@@ -19,7 +19,7 @@ export const metadata = {
 export default function MainPage() {
   return (
     <>
-      <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
+      <main className="min-h-screen" style={{ backgroundColor: "#ffffff" }}>
         <HookIntro />
         <Intro />
         <CompareTable />

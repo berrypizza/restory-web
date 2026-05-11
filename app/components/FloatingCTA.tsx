@@ -27,28 +27,21 @@ export default function FloatingCTA() {
     <div
       className="fixed bottom-0 left-0 right-0 z-50 px-4 md:hidden"
       style={{
-        paddingBottom: "max(16px, env(safe-area-inset-bottom))",
-        paddingTop: 12,
-        background: "linear-gradient(to top, rgba(13,13,13,0.99) 60%, transparent)",
+        paddingBottom: "max(12px, env(safe-area-inset-bottom))",
+        paddingTop: 10,
+        background: "linear-gradient(to top, rgba(255,255,255,0.98) 60%, transparent)",
       }}>
-      <div className="flex flex-col gap-2 mx-auto max-w-sm">
-        <a
-          href={KAKAO_CHANNEL_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full rounded-xl py-4 text-sm font-black transition-opacity active:opacity-80"
-          style={{ backgroundColor: "#FEE500", color: "#191919" }}>
-          <KakaoIcon />
-          카카오톡으로 사진 상담하기
+      <div className="flex gap-2 mx-auto max-w-sm">
+        <a href={KAKAO_CHANNEL_URL} target="_blank" rel="noopener noreferrer"
+          className="flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold"
+          style={{ backgroundColor: "#FEE500", color: "#1a1a1a" }}>
+          <KakaoIcon /> 카카오 상담
         </a>
-        <div className="flex gap-2">
-          <a href="/request" className="flex-1 rounded-xl py-3 text-center text-sm font-bold transition-opacity active:opacity-80" style={{ backgroundColor: "#2fae8a", color: "white" }}>
-            💬 문자 상담
-          </a>
-          <a href="tel:01000000000" className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-3 text-sm font-bold transition-opacity active:opacity-80" style={{ backgroundColor: "#1e1e1e", border: "1px solid #333", color: "#e5e5e5", whiteSpace: "nowrap" }}>
-            📞 010-0000-0000
-          </a>
-        </div>
+        <a href="tel:01000000000"
+          className="flex items-center justify-center gap-1 rounded-xl px-4 py-3.5 text-sm font-semibold"
+          style={{ backgroundColor: "#fff", border: "1px solid #e5e5e5", color: "#1a1a1a" }}>
+          📞 전화
+        </a>
       </div>
     </div>
   );

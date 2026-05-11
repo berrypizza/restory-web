@@ -1,20 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
-  --bg-card: #161616;
-  --bg-card-hover: #1e1e1e;
-  --border-primary: #2a2a2a;
-  --border-accent: #2fae8a55;
-  --text-primary: #ffffff;
-  --text-secondary: #cccccc;
-  --text-muted: #aaaaaa;
-  --text-dim: #888888;
-  --accent: #2fae8a;
-  --accent-light: #00ffa2;
-  --accent-bg: #2fae8a22;
-  --danger: #ef4444;
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-card: #f5f5f5;
+  --bg-card-hover: #eeeeee;
+  --border-primary: #e5e5e5;
+  --border-accent: #1a1a1a;
+  --text-primary: #1a1a1a;
+  --text-secondary: #444444;
+  --text-muted: #888888;
+  --text-dim: #aaaaaa;
+  --accent: #1a1a1a;
+  --danger: #dc2626;
   --kakao: #FEE500;
   --naver: #03C75A;
 }

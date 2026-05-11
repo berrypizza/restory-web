@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import DrawerMenu from "./DrawerMenu";
 
@@ -15,46 +16,35 @@ export default function Navbar() {
   return (
     <header
       className="sticky top-0 z-50"
-      style={{ backgroundColor: "#1e1e1e", borderBottom: "1px solid #2a2a2a" }}>
+      style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #eee" }}>
       <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          {/* TODO: 로고 이미지로 교체 */}
-          <span className="text-lg font-black" style={{ color: "white" }}>
-            리스토리
-          </span>
-          <span
-            className="text-xs px-2 py-0.5 rounded-full font-medium"
-            style={{
-              backgroundColor: "#2fae8a22",
-              color: "#2fae8a",
-              border: "1px solid #2fae8a44",
-            }}>
-            가구수리
-          </span>
+          <Image
+            src="/images/logo.png"
+            alt="Re'Story 로고"
+            width={120}
+            height={36}
+            className="h-8 w-auto object-contain"
+            priority
+          />
         </Link>
 
         <div className="flex items-center gap-2">
-          {/* 카카오 CTA */}
           <a
             href={KAKAO_CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-black transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#FEE500", color: "#191919" }}>
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-opacity hover:opacity-80"
+            style={{ backgroundColor: "#FEE500", color: "#1a1a1a" }}>
             <KakaoIcon />
             <span className="hidden sm:inline">카카오 상담</span>
             <span className="sm:hidden">상담</span>
           </a>
 
-          {/* 전화 — 데스크탑만 */}
           <a
             href="tel:01000000000"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90"
-            style={{
-              backgroundColor: "#2a2a2a",
-              border: "1px solid #333",
-              color: "#e5e5e5",
-            }}>
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
+            style={{ backgroundColor: "#f5f5f5", border: "1px solid #e5e5e5", color: "#1a1a1a" }}>
             📞 전화 문의
           </a>
 

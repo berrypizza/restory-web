@@ -6,16 +6,16 @@ export default function TrustBar() {
   ];
 
   return (
-    <div style={{ backgroundColor: "#161616", borderBottom: "1px solid #2a2a2a" }}>
+    <div style={{ backgroundColor: "#fafafa", borderBottom: "1px solid #eee" }}>
       <div className="mx-auto max-w-5xl px-6 py-2 flex items-center justify-center gap-0 overflow-x-auto">
         {signals.map((s, i) => (
           <div key={i} className="flex items-center gap-4 flex-shrink-0">
-            <div className="flex items-center gap-0.9">
-              <span className="text-xs" style={{ color: "#2fae8a" }}>{s.icon}</span>
-              <span className="text-xs whitespace-nowrap" style={{ color: "#7a7a7a" }}>{s.text}</span>
+            <div className="flex items-center gap-1">
+              <span className="text-xs" style={{ color: "#1a1a1a" }}>{s.icon}</span>
+              <span className="text-xs whitespace-nowrap" style={{ color: "#aaa" }}>{s.text}</span>
             </div>
             {i < signals.length - 1 && (
-              <div className="h-3 w-px mx-3 flex-shrink-0" style={{ backgroundColor: "#2a2a2a" }} />
+              <div className="h-3 w-px mx-3 flex-shrink-0" style={{ backgroundColor: "#e5e5e5" }} />
             )}
           </div>
         ))}

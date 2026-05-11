@@ -14,39 +14,40 @@ function KakaoIcon() {
 
 export default function WhyRestory() {
   return (
-    <section style={{ backgroundColor: "#0d0d0d" }}>
-      <div className="px-6 py-20 mx-auto max-w-3xl">
+    <section style={{ backgroundColor: "#fafafa" }}>
+      <div className="px-6 py-24 mx-auto max-w-2xl">
         <FadeIn delay={0}>
-          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid #2fae8a44" }}>
-            <div className="px-7 py-7" style={{ background: "linear-gradient(135deg, #0a1a12 0%, #0d2018 100%)" }}>
-              <p className="text-sm font-black uppercase tracking-widest mb-3" style={{ color: "#2fae8a" }}>
-                리스토리의 약속
+          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid #e5e5e5" }}>
+            <div className="px-7 py-8" style={{ backgroundColor: "#ffffff" }}>
+              <p className="text-sm font-medium tracking-widest uppercase mb-4" style={{ color: "#aaa", letterSpacing: "0.15em" }}>
+                Our Promise
               </p>
-              <h3 className="font-black leading-snug mb-3" style={{ fontSize: "clamp(1.3rem, 3.5vw, 1.9rem)", color: "white" }}>
-                위 4가지 중 하나라도 못 지키면
+              <h3 className="font-black leading-snug mb-4" style={{ fontSize: "clamp(1.3rem, 3.5vw, 1.8rem)", color: "#1a1a1a" }}>
+                하나라도 못 지키면
                 <br />
-                <span style={{ color: "#2fae8a" }}>출장비를 받지 않습니다.</span>
+                출장비를 받지 않습니다.
               </h3>
-              <p className="text-base leading-relaxed" style={{ color: "#2fae8aaa" }}>
+              <p className="text-base leading-relaxed" style={{ color: "#888" }}>
                 광고 카피가 아닙니다. 실제로 지키지 못한 날은 청구하지 않습니다.
               </p>
               <div className="mt-6 grid grid-cols-2 gap-2">
                 {["📷 사진 1장 사전 진단", "💬 범위 먼저 공유", "✅ 불가 시 출장비 0원", "🛡 1년 무상 AS"].map((item, i) => (
-                  <div key={i} className="rounded-xl px-3 py-2 text-sm font-bold" style={{ backgroundColor: "#2fae8a18", color: "#2fae8a", border: "1px solid #2fae8a33" }}>
+                  <div key={i} className="rounded-xl px-3 py-2.5 text-sm font-semibold"
+                    style={{ backgroundColor: "#fafafa", color: "#444", border: "1px solid #eee" }}>
                     {item}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="px-7 py-6" style={{ backgroundColor: "#0f0f0f", borderTop: "1px solid #1e1e1e" }}>
+            <div className="px-7 py-6" style={{ backgroundColor: "#fafafa", borderTop: "1px solid #eee" }}>
               <a
                 href={KAKAO_CHANNEL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-xl py-4 font-black text-center transition-opacity hover:opacity-90"
-                style={{ backgroundColor: "#FEE500", color: "#191919", fontSize: "1.05rem" }}>
+                className="flex w-full items-center justify-center gap-2 rounded-xl py-4 font-bold text-center transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "#FEE500", color: "#1a1a1a", fontSize: "1rem" }}>
                 <KakaoIcon />
-                카카오로 직접 확인하기 →
+                카카오로 직접 확인하기
               </a>
             </div>
           </div>
