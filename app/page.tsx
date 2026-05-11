@@ -89,7 +89,6 @@ export default function MainPage() {
           </div>
         </div>
       </section>
-
       {/* 아정당 스타일 아이콘 메뉴 */}
       <section className="border-b border-neutral-100 bg-white px-4 py-5">
         <div className="mx-auto grid max-w-[720px] grid-cols-3 items-start text-center">
@@ -116,51 +115,51 @@ export default function MainPage() {
           ))}
         </div>
       </section>
-
-      <section className="px-6 py-20">
+      <section className="bg-gradient-to-b from-[#f7f9fd] to-[#eef2f8] px-5 py-14">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-2xl font-black leading-tight text-neutral-950 md:text-3xl">
-            정리해서 보면, 세 가지 일만 합니다.
+          <h2 className="mb-7 text-[22px] font-black tracking-[-0.04em] text-neutral-950 md:text-[26px]">
+            한 번의 클릭, 필요한 작업만
           </h2>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3">
             {businessLines.map((line) => (
               <Link
                 key={line.id}
                 href={line.href}
-                className="rounded-[2rem] bg-gradient-to-b from-neutral-50 to-white p-8 shadow-[0_18px_60px_rgba(0,0,0,0.08)] transition hover:-translate-y-1">
-                <div className="flex h-[64px] w-[64px] items-center justify-center">
+                className="overflow-hidden rounded-[20px] bg-gradient-to-b from-white to-[#fbfcff] shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
+                <div className="relative min-h-[160px] p-6">
+                  <h3 className="text-[20px] font-black tracking-[-0.04em] text-neutral-950">
+                    {line.title}
+                  </h3>
+
+                  <p className="mt-3 max-w-[210px] whitespace-pre-line text-[14px] font-medium leading-[1.7] text-neutral-700">
+                    {line.description}
+                  </p>
+
                   <Image
                     src={iconMap[line.id]}
                     alt={line.title}
-                    width={64}
-                    height={64}
-                    className="h-[64px] w-[64px] object-contain"
+                    width={96}
+                    height={96}
+                    className="absolute bottom-5 right-6 h-[86px] w-[86px] object-contain"
                   />
                 </div>
 
-                <p className="mt-8 text-xl font-black text-neutral-950">
-                  {line.title}
-                </p>
-
-                <p className="mt-4 text-sm leading-relaxed text-neutral-500">
-                  {line.description}
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-2">
-                  {line.services.slice(0, 4).map((service) => (
-                    <span
-                      key={service.slug}
-                      className="rounded-full bg-white px-3 py-2 text-xs font-bold text-neutral-600 shadow-sm">
-                      {service.shortTitle}
+                <div className="border-t border-[#e5eaf2] bg-gradient-to-b from-white to-[#f9fbff] px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[15px] font-black text-[#005cff]">
+                      자세히 보기
                     </span>
-                  ))}
+                    <span className="text-[22px] font-black text-[#005cff]">
+                      ›
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
         </div>
-      </section>
+      </section>{" "}
     </main>
   );
 }
