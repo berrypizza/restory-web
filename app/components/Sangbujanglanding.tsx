@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
+import Image from "next/image";
 
 /* ═══════════════════════════════════════════
    FADE-IN ON SCROLL
@@ -200,74 +201,42 @@ export default function SangbujangLanding() {
   return (
     <main className="bg-white">
       {/* ────────────────────────────
-          HERO
+          HERO IMAGE
          ──────────────────────────── */}
-      <section
-        className="relative overflow-hidden px-6 py-16 text-white md:py-24"
-        style={{
-          background: "linear-gradient(150deg, #1a5cff 0%, #003ad6 100%)",
-        }}>
-        {/* decorative circles */}
-        <div
-          className="absolute -right-10 -top-10 h-52 w-52 rounded-full opacity-[0.06]"
-          style={{ background: "#fff" }}
+      <section>
+        <Image
+          src="/images/hero-sangbujang.png"
+          alt="리스토리의 싱크대 상부장 수리"
+          width={1080}
+          height={1350}
+          className="w-full h-auto"
+          priority
         />
-        <div
-          className="absolute -bottom-16 -left-16 h-60 w-60 rounded-full opacity-[0.04]"
-          style={{ background: "#fff" }}
-        />
+      </section>
 
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <span
-              className="mb-5 inline-block rounded-full px-4 py-1.5 text-[13px] font-bold"
-              style={{
-                background: "rgba(255,255,255,0.14)",
-                backdropFilter: "blur(4px)",
-              }}>
-              ⚠️ 상부장 수리 전문
-            </span>
-          </FadeIn>
-
-          <FadeIn delay={80}>
-            <h1 className="text-[28px] font-black leading-[1.35] tracking-tight md:text-[40px]">
-              싱크대 상부장
-              <br />
-              <span style={{ color: "#ffe066" }}>3가지 증상</span> 있는지
-              <br />
-              확인해보세요
-            </h1>
-          </FadeIn>
-
-          <FadeIn delay={160}>
-            <p
-              className="mt-5 text-[15px] font-semibold leading-[1.7] md:text-base"
-              style={{ color: "rgba(255,255,255,0.82)" }}>
-              있다면 당장 전화 주세요.
-              <br />
-              <span className="font-extrabold" style={{ color: "#ffe066" }}>
-                지금이 가장 저렴합니다.
-              </span>
-            </p>
-          </FadeIn>
-
-          <FadeIn delay={240}>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={PHONE}
-                className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-[15px] font-extrabold text-[#1a5cff]">
-                📞 전화 문의
-              </a>
-              <a
-                href={PHOTO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/30 px-6 py-4 text-[15px] font-extrabold text-white">
-                📷 사진 접수
-              </a>
-            </div>
-          </FadeIn>
+      {/* ────────────────────────────
+          HERO CTA BUTTONS
+         ──────────────────────────── */}
+      <section className="px-5 py-5" style={{ background: "#3672ff" }}>
+        <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
+          <a
+            href={PHONE}
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-[15px] font-extrabold text-[#1a5cff] shadow-lg">
+            📞 전화 문의
+          </a>
+          <a
+            href={PHOTO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 py-4 text-[15px] font-extrabold text-white">
+            📷 사진 접수
+          </a>
         </div>
+        <p
+          className="mx-auto mt-3 max-w-3xl text-center text-[13px] font-semibold"
+          style={{ color: "rgba(255,255,255,0.6)" }}>
+          사진 한 장이면 수리 가능 여부 바로 안내드립니다
+        </p>
       </section>
 
       {/* ────────────────────────────
