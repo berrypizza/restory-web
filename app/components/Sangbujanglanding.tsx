@@ -4,6 +4,19 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 
 /* ═══════════════════════════════════════════
+   WANTED SANS FONT
+   ═══════════════════════════════════════════ */
+function WantedSansFont() {
+  return (
+    // eslint-disable-next-line @next/next/no-css-tags
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
+    />
+  );
+}
+
+/* ═══════════════════════════════════════════
    FADE-IN ON SCROLL
    ═══════════════════════════════════════════ */
 function FadeIn({
@@ -199,7 +212,13 @@ export default function SangbujangLanding() {
   }, []);
 
   return (
-    <main className="bg-white">
+    <main
+      className="bg-white"
+      style={{
+        fontFamily:
+          "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+      }}>
+      <WantedSansFont />
       {/* ────────────────────────────
           HERO IMAGE
          ──────────────────────────── */}
@@ -237,6 +256,83 @@ export default function SangbujangLanding() {
           style={{ color: "rgba(255,255,255,0.6)" }}>
           사진 한 장이면 수리 가능 여부 바로 안내드립니다
         </p>
+      </section>
+
+      {/* ────────────────────────────
+          TRUST — 증명서 / 자격증
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#fafafa" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-[15px] font-medium text-neutral-500">
+                실력이 하느라 많이 답답하셨죠?
+              </p>
+              <h2 className="mt-2 text-[22px] font-black leading-[1.35] md:text-[28px]">
+                파손 걱정 없는 정당한 수리
+              </h2>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={100}>
+            <div className="mx-auto my-8 flex flex-col items-center">
+              <div className="h-10 w-px bg-neutral-300" />
+              <div className="mt-6 text-center">
+                <p className="text-[20px] font-black md:text-[24px]">
+                  본사 책임 제도로 스트레스
+                </p>
+                <p
+                  className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[24px]"
+                  style={{ background: "#d4f5c4", color: "#1a1a1a" }}>
+                  싹- 다 잊으세요!
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={200}>
+            <div className="grid grid-cols-3 gap-3">
+              {/* 증명서 1 */}
+              <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+                <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3">
+                  <Image
+                    src="/images/cert-1.png"
+                    alt="가입증명서"
+                    width={300}
+                    height={400}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              </div>
+              {/* 증명서 2 */}
+              <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+                <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3">
+                  <Image
+                    src="/images/cert-2.png"
+                    alt="보험증서"
+                    width={300}
+                    height={400}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              </div>
+              {/* 증명서 3 */}
+              <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+                <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3">
+                  <Image
+                    src="/images/cert-3.png"
+                    alt="사업자등록증"
+                    width={300}
+                    height={400}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
       </section>
 
       {/* ────────────────────────────

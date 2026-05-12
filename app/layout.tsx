@@ -14,7 +14,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="antialiased">
-      <body style={{ backgroundColor: "#fff" }}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
+        />
+      </head>
+      <body
+        style={{
+          backgroundColor: "#fff",
+          fontFamily:
+            "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+        }}>
         <Navbar />
         {children}
       </body>

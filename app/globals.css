@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+@import url("https://cdn.jsdelivr.net/gh/AlfredWorkspace/WantedSans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
 :root {
   --bg-primary: #ffffff;
   --bg-secondary: #fafafa;
@@ -13,8 +14,8 @@
   --text-dim: #aaaaaa;
   --accent: #1a1a1a;
   --danger: #dc2626;
-  --kakao: #FEE500;
-  --naver: #03C75A;
+  --kakao: #fee500;
+  --naver: #03c75a;
 }
 
 html {
@@ -24,7 +25,22 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    sans-serif;
 }
 
 .sr-only {
