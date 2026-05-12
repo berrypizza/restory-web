@@ -260,7 +260,7 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="text-center">
-              <p className="text-[15px] font-medium text-neutral-500">
+              <p className="text-[18px] font-black text-neutral-500">
                 걱정만 하시느냐 답답하셨죠?
               </p>
               <h2 className="mt-2 text-[22px] font-black leading-[1.35] md:text-[28px]">
