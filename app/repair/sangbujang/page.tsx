@@ -1,17 +1,11 @@
-import { notFound } from "next/navigation";
-import { ServiceLandingPage } from "@/app/components/CategoryPages";
-import { getService } from "@/lib/site-config";
+import SangbujangLanding from "@/app/components/Sangbujanglanding";
 
-export async function generateMetadata() {
-  const service = getService("repair" as any, "sangbujang");
-  return {
-    title: service ? `${service.title} | Re'Story` : "Re'Story",
-    description: service?.description,
-  };
-}
+export const metadata = {
+  title: "싱크대 상부장 수리 | Re'Story",
+  description:
+    "상부장 처짐·뜸·벌어짐, 사진 한 장이면 수리 가능 여부 바로 안내드립니다.",
+};
 
 export default function Page() {
-  const service = getService("repair" as any, "sangbujang");
-  if (!service) return notFound();
-  return <ServiceLandingPage service={service} />;
+  return <SangbujangLanding />;
 }
