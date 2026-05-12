@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type ReactNode } from "react";
+import React, { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 
 /* ═══════════════════════════════════════════
@@ -90,13 +90,6 @@ const SYMPTOMS = [
     title: "옆부분 뜸",
     desc: "측면이 벌어지며 흔들리는 상태",
   },
-];
-
-const WHY_US = [
-  { us: "시공목 전부 합판 사용", them: "시공목 PB(파티클보드) 사용" },
-  { us: "작업 전 전부 보양 처리", them: "보양 안 함" },
-  { us: "집진기 사용으로 깨끗한 현장", them: "먼지 그대로 방치" },
-  { us: "무상 A/S 3년 보장", them: "A/S 1년 ~ 없음" },
 ];
 
 const PROCESS = [
@@ -517,6 +510,89 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f7f9fd" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-[18px] font-black text-neutral-500">
+                수리 고수들만 모인
+              </p>
+              <h2 className="mt-1 text-[22px] font-black md:text-[26px]">
+                리스토리의 자부심
+              </h2>
+              <p
+                className="mx-auto mt-3 inline-block rounded-lg px-5 py-1.5 text-[18px] font-black md:text-[22px]"
+                style={{ background: "#1a5cff", color: "#fff" }}>
+                안심인증수리
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={120}>
+            <div className="mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-[#e0e8f5]">
+              {/* 헤더 — A사 */}
+              <div
+                className="p-5 text-center"
+                style={{ background: "#1a1a1a" }}>
+                <span className="inline-block rounded-full bg-white px-3 py-1 text-[11px] font-bold text-neutral-600">
+                  A사
+                </span>
+                <p className="mt-2 text-[18px] font-black text-white md:text-[20px]">
+                  일반 수리
+                </p>
+              </div>
+              {/* 헤더 — 리스토리 */}
+              <div
+                className="p-5 text-center"
+                style={{ background: "#1a5cff" }}>
+                <span
+                  className="inline-block rounded-full px-3 py-1 text-[11px] font-bold"
+                  style={{
+                    background: "rgba(255,255,255,0.2)",
+                    color: "#fff",
+                  }}>
+                  리스토리
+                </span>
+                <p className="mt-2 text-[18px] font-black text-white md:text-[20px]">
+                  안심 인증 수리
+                </p>
+              </div>
+
+              {/* 비교 행들 */}
+              {[
+                { a: "시공목 PB 사용", b: "시공목 전부 합판 사용" },
+                { a: "보양 처리 없음", b: "작업 전 전부 보양 처리" },
+                {
+                  a: "추가 금액 발생\n가능성 有",
+                  b: "집진기 사용\n깨끗한 현장",
+                },
+                { a: "A/S 발생 시 직접 해결", b: "A/S 발생 시 책임 중재" },
+              ].map((row, i) => (
+                <React.Fragment key={i}>
+                  <div className="border-t border-neutral-200 bg-white px-4 py-5 text-center">
+                    <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.5] text-neutral-500">
+                      {row.a}
+                    </p>
+                  </div>
+                  <div
+                    className="border-t px-4 py-5 text-center"
+                    style={{
+                      borderColor: "#d6e4ff",
+                      background: "#eef4ff",
+                    }}>
+                    <p className="whitespace-pre-line text-[14px] font-bold leading-[1.5] text-[#1a5cff]">
+                      {row.b}
+                    </p>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* ────────────────────────────
           3 SYMPTOMS — SELF CHECK
          ──────────────────────────── */}
@@ -631,47 +707,6 @@ export default function SangbujangLanding() {
               </p>
             </div>
           </FadeIn>
-        </div>
-      </section>
-
-      {/* ────────────────────────────
-          WHY US — 비교표
-         ──────────────────────────── */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff]">
-              WHY RE&apos;STORY
-            </p>
-            <h2 className="mb-8 text-[22px] font-black leading-[1.4] md:text-[28px]">
-              왜 리스토리인가요?
-            </h2>
-          </FadeIn>
-
-          <div className="flex flex-col gap-3">
-            {WHY_US.map((item, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-[#e0e8f5]">
-                  <div className="bg-[#1a5cff] p-4 text-white">
-                    <p className="mb-1.5 text-[10px] font-bold tracking-wider opacity-60">
-                      리스토리
-                    </p>
-                    <p className="text-[14px] font-bold">✓ {item.us}</p>
-                  </div>
-                  <div className="bg-neutral-100 p-4">
-                    <p className="mb-1.5 text-[10px] font-bold tracking-wider text-neutral-400">
-                      타사
-                    </p>
-                    <p className="text-[14px] font-semibold text-neutral-400">
-                      ✗ {item.them}
-                    </p>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
         </div>
       </section>
 
