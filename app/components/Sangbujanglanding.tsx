@@ -268,10 +268,10 @@ export default function SangbujangLanding() {
           <FadeIn>
             <div className="text-center">
               <p className="text-[15px] font-medium text-neutral-500">
-                실력이 하느라 많이 답답하셨죠?
+                걱정만 하시느냐 답답하셨죠?
               </p>
               <h2 className="mt-2 text-[22px] font-black leading-[1.35] md:text-[28px]">
-                파손 걱정 없는 정당한 수리
+                AS 걱정 없는 시원한 수리
               </h2>
             </div>
           </FadeIn>
@@ -285,7 +285,7 @@ export default function SangbujangLanding() {
                 </p>
                 <p
                   className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[24px]"
-                  style={{ background: "#d4f5c4", color: "#1a1a1a" }}>
+                  style={{ background: "#1f66ff", color: "#ffffff" }}>
                   싹- 다 잊으세요!
                 </p>
               </div>
@@ -327,6 +327,188 @@ export default function SangbujangLanding() {
                     width={300}
                     height={400}
                     className="h-full w-full object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ────────────────────────────
+          PHOTO REVIEWS — 솔직후기
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f5f5f5" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-[28px] leading-none text-amber-400">★★★★★</p>
+              <h2 className="mt-4 text-[22px] font-black leading-[1.4] md:text-[28px]">
+                실제 고객님들이 인정한
+                <br />
+                <span className="text-[26px] md:text-[32px]">솔직후기</span>
+              </h2>
+              <p className="mt-3 text-[15px] font-semibold text-neutral-500">
+                평점 5점 만점에
+              </p>
+              <p
+                className="mt-1 text-[40px] font-black md:text-[48px]"
+                style={{ color: "#1a5cff" }}>
+                4.9
+                <span className="text-[20px] font-bold text-neutral-400">
+                  점
+                </span>
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={150}>
+            <div className="mt-10 grid grid-cols-2 gap-3">
+              {/* 후기 카드 1 */}
+              <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                  <Image
+                    src="/images/review-photo-1.jpg"
+                    alt="수리 후기 사진 1"
+                    width={400}
+                    height={300}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <p className="text-[11px] text-neutral-400">
+                    서울 강동구 김현*
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff]">
+                    사장님이 친절하시고 직원분들이
+                    <br />
+                    엄청 열심히 일해주십니다
+                  </p>
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-500">
+                    현장에서 여러번 가구 배치를 요청드렸는데 불편해한 기색없이
+                    운반해주셔서 감사합니다. 반장하세요!
+                  </p>
+                </div>
+              </div>
+
+              {/* 후기 카드 2 */}
+              <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                  <Image
+                    src="/images/review-photo-2.jpg"
+                    alt="수리 후기 사진 2"
+                    width={400}
+                    height={300}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <p className="text-[11px] text-neutral-400">
+                    대구 달성군 이승*
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff]">
+                    다테일하게 신경 써주시는
+                    <br />
+                    곳이에요!
+                  </p>
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-500">
+                    집을길때 그냥 신발 신고 작업하는게 아니라, 덧신을 신고
+                    하시고, 주방 이모님도 꼼꼼하게 그릇 정리해주시는데 정말
+                    좋았어요!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ────────────────────────────
+          SPECIALS — 왜 리스토리인가요?
+         ──────────────────────────── */}
+      {/* 파란 배경 타이틀 */}
+      <section
+        className="px-5 pt-10 text-center text-white"
+        style={{ background: "#1f66ff" }}>
+        <FadeIn>
+          <p className="text-[40px] leading-none">🧐</p>
+          <p
+            className="mt-4 text-[16px] font-semibold"
+            style={{ color: "rgba(255,255,255,0.8)" }}>
+            왜 유명하냐고요?
+          </p>
+          <h2 className="mt-2 text-[24px] font-black md:text-[28px]">
+            리스토리 수리는 특별합니다!
+          </h2>
+        </FadeIn>
+      </section>
+
+      {/* Special 01 */}
+      <section
+        className="px-5 pt-14 md:py-20"
+        style={{ background: "#1f66ff" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
+              <div className="text-center">
+                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-500">
+                  Special 01
+                </span>
+                <h3 className="mt-4 text-[20px] font-black md:text-[24px]">
+                  상부장 또!! 떨어지면{" "}
+                  <span className="text-[#1a5cff]">책임</span>져 주나요?
+                </h3>
+              </div>
+
+              <div className="mt-6 overflow-hidden rounded-xl">
+                <Image
+                  src="/images/special-01.png"
+                  alt="본사 안심 보상제"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Special 02 */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#1f66ff" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
+              <div className="text-center">
+                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-500">
+                  Special 02
+                </span>
+                <h3 className="mt-4 text-[20px] font-black md:text-[24px]">
+                  절차는 간편한가요?
+                </h3>
+              </div>
+
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <div className="overflow-hidden rounded-xl">
+                  <Image
+                    src="/images/special-02-1.png"
+                    alt="사진만 찍어도 비대면 무료 견적 가능"
+                    width={400}
+                    height={300}
+                    className="w-full h-auto"
+                  />
+                </div>
+                <div className="overflow-hidden rounded-xl">
+                  <Image
+                    src="/images/special-02-2.png"
+                    alt="365일 밤 10시까지 상담 가능"
+                    width={400}
+                    height={300}
+                    className="w-full h-auto"
                   />
                 </div>
               </div>
