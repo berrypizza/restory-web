@@ -592,6 +592,16 @@ export default function SangbujangLanding() {
           </FadeIn>
         </div>
       </section>
+      <section>
+        <Image
+          src="/images/safe.png"
+          alt="리스토리의 싱크대 상부장 수리"
+          width={1080}
+          height={1350}
+          className="w-full h-auto"
+          priority
+        />
+      </section>
 
       {/* ────────────────────────────
           3 SYMPTOMS — SELF CHECK
