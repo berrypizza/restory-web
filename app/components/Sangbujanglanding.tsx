@@ -320,9 +320,8 @@ export default function SangbujangLanding() {
                     서울 영등포구 김현*
                   </p>
                   <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    사장님이 친절하시고 직원분들이
-                    <br />
-                    엄청 열심히 일해주십니다
+                    사장님이 친절하시고 직원분들이 엄청
+                    <br /> 열심히 일해주십니다
                   </p>
                   <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
                     현장에서 여러번 가구 배치를 요청드렸는데 불편해한 기색없이
@@ -347,9 +346,7 @@ export default function SangbujangLanding() {
                     서울 강서구 이승*
                   </p>
                   <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    디테일하게 신경 써주시는
-                    <br />
-                    곳이에요!
+                    디테일하게 <br /> 신경 써주시는 곳이에요!
                   </p>
                   <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
                     상부장이 떨어졌는데, 합판으로 튼튼하게 고쳐주셨어요. 작업
@@ -371,8 +368,8 @@ export default function SangbujangLanding() {
         <FadeIn>
           <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
           <p
-            className="mt-4 text-[30px] font-semibold md:text-[45px]"
-            style={{ color: "rgba(255,255,255,0.8)" }}>
+            className="mt-4 text-[40px] font-thin md:text-[55px]"
+            style={{ color: "rgb(255, 255, 255)" }}>
             왜 유명하냐고요?
           </p>
           <h2 className="mt-2 text-[40px] font-black md:text-[55px]">
@@ -413,7 +410,7 @@ export default function SangbujangLanding() {
 
       {/* Special 02 */}
       <section
-        className="px-5 py-14 md:py-20"
+        className="px-5 pt-7 pb-14 md:pt-7 md:pb-20"
         style={{ background: "#1f66ff" }}>
         <div className="mx-auto max-w-3xl">
           <FadeIn>
@@ -561,7 +558,7 @@ export default function SangbujangLanding() {
             <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
               SELF CHECK
             </p>
-            <h2 className="text-[22px] font-black leading-[1.4] md:text-[30px]">
+            <h2 className="text-[30px] font-black leading-[1.4] md:text-[45px]">
               이 중 하나라도 해당되면
               <br />
               <span className="text-[#e53e3e]">지금 바로 연락하세요</span>
@@ -569,7 +566,7 @@ export default function SangbujangLanding() {
           </FadeIn>
 
           <FadeIn delay={120}>
-            <div className="mt-8 grid grid-cols-3 gap-3 md:gap-5">
+            <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
               {[
                 {
                   img: "/images/symptom-1.jpg",
@@ -608,12 +605,46 @@ export default function SangbujangLanding() {
                     <p className="text-[16px] font-extrabold md:text-[18px]">
                       {s.title}
                     </p>
-                    <p className="mt-1.5 whitespace-pre-line text-[12px] leading-[1.6] text-neutral-600 md:text-[14px]">
+                    <p className="mt-1.5 whitespace-pre-line text-[14px] leading-[1.6] text-neutral-500 md:text-[16px]">
                       {s.desc}
                     </p>
                   </div>
                 </div>
               ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+      {/* ────────────────────────────
+          URGENT — 우선 배정
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{
+          background: "linear-gradient(150deg, #000f36 0%, #003ad6 100%)",
+        }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
+              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[20px] font-extrabold text-white md:text-[35px]">
+                ⚡ 우선 배정
+              </div>
+              <h3 className="mt-1 text-[30px] font-black leading-[1.45] md:text-[45px]">
+                상부장은 떨어지면
+                <br />
+                <span className="text-[#e53e3e]">더 큰 문제</span>가 생깁니다
+              </h3>
+              <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
+                그릇·가전 파손, 바닥 훼손, 부상 위험까지.
+                <br />
+                그래서{" "}
+                <strong
+                  className="text-neutral-900 text-[18px] font-bold md:text-[22px]"
+                  style={{ color: "#1f66ff" }}>
+                  상부장 수리 고객은 우선 배정
+                </strong>
+                으로 빠르게 방문합니다.
+              </p>
             </div>
           </FadeIn>
         </div>
@@ -651,7 +682,7 @@ export default function SangbujangLanding() {
             ].map((s, i) => (
               <div
                 key={i}
-                className="text-center bg-white/20 px-4 py-3 rounded-lg">
+                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg">
                 <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
                 <p
                   className="mt-1 text-[18px] font-semibold md:text-[22px]"
@@ -662,37 +693,6 @@ export default function SangbujangLanding() {
             ))}
           </div>
         </FadeIn>
-      </section>
-
-      {/* ────────────────────────────
-          URGENT — 우선 배정
-         ──────────────────────────── */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#fff7ed" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
-              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[12px] font-extrabold text-white md:text-[13px]">
-                ⚡ 우선 배정
-              </div>
-              <h3 className="mt-1 text-[19px] font-black leading-[1.45] md:text-[24px]">
-                상부장은 떨어지면
-                <br />
-                <span className="text-[#e53e3e]">더 큰 문제</span>가 생깁니다
-              </h3>
-              <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
-                그릇·가전 파손, 바닥 훼손, 부상 위험까지.
-                <br />
-                그래서{" "}
-                <strong className="text-neutral-900">
-                  상부장 수리 고객은 우선 배정
-                </strong>
-                으로 빠르게 방문합니다.
-              </p>
-            </div>
-          </FadeIn>
-        </div>
       </section>
 
       {/* ────────────────────────────
