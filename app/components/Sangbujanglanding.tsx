@@ -626,10 +626,10 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
-              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[20px] font-extrabold text-white md:text-[35px]">
+              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[30px] font-extrabold text-white md:text-[45px]">
                 ⚡ 우선 배정
               </div>
-              <h3 className="mt-1 text-[30px] font-black leading-[1.45] md:text-[45px]">
+              <h3 className="mt-7 text-[30px] font-black leading-[1.45] md:text-[45px]">
                 상부장은 떨어지면
                 <br />
                 <span className="text-[#e53e3e]">더 큰 문제</span>가 생깁니다
