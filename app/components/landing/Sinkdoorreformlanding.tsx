@@ -193,10 +193,10 @@ export default function SinkdoorReformLanding() {
               리스토리 도어 리폼
             </p>
             <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
-              새 공간을 만드는
+              새 주방을 만드는
             </p>
             <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
-              가장 쉬운 방법
+              가장 쉽고 저렴한 방법
             </p>
           </div>
         </div>
