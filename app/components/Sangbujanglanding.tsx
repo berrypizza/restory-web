@@ -136,9 +136,9 @@ const EXTRAS = [
     desc: "문짝 처짐·소음의 원인, 경첩 교체로 해결",
   },
   {
-    icon: "🛤️",
-    title: "레일 교체",
-    desc: "서랍 안 들어가거나 빠지는 증상, 레일 교체",
+    icon: "🚪",
+    title: "문짝 교체",
+    desc: "장 전체 교체 필요 없이, 문짝 교체로 새것처럼!",
   },
 ];
 
@@ -694,7 +694,47 @@ export default function SangbujangLanding() {
           </div>
         </FadeIn>
       </section>
+      {/* ────────────────────────────
+          YOUTUBE
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-14 text-white md:py-20"
+        style={{ background: "#1a1a1a" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <p
+              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
+              style={{ color: "rgba(255,255,255,0.35)" }}>
+              YOUTUBE
+            </p>
+            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
+              실제 시공 영상을 확인하세요
+            </h2>
+          </FadeIn>
 
+          <FadeIn delay={100}>
+            {/* TODO: 실제 유튜브 영상 iframe 교체 */}
+            <div className="flex aspect-video flex-col items-center justify-center rounded-2xl border border-neutral-700 bg-neutral-800">
+              <div
+                className="mb-4 flex h-14 w-14 items-center justify-center rounded-full md:h-20 md:w-20"
+                style={{ background: "rgba(255,255,255,0.1)" }}>
+                <span className="ml-1 text-[28px] md:text-[36px]">▶</span>
+              </div>
+              <p
+                className="text-[14px] text-center font-semibold md:text-[16px]"
+                style={{ color: "rgba(255,255,255,0.45)" }}>
+                유튜브 영상 준비 중입니다...
+                <br /> 곧 멋진 시공 영상으로 찾아뵐게요!
+              </p>
+              <p
+                className="mt-1 text-[11px] md:text-[13px]"
+                style={{ color: "rgba(255,255,255,0.25)" }}>
+                상부장 수리 실제 현장 시공 과정
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
       {/* ────────────────────────────
           PROCESS — 수리절차 (아정당 스타일 가로 4단계)
          ──────────────────────────── */}
@@ -704,7 +744,7 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="text-center">
-              <p className="text-[18px] font-semibold text-neutral-600 md:text-[20px]">
+              <p className="text-[26px] font-medium text-neutral-600 md:text-[34px]">
                 처음부터 끝까지 쉽고 빠르게
               </p>
               <h2 className="mt-2 text-[26px] font-black md:text-[34px]">
@@ -820,50 +860,9 @@ export default function SangbujangLanding() {
       </section>
 
       {/* ────────────────────────────
-          YOUTUBE
-         ──────────────────────────── */}
-      <section
-        className="px-5 py-14 text-white md:py-20"
-        style={{ background: "#1a1a1a" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p
-              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
-              style={{ color: "rgba(255,255,255,0.35)" }}>
-              YOUTUBE
-            </p>
-            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
-              실제 시공 영상을 확인하세요
-            </h2>
-          </FadeIn>
-
-          <FadeIn delay={100}>
-            {/* TODO: 실제 유튜브 영상 iframe 교체 */}
-            <div className="flex aspect-video flex-col items-center justify-center rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div
-                className="mb-4 flex h-14 w-14 items-center justify-center rounded-full md:h-20 md:w-20"
-                style={{ background: "rgba(255,255,255,0.1)" }}>
-                <span className="ml-1 text-[28px] md:text-[36px]">▶</span>
-              </div>
-              <p
-                className="text-[14px] font-semibold md:text-[16px]"
-                style={{ color: "rgba(255,255,255,0.45)" }}>
-                유튜브 영상 임베드 영역
-              </p>
-              <p
-                className="mt-1 text-[11px] md:text-[13px]"
-                style={{ color: "rgba(255,255,255,0.25)" }}>
-                상부장 수리 실제 현장 시공 과정
-              </p>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* ────────────────────────────
           REVIEWS — 후기
          ──────────────────────────── */}
-      <section className="px-5 py-14 md:py-20">
+      {/* <section className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
@@ -908,7 +907,7 @@ export default function SangbujangLanding() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ────────────────────────────
           FAQ
