@@ -586,6 +586,11 @@ export default function SangbujangLanding() {
                   title: "옆부분 뜸",
                   desc: "측면이 벌어지며\n흔들리는 상태",
                 },
+                {
+                  img: "/images/symptom-4.jpg",
+                  title: "상부장 추락",
+                  desc: "싱크대 상부장이\n떨어진 상태",
+                },
               ].map((s, i) => (
                 <div
                   key={i}
@@ -620,20 +625,21 @@ export default function SangbujangLanding() {
       <section
         className="px-5 py-12 text-center text-white md:py-20"
         style={{
-          background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)",
+          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
         }}>
         <FadeIn>
+          <p className="text-[100px]">🥇🏆</p>
           <p
-            className="mb-2 text-[13px] font-semibold tracking-widest md:text-[14px]"
-            style={{ color: "rgba(255,255,255,0.4)" }}>
-            TRACK RECORD
+            className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
+            style={{ color: "rgb(255, 255, 255)" }}>
+            미친 자신감의 이유
           </p>
-          <p className="text-[44px] font-black tracking-tight md:text-[60px]">
-            <span style={{ color: "#ffe066" }}>500</span>건+
+          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
+            <span style={{ color: "#ffffff" }}>500</span>건+
           </p>
           <p
-            className="mt-1 text-[15px] font-semibold md:text-[17px]"
-            style={{ color: "rgba(255,255,255,0.6)" }}>
+            className="mt-1 text-[25px] font-semibold md:text-[35px]"
+            style={{ color: "rgba(255, 255, 255, 0.79)" }}>
             매년 상부장 수리 시공 실적
           </p>
 
@@ -643,11 +649,13 @@ export default function SangbujangLanding() {
               { n: "3년", l: "무상 A/S" },
               { n: "4.9", l: "고객 평점" },
             ].map((s, i) => (
-              <div key={i} className="text-center">
+              <div
+                key={i}
+                className="text-center bg-white/20 px-4 py-3 rounded-lg">
                 <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
                 <p
-                  className="mt-1 text-[11px] font-semibold md:text-[13px]"
-                  style={{ color: "rgba(255,255,255,0.45)" }}>
+                  className="mt-1 text-[18px] font-semibold md:text-[22px]"
+                  style={{ color: "rgba(255,255,255,0.79)" }}>
                   {s.l}
                 </p>
               </div>
