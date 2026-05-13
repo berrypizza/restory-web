@@ -315,7 +315,7 @@ export default function SangbujangLanding() {
                 </div>
                 <div className="p-4 md:p-6">
                   <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 강동구 김현*
+                    서울 영등포구 김현*
                   </p>
                   <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
                     사장님이 친절하시고 직원분들이
@@ -342,17 +342,16 @@ export default function SangbujangLanding() {
                 </div>
                 <div className="p-4 md:p-6">
                   <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    대구 달성군 이승*
+                    서울 강서구 이승*
                   </p>
                   <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    다테일하게 신경 써주시는
+                    디테일하게 신경 써주시는
                     <br />
                     곳이에요!
                   </p>
                   <p className="mt-2 text-[11px] leading-[1.6] text-neutral-500 md:text-[13px]">
-                    집을길때 그냥 신발 신고 작업하는게 아니라, 덧신을 신고
-                    하시고, 주방 이모님도 꼼꼼하게 그릇 정리해주시는데 정말
-                    좋았어요!
+                    상부장이 떨어졌는데, 합판으로 튼튼하게 고쳐주셨어요. 작업
+                    후에도 먼지 하나 없이 깨끗하게 청소해주셔서 감동했습니다.
                   </p>
                 </div>
               </div>
