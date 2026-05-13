@@ -92,33 +92,6 @@ const SYMPTOMS = [
   },
 ];
 
-const PROCESS = [
-  {
-    step: "01",
-    title: "사진 접수",
-    desc: "카카오톡 또는 사진접수로\n상부장 사진 1~3장 보내기",
-    icon: "📷",
-  },
-  {
-    step: "02",
-    title: "상태 확인",
-    desc: "수리 가능 여부 +\n예상 비용 범위 안내",
-    icon: "🔍",
-  },
-  {
-    step: "03",
-    title: "방문 일정",
-    desc: "우선 배정으로\n빠른 방문 일정 확정",
-    icon: "📅",
-  },
-  {
-    step: "04",
-    title: "현장 시공",
-    desc: "보양 → 수리 → 집진기 청소\n→ 완료 확인",
-    icon: "🔧",
-  },
-];
-
 const REVIEWS = [
   {
     name: "김**",
@@ -510,6 +483,9 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
+      {/* ────────────────────────────
+          비교표 (아정당 스타일)
+         ──────────────────────────── */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -592,6 +568,10 @@ export default function SangbujangLanding() {
           </FadeIn>
         </div>
       </section>
+
+      {/* ────────────────────────────
+          본사 책임 AS 이미지
+         ──────────────────────────── */}
       <section>
         <Image
           src="/images/safe.png"
@@ -604,7 +584,7 @@ export default function SangbujangLanding() {
       </section>
 
       {/* ────────────────────────────
-          3 SYMPTOMS — SELF CHECK
+          3 SYMPTOMS — SELF CHECK (사진 카드)
          ──────────────────────────── */}
       <section className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
@@ -619,33 +599,47 @@ export default function SangbujangLanding() {
             </h2>
           </FadeIn>
 
-          <div className="mt-8 flex flex-col gap-3">
-            {SYMPTOMS.map((s, i) => (
-              <FadeIn key={i} delay={i * 100}>
+          <FadeIn delay={120}>
+            <div className="mt-8 grid grid-cols-3 gap-3">
+              {[
+                {
+                  img: "/images/symptom-1.jpg",
+                  title: "장 안쪽 터짐",
+                  desc: "장 내부 pb 프레임이\n부서지는 상태",
+                },
+                {
+                  img: "/images/symptom-2.jpg",
+                  title: "윗부분 처짐",
+                  desc: "상부장 전체가 아래로\n내려앉는 증상",
+                },
+                {
+                  img: "/images/symptom-3.jpg",
+                  title: "옆부분 뜸",
+                  desc: "측면이 벌어지며\n흔들리는 상태",
+                },
+              ].map((s, i) => (
                 <div
-                  className="relative flex items-center gap-4 overflow-hidden rounded-2xl border border-[#e0e8f5] p-5"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #f8faff 0%, #eef3ff 100%)",
-                  }}>
-                  <div className="flex h-[52px] w-[52px] flex-shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
-                    {s.icon}
+                  key={i}
+                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                  <div className="aspect-square overflow-hidden bg-neutral-100">
+                    <Image
+                      src={s.img}
+                      alt={s.title}
+                      width={400}
+                      height={400}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[17px] font-extrabold">{s.title}</p>
-                    <p className="mt-1 text-[13px] font-medium text-neutral-500">
+                  <div className="p-4">
+                    <p className="text-[16px] font-extrabold">{s.title}</p>
+                    <p className="mt-1.5 whitespace-pre-line text-[12px] leading-[1.6] text-neutral-500">
                       {s.desc}
                     </p>
                   </div>
-                  <div
-                    className="absolute right-4 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-xs font-extrabold text-white"
-                    style={{ background: i === 1 ? "#e53e3e" : "#1a5cff" }}>
-                    !
-                  </div>
                 </div>
-              </FadeIn>
-            ))}
-          </div>
+              ))}
+            </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -721,41 +715,83 @@ export default function SangbujangLanding() {
       </section>
 
       {/* ────────────────────────────
-          PROCESS — 절차
+          PROCESS — 수리절차 (아정당 스타일 가로 4단계)
          ──────────────────────────── */}
-      <section className="px-5 py-14 md:py-20">
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f7f9fd" }}>
         <div className="mx-auto max-w-3xl">
           <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff]">
-              PROCESS
-            </p>
-            <h2 className="mb-8 text-[22px] font-black leading-[1.4] md:text-[28px]">
-              처음부터 끝까지 빠르게
-            </h2>
+            <div className="text-center">
+              <p className="text-[18px] font-semibold text-neutral-500">
+                처음부터 끝까지 쉽고 빠르게
+              </p>
+              <h2 className="mt-2 text-[26px] font-black md:text-[32px]">
+                리스토리 <span className="text-[#1a5cff]">수리절차</span>
+              </h2>
+            </div>
           </FadeIn>
 
-          <div className="grid grid-cols-2 gap-3">
-            {PROCESS.map((p, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div
-                  className="flex min-h-[148px] flex-col rounded-2xl border border-[#e0e8f5] p-5"
-                  style={{
-                    background: "linear-gradient(145deg, #f8faff, #eef3ff)",
-                  }}>
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="text-[28px] font-black text-[#1a5cff] opacity-20">
-                      {p.step}
-                    </span>
-                    <span className="text-[22px]">{p.icon}</span>
+          <FadeIn delay={120}>
+            <div className="mt-12 grid grid-cols-4 gap-3 text-center">
+              {[
+                {
+                  icon: "/images/icon_step1.png",
+                  step: "01",
+                  title: "사진 접수",
+                  desc: "카카오톡 또는\n사진접수",
+                },
+                {
+                  icon: "/images/icon_step2.png",
+                  step: "02",
+                  title: "상태 확인",
+                  desc: "수리 가능 여부\n비용 안내",
+                },
+                {
+                  icon: "/images/icon_step3.png",
+                  step: "03",
+                  title: "출장 방문",
+                  desc: "우선 배정\n빠른 방문",
+                },
+                {
+                  icon: "/images/icon_step4.png",
+                  step: "04",
+                  title: "시공",
+                  desc: "보양→수리→\n청소→완료",
+                },
+              ].map((p, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <div className="flex h-[72px] w-[72px] items-center justify-center">
+                    <Image
+                      src={p.icon}
+                      alt={p.title}
+                      width={72}
+                      height={72}
+                      className="h-[72px] w-[72px] rounded-full border border-neutral-200 object-contain"
+                    />
                   </div>
-                  <p className="text-[16px] font-extrabold">{p.title}</p>
-                  <p className="mt-2 whitespace-pre-line text-[12px] leading-[1.6] text-neutral-500">
+                  <p className="mt-5 text-[22px] font-black text-[#1a5cff]">
+                    {p.step}
+                  </p>
+                  <p className="mt-2 text-[16px] font-extrabold">{p.title}</p>
+                  <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.6] text-neutral-400">
                     {p.desc}
                   </p>
                 </div>
-              </FadeIn>
-            ))}
-          </div>
+              ))}
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={200}>
+            <div className="mt-10 flex justify-center">
+              <a
+                href={PHONE}
+                className="flex items-center justify-center gap-2 rounded-full px-10 py-4 text-[17px] font-extrabold text-white"
+                style={{ background: "#1a5cff" }}>
+                📞 간편접수 010-9127-3024
+              </a>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
