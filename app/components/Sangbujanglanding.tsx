@@ -628,7 +628,7 @@ export default function SangbujangLanding() {
           background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
         }}>
         <FadeIn>
-          <p className="text-[100px]">🥇🏆</p>
+          <p className="text-[100px]">🥇</p>
           <p
             className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
             style={{ color: "rgb(255, 255, 255)" }}>
