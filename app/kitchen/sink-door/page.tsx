@@ -1,17 +1,10 @@
-import { notFound } from "next/navigation";
-import { ServiceLandingPage } from "@/app/components/CategoryPages";
-import { getService } from "@/lib/site-config";
+import Sinkdoorreformlanding from "@/app/components/landing/Sinkdoorreformlanding";
 
-export async function generateMetadata() {
-  const service = getService("kitchen" as any, "sink-door");
-  return {
-    title: service ? `${service.title} | Re'Story` : "Re'Story",
-    description: service?.description,
-  };
-}
+export const metadata = {
+  title: "싱크대 문짝 리폼 | Re'Story",
+  description: "문짝 교체, 사진 한 장이면 교체 견적 보내드립니다.",
+};
 
 export default function Page() {
-  const service = getService("kitchen" as any, "sink-door");
-  if (!service) return notFound();
-  return <ServiceLandingPage service={service} />;
+  return <Sinkdoorreformlanding />;
 }

@@ -1,4 +1,4 @@
-import SangbujangLanding from "@/app/components/Sangbujanglanding";
+import SangbujangLanding from "@/app/components/landing/Sangbujanglanding";
 
 export const metadata = {
   title: "싱크대 상부장 수리 | Re'Story",
