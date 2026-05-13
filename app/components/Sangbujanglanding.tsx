@@ -218,10 +218,10 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="text-center">
-              <p className="text-[18px] font-black text-neutral-500 md:text-[20px]">
+              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
                 걱정만 하시느냐 답답하셨죠?
               </p>
-              <h2 className="mt-2 text-[22px] font-black leading-[1.35] md:text-[30px]">
+              <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
                 AS 걱정 없는 시원한 수리
               </h2>
             </div>
@@ -231,7 +231,7 @@ export default function SangbujangLanding() {
             <div className="mx-auto my-8 flex flex-col items-center md:my-10">
               <div className="h-10 w-px bg-neutral-300" />
               <div className="mt-6 text-center">
-                <p className="text-[20px] font-black md:text-[26px]">
+                <p className="text-[30px] font-black md:text-[45px]">
                   본사 책임 제도로 스트레스
                 </p>
                 <p
@@ -281,12 +281,14 @@ export default function SangbujangLanding() {
               <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
                 ★★★★★
               </p>
-              <h2 className="mt-4 text-[22px] font-black leading-[1.4] md:text-[30px]">
+              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
                 실제 고객님들이 인정한
                 <br />
-                <span className="text-[26px] md:text-[34px]">솔직후기</span>
+                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
+                  솔직후기
+                </span>
               </h2>
-              <p className="mt-3 text-[15px] font-semibold text-neutral-500 md:text-[16px]">
+              <p className="mt-3 text-[22px] font-medium text-neutral-600 md:text-[22px]">
                 평점 5점 만점에
               </p>
               <p
@@ -322,7 +324,7 @@ export default function SangbujangLanding() {
                     <br />
                     엄청 열심히 일해주십니다
                   </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-500 md:text-[13px]">
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
                     현장에서 여러번 가구 배치를 요청드렸는데 불편해한 기색없이
                     운반해주셔서 감사합니다. 반장하세요!
                   </p>
@@ -349,7 +351,7 @@ export default function SangbujangLanding() {
                     <br />
                     곳이에요!
                   </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-500 md:text-[13px]">
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
                     상부장이 떨어졌는데, 합판으로 튼튼하게 고쳐주셨어요. 작업
                     후에도 먼지 하나 없이 깨끗하게 청소해주셔서 감동했습니다.
                   </p>
@@ -369,11 +371,11 @@ export default function SangbujangLanding() {
         <FadeIn>
           <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
           <p
-            className="mt-4 text-[16px] font-semibold md:text-[18px]"
+            className="mt-4 text-[30px] font-semibold md:text-[45px]"
             style={{ color: "rgba(255,255,255,0.8)" }}>
             왜 유명하냐고요?
           </p>
-          <h2 className="mt-2 text-[24px] font-black md:text-[32px]">
+          <h2 className="mt-2 text-[40px] font-black md:text-[55px]">
             리스토리 수리는 특별합니다!
           </h2>
         </FadeIn>
@@ -387,7 +389,7 @@ export default function SangbujangLanding() {
           <FadeIn>
             <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
               <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-500 md:text-[14px]">
+                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
                   Special 01
                 </span>
                 <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
@@ -417,7 +419,7 @@ export default function SangbujangLanding() {
           <FadeIn>
             <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
               <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-500 md:text-[14px]">
+                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
                   Special 02
                 </span>
                 <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
@@ -458,10 +460,10 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="text-center">
-              <p className="text-[18px] font-black text-neutral-500 md:text-[20px]">
+              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
                 수리 고수들만 모인
               </p>
-              <h2 className="mt-1 text-[22px] font-black md:text-[28px]">
+              <h2 className="mt-1 text-[30px] font-black md:text-[45px]">
                 리스토리의 자부심
               </h2>
               <p
@@ -514,7 +516,7 @@ export default function SangbujangLanding() {
               ].map((row, i) => (
                 <React.Fragment key={i}>
                   <div className="border-t border-neutral-200 bg-white px-4 py-5 text-center md:py-6">
-                    <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.5] text-neutral-500 md:text-[16px]">
+                    <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.5] text-neutral-600 md:text-[16px]">
                       {row.a}
                     </p>
                   </div>
@@ -601,7 +603,7 @@ export default function SangbujangLanding() {
                     <p className="text-[16px] font-extrabold md:text-[18px]">
                       {s.title}
                     </p>
-                    <p className="mt-1.5 whitespace-pre-line text-[12px] leading-[1.6] text-neutral-500 md:text-[14px]">
+                    <p className="mt-1.5 whitespace-pre-line text-[12px] leading-[1.6] text-neutral-600 md:text-[14px]">
                       {s.desc}
                     </p>
                   </div>
@@ -694,7 +696,7 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="text-center">
-              <p className="text-[18px] font-semibold text-neutral-500 md:text-[20px]">
+              <p className="text-[18px] font-semibold text-neutral-600 md:text-[20px]">
                 처음부터 끝까지 쉽고 빠르게
               </p>
               <h2 className="mt-2 text-[26px] font-black md:text-[34px]">
@@ -747,7 +749,7 @@ export default function SangbujangLanding() {
                   <p className="mt-2 text-[16px] font-extrabold md:text-[18px]">
                     {p.title}
                   </p>
-                  <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.6] text-neutral-400 md:text-[14px]">
+                  <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.6] text-neutral-600 md:text-[14px]">
                     {p.desc}
                   </p>
                 </div>
@@ -782,7 +784,7 @@ export default function SangbujangLanding() {
             <h2 className="text-[20px] font-black leading-[1.4] md:text-[26px]">
               방문 시 함께 가능합니다
             </h2>
-            <p className="mb-7 mt-1 text-[13px] text-neutral-500 md:text-[15px]">
+            <p className="mb-7 mt-1 text-[13px] text-neutral-600 md:text-[15px]">
               추가 출장비 없이 한 번에 해결
             </p>
           </FadeIn>
@@ -798,7 +800,7 @@ export default function SangbujangLanding() {
                     <p className="text-[15px] font-extrabold md:text-[17px]">
                       {e.title}
                     </p>
-                    <p className="mt-0.5 text-[12px] text-neutral-500 md:mt-1.5 md:text-[14px]">
+                    <p className="mt-0.5 text-[12px] text-neutral-600 md:mt-1.5 md:text-[14px]">
                       {e.desc}
                     </p>
                   </div>
