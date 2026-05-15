@@ -228,6 +228,95 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ────────────────────────────
+          PHOTO REVIEWS — 솔직후기
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f5f5f5" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
+                ★★★★★
+              </p>
+              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
+                실제 고객님들이 인정한
+                <br />
+                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
+                  솔직후기
+                </span>
+              </h2>
+              <p className="mt-3 text-[22px] font-medium text-neutral-600">
+                평점 5점 만점에
+              </p>
+              <p
+                className="mt-1 text-[40px] font-black md:text-[52px]"
+                style={{ color: "#1a5cff" }}>
+                4.9
+                <span className="text-[20px] font-bold text-neutral-400 md:text-[24px]">
+                  점
+                </span>
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={150}>
+            <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
+              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
+                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                  <Image
+                    src="/images/door/review-1.jpg"
+                    alt="도어 리폼 후기 1"
+                    width={400}
+                    height={300}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4 md:p-6">
+                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
+                    서울 마포구 정**
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
+                    문짝만 바꿨는데
+                    <br />새 주방 같아요!
+                  </p>
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
+                    20년 된 아파트인데 싱크대가 완전 새것처럼 됐어요. 색상도 딱
+                    맞게 해주셔서 감동!
+                  </p>
+                </div>
+              </div>
+              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
+                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                  <Image
+                    src="/images/door/review-2.jpg"
+                    alt="도어 리폼 후기 2"
+                    width={400}
+                    height={300}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4 md:p-6">
+                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
+                    경기 수원시 한**
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
+                    비용 1/5로
+                    <br />
+                    이렇게 달라질 줄이야
+                  </p>
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
+                    전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요.
+                    결과물도 완벽합니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ────────────────────────────
           WHY DOOR — 왜 문짝만 교체하나요?
          ──────────────────────────── */}
       <section
@@ -673,95 +762,6 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ────────────────────────────
-          PHOTO REVIEWS — 솔직후기
-         ──────────────────────────── */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f5f5f5" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
-                ★★★★★
-              </p>
-              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
-                실제 고객님들이 인정한
-                <br />
-                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
-                  솔직후기
-                </span>
-              </h2>
-              <p className="mt-3 text-[22px] font-medium text-neutral-600">
-                평점 5점 만점에
-              </p>
-              <p
-                className="mt-1 text-[40px] font-black md:text-[52px]"
-                style={{ color: "#1a5cff" }}>
-                4.9
-                <span className="text-[20px] font-bold text-neutral-400 md:text-[24px]">
-                  점
-                </span>
-              </p>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={150}>
-            <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/door/review-1.jpg"
-                    alt="도어 리폼 후기 1"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 마포구 정**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    문짝만 바꿨는데
-                    <br />새 주방 같아요!
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    20년 된 아파트인데 싱크대가 완전 새것처럼 됐어요. 색상도 딱
-                    맞게 해주셔서 감동!
-                  </p>
-                </div>
-              </div>
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/door/review-2.jpg"
-                    alt="도어 리폼 후기 2"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    경기 수원시 한**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    비용 1/5로
-                    <br />
-                    이렇게 달라질 줄이야
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요.
-                    결과물도 완벽합니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* ────────────────────────────
           PROCESS — 시공절차
          ──────────────────────────── */}
       <section
@@ -985,7 +985,7 @@ export default function SinkdoorReformLanding() {
         }}>
         <FadeIn>
           <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            싱크대 문짝 교체, 리폼
+            싱크대 문짝 리폼
             <br />
             <span style={{ color: "#ffe066" }}>가장 저렴하게</span> 주방을
             바꾸는 방법
