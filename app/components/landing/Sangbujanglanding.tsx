@@ -210,50 +210,33 @@ export default function SangbujangLanding() {
       </section>
 
       {/* ────────────────────────────
-          TRUST — 증명서 / 자격증
-         ──────────────────────────── */}
+                TRUST — 증명서 / 자격증
+               ──────────────────────────── */}
       <section
         className="px-5 py-14 md:py-20"
-        style={{ background: "#fafafa" }}>
+        style={{ background: "#f5f5f5" }}>
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="text-center">
               <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                걱정만 하시느냐 답답하셨죠?
+                걱정 없이 맡기세요
               </p>
               <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                AS 걱정 없는 시원한 수리
+                AS 걱정 없는 확실한 시공
               </h2>
             </div>
           </FadeIn>
 
-          <FadeIn delay={100}>
-            <div className="mx-auto my-8 flex flex-col items-center md:my-10">
-              <div className="h-10 w-px bg-neutral-300" />
-              <div className="mt-6 text-center">
-                <p className="text-[30px] font-black md:text-[45px]">
-                  본사 책임 제도로 스트레스
-                </p>
-                <p
-                  className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[26px]"
-                  style={{ background: "#1f66ff", color: "#ffffff" }}>
-                  싹- 다 잊으세요!
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-
           <FadeIn delay={200}>
-            <div className="grid grid-cols-3 gap-3 md:gap-5">
+            <div className="flex mt-10 justify-center gap-5 md:gap-10   ">
               {[
-                { src: "/images/cert-1.png", alt: "가입증명서" },
-                { src: "/images/cert-2.png", alt: "보험증서" },
-                { src: "/images/cert-3.png", alt: "사업자등록증" },
+                { src: "/images/cert-2.png", alt: "생산물배상책임 보험증서" },
+                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
               ].map((cert, i) => (
                 <div
                   key={i}
                   className="overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
+                  <div className=" max-w-[310px] flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
                     <Image
                       src={cert.src}
                       alt={cert.alt}
@@ -262,6 +245,9 @@ export default function SangbujangLanding() {
                       className="h-full w-full object-contain"
                     />
                   </div>
+                  <p className="bg-neutral-100 pb-[18px] text-center text-[18px] font-bold text-neutral-600 md:text-[24px]">
+                    {cert.alt}
+                  </p>
                 </div>
               ))}
             </div>

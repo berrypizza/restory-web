@@ -400,16 +400,15 @@ export default function RestaurantChairLanding() {
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className="mt-10 grid grid-cols-3 gap-3 md:gap-5">
+            <div className="flex mt-10 justify-center gap-5 md:gap-10   ">
               {[
-                { src: "/images/cert-1.png", alt: "가입증명서" },
-                { src: "/images/cert-2.png", alt: "보험증서" },
-                { src: "/images/cert-3.png", alt: "사업자등록증" },
+                { src: "/images/cert-2.png", alt: "생산물배상책임 보험증서" },
+                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
               ].map((cert, i) => (
                 <div
                   key={i}
                   className="overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
+                  <div className=" max-w-[310px] flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
                     <Image
                       src={cert.src}
                       alt={cert.alt}
@@ -418,6 +417,9 @@ export default function RestaurantChairLanding() {
                       className="h-full w-full object-contain"
                     />
                   </div>
+                  <p className="bg-neutral-100 pb-[18px] text-center text-[18px] font-bold text-neutral-600 md:text-[24px]">
+                    {cert.alt}
+                  </p>
                 </div>
               ))}
             </div>

@@ -387,8 +387,8 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ────────────────────────────
-          TRUST — 증명서 / 자격증
-         ──────────────────────────── */}
+                TRUST — 증명서 / 자격증
+               ──────────────────────────── */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -399,22 +399,21 @@ export default function SinkdoorReformLanding() {
                 걱정 없이 맡기세요
               </p>
               <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                AS 걱정 없는 시원한 시공
+                AS 걱정 없는 확실한 시공
               </h2>
             </div>
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className="mt-10 grid grid-cols-3 gap-3 md:gap-5">
+            <div className="flex mt-10 justify-center gap-5 md:gap-10   ">
               {[
-                { src: "/images/cert-1.png", alt: "가입증명서" },
-                { src: "/images/cert-2.png", alt: "보험증서" },
-                { src: "/images/cert-3.png", alt: "사업자등록증" },
+                { src: "/images/cert-2.png", alt: "생산물배상책임 보험증서" },
+                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
               ].map((cert, i) => (
                 <div
                   key={i}
                   className="overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
+                  <div className=" max-w-[310px] flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
                     <Image
                       src={cert.src}
                       alt={cert.alt}
@@ -423,13 +422,15 @@ export default function SinkdoorReformLanding() {
                       className="h-full w-full object-contain"
                     />
                   </div>
+                  <p className="bg-neutral-100 pb-[18px] text-center text-[18px] font-bold text-neutral-600 md:text-[24px]">
+                    {cert.alt}
+                  </p>
                 </div>
               ))}
             </div>
           </FadeIn>
         </div>
       </section>
-
       {/* ────────────────────────────
           SPECIALS — 왜 리스토리인가요?
          ──────────────────────────── */}
