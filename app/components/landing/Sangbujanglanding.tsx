@@ -1056,7 +1056,7 @@ export default function SangbujangLanding() {
         href={KAKAO_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_20px_0px_rgba(26,92,255,0.3)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4 md:shadow-[0px_4px_20px_0px_rgba(26,92,255,0.4)]"
+        className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_20px_0px_rgba(255,255,255,0.5)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4 md:shadow-[0px_4px_20px_0px_rgba(26,92,255,0.4)]"
         style={{
           background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
           opacity: showSticky ? 1 : 0,
