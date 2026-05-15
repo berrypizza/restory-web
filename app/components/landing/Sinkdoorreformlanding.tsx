@@ -1055,13 +1055,13 @@ export default function SinkdoorReformLanding() {
         }}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.06),0px_4px_16px_0px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           aria-label="맨 위로">
           <span className="text-[18px] text-neutral-500 md:text-[20px]">↑</span>
         </button>
         <a
           href={PHONE}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1a5cff] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.06),0px_4px_16px_0px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1a5cff] shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           aria-label="전화 문의">
           <span className="text-[20px] md:text-[22px]">📞</span>
         </a>
@@ -1069,7 +1069,7 @@ export default function SinkdoorReformLanding() {
           href={KAKAO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-12 w-12 items-center justify-center rounded-full shadow-[0px_1px_2px_0px_rgba(0,0,0,0.06),0px_4px_16px_0px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          className="flex h-12 w-12 items-center justify-center rounded-full shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           style={{ background: "#FEE500" }}
           aria-label="카카오톡 상담">
           <span className="text-[20px] md:text-[22px]">💬</span>
@@ -1081,16 +1081,15 @@ export default function SinkdoorReformLanding() {
         href={KAKAO_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_20px_0px_rgba(255,255,255,0.5)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4 md:shadow-[0px_4px_20px_0px_rgba(26,92,255,0.4)]"
+        className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4"
         style={{
           background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
           opacity: showSticky ? 1 : 0,
           transform: showSticky ? "translateY(0)" : "translateY(100%)",
-          pointerEvents: showSticky ? "auto" : "auto",
+          pointerEvents: showSticky ? "auto" : "none",
         }}>
         😊 카톡으로 무료 견적 받기 &gt;
       </a>
-
       <div className="h-20" />
     </main>
   );
