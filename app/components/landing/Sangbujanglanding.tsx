@@ -1015,41 +1015,56 @@ export default function SangbujangLanding() {
       </section>
 
       {/* ────────────────────────────
-          STICKY BOTTOM BAR
+          FLOATING CTA — 아정당 스타일
+          모바일: 하단 풀너비 pill + 오른쪽 FAB
+          데스크탑: 하단 중앙 pill + 오른쪽 FAB
          ──────────────────────────── */}
+      {/* 오른쪽 세로 FAB 스택 (항상 보임) */}
       <div
-        className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-3xl border-t border-neutral-200 px-4 pb-4 pt-3 transition-all duration-300"
+        className="fixed right-4 z-50 flex flex-col gap-3 transition-all duration-300 md:right-6"
         style={{
-          background: "rgba(255,255,255,0.96)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
+          bottom: showSticky ? 80 : 32,
           opacity: showSticky ? 1 : 0,
-          transform: showSticky ? "translateY(0)" : "translateY(100%)",
+          transform: showSticky ? "translateY(0)" : "translateY(20px)",
           pointerEvents: showSticky ? "auto" : "none",
         }}>
-        <div className="flex gap-2">
-          <a
-            href={PHONE}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1a5cff] px-4 py-3.5 text-[15px] font-extrabold text-white md:py-4 md:text-[16px]">
-            📞 전화
-          </a>
-          <a
-            href={KAKAO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-3.5 text-[15px] font-extrabold md:py-4 md:text-[16px]"
-            style={{ background: "#FEE500", color: "#1a1a1a" }}>
-            💬 카카오톡
-          </a>
-          <a
-            href={PHOTO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center rounded-xl bg-neutral-100 px-4 py-3.5 text-[15px] font-extrabold text-neutral-900 md:py-4 md:text-[16px]">
-            📷
-          </a>
-        </div>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.06),0px_4px_16px_0px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          aria-label="맨 위로">
+          <span className="text-[18px] text-neutral-500 md:text-[20px]">↑</span>
+        </button>
+        <a
+          href={PHONE}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1a5cff] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.06),0px_4px_16px_0px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          aria-label="전화 문의">
+          <span className="text-[20px] md:text-[22px]">📞</span>
+        </a>
+        <a
+          href={KAKAO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-12 w-12 items-center justify-center rounded-full shadow-[0px_1px_2px_0px_rgba(0,0,0,0.06),0px_4px_16px_0px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          style={{ background: "#FEE500" }}
+          aria-label="카카오톡 상담">
+          <span className="text-[20px] md:text-[22px]">💬</span>
+        </a>
       </div>
+
+      {/* 하단 중앙 pill CTA */}
+      <a
+        href={KAKAO_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_20px_0px_rgba(26,92,255,0.3)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4 md:shadow-[0px_4px_20px_0px_rgba(26,92,255,0.4)]"
+        style={{
+          background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
+          opacity: showSticky ? 1 : 0,
+          transform: showSticky ? "translateY(0)" : "translateY(100%)",
+          pointerEvents: showSticky ? "auto" : "auto",
+        }}>
+        😊 카톡으로 무료 견적 받기 &gt;
+      </a>
 
       {/* spacer for sticky bar */}
       <div className="h-20" />
