@@ -112,7 +112,7 @@ const FAQ = [
   },
   {
     q: "시공 시간은 얼마나 걸리나요?",
-    a: "문짝 교체 기준 약 2~4시간 소요됩니다. 당일 시공 완료되며, 바로 사용 가능합니다.",
+    a: "문짝 교체 기준 약 1~2시간 소요됩니다. 당일 시공 완료되며, 바로 사용 가능합니다.",
   },
   {
     q: "기존 싱크대 색상과 맞출 수 있나요?",
@@ -482,12 +482,12 @@ export default function SinkdoorReformLanding() {
               </div>
 
               {[
-                { a: "저가 필름 사용", b: "LG·현대 고급 필름 사용" },
+                { a: "일반 엣지", b: "하이 조인트 엣지" },
                 {
                   a: "기존 문짝 위에 덧붙이기",
                   b: "문짝 자체를 새것으로 교체",
                 },
-                { a: "색상 선택 제한적", b: "100+ 색상·패턴 선택 가능" },
+                { a: "~E1 레벨 보드", b: "친환경 E0~ 레벨 보드" },
                 { a: "A/S 1년 또는 없음", b: "무상 A/S 3년 보장" },
               ].map((row, i) => (
                 <React.Fragment key={i}>
@@ -517,7 +517,7 @@ export default function SinkdoorReformLanding() {
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
         <Image
-          src="/images/safe.png"
+          src="/images/door/safe.png"
           alt="리스토리 본사 책임 AS"
           width={1080}
           height={1350}
@@ -556,7 +556,7 @@ export default function SinkdoorReformLanding() {
                 },
                 {
                   img: "/images/door/symptom-3.jpg",
-                  title: "문짝 파손·깨짐",
+                  title: "문짝 파손",
                   desc: "충격이나 습기로\n문짝이 파손된 상태",
                 },
                 {
@@ -612,7 +612,8 @@ export default function SinkdoorReformLanding() {
                 <span className="text-[#e53e3e]">당일 시공</span> 가능합니다
               </h3>
               <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
-                사진 접수 → 색상 선택 → 당일 방문 시공.
+                사진 접수 → 실측 방문 → 샘플 고르신 후 3일 후에 → 당일 방문
+                시공.
                 <br />
                 <strong
                   className="text-[18px] font-bold md:text-[22px]"
@@ -790,14 +791,14 @@ export default function SinkdoorReformLanding() {
                 {
                   icon: "/images/icon_step2.png",
                   step: "02",
-                  title: "색상 선택",
-                  desc: "100+ 색상 중\n원하는 색 선택",
+                  title: "실측 방문",
+                  desc: "방문해서 실측\n샘플 눈으로 보고 선택",
                 },
                 {
                   icon: "/images/icon_step3.png",
                   step: "03",
                   title: "방문 시공",
-                  desc: "우선 배정\n빠른 방문",
+                  desc: "실측 후 영업일 3일\n이내 방문 시공",
                 },
                 {
                   icon: "/images/icon_step4.png",
@@ -984,9 +985,10 @@ export default function SinkdoorReformLanding() {
         }}>
         <FadeIn>
           <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            싱크대 문짝, 지금이
+            싱크대 문짝 교체, 리폼
             <br />
-            <span style={{ color: "#ffe066" }}>가장 저렴한</span> 타이밍입니다
+            <span style={{ color: "#ffe066" }}>가장 저렴하게</span> 주방을
+            바꾸는 방법
           </h2>
           <p
             className="mt-3 text-[14px] leading-[1.7] md:text-[17px]"
