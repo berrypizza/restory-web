@@ -112,7 +112,7 @@ const FAQ = [
   },
   {
     q: "의자 수량이 많으면 시간이 오래 걸리나요?",
-    a: "의자 1개당 약 15~20분 소요됩니다. 30개 기준 반나절이면 완료됩니다.",
+    a: "의자 1개당 약 5~15분 소요됩니다. 대량 작업시 팀이 움직입니다.",
   },
   {
     q: "원하는 색상·재질로 선택 가능한가요?",
@@ -120,7 +120,7 @@ const FAQ = [
   },
   {
     q: "A/S는 어떻게 되나요?",
-    a: "시공 후 1년간 무상 A/S를 제공합니다. 박음질 풀림, 들뜸 등 무상으로 재시공해드립니다.",
+    a: "시공 완료 후 미흡한 부분을 100% 무상으로 재시공해드립니다.",
   },
 ];
 
@@ -290,7 +290,7 @@ export default function RestaurantChairLanding() {
               <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
                 <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
                   <Image
-                    src="/images/chair/review-2.jpg"
+                    src="/images/chair/review-4.jpg"
                     alt="의자 교체 후기 2"
                     width={400}
                     height={300}
@@ -299,7 +299,7 @@ export default function RestaurantChairLanding() {
                 </div>
                 <div className="p-4 md:p-6">
                   <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    경기 성남시 박**
+                    부천시 박**
                   </p>
                   <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
                     영업 끝나고 밤에 와서
@@ -354,8 +354,8 @@ export default function RestaurantChairLanding() {
           <FadeIn delay={200}>
             <div className="grid grid-cols-2 gap-3 md:gap-5">
               {[
-                { img: "/images/chair/before-after-1.jpg", label: "교체 전" },
-                { img: "/images/chair/before-after-2.jpg", label: "교체 후" },
+                { img: "/images/chair/before-after-3.jpg", label: "교체 전" },
+                { img: "/images/chair/before-after-4.jpg", label: "교체 후" },
               ].map((item, i) => (
                 <div
                   key={i}
@@ -462,7 +462,7 @@ export default function RestaurantChairLanding() {
               </div>
               <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
                 <Image
-                  src="/images/special-01.png"
+                  src="/images/chair/special-03.png"
                   alt="본사 안심 보상제"
                   width={600}
                   height={400}
@@ -566,10 +566,13 @@ export default function RestaurantChairLanding() {
               </div>
 
               {[
-                { a: "저가 인조가죽 사용", b: "고급 인조가죽 사용" },
-                { a: "기존 천 위에 덧씌우기", b: "기존 천 제거 후 새로 시공" },
+                {
+                  a: "저가 인조가죽 사용",
+                  b: "고급 인조가죽 사용(미라노, 베니스 등)",
+                },
+                { a: "가죽 샘플 100개 미만", b: "가죽 샘플 1000+" },
                 { a: "스테이플러만 사용", b: "전문 타카+마감 처리" },
-                { a: "A/S 없음", b: "무상 A/S 1년 보장" },
+                { a: "A/S 없음, 연락 두절", b: "100% 안심 천갈이 A/S" },
               ].map((row, i) => (
                 <React.Fragment key={i}>
                   <div className="border-t border-neutral-200 bg-white px-4 py-5 text-center md:py-6">
@@ -598,12 +601,86 @@ export default function RestaurantChairLanding() {
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
         <Image
-          src="/images/safe.png"
+          src="/images/chair/safe-chair.png"
           alt="리스토리 본사 책임 AS"
           width={1080}
           height={1350}
           className="w-full max-w-3xl h-auto"
         />
+      </section>
+
+      {/* ────────────────────────────
+          어디든 어떤 의자든 천갈이 OK
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#edf3ff" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <h2 className="text-[30px] font-black leading-[1.35] md:text-[45px]">
+                어디든 어떤 의자든
+              </h2>
+              <p
+                className="mt-1 text-[30px] font-black md:text-[45px]"
+                style={{ color: "#1a5cff" }}>
+                천갈이 OK
+              </p>
+              <p className="mt-3 text-[15px] font-medium text-neutral-500 md:text-[17px]">
+                카페 · 식당 · 병원 · 사무실 · 호텔 등
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={120}>
+            <div className="mt-10 flex flex-col gap-3">
+              {[
+                {
+                  img: "/images/chair/type-5.jpeg",
+                  sub: "카페·레스토랑 의자",
+                  title: "식탁 의자 천갈이",
+                },
+                {
+                  img: "/images/chair/type-4.jpg",
+                  sub: "업소용 붙박이 소파 의자",
+                  title: "업소용 붙박이 소파 의자 천갈이",
+                },
+                {
+                  img: "/images/chair/type-6.png",
+                  sub: "병원·약국·공항 대기석",
+                  title: "대기실 의자 천갈이",
+                },
+                {
+                  img: "/images/chair/type-3.jpg",
+                  sub: "사무실·회의실 의자",
+                  title: "회의실 테이블 가죽 교체",
+                },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-4 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-3 md:p-4">
+                  <div className="h-[100px] w-[100px] flex-shrink-0 overflow-hidden rounded-xl bg-neutral-100 md:h-[120px] md:w-[120px]">
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      width={180}
+                      height={180}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-medium text-neutral-400 md:text-[14px]">
+                      {item.sub}
+                    </p>
+                    <p className="mt-0.5 text-[17px] font-extrabold md:text-[20px]">
+                      {item.title}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
       </section>
 
       {/* ────────────────────────────
@@ -642,8 +719,8 @@ export default function RestaurantChairLanding() {
                 },
                 {
                   img: "/images/chair/symptom-4.jpg",
-                  title: "쿠션 꺼짐",
-                  desc: "스펀지가 눌려서\n앉기 불편한 상태",
+                  title: "가죽 늘어남, 꺼짐",
+                  desc: "가죽이 늘어나거나\n쿠션이 꺼진 상태",
                 },
               ].map((s, i) => (
                 <div
@@ -723,7 +800,7 @@ export default function RestaurantChairLanding() {
             미친 자신감의 이유
           </p>
           <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>3,000</span>건+
+            <span style={{ color: "#ffffff" }}>1,000</span>건+
           </p>
           <p
             className="mt-1 text-[25px] font-semibold md:text-[35px]"
@@ -734,7 +811,7 @@ export default function RestaurantChairLanding() {
           <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
             {[
               { n: "99%", l: "시공 만족도" },
-              { n: "1년", l: "무상 A/S" },
+              { n: "100%", l: "무상 A/S" },
               { n: "4.9", l: "고객 평점" },
             ].map((s, i) => (
               <div
@@ -782,7 +859,7 @@ export default function RestaurantChairLanding() {
                 {
                   icon: "/images/icon_step2.png",
                   step: "02",
-                  title: "견적 안내",
+                  title: "실측 방문",
                   desc: "재질·색상 선택\n비용 안내",
                 },
                 {

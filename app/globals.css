@@ -1,6 +1,7 @@
+@import url("https://cdn.jsdelivr.net/gh/AlfredWorkspace/WantedSans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
+
 @import "tailwindcss";
 
-@import url("https://cdn.jsdelivr.net/gh/AlfredWorkspace/WantedSans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
 :root {
   --bg-primary: #ffffff;
   --bg-secondary: #fafafa;

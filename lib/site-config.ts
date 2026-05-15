@@ -171,6 +171,19 @@ export const businessLines: BusinessLineConfig[] = [
     hero: "주방 전체를 바꾸지 않아도\n새것처럼 보입니다.",
     services: [
       {
+        slug: "sink-door",
+        title: "싱크대 문짝 리폼",
+        shortTitle: "싱크대 문짝 리폼",
+        description: "싱크대 문짝만 교체해 새것처럼.",
+        hero: "싱크대 전체 교체?\n문짝만 바꾸면 됩니다.",
+        painPoints: [
+          "문짝이 들떴다",
+          "색이 바랬다",
+          "전체 교체는 수백만원이다",
+        ],
+        process: ["사진으로 문짝 상태 확인", "재질·색상 선택", "현장 교체"],
+      },
+      {
         slug: "fridge-cabinet",
         title: "냉장고장 리폼",
         shortTitle: "냉장고장",
@@ -183,19 +196,7 @@ export const businessLines: BusinessLineConfig[] = [
         ],
         process: ["사진으로 상태 확인", "문짝 재질·색상 선택", "현장 교체"],
       },
-      {
-        slug: "sink-door",
-        title: "싱크대 문짝 리폼",
-        shortTitle: "싱크대 문짝",
-        description: "싱크대 문짝만 교체해 새것처럼.",
-        hero: "싱크대 전체 교체?\n문짝만 바꾸면 됩니다.",
-        painPoints: [
-          "문짝이 들떴다",
-          "색이 바랬다",
-          "전체 교체는 수백만원이다",
-        ],
-        process: ["사진으로 문짝 상태 확인", "재질·색상 선택", "현장 교체"],
-      },
+
       {
         slug: "rocheong",
         title: "로청장 리폼",
@@ -221,23 +222,10 @@ export const businessLines: BusinessLineConfig[] = [
     hero: "버리지 마세요.\n가죽만 바꾸면 됩니다.",
     services: [
       {
-        slug: "dining-chair",
-        title: "식탁의자 천갈이",
-        shortTitle: "식탁의자",
-        description: "가정용 식탁의자 인조가죽 교체.",
-        hero: "찢어진 식탁의자,\n3만원이면 다시 앉습니다.",
-        painPoints: [
-          "가죽이 벗겨졌다",
-          "손님 올 때 부끄럽다",
-          "새 의자가 비싸다",
-        ],
-        process: ["사진으로 상태 확인", "가죽 색상 선택", "현장 교체"],
-      },
-      {
         slug: "restaurant-chair",
-        title: "식당 일반의자 천갈이",
-        shortTitle: "식당 의자",
-        description: "식당·카페 일반 의자 대량 천갈이.",
+        title: "의자 가죽 천갈이 리폼",
+        shortTitle: "의자 가죽 천갈이 리폼",
+        description: "식당·카페·공항·관공서 의자 대량 천갈이.",
         hero: "식당 의자 20개,\n하루면 끝납니다.",
         painPoints: [
           "의자가 다 찢어졌다",
@@ -250,36 +238,11 @@ export const businessLines: BusinessLineConfig[] = [
           "일정 잡고 현장 작업",
         ],
       },
-      {
-        slug: "restaurant-sofa",
-        title: "식당 붙박이소파 천갈이",
-        shortTitle: "붙박이소파",
-        description: "식당 벽면 붙박이 소파 인조가죽 교체.",
-        hero: "붙박이소파는\n뜯어낼 필요 없습니다.",
-        painPoints: [
-          "소파 전체를 교체해야 하나",
-          "비용이 얼마나 나올지 모르겠다",
-          "영업에 지장이 없는가",
-        ],
-        process: ["사진으로 면적 확인", "m당 단가 안내", "현장 작업"],
-      },
-      {
-        slug: "office-chair",
-        title: "사무용 의자 천갈이",
-        shortTitle: "사무용 의자",
-        description: "사무실 의자 가죽 교체.",
-        hero: "사무실 의자,\n새로 살 필요 없습니다.",
-        painPoints: [
-          "가죽이 갈라졌다",
-          "앉으면 가루가 묻는다",
-          "수십 개를 다 바꿔야 한다",
-        ],
-        process: ["사진으로 상태 확인", "수량별 단가 안내", "현장 작업"],
-      },
+
       {
         slug: "custom",
-        title: "기타 가죽 리폼",
-        shortTitle: "기타 가죽",
+        title: "기타 가죽 천갈이 리폼",
+        shortTitle: "기타 가죽 천갈이 리폼",
         description: "기타 가죽 교체가 필요한 가구.",
         hero: "가죽이 씌워진 가구라면\n한 번 물어보세요.",
         painPoints: [
