@@ -615,7 +615,7 @@ export default function SinkdoorReformLanding() {
         />
       </section>
       {/* ────────────────────────────
-          STATS BANNER
+          리스토리만의 특별 서비스
          ──────────────────────────── */}
       <section
         className="px-5 py-12 text-center text-white md:py-20"
