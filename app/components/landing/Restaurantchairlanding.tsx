@@ -407,8 +407,8 @@ export default function RestaurantChairLanding() {
               ].map((cert, i) => (
                 <div
                   key={i}
-                  className="overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className=" max-w-[310px] flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
+                  className="flex-1 max-w-[280px] md:max-w-[310px] overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
+                  <div className=" flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
                     <Image
                       src={cert.src}
                       alt={cert.alt}
