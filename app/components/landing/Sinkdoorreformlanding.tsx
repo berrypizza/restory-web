@@ -438,7 +438,17 @@ export default function SinkdoorReformLanding() {
         className="px-5 pt-10 text-center text-white md:pt-16"
         style={{ background: "#1f66ff" }}>
         <FadeIn>
+          {/* <div className="mx-auto flex max-w-sm flex-col items-center">
+            <Image
+              src="/images/thinking-emoji.jpg"
+              alt="도어 리폼 특별 서비스"
+              width={100}
+              height={100}
+              className="text-center"
+            />
+          </div> */}
           <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
+
           <p
             className="mt-4 text-[40px] font-thin md:text-[55px]"
             style={{ color: "rgb(255, 255, 255)" }}>
