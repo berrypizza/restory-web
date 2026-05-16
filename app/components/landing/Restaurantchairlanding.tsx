@@ -1130,9 +1130,15 @@ export default function RestaurantChairLanding() {
         </button>
         <a
           href={PHONE}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1a5cff] shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ffffff] shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.35)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           aria-label="전화 문의">
-          <span className="text-[20px] md:text-[22px]">📞</span>
+          <Image
+            src="/images/phone-icon.png"
+            alt="전화기 아이콘"
+            width={48}
+            height={48}
+            className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
+          />{" "}
         </a>
         <a
           href={KAKAO_URL}
@@ -1141,7 +1147,13 @@ export default function RestaurantChairLanding() {
           className="flex h-12 w-12 items-center justify-center rounded-full shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           style={{ background: "#FEE500" }}
           aria-label="카카오톡 상담">
-          <span className="text-[20px] md:text-[22px]">💬</span>
+          <Image
+            src="/images/kakao-logo.png"
+            alt="카카오톡 로고"
+            width={48}
+            height={48}
+            className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
+          />
         </a>
       </div>
 

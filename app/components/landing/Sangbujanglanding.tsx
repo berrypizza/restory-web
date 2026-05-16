@@ -1015,10 +1015,10 @@ export default function SangbujangLanding() {
       </section>
 
       {/* ────────────────────────────
-          FLOATING CTA — 아정당 스타일
-          모바일: 하단 풀너비 pill + 오른쪽 FAB
-          데스크탑: 하단 중앙 pill + 오른쪽 FAB
-         ──────────────────────────── */}
+               FLOATING CTA — 아정당 스타일
+               모바일: 하단 풀너비 pill + 오른쪽 FAB
+               데스크탑: 하단 중앙 pill + 오른쪽 FAB
+              ──────────────────────────── */}
       {/* 오른쪽 세로 FAB 스택 (항상 보임) */}
       <div
         className="fixed right-4 z-50 flex flex-col gap-3 transition-all duration-300 md:right-6"
@@ -1036,9 +1036,15 @@ export default function SangbujangLanding() {
         </button>
         <a
           href={PHONE}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1a5cff] shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ffffff] shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.35)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           aria-label="전화 문의">
-          <span className="text-[20px] md:text-[22px]">📞</span>
+          <Image
+            src="/images/phone-icon.png"
+            alt="전화기 아이콘"
+            width={48}
+            height={48}
+            className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
+          />{" "}
         </a>
         <a
           href={KAKAO_URL}
@@ -1047,7 +1053,13 @@ export default function SangbujangLanding() {
           className="flex h-12 w-12 items-center justify-center rounded-full shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           style={{ background: "#FEE500" }}
           aria-label="카카오톡 상담">
-          <span className="text-[20px] md:text-[22px]">💬</span>
+          <Image
+            src="/images/kakao-logo.png"
+            alt="카카오톡 로고"
+            width={48}
+            height={48}
+            className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
+          />
         </a>
       </div>
 
