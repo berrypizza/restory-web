@@ -99,23 +99,7 @@ export const businessLines: BusinessLineConfig[] = [
         painPoints: ["서랍이 뻑뻑하다", "레일이 휘었다", "서랍이 빠진다"],
         process: ["사진으로 레일 타입 확인", "호환 레일 준비", "현장 교체"],
       },
-      {
-        slug: "sofa-sag",
-        title: "소파 꺼짐 수리",
-        shortTitle: "소파 꺼짐",
-        description: "소파 쿠션이 꺼지거나 주저앉은 경우 내부 보강합니다.",
-        hero: "새 소파 사기 전에\n한 번만 물어보세요.",
-        painPoints: [
-          "한쪽만 꺼진다",
-          "앉으면 바닥이 느껴진다",
-          "새 소파가 수백만원이다",
-        ],
-        process: [
-          "사진으로 꺼짐 정도 확인",
-          "내부 구조 진단",
-          "스프링·밴드 보강",
-        ],
-      },
+
       {
         slug: "sofa-frame",
         title: "소파 목대·스프링 수리",
