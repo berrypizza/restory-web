@@ -264,7 +264,7 @@ export const businessLines: BusinessLineConfig[] = [
     hero: "버리지 마세요.\n5배는 아낍니다.",
     services: [
       {
-        slug: "sofa-sag",
+        slug: "sofa-sagging",
         title: "소파 꺼짐 복원",
         shortTitle: "소파 꺼짐 복원",
         description: "소파가 꺼진 경우 내부 보강으로 해결합니다.",
