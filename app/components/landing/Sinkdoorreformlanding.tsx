@@ -422,7 +422,7 @@ export default function SinkdoorReformLanding() {
                       className="h-full w-full object-contain"
                     />
                   </div>
-                  <p className="bg-neutral-100 pb-[18px] text-center text-[18px] font-bold text-neutral-600 md:text-[24px]">
+                  <p className="bg-neutral-100 pb-[18px] text-center text-[16px] font-bold text-neutral-600 md:text-[18px]">
                     {cert.alt}
                   </p>
                 </div>
