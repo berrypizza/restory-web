@@ -803,7 +803,7 @@ export default function SinkdoorReformLanding() {
             ].map((s, i) => (
               <div
                 key={i}
-                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg">
+                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg shadow-md md:px-6 md:py-4">
                 <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
                 <p
                   className="mt-1 text-[18px] font-semibold md:text-[22px]"
