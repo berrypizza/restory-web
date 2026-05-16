@@ -22,11 +22,9 @@ export default function Navbar() {
     <>
       {/* 스크롤 시 접히는 영역 — sticky 밖 */}
       <div
-        className="bg-white transition-all duration-300"
-        style={{
-          height: scrolled ? 0 : 100,
-          overflow: "hidden",
-        }}>
+        className={`bg-white overflow-hidden transition-transform duration-300 ${
+          scrolled ? "-translate-y-full" : "translate-y-0"
+        }`}>
         {/* 파란 배너 */}
         <div className="bg-[#1f66ff] text-white">
           <div className="mx-auto flex h-9 max-w-6xl items-center justify-center px-4 text-xs font-bold md:text-sm">

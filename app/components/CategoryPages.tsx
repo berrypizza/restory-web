@@ -41,9 +41,10 @@ export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
               <Link
                 key={service.slug}
                 href={`/${line.id}/${service.slug}`}
-                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition hover:-translate-y-1 hover:bg-white hover:shadow-lg"
-              >
-                <p className="text-sm font-bold text-neutral-400">{line.title}</p>
+                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition hover:-translate-y-1 hover:bg-white hover:shadow-lg">
+                <p className="text-sm font-bold text-neutral-400">
+                  {line.title}
+                </p>
                 <h3 className="mt-3 text-xl font-black text-neutral-950">
                   {service.shortTitle}
                 </h3>
@@ -62,7 +63,11 @@ export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
   );
 }
 
-export function ServiceLandingPage({ service }: { service: ServicePageConfig }) {
+export function ServiceLandingPage({
+  service,
+}: {
+  service: ServicePageConfig;
+}) {
   return (
     <main className="bg-white">
       {/* 히어로 */}
@@ -80,14 +85,12 @@ export function ServiceLandingPage({ service }: { service: ServicePageConfig }) 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href="tel:01000000000"
-              className="rounded-2xl bg-neutral-950 px-6 py-4 text-center text-sm font-black text-white"
-            >
+              className="rounded-2xl bg-neutral-950 px-6 py-4 text-center text-sm font-black text-white">
               전화 문의
             </a>
             <a
               href="#"
-              className="rounded-2xl border border-neutral-200 px-6 py-4 text-center text-sm font-black text-neutral-950"
-            >
+              className="rounded-2xl border border-neutral-200 px-6 py-4 text-center text-sm font-black text-neutral-950">
               사진 보내고 가능 여부 확인
             </a>
           </div>
@@ -100,10 +103,11 @@ export function ServiceLandingPage({ service }: { service: ServicePageConfig }) 
           {service.painPoints.map((point, i) => (
             <div
               key={point}
-              className="rounded-2xl border border-neutral-200 bg-white p-6"
-            >
+              className="rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="text-sm font-black text-neutral-300">0{i + 1}</p>
-              <p className="mt-4 text-lg font-black text-neutral-950">{point}</p>
+              <p className="mt-4 text-lg font-black text-neutral-950">
+                {point}
+              </p>
             </div>
           ))}
         </div>
@@ -119,10 +123,13 @@ export function ServiceLandingPage({ service }: { service: ServicePageConfig }) 
             {service.process.map((step, i) => (
               <div
                 key={step}
-                className="rounded-2xl border border-neutral-200 p-6"
-              >
-                <p className="text-sm font-black text-neutral-400">STEP {i + 1}</p>
-                <p className="mt-4 text-lg font-bold text-neutral-950">{step}</p>
+                className="rounded-2xl border border-neutral-200 p-6">
+                <p className="text-sm font-black text-neutral-400">
+                  STEP {i + 1}
+                </p>
+                <p className="mt-4 text-lg font-bold text-neutral-950">
+                  {step}
+                </p>
               </div>
             ))}
           </div>
@@ -132,7 +139,8 @@ export function ServiceLandingPage({ service }: { service: ServicePageConfig }) 
               사진 보고 안 되는 건 안 된다고 솔직히 말씀드립니다.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-neutral-300">
-              가구 사진 보내주시면 수리 가능 여부와 비용 범위를 먼저 안내드립니다.
+              가구 사진 보내주시면 수리 가능 여부와 비용 범위를 먼저
+              안내드립니다.
             </p>
           </div>
         </div>
