@@ -1,5 +1,5 @@
 // ─── 타입 ───
-export type BusinessLineId = "repair" | "leather" | "kitchen";
+export type BusinessLineId = "repair" | "leather" | "kitchen" | "sofa";
 
 export interface ServicePageConfig {
   slug: string;
@@ -164,7 +164,7 @@ export const businessLines: BusinessLineConfig[] = [
 
   {
     id: "kitchen",
-    title: "주방 리폼",
+    title: "싱크대 리폼",
     subtitle: "냉장고장 · 싱크대 문짝 · 로청장",
     href: "/kitchen",
     description: "주방 가구의 외관(문짝·패널)을\n교체해 새것처럼 바꿉니다.",
@@ -251,6 +251,34 @@ export const businessLines: BusinessLineConfig[] = [
           "비용이 궁금하다",
         ],
         process: ["사진으로 상태 확인", "가능 여부 안내", "현장 작업"],
+      },
+    ],
+  },
+  {
+    id: "sofa",
+    title: "소파 리폼",
+    subtitle: "소파",
+    href: "/sofa",
+    description:
+      "소파가 꺼진 경우\n새로 살 필요 없이 내부 보강으로 해결합니다.",
+    hero: "버리지 마세요.\n5배는 아낍니다.",
+    services: [
+      {
+        slug: "sofa-sag",
+        title: "소파 꺼짐 복원",
+        shortTitle: "소파 꺼짐 복원",
+        description: "소파가 꺼진 경우 내부 보강으로 해결합니다.",
+        hero: "버리지 마세요.\n5배는 아픕니다.",
+        painPoints: [
+          "의자가 다 찢어졌다",
+          "전부 새로 사면 수백만원이다",
+          "영업 중 작업이 가능한가",
+        ],
+        process: [
+          "사진으로 수량·상태 확인",
+          "단가 안내",
+          "일정 잡고 현장 작업",
+        ],
       },
     ],
   },
