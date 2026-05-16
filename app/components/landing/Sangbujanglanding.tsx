@@ -1,75 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef, type ReactNode } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
-/* ═══════════════════════════════════════════
-   WANTED SANS FONT
-   ═══════════════════════════════════════════ */
-function WantedSansFont() {
-  return (
-    // eslint-disable-next-line @next/next/no-css-tags
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
-    />
-  );
-}
-
-/* ═══════════════════════════════════════════
-   FADE-IN ON SCROLL
-   ═══════════════════════════════════════════ */
-function FadeIn({
-  children,
-  delay = 0,
-  className = "",
-  direction = "up",
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-  direction?: "up" | "down" | "left" | "right";
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.12 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const transforms = {
-    up: "translateY(32px)",
-    down: "translateY(-32px)",
-    left: "translateX(32px)",
-    right: "translateX(-32px)",
-  };
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translate(0,0)" : transforms[direction],
-        transition: `opacity 0.7s cubic-bezier(.22,.61,.36,1) ${delay}ms, transform 0.7s cubic-bezier(.22,.61,.36,1) ${delay}ms`,
-        willChange: "opacity, transform",
-      }}>
-      {children}
-    </div>
-  );
-}
+import FadeIn from "@/app/components/FadeIn";
 
 /* ═══════════════════════════════════════════
    DATA
@@ -166,11 +99,7 @@ export default function SangbujangLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      <WantedSansFont />
-
-      {/* ────────────────────────────
-          HERO IMAGE
-         ──────────────────────────── */}
+      {/* HERO IMAGE */}
       <section
         className="flex justify-center"
         style={{ background: "#1f66ff" }}>
@@ -184,9 +113,7 @@ export default function SangbujangLanding() {
         />
       </section>
 
-      {/* ────────────────────────────
-          HERO CTA BUTTONS
-         ──────────────────────────── */}
+      {/* HERO CTA BUTTONS */}
       <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
         <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
           <a
@@ -209,9 +136,7 @@ export default function SangbujangLanding() {
         </p>
       </section>
 
-      {/* ────────────────────────────
-                TRUST — 증명서 / 자격증
-               ──────────────────────────── */}
+      {/* TRUST — 증명서 */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -226,9 +151,8 @@ export default function SangbujangLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
-            <div className="flex mt-10 justify-center gap-5 md:gap-10   ">
+            <div className="flex mt-10 justify-center gap-5 md:gap-10">
               {[
                 { src: "/images/cert-2.png", alt: "생산물배상책임 보험증서" },
                 { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
@@ -255,9 +179,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          PHOTO REVIEWS — 솔직후기
-         ──────────────────────────── */}
+      {/* PHOTO REVIEWS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -287,10 +209,8 @@ export default function SangbujangLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={150}>
             <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
-              {/* 후기 카드 1 */}
               <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
                 <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
                   <Image
@@ -315,8 +235,6 @@ export default function SangbujangLanding() {
                   </p>
                 </div>
               </div>
-
-              {/* 후기 카드 2 */}
               <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
                 <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
                   <Image
@@ -345,9 +263,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          SPECIALS — 왜 리스토리인가요?
-         ──────────────────────────── */}
+      {/* SPECIALS */}
       <section
         className="px-5 pt-10 text-center text-white md:pt-16"
         style={{ background: "#1f66ff" }}>
@@ -434,9 +350,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          비교표 (아정당 스타일)
-         ──────────────────────────── */}
+      {/* 비교표 */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -456,10 +370,8 @@ export default function SangbujangLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-[#e0e8f5]">
-              {/* 헤더 — A사 */}
               <div
                 className="p-5 text-center md:p-7"
                 style={{ background: "#1a1a1a" }}>
@@ -470,7 +382,6 @@ export default function SangbujangLanding() {
                   일반 수리
                 </p>
               </div>
-              {/* 헤더 — 리스토리 */}
               <div
                 className="p-5 text-center md:p-7"
                 style={{ background: "#1a5cff" }}>
@@ -486,8 +397,6 @@ export default function SangbujangLanding() {
                   안심 인증 수리
                 </p>
               </div>
-
-              {/* 비교 행들 */}
               {[
                 { a: "시공목 PB 사용", b: "시공목 전부 합판 사용" },
                 { a: "보양 처리 없음", b: "작업 전 전부 보양 처리" },
@@ -505,10 +414,7 @@ export default function SangbujangLanding() {
                   </div>
                   <div
                     className="border-t px-4 py-5 text-center md:py-6"
-                    style={{
-                      borderColor: "#d6e4ff",
-                      background: "#eef4ff",
-                    }}>
+                    style={{ borderColor: "#d6e4ff", background: "#eef4ff" }}>
                     <p className="whitespace-pre-line text-[14px] font-bold leading-[1.5] text-[#1a5cff] md:text-[16px]">
                       {row.b}
                     </p>
@@ -520,9 +426,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          본사 책임 AS 이미지
-         ──────────────────────────── */}
+      {/* 본사 책임 AS 이미지 */}
       <section
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
@@ -535,9 +439,7 @@ export default function SangbujangLanding() {
         />
       </section>
 
-      {/* ────────────────────────────
-          3 SYMPTOMS — SELF CHECK (사진 카드)
-         ──────────────────────────── */}
+      {/* SELF CHECK */}
       <section className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
@@ -550,7 +452,6 @@ export default function SangbujangLanding() {
               <span className="text-[#e53e3e]">지금 바로 연락하세요</span>
             </h2>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
               {[
@@ -601,9 +502,8 @@ export default function SangbujangLanding() {
           </FadeIn>
         </div>
       </section>
-      {/* ────────────────────────────
-          URGENT — 우선 배정
-         ──────────────────────────── */}
+
+      {/* URGENT */}
       <section
         className="px-5 py-14 md:py-20"
         style={{
@@ -636,9 +536,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          STATS BANNER
-         ──────────────────────────── */}
+      {/* STATS BANNER */}
       <section
         className="px-5 py-12 text-center text-white md:py-20"
         style={{
@@ -659,7 +557,6 @@ export default function SangbujangLanding() {
             style={{ color: "rgba(255, 255, 255, 0.79)" }}>
             매년 상부장 수리 시공 실적
           </p>
-
           <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
             {[
               { n: "98%", l: "수리 성공률" },
@@ -680,9 +577,8 @@ export default function SangbujangLanding() {
           </div>
         </FadeIn>
       </section>
-      {/* ────────────────────────────
-          YOUTUBE
-         ──────────────────────────── */}
+
+      {/* YOUTUBE */}
       <section
         className="px-5 py-14 text-white md:py-20"
         style={{ background: "#1a1a1a" }}>
@@ -697,9 +593,7 @@ export default function SangbujangLanding() {
               실제 시공 영상을 확인하세요
             </h2>
           </FadeIn>
-
           <FadeIn delay={100}>
-            {/* TODO: 실제 유튜브 영상 iframe 교체 */}
             <div className="flex aspect-video flex-col items-center justify-center rounded-2xl border border-neutral-700 bg-neutral-800">
               <div
                 className="mb-4 flex h-14 w-14 items-center justify-center rounded-full md:h-20 md:w-20"
@@ -712,18 +606,12 @@ export default function SangbujangLanding() {
                 유튜브 영상 준비 중입니다...
                 <br /> 곧 멋진 시공 영상으로 찾아뵐게요!
               </p>
-              <p
-                className="mt-1 text-[11px] md:text-[13px]"
-                style={{ color: "rgba(255,255,255,0.25)" }}>
-                상부장 수리 실제 현장 시공 과정
-              </p>
             </div>
           </FadeIn>
         </div>
       </section>
-      {/* ────────────────────────────
-          PROCESS — 수리절차 (아정당 스타일 가로 4단계)
-         ──────────────────────────── */}
+
+      {/* PROCESS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -738,7 +626,6 @@ export default function SangbujangLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-12 grid grid-cols-4 gap-3 text-center md:gap-6">
               {[
@@ -790,7 +677,6 @@ export default function SangbujangLanding() {
               ))}
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
             <div className="mt-10 flex justify-center md:mt-12">
               <a
@@ -804,9 +690,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          EXTRAS — 하부장 / 경첩 / 레일
-         ──────────────────────────── */}
+      {/* EXTRAS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f0f4ff" }}>
@@ -822,7 +706,6 @@ export default function SangbujangLanding() {
               추가 출장비 없이 한 번에 해결
             </p>
           </FadeIn>
-
           <div className="flex flex-col gap-2.5 md:grid md:grid-cols-3 md:gap-4">
             {EXTRAS.map((e, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -845,59 +728,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          REVIEWS — 후기
-         ──────────────────────────── */}
-      {/* <section className="px-5 py-14 md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              REVIEWS
-            </p>
-            <h2 className="text-[22px] font-black leading-[1.4] md:text-[28px]">
-              실제 고객 후기
-            </h2>
-            <div className="mb-8 mt-2 flex items-center gap-2">
-              <span className="text-[18px] text-amber-400 md:text-[20px]">
-                ★★★★★
-              </span>
-              <span className="text-[20px] font-black md:text-[24px]">4.9</span>
-              <span className="text-[13px] text-neutral-400 md:text-[15px]">
-                / 5.0
-              </span>
-            </div>
-          </FadeIn>
-
-          <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
-            {REVIEWS.map((r, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div className="rounded-2xl border border-[#eaeffa] bg-[#fafbff] p-5 md:p-6">
-                  <div className="mb-2.5 flex items-center justify-between">
-                    <div>
-                      <span className="text-[14px] font-extrabold md:text-[16px]">
-                        {r.name}
-                      </span>
-                      <span className="ml-2 text-[12px] text-neutral-400 md:text-[14px]">
-                        {r.area}
-                      </span>
-                    </div>
-                    <span className="text-[13px] text-amber-400 md:text-[15px]">
-                      {"★".repeat(r.rating)}
-                    </span>
-                  </div>
-                  <p className="text-[14px] font-medium leading-[1.7] text-neutral-600 md:text-[15px]">
-                    {r.text}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
-      {/* ────────────────────────────
-          FAQ
-         ──────────────────────────── */}
+      {/* FAQ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -910,7 +741,6 @@ export default function SangbujangLanding() {
               자주 묻는 질문
             </h2>
           </FadeIn>
-
           <div className="flex flex-col gap-2 md:gap-3">
             {FAQ.map((f, i) => (
               <FadeIn key={i} delay={i * 60}>
@@ -950,9 +780,7 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          FINAL CTA
-         ──────────────────────────── */}
+      {/* FINAL CTA */}
       <section
         className="px-5 py-16 text-center text-white md:py-24"
         style={{
@@ -971,7 +799,6 @@ export default function SangbujangLanding() {
             <br />
             바로 안내드립니다
           </p>
-
           <div className="mx-auto mt-8 flex max-w-xs flex-col gap-2.5 md:max-w-sm">
             <a
               href={PHONE}
@@ -995,7 +822,6 @@ export default function SangbujangLanding() {
               📷 사진 접수
             </a>
           </div>
-
           <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
             {["합판 시공목", "보양 처리", "집진기 사용", "3년 A/S"].map(
               (badge) => (
@@ -1014,12 +840,7 @@ export default function SangbujangLanding() {
         </FadeIn>
       </section>
 
-      {/* ────────────────────────────
-               FLOATING CTA — 아정당 스타일
-               모바일: 하단 풀너비 pill + 오른쪽 FAB
-               데스크탑: 하단 중앙 pill + 오른쪽 FAB
-              ──────────────────────────── */}
-      {/* 오른쪽 세로 FAB 스택 (항상 보임) */}
+      {/* FLOATING CTA */}
       <div
         className="fixed right-4 z-50 flex flex-col gap-3 transition-all duration-300 md:right-6"
         style={{
@@ -1044,7 +865,7 @@ export default function SangbujangLanding() {
             width={48}
             height={48}
             className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
-          />{" "}
+          />
         </a>
         <a
           href={KAKAO_URL}
@@ -1062,8 +883,6 @@ export default function SangbujangLanding() {
           />
         </a>
       </div>
-
-      {/* 하단 중앙 pill CTA */}
       <a
         href={KAKAO_URL}
         target="_blank"
@@ -1078,7 +897,6 @@ export default function SangbujangLanding() {
         😊 카톡으로 무료 견적 받기 &gt;
       </a>
 
-      {/* spacer for sticky bar */}
       <div className="h-20" />
     </main>
   );
