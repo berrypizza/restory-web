@@ -298,7 +298,7 @@ export default function SangbujangLanding() {
               </div>
               <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
                 <Image
-                  src="/images/special-01.png"
+                  src="/images/special-1-2.png"
                   alt="본사 안심 보상제"
                   width={600}
                   height={400}
@@ -543,7 +543,13 @@ export default function SangbujangLanding() {
           background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
         }}>
         <FadeIn>
-          <p className="text-[100px]">🥇</p>
+          <Image
+            src="/images/upper/upper-medal.png"
+            alt="리스토리 로고"
+            width={250}
+            height={250}
+            className="mx-auto mb-4 w-[250px] h-auto md:w-[300px] md:h-auto"
+          />
           <p
             className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
             style={{ color: "rgb(255, 255, 255)" }}>

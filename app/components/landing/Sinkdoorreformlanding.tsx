@@ -133,7 +133,7 @@ const EXTRAS = [
   {
     icon: "💧",
     title: "하부장 물먹음",
-    desc: "싱크대 아래 습기로 인한 부풀음·변형 수리",
+    desc: "습기로 인한 부풀음·변형 수리",
   },
   {
     icon: "📐",
@@ -468,7 +468,7 @@ export default function SinkdoorReformLanding() {
               </div>
               <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
                 <Image
-                  src="/images/special-01.png"
+                  src="/images/special-1-2.png"
                   alt="본사 안심 보상제"
                   width={600}
                   height={400}
@@ -601,7 +601,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ────────────────────────────
-          본사 책임 AS 이미지
+          제로 조인트
          ──────────────────────────── */}
       <section
         className="flex justify-center"
@@ -613,6 +613,54 @@ export default function SinkdoorReformLanding() {
           height={1350}
           className="w-full max-w-3xl h-auto"
         />
+      </section>
+      {/* ────────────────────────────
+          STATS BANNER
+         ──────────────────────────── */}
+      <section
+        className="px-5 py-12 text-center text-white md:py-20"
+        style={{
+          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
+        }}>
+        <FadeIn>
+          <Image
+            src="/images/finger-imoji.png"
+            alt="손가락 이모지"
+            width={100}
+            height={100}
+            className="mx-auto mb-10 w-[100px] h-auto md:w-[200px] md:h-auto"
+          />
+          <p
+            className="mb-2 text-[35px] font-medium tracking-widest md:text-[50px]"
+            style={{ color: "rgb(255, 255, 255)" }}>
+            리스토리만의{" "}
+          </p>
+          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
+            <span style={{ color: "#ffffff" }}>특별 서비스 하나 더!</span>
+          </p>
+          <div className="mx-auto mt-6 max-w-sm border border-white/25 rounded-lg bg-[#ffffff]/20 px-5 py-8 md:mt-10 md:max-w-md shadow-lg">
+            <Image
+              src="/images/sink-door-gear.png"
+              alt="경첩 이미지"
+              width={300}
+              height={300}
+              className="mx-auto mt-4 mb-4 w-[300px] h-auto md:w-[300px] md:h-auto"
+            />
+            <p
+              className="mt-1 text-[40px] font-semibold md:text-[55px]"
+              style={{ color: "#ffffff" }}>
+              도어 경첩
+            </p>
+            <p
+              className="mt-1 text-[25px] font-semibold md:text-[35px]"
+              style={{ color: "#ffffff" }}>
+              무료 교체 서비스 제공!
+            </p>
+          </div>
+          <p className="mt-4 text-[16px] font-normal text-white/79">
+            *교체하시는 문짝 경첩은 리스토리에서 서비스로 교체해드립니다.
+          </p>
+        </FadeIn>
       </section>
 
       {/* ────────────────────────────
@@ -726,7 +774,13 @@ export default function SinkdoorReformLanding() {
           background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
         }}>
         <FadeIn>
-          <p className="text-[100px]">🥇</p>
+          <Image
+            src="/images/door/door-medal.png"
+            alt="리스토리 로고"
+            width={250}
+            height={250}
+            className="mx-auto mb-4 w-[250px] h-auto md:w-[300px] md:h-auto"
+          />
           <p
             className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
             style={{ color: "rgb(255, 255, 255)" }}>
