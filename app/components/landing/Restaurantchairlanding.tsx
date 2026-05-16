@@ -1,75 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef, type ReactNode } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
-/* ═══════════════════════════════════════════
-   WANTED SANS FONT
-   ═══════════════════════════════════════════ */
-function WantedSansFont() {
-  return (
-    // eslint-disable-next-line @next/next/no-css-tags
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
-    />
-  );
-}
-
-/* ═══════════════════════════════════════════
-   FADE-IN ON SCROLL
-   ═══════════════════════════════════════════ */
-function FadeIn({
-  children,
-  delay = 0,
-  className = "",
-  direction = "up",
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-  direction?: "up" | "down" | "left" | "right";
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.12 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const transforms = {
-    up: "translateY(32px)",
-    down: "translateY(-32px)",
-    left: "translateX(32px)",
-    right: "translateX(-32px)",
-  };
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translate(0,0)" : transforms[direction],
-        transition: `opacity 0.7s cubic-bezier(.22,.61,.36,1) ${delay}ms, transform 0.7s cubic-bezier(.22,.61,.36,1) ${delay}ms`,
-        willChange: "opacity, transform",
-      }}>
-      {children}
-    </div>
-  );
-}
+import FadeIn from "@/app/components/FadeIn";
 
 /* ═══════════════════════════════════════════
    DATA
@@ -125,11 +58,7 @@ const FAQ = [
 ];
 
 const EXTRAS = [
-  {
-    icon: "🪑",
-    title: "쿠션 교체",
-    desc: "푹 꺼진 쿠션, 새 스펀지로 교체",
-  },
+  { icon: "🪑", title: "쿠션 교체", desc: "푹 꺼진 쿠션, 새 스펀지로 교체" },
   {
     icon: "🔩",
     title: "의자 다리 수리",
@@ -166,11 +95,7 @@ export default function RestaurantChairLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      <WantedSansFont />
-
-      {/* ────────────────────────────
-          HERO IMAGE
-         ──────────────────────────── */}
+      {/* HERO IMAGE */}
       <section className="relative" style={{ background: "#1f66ff" }}>
         <Image
           src="/images/chair/hero-chair.jpg"
@@ -202,9 +127,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          HERO CTA BUTTONS
-         ──────────────────────────── */}
+      {/* HERO CTA BUTTONS */}
       <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
         <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
           <a
@@ -227,9 +150,7 @@ export default function RestaurantChairLanding() {
         </p>
       </section>
 
-      {/* ────────────────────────────
-          PHOTO REVIEWS — 솔직후기
-         ──────────────────────────── */}
+      {/* PHOTO REVIEWS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -259,7 +180,6 @@ export default function RestaurantChairLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={150}>
             <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
               <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
@@ -317,9 +237,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          WHY — 왜 교체인가요?
-         ──────────────────────────── */}
+      {/* WHY */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#fafafa" }}>
@@ -334,7 +252,6 @@ export default function RestaurantChairLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={100}>
             <div className="mx-auto my-8 flex flex-col items-center md:my-10">
               <div className="h-10 w-px bg-neutral-300" />
@@ -350,7 +267,6 @@ export default function RestaurantChairLanding() {
               </div>
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
             <div className="grid grid-cols-2 gap-3 md:gap-5">
               {[
@@ -381,9 +297,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          TRUST — 증명서 / 자격증
-         ──────────────────────────── */}
+      {/* TRUST */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -398,9 +312,8 @@ export default function RestaurantChairLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
-            <div className="flex mt-10 justify-center gap-5 md:gap-10   ">
+            <div className="flex mt-10 justify-center gap-5 md:gap-10">
               {[
                 { src: "/images/cert-2.png", alt: "생산물배상책임보험증서" },
                 { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
@@ -408,7 +321,7 @@ export default function RestaurantChairLanding() {
                 <div
                   key={i}
                   className="flex-1 max-w-[280px] md:max-w-[310px] overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className=" flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
+                  <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
                     <Image
                       src={cert.src}
                       alt={cert.alt}
@@ -427,9 +340,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          SPECIALS
-         ──────────────────────────── */}
+      {/* SPECIALS */}
       <section
         className="px-5 pt-10 text-center text-white md:pt-16"
         style={{ background: "#1f66ff" }}>
@@ -516,9 +427,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          비교표 (아정당 스타일)
-         ──────────────────────────── */}
+      {/* 비교표 */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -538,7 +447,6 @@ export default function RestaurantChairLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-[#e0e8f5]">
               <div
@@ -566,7 +474,6 @@ export default function RestaurantChairLanding() {
                   안심 인증 교체
                 </p>
               </div>
-
               {[
                 {
                   a: "저가 인조가죽 사용",
@@ -596,9 +503,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          본사 책임 AS 이미지
-         ──────────────────────────── */}
+      {/* 본사 책임 AS */}
       <section
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
@@ -611,9 +516,7 @@ export default function RestaurantChairLanding() {
         />
       </section>
 
-      {/* ────────────────────────────
-          어디든 어떤 의자든 천갈이 OK
-         ──────────────────────────── */}
+      {/* 어디든 어떤 의자든 천갈이 OK */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#edf3ff" }}>
@@ -633,7 +536,6 @@ export default function RestaurantChairLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-10 flex flex-col gap-3">
               {[
@@ -685,9 +587,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          SELF CHECK — 이런 상태라면 교체 시기!
-         ──────────────────────────── */}
+      {/* SELF CHECK */}
       <section className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
@@ -700,7 +600,6 @@ export default function RestaurantChairLanding() {
               <span className="text-[#e53e3e]">가죽 교체 시기입니다</span>
             </h2>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
               {[
@@ -752,9 +651,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          URGENT — 영업 방해 없이
-         ──────────────────────────── */}
+      {/* URGENT */}
       <section
         className="px-5 py-14 md:py-20"
         style={{
@@ -786,9 +683,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          STATS BANNER
-         ──────────────────────────── */}
+      {/* STATS BANNER */}
       <section
         className="px-5 py-12 text-center text-white md:py-20"
         style={{
@@ -815,7 +710,6 @@ export default function RestaurantChairLanding() {
             style={{ color: "rgba(255, 255, 255, 0.79)" }}>
             매년 의자 가죽 교체 실적
           </p>
-
           <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
             {[
               { n: "99%", l: "시공 만족도" },
@@ -837,9 +731,7 @@ export default function RestaurantChairLanding() {
         </FadeIn>
       </section>
 
-      {/* ────────────────────────────
-          PROCESS — 시공절차
-         ──────────────────────────── */}
+      {/* PROCESS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -854,7 +746,6 @@ export default function RestaurantChairLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-12 grid grid-cols-4 gap-3 text-center md:gap-6">
               {[
@@ -906,7 +797,6 @@ export default function RestaurantChairLanding() {
               ))}
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
             <div className="mt-10 flex justify-center md:mt-12">
               <a
@@ -920,9 +810,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          EXTRAS — 함께 가능한 서비스
-         ──────────────────────────── */}
+      {/* EXTRAS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f0f4ff" }}>
@@ -938,7 +826,6 @@ export default function RestaurantChairLanding() {
               추가 출장비 없이 한 번에 해결
             </p>
           </FadeIn>
-
           <div className="flex flex-col gap-2.5 md:grid md:grid-cols-3 md:gap-4">
             {EXTRAS.map((e, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -961,9 +848,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          YOUTUBE
-         ──────────────────────────── */}
+      {/* YOUTUBE */}
       <section
         className="px-5 py-14 text-white md:py-20"
         style={{ background: "#1a1a1a" }}>
@@ -996,9 +881,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          FAQ
-         ──────────────────────────── */}
+      {/* FAQ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -1011,7 +894,6 @@ export default function RestaurantChairLanding() {
               자주 묻는 질문
             </h2>
           </FadeIn>
-
           <div className="flex flex-col gap-2 md:gap-3">
             {FAQ.map((f, i) => (
               <FadeIn key={i} delay={i * 60}>
@@ -1051,9 +933,7 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          FINAL CTA
-         ──────────────────────────── */}
+      {/* FINAL CTA */}
       <section
         className="px-5 py-16 text-center text-white md:py-24"
         style={{
@@ -1072,7 +952,6 @@ export default function RestaurantChairLanding() {
             <br />
             견적 바로 안내드립니다
           </p>
-
           <div className="mx-auto mt-8 flex max-w-xs flex-col gap-2.5 md:max-w-sm">
             <a
               href={PHONE}
@@ -1096,7 +975,6 @@ export default function RestaurantChairLanding() {
               📷 사진 접수
             </a>
           </div>
-
           <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
             {["고급 인조가죽", "색상 선택", "영업 외 시공", "1년 A/S"].map(
               (badge) => (
@@ -1114,12 +992,8 @@ export default function RestaurantChairLanding() {
           </div>
         </FadeIn>
       </section>
-      {/* ────────────────────────────
-          FLOATING CTA — 아정당 스타일
-          모바일: 하단 풀너비 pill + 오른쪽 FAB
-          데스크탑: 하단 중앙 pill + 오른쪽 FAB
-         ──────────────────────────── */}
-      {/* 오른쪽 세로 FAB 스택 (항상 보임) */}
+
+      {/* FLOATING CTA */}
       <div
         className="fixed right-4 z-50 flex flex-col gap-3 transition-all duration-300 md:right-6"
         style={{
@@ -1144,7 +1018,7 @@ export default function RestaurantChairLanding() {
             width={48}
             height={48}
             className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
-          />{" "}
+          />
         </a>
         <a
           href={KAKAO_URL}
@@ -1162,8 +1036,6 @@ export default function RestaurantChairLanding() {
           />
         </a>
       </div>
-
-      {/* 하단 중앙 pill CTA */}
       <a
         href={KAKAO_URL}
         target="_blank"

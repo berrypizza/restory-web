@@ -44,10 +44,10 @@ export default function Navbar() {
                 className="h-19 w-auto object-contain"
                 priority
               />{" "}
-              <h1 className="pl-[7px] text-[18px] font-bold text-[#1f66ff]">
+              <h1 className="pl-[6px] text-[17px] font-bold text-[#1f66ff]">
                 리스토리
               </h1>
-              <p className="pl-[4px] text-[18px] font-bold text-neutral-500">
+              <p className="pl-[3px] text-[17px] font-bold text-neutral-500">
                 스튜디오
               </p>
             </Link>

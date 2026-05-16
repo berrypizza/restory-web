@@ -1,75 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef, type ReactNode } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
-/* ═══════════════════════════════════════════
-   WANTED SANS FONT
-   ═══════════════════════════════════════════ */
-function WantedSansFont() {
-  return (
-    // eslint-disable-next-line @next/next/no-css-tags
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
-    />
-  );
-}
-
-/* ═══════════════════════════════════════════
-   FADE-IN ON SCROLL
-   ═══════════════════════════════════════════ */
-function FadeIn({
-  children,
-  delay = 0,
-  className = "",
-  direction = "up",
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-  direction?: "up" | "down" | "left" | "right";
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.12 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const transforms = {
-    up: "translateY(32px)",
-    down: "translateY(-32px)",
-    left: "translateX(32px)",
-    right: "translateX(-32px)",
-  };
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translate(0,0)" : transforms[direction],
-        transition: `opacity 0.7s cubic-bezier(.22,.61,.36,1) ${delay}ms, transform 0.7s cubic-bezier(.22,.61,.36,1) ${delay}ms`,
-        willChange: "opacity, transform",
-      }}>
-      {children}
-    </div>
-  );
-}
+import FadeIn from "@/app/components/FadeIn";
 
 /* ═══════════════════════════════════════════
    DATA
@@ -125,16 +58,8 @@ const FAQ = [
 ];
 
 const EXTRAS = [
-  {
-    icon: "🔩",
-    title: "경첩 교체",
-    desc: "문짝 교체 시 경첩도 새것으로 교체",
-  },
-  {
-    icon: "💧",
-    title: "하부장 물먹음",
-    desc: "습기로 인한 부풀음·변형 수리",
-  },
+  { icon: "🔩", title: "경첩 교체", desc: "문짝 교체 시 경첩도 새것으로 교체" },
+  { icon: "💧", title: "하부장 물먹음", desc: "습기로 인한 부풀음·변형 수리" },
   {
     icon: "📐",
     title: "상부장 처짐",
@@ -166,11 +91,7 @@ export default function SinkdoorReformLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      <WantedSansFont />
-
-      {/* ────────────────────────────
-          HERO IMAGE
-         ──────────────────────────── */}
+      {/* HERO IMAGE */}
       <section className="relative" style={{ background: "#1f66ff" }}>
         <Image
           src="/images/hero-door.png"
@@ -181,7 +102,7 @@ export default function SinkdoorReformLanding() {
           priority
         />
         <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent md:pb-20">
-          <div className="w-full max-w-5xl  to-transparent px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
+          <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
             <p className="text-[13px] text-[#1f66ff] font-bold md:text-[15px]">
               <Image
                 src="/images/logo.png"
@@ -202,9 +123,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          HERO CTA BUTTONS
-         ──────────────────────────── */}
+      {/* HERO CTA BUTTONS */}
       <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
         <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
           <a
@@ -227,9 +146,7 @@ export default function SinkdoorReformLanding() {
         </p>
       </section>
 
-      {/* ────────────────────────────
-          PHOTO REVIEWS — 솔직후기
-         ──────────────────────────── */}
+      {/* PHOTO REVIEWS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -259,7 +176,6 @@ export default function SinkdoorReformLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={150}>
             <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
               <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
@@ -316,9 +232,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          WHY DOOR — 왜 문짝만 교체하나요?
-         ──────────────────────────── */}
+      {/* WHY DOOR */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#fafafa" }}>
@@ -333,7 +247,6 @@ export default function SinkdoorReformLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={100}>
             <div className="mx-auto my-8 flex flex-col items-center md:my-10">
               <div className="h-10 w-px bg-neutral-300" />
@@ -349,18 +262,11 @@ export default function SinkdoorReformLanding() {
               </div>
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
             <div className="grid grid-cols-2 gap-3 md:gap-5">
               {[
-                {
-                  img: "/images/door/before-after-1.jpg",
-                  label: "시공 전",
-                },
-                {
-                  img: "/images/door/before-after-2.jpg",
-                  label: "시공 후",
-                },
+                { img: "/images/door/before-after-1.jpg", label: "시공 전" },
+                { img: "/images/door/before-after-2.jpg", label: "시공 후" },
               ].map((item, i) => (
                 <div
                   key={i}
@@ -386,9 +292,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-                TRUST — 증명서 / 자격증
-               ──────────────────────────── */}
+      {/* TRUST */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -403,9 +307,8 @@ export default function SinkdoorReformLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
-            <div className="flex mt-10 justify-center gap-5 md:gap-10   ">
+            <div className="flex mt-10 justify-center gap-5 md:gap-10">
               {[
                 { src: "/images/cert-2.png", alt: "생산물배상책임 보험증서" },
                 { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
@@ -431,24 +334,13 @@ export default function SinkdoorReformLanding() {
           </FadeIn>
         </div>
       </section>
-      {/* ────────────────────────────
-          SPECIALS — 왜 리스토리인가요?
-         ──────────────────────────── */}
+
+      {/* SPECIALS */}
       <section
         className="px-5 pt-10 text-center text-white md:pt-16"
         style={{ background: "#1f66ff" }}>
         <FadeIn>
-          {/* <div className="mx-auto flex max-w-sm flex-col items-center">
-            <Image
-              src="/images/thinking-emoji.jpg"
-              alt="도어 리폼 특별 서비스"
-              width={100}
-              height={100}
-              className="text-center"
-            />
-          </div> */}
           <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
-
           <p
             className="mt-4 text-[40px] font-thin md:text-[55px]"
             style={{ color: "rgb(255, 255, 255)" }}>
@@ -530,9 +422,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          비교표 (아정당 스타일)
-         ──────────────────────────── */}
+      {/* 비교표 */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -552,7 +442,6 @@ export default function SinkdoorReformLanding() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-[#e0e8f5]">
               <div
@@ -580,7 +469,6 @@ export default function SinkdoorReformLanding() {
                   안심 인증 시공
                 </p>
               </div>
-
               {[
                 { a: "일반 엣지", b: "하이 조인트 엣지" },
                 {
@@ -610,9 +498,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          제로 조인트
-         ──────────────────────────── */}
+      {/* 제로 조인트 */}
       <section
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
@@ -624,9 +510,8 @@ export default function SinkdoorReformLanding() {
           className="w-full max-w-3xl h-auto"
         />
       </section>
-      {/* ────────────────────────────
-          리스토리만의 특별 서비스
-         ──────────────────────────── */}
+
+      {/* 리스토리만의 특별 서비스 — 경첩 무료 교체 */}
       <section
         className="px-5 py-12 text-center text-white md:py-20"
         style={{
@@ -673,9 +558,7 @@ export default function SinkdoorReformLanding() {
         </FadeIn>
       </section>
 
-      {/* ────────────────────────────
-          SELF CHECK — 이런 상태라면 교체 시기!
-         ──────────────────────────── */}
+      {/* SELF CHECK */}
       <section className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
@@ -688,7 +571,6 @@ export default function SinkdoorReformLanding() {
               <span className="text-[#e53e3e]">도어 교체 시기입니다</span>
             </h2>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
               {[
@@ -740,9 +622,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          URGENT — 우선 배정
-         ──────────────────────────── */}
+      {/* URGENT */}
       <section
         className="px-5 py-14 md:py-20"
         style={{
@@ -775,9 +655,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          STATS BANNER
-         ──────────────────────────── */}
+      {/* STATS BANNER */}
       <section
         className="px-5 py-12 text-center text-white md:py-20"
         style={{
@@ -804,7 +682,6 @@ export default function SinkdoorReformLanding() {
             style={{ color: "rgba(255, 255, 255, 0.79)" }}>
             매년 도어 리폼 시공 실적
           </p>
-
           <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
             {[
               { n: "99%", l: "시공 만족도" },
@@ -826,9 +703,7 @@ export default function SinkdoorReformLanding() {
         </FadeIn>
       </section>
 
-      {/* ────────────────────────────
-          PROCESS — 시공절차
-         ──────────────────────────── */}
+      {/* PROCESS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -843,7 +718,6 @@ export default function SinkdoorReformLanding() {
               </h2>
             </div>
           </FadeIn>
-
           <FadeIn delay={120}>
             <div className="mt-12 grid grid-cols-4 gap-3 text-center md:gap-6">
               {[
@@ -895,7 +769,6 @@ export default function SinkdoorReformLanding() {
               ))}
             </div>
           </FadeIn>
-
           <FadeIn delay={200}>
             <div className="mt-10 flex justify-center md:mt-12">
               <a
@@ -909,9 +782,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          EXTRAS — 함께 가능한 서비스
-         ──────────────────────────── */}
+      {/* EXTRAS */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f0f4ff" }}>
@@ -927,7 +798,6 @@ export default function SinkdoorReformLanding() {
               추가 출장비 없이 한 번에 해결
             </p>
           </FadeIn>
-
           <div className="flex flex-col gap-2.5 md:grid md:grid-cols-3 md:gap-4">
             {EXTRAS.map((e, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -950,9 +820,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          YOUTUBE
-         ──────────────────────────── */}
+      {/* YOUTUBE */}
       <section
         className="px-5 py-14 text-white md:py-20"
         style={{ background: "#1a1a1a" }}>
@@ -985,9 +853,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          FAQ
-         ──────────────────────────── */}
+      {/* FAQ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -1000,7 +866,6 @@ export default function SinkdoorReformLanding() {
               자주 묻는 질문
             </h2>
           </FadeIn>
-
           <div className="flex flex-col gap-2 md:gap-3">
             {FAQ.map((f, i) => (
               <FadeIn key={i} delay={i * 60}>
@@ -1040,9 +905,7 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* ────────────────────────────
-          FINAL CTA
-         ──────────────────────────── */}
+      {/* FINAL CTA */}
       <section
         className="px-5 py-16 text-center text-white md:py-24"
         style={{
@@ -1062,7 +925,6 @@ export default function SinkdoorReformLanding() {
             <br />
             바로 안내드립니다
           </p>
-
           <div className="mx-auto mt-8 flex max-w-xs flex-col gap-2.5 md:max-w-sm">
             <a
               href={PHONE}
@@ -1086,7 +948,6 @@ export default function SinkdoorReformLanding() {
               📷 사진 접수
             </a>
           </div>
-
           <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
             {["고급 필름", "100+ 색상", "당일 시공", "3년 A/S"].map((badge) => (
               <span
@@ -1103,12 +964,7 @@ export default function SinkdoorReformLanding() {
         </FadeIn>
       </section>
 
-      {/* ────────────────────────────
-               FLOATING CTA — 아정당 스타일
-               모바일: 하단 풀너비 pill + 오른쪽 FAB
-               데스크탑: 하단 중앙 pill + 오른쪽 FAB
-              ──────────────────────────── */}
-      {/* 오른쪽 세로 FAB 스택 (항상 보임) */}
+      {/* FLOATING CTA */}
       <div
         className="fixed right-4 z-50 flex flex-col gap-3 transition-all duration-300 md:right-6"
         style={{
@@ -1133,7 +989,7 @@ export default function SinkdoorReformLanding() {
             width={48}
             height={48}
             className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
-          />{" "}
+          />
         </a>
         <a
           href={KAKAO_URL}
@@ -1151,8 +1007,6 @@ export default function SinkdoorReformLanding() {
           />
         </a>
       </div>
-
-      {/* 하단 중앙 pill CTA */}
       <a
         href={KAKAO_URL}
         target="_blank"
