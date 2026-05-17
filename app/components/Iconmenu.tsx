@@ -6,12 +6,13 @@ const iconMap: Record<BusinessLineId, string> = {
   repair: "/images/icon_sink_repair.png",
   kitchen: "/images/icon_sink_reform.png",
   leather: "/images/icon_leather.png",
+  sofa: "/images/icon_sofa.png",
 };
 
 export default function IconMenu() {
   return (
     <section className="border-b border-neutral-100 bg-white px-4 py-5">
-      <div className="mx-auto grid max-w-[720px] grid-cols-3 items-start text-center">
+      <div className="mx-auto grid max-w-[720px] grid-cols-4 items-start text-center">
         {businessLines.map((line) => (
           <Link
             key={line.id}

@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { BusinessLinePage } from "@/app/components/CategoryPages";
 import { getBusinessLine } from "@/lib/site-config";
 import Sofacushionlanding from "@/app/components/landing/Sofacushionlanding";
 

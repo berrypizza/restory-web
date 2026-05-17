@@ -6,6 +6,7 @@ const iconMap: Record<BusinessLineId, string> = {
   repair: "/images/icon_sink_repair.png",
   kitchen: "/images/icon_sink_reform.png",
   leather: "/images/icon_leather.png",
+  sofa: "/images/icon_sofa.png",
 };
 
 export default function BusinessLineCards() {
@@ -16,7 +17,7 @@ export default function BusinessLineCards() {
           한 번의 클릭, 필요한 작업만
         </h2>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-4">
           {businessLines.map((line) => (
             <Link
               key={line.id}

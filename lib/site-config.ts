@@ -99,7 +99,6 @@ export const businessLines: BusinessLineConfig[] = [
         painPoints: ["서랍이 뻑뻑하다", "레일이 휘었다", "서랍이 빠진다"],
         process: ["사진으로 레일 타입 확인", "호환 레일 준비", "현장 교체"],
       },
-
       {
         slug: "sofa-frame",
         title: "소파 목대·스프링 수리",
@@ -145,7 +144,6 @@ export const businessLines: BusinessLineConfig[] = [
       },
     ],
   },
-
   {
     id: "kitchen",
     title: "싱크대 리폼",
@@ -180,7 +178,6 @@ export const businessLines: BusinessLineConfig[] = [
         ],
         process: ["사진으로 상태 확인", "문짝 재질·색상 선택", "현장 교체"],
       },
-
       {
         slug: "rocheong",
         title: "로청장 리폼",
@@ -222,7 +219,6 @@ export const businessLines: BusinessLineConfig[] = [
           "일정 잡고 현장 작업",
         ],
       },
-
       {
         slug: "custom",
         title: "기타 가죽 천갈이 리폼",
@@ -241,7 +237,7 @@ export const businessLines: BusinessLineConfig[] = [
   {
     id: "sofa",
     title: "소파 리폼",
-    subtitle: "소파",
+    subtitle: "소파 꺼짐 · 쿠션 복원",
     href: "/sofa",
     description:
       "소파가 꺼진 경우\n새로 살 필요 없이 내부 보강으로 해결합니다.",
@@ -252,16 +248,16 @@ export const businessLines: BusinessLineConfig[] = [
         title: "소파 꺼짐 복원",
         shortTitle: "소파 꺼짐 복원",
         description: "소파가 꺼진 경우 내부 보강으로 해결합니다.",
-        hero: "버리지 마세요.\n5배는 아픕니다.",
+        hero: "버리지 마세요.\n5배는 아낍니다.",
         painPoints: [
-          "의자가 다 찢어졌다",
-          "전부 새로 사면 수백만원이다",
-          "영업 중 작업이 가능한가",
+          "한쪽만 꺼진다",
+          "앉으면 바닥이 느껴진다",
+          "새 소파가 수백만원이다",
         ],
         process: [
-          "사진으로 수량·상태 확인",
-          "단가 안내",
-          "일정 잡고 현장 작업",
+          "사진으로 꺼짐 정도 확인",
+          "내부 구조 진단",
+          "스프링·밴드 보강",
         ],
       },
     ],
