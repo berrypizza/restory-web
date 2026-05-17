@@ -9,65 +9,64 @@ import FadeIn from "@/app/components/FadeIn";
    ═══════════════════════════════════════════ */
 const REVIEWS = [
   {
-    name: "김**",
-    area: "서울 강남구",
-    text: "카페 의자 30개 전부 교체했는데, 새 의자 산 줄 알고 손님들이 물어봐요. 가격은 1/3도 안 됐습니다.",
+    name: "신**",
+    area: "서울 강서구",
+    text: "이태리 소파라 버리기 아까웠는데, 쿠션 복원하니 처음 샀을 때처럼 됐어요. 새로 사는 것보다 훨씬 저렴했습니다.",
     rating: 5,
   },
   {
-    name: "박**",
-    area: "경기 성남시",
-    text: "고깃집 의자라 기름때가 심했는데 깔끔하게 새것처럼 됐어요. 색상도 인테리어에 딱 맞춰주셨습니다.",
+    name: "고**",
+    area: "인천시",
+    text: "직장인이라 반차 내고 받았는데 당일에 바로 끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셨습니다.",
     rating: 5,
   },
   {
-    name: "이**",
-    area: "서울 마포구",
-    text: "영업 끝나고 밤에 와서 작업해주셔서 영업 지장 하나도 없었어요. 다음에도 여기 할 겁니다.",
+    name: "장**",
+    area: "경기 분당",
+    text: "한쪽만 꺼져서 앉기 불편했는데, 양쪽 다 보강해주셨어요. 탄성이 돌아와서 소파가 살아났습니다.",
     rating: 5,
   },
   {
-    name: "최**",
-    area: "인천 부평구",
-    text: "의자 다리 흔들림까지 같이 잡아주셨어요. 따로 비용 안 받으시길래 감동이었습니다.",
+    name: "오**",
+    area: "서울 송파구",
+    text: "500만원짜리 소파인데 50만원으로 새것처럼 됐어요. 진작 할걸 그랬습니다.",
     rating: 5,
   },
 ];
 
 const FAQ = [
   {
-    q: "의자 새로 사는 것보다 정말 저렴한가요?",
-    a: "네. 새 의자 구매 대비 1/3~1/5 수준입니다. 수량이 많을수록 단가가 더 낮아집니다.",
+    q: "소파 새로 사는 것보다 정말 저렴한가요?",
+    a: "네. 새 소파 구매 대비 1/5~1/10 수준입니다. 고급 소파일수록 복원 대비 절약 효과가 큽니다.",
   },
   {
-    q: "영업 중에도 작업 가능한가요?",
-    a: "네. 영업 전·후 시간, 또는 휴무일에 맞춰 작업 가능합니다. 일정은 협의해서 진행합니다.",
+    q: "어떤 소파든 복원 가능한가요?",
+    a: "대부분 가능합니다. 스프링, 밴드, 스펀지 구조의 소파라면 복원 가능하며, 사진 보내주시면 가능 여부를 바로 안내드립니다.",
   },
   {
-    q: "의자 수량이 많으면 시간이 오래 걸리나요?",
-    a: "의자 1개당 약 5~15분 소요됩니다. 대량 작업시 팀이 움직입니다.",
+    q: "복원 시간은 얼마나 걸리나요?",
+    a: "소파 3인용 1개 기준 약 2시간 소요됩니다. 당일 시공 완료되며, 바로 사용 가능합니다.",
   },
   {
-    q: "원하는 색상·재질로 선택 가능한가요?",
-    a: "다양한 인조가죽 샘플을 보유하고 있습니다. 매장 인테리어에 맞는 색상·질감을 선택하실 수 있습니다.",
+    q: "복원하면 얼마나 오래 가나요?",
+    a: "HR계열 고탄성 스펀지와 이태리 엘라스틱 밴드를 사용하기 때문에 일반 소파보다 오래 유지됩니다.",
   },
   {
     q: "A/S는 어떻게 되나요?",
-    a: "시공 완료 후 미흡한 부분을 100% 무상으로 재시공해드립니다.",
+    a: "시공 완료 후 미흡한 부분은 100% 무상으로 재시공해드립니다.",
   },
 ];
 
 const EXTRAS = [
-  { icon: "🪑", title: "쿠션 교체", desc: "푹 꺼진 쿠션, 새 스펀지로 교체" },
   {
     icon: "🔩",
-    title: "의자 다리 수리",
-    desc: "흔들리는 다리, 볼트 조임·보강",
+    title: "프레임 보강",
+    desc: "삐걱거리는 목대·스프링 보강",
   },
   {
-    icon: "🛋️",
-    title: "소파·부스석",
-    desc: "식당 부스석·소파 가죽 교체도 가능",
+    icon: "🪑",
+    title: "의자 천갈이",
+    desc: "식탁 의자·사무용 의자 가죽 교체도 가능",
   },
 ];
 
@@ -78,7 +77,7 @@ const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
 /* ═══════════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════════ */
-export default function RestaurantChairLanding() {
+export default function SofaCushionLanding() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
 
@@ -121,7 +120,7 @@ export default function RestaurantChairLanding() {
               소파를 새로 살 필요 없습니다
             </p>
             <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
-              내부 구조만 복원 하면 새것처럼
+              내부 구조만 복원하면 새것처럼
             </p>
           </div>
         </div>
@@ -146,7 +145,7 @@ export default function RestaurantChairLanding() {
         <p
           className="mx-auto mt-3 max-w-3xl text-center text-[13px] font-semibold md:text-[14px]"
           style={{ color: "rgba(255,255,255,0.6)" }}>
-          의자 사진 + 수량만 보내주시면 견적 바로 안내드립니다
+          소파 사진만 보내주시면 복원 가능 여부 바로 안내드립니다
         </p>
       </section>
 
@@ -161,7 +160,7 @@ export default function RestaurantChairLanding() {
                 ★★★★★
               </p>
               <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
-                사장님들이 인정한
+                실제 고객님들이 인정한
                 <br />
                 <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
                   솔직후기
@@ -199,12 +198,12 @@ export default function RestaurantChairLanding() {
                   <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
                     이태리 소파라 버리기 아까웠는데
                     <br />
-                    처음 샀을 때 같이 됐어요
+                    처음 샀을 때처럼 됐어요
                   </p>
                   <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
                     이태리에서 수입한 고급 소파였는데, 쿠션이 너무 꺼져서
-                    고민이었어요. 새로 사는 것보다 훨씬 저렴하게 처음 샀을
-                    때처럼 복원돼서 너무 만족합니다.
+                    고민이었어요. 새로 사는 것보다 훨씬 저렴하게 복원돼서 너무
+                    만족합니다.
                   </p>
                 </div>
               </div>
@@ -229,8 +228,7 @@ export default function RestaurantChairLanding() {
                   </p>
                   <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
                     직장인이라 평일에 잠깐 반차 내고 작업 받았는데, 당일에 바로
-                    끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셔서
-                    만족합니다.
+                    끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셨습니다.
                   </p>
                 </div>
               </div>
@@ -250,7 +248,7 @@ export default function RestaurantChairLanding() {
                 소파를 새로 사야 하나 고민이시죠?
               </p>
               <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                쿠션 복원만 하면 새것처럼!!
+                쿠션 복원만 하면 새것처럼!
               </h2>
             </div>
           </FadeIn>
@@ -470,17 +468,14 @@ export default function RestaurantChairLanding() {
                     background: "rgba(255,255,255,0.2)",
                     color: "#fff",
                   }}>
-                  리스토리의
+                  리스토리
                 </span>
                 <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
                   안심 소파 복원
                 </p>
               </div>
               {[
-                {
-                  a: "화학 스폰지 사용",
-                  b: "HR계열 고탄성 스펀지 사용",
-                },
+                { a: "화학 스폰지 사용", b: "HR계열 고탄성 스펀지 사용" },
                 { a: "일반 밴드 사용", b: "이태리 엘라스틱 밴드 사용" },
                 { a: "맘대로 시공", b: "중간 중간 고객님과 조율" },
                 { a: "A/S 없음, 연락 두절", b: "100% 안심 A/S" },
@@ -510,83 +505,12 @@ export default function RestaurantChairLanding() {
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
         <Image
-          src="/images/chair/safe-chair.png"
+          src="/images/sofa/safe-sofa-1.png"
           alt="리스토리 본사 책임 AS"
           width={1080}
           height={1350}
           className="w-full max-w-3xl h-auto"
         />
-      </section>
-
-      {/* 어디든 어떤 의자든 천갈이 OK */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#edf3ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <h2 className="text-[30px] font-black leading-[1.35] md:text-[45px]">
-                어디든 어떤 의자든
-              </h2>
-              <p
-                className="mt-1 text-[30px] font-black md:text-[45px]"
-                style={{ color: "#1a5cff" }}>
-                천갈이 OK
-              </p>
-              <p className="mt-3 text-[15px] font-medium text-neutral-500 md:text-[17px]">
-                카페 · 식당 · 병원 · 사무실 · 호텔 등
-              </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-10 flex flex-col gap-3">
-              {[
-                {
-                  img: "/images/chair/type-5.jpeg",
-                  sub: "카페·레스토랑 의자",
-                  title: "식탁 의자 천갈이",
-                },
-                {
-                  img: "/images/chair/type-4.jpg",
-                  sub: "업소용 붙박이 소파 의자",
-                  title: "업소용 붙박이 소파 의자 천갈이",
-                },
-                {
-                  img: "/images/chair/type-6.png",
-                  sub: "병원·약국·공항 대기석",
-                  title: "대기실 의자 천갈이",
-                },
-                {
-                  img: "/images/chair/type-3.jpg",
-                  sub: "사무실·회의실 의자",
-                  title: "회의실 테이블 가죽 교체",
-                },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-4 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-3 md:p-4">
-                  <div className="h-[100px] w-[100px] flex-shrink-0 overflow-hidden rounded-xl bg-neutral-100 md:h-[120px] md:w-[120px]">
-                    <Image
-                      src={item.img}
-                      alt={item.title}
-                      width={180}
-                      height={180}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-[12px] font-medium text-neutral-400 md:text-[14px]">
-                      {item.sub}
-                    </p>
-                    <p className="mt-0.5 text-[17px] font-extrabold md:text-[20px]">
-                      {item.title}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
       </section>
 
       {/* SELF CHECK */}
@@ -599,31 +523,31 @@ export default function RestaurantChairLanding() {
             <h2 className="text-[30px] font-black leading-[1.4] md:text-[45px]">
               이런 상태라면
               <br />
-              <span className="text-[#e53e3e]">가죽 교체 시기입니다</span>
+              <span className="text-[#e53e3e]">쿠션 복원 시기입니다</span>
             </h2>
           </FadeIn>
           <FadeIn delay={120}>
             <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
               {[
                 {
-                  img: "/images/chair/symptom-1.jpg",
-                  title: "가죽 갈라짐",
-                  desc: "표면이 갈라지고\n가루가 떨어지는 상태",
+                  img: "/images/sofa/symptom-1.jpg",
+                  title: "한쪽만 꺼짐",
+                  desc: "자주 앉는 쪽만\n깊이 꺼진 상태",
                 },
                 {
-                  img: "/images/chair/symptom-2.jpg",
-                  title: "찢어짐·구멍",
-                  desc: "가죽이 찢어지거나\n구멍이 난 상태",
+                  img: "/images/sofa/symptom-2.jpg",
+                  title: "전체적으로 주저앉음",
+                  desc: "소파 전체가\n탄성을 잃은 상태",
                 },
                 {
-                  img: "/images/chair/symptom-3.jpg",
-                  title: "변색·얼룩",
-                  desc: "기름때·음식물로\n변색된 상태",
+                  img: "/images/sofa/symptom-3.jpg",
+                  title: "앉으면 바닥 느낌",
+                  desc: "스펀지가 삭아서\n프레임이 느껴지는 상태",
                 },
                 {
-                  img: "/images/chair/symptom-4.jpg",
-                  title: "가죽 늘어남, 꺼짐",
-                  desc: "가죽이 늘어나거나\n쿠션이 꺼진 상태",
+                  img: "/images/sofa/symptom-4.jpg",
+                  title: "삐걱삐걱 소리",
+                  desc: "앉을 때마다\n내부에서 소리나는 상태",
                 },
               ].map((s, i) => (
                 <div
@@ -663,20 +587,20 @@ export default function RestaurantChairLanding() {
           <FadeIn>
             <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
               <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[20px] font-extrabold text-white md:text-[35px]">
-                ⚡ 영업 방해 ZERO
+                ⚡ 당일 시공
               </div>
               <h3 className="mt-1 text-[30px] font-black leading-[1.45] md:text-[45px]">
-                영업 끝나고
+                소파 복원은
                 <br />
-                <span className="text-[#e53e3e]">밤에도 시공</span> 가능합니다
+                <span className="text-[#e53e3e]">당일 완료</span> 가능합니다
               </h3>
               <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
-                영업 전·후, 휴무일 맞춤 일정 조율.
+                사진 접수 → 방문 시공 → 당일 완료.
                 <br />
                 <strong
                   className="text-[18px] font-bold md:text-[22px]"
                   style={{ color: "#1f66ff" }}>
-                  매장 운영에 지장 없이 완료
+                  소파 사용 중단 없이 바로 완료
                 </strong>
                 됩니다.
               </p>
@@ -694,7 +618,7 @@ export default function RestaurantChairLanding() {
         <FadeIn>
           <Image
             src="/images/chair/chair-medal.png"
-            alt="리스토리 로고"
+            alt="리스토리 메달"
             width={250}
             height={250}
             className="mx-auto mb-4 w-[250px] h-auto md:w-[300px] md:h-auto"
@@ -705,12 +629,12 @@ export default function RestaurantChairLanding() {
             미친 자신감의 이유
           </p>
           <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>1,000</span>건+
+            <span style={{ color: "#ffffff" }}>500</span>건+
           </p>
           <p
             className="mt-1 text-[25px] font-semibold md:text-[35px]"
             style={{ color: "rgba(255, 255, 255, 0.79)" }}>
-            매년 의자 가죽 교체 실적
+            매년 소파 쿠션 복원 실적
           </p>
           <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
             {[
@@ -749,29 +673,23 @@ export default function RestaurantChairLanding() {
             </div>
           </FadeIn>
           <FadeIn delay={120}>
-            <div className="mt-12 grid grid-cols-4 gap-3 text-center md:gap-6">
+            <div className="mt-12 grid grid-cols-3 gap-3 text-center md:gap-6">
               {[
                 {
                   icon: "/images/icon_step1.png",
                   step: "01",
                   title: "사진 접수",
-                  desc: "의자 사진 +\n수량 보내기",
-                },
-                {
-                  icon: "/images/icon_step2.png",
-                  step: "02",
-                  title: "실측 방문",
-                  desc: "재질·색상 선택\n비용 안내",
+                  desc: "소파 사진\n보내기",
                 },
                 {
                   icon: "/images/icon_step3.png",
-                  step: "03",
+                  step: "02",
                   title: "방문 시공",
-                  desc: "영업 외 시간\n맞춤 방문",
+                  desc: "당일 시공\n맞춤 방문",
                 },
                 {
                   icon: "/images/icon_step4.png",
-                  step: "04",
+                  step: "03",
                   title: "완료",
                   desc: "당일 완료\n바로 사용",
                 },
@@ -943,16 +861,16 @@ export default function RestaurantChairLanding() {
         }}>
         <FadeIn>
           <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            식당 의자, 새로 사지 마세요
+            소파, 새로 사지 마세요
             <br />
-            <span style={{ color: "#ffe066" }}>가죽만 바꾸면</span> 새것처럼
+            <span style={{ color: "#ffe066" }}>쿠션 복원만 하면</span> 새것처럼
           </h2>
           <p
             className="mt-3 text-[14px] leading-[1.7] md:text-[17px]"
             style={{ color: "rgba(255,255,255,0.7)" }}>
             소파 사진만 보내주시면
             <br />
-            견적 바로 안내드립니다
+            복원 가능 여부 바로 안내드립니다
           </p>
           <div className="mx-auto mt-8 flex max-w-xs flex-col gap-2.5 md:max-w-sm">
             <a
@@ -978,7 +896,7 @@ export default function RestaurantChairLanding() {
             </a>
           </div>
           <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
-            {["고급 인조가죽", "색상 선택", "영업 외 시공", "1년 A/S"].map(
+            {["고탄성 스펀지", "이태리 밴드", "당일 시공", "무상 A/S"].map(
               (badge) => (
                 <span
                   key={badge}
