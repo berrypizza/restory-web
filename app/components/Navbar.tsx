@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { businessLines } from "@/lib/site-config";
+import DrawerMenu from "@/app/components/DrawerMenu";
 
 const quickLinks = ["질문/답변", "작업사례", "후기", "이벤트", "사진접수"];
 
@@ -103,7 +104,7 @@ export default function Navbar() {
                   )}
                 </Link>
 
-                {/* 드롭다운 — 스크롤 중에는 pointer-events 차단 */}
+                {/* 드롭다운 */}
                 <div className="invisible absolute left-0 top-full z-50 w-[760px] translate-y-2 rounded-b-3xl border border-t-0 border-neutral-200 bg-white opacity-0 shadow-2xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="grid grid-cols-[190px_1fr]">
                     <div className="bg-[#edf3ff] p-6">
@@ -141,10 +142,9 @@ export default function Navbar() {
             );
           })}
 
+          {/* 햄버거 → DrawerMenu */}
           <div className="ml-auto flex h-full items-center">
-            <button className="rounded-xl px-3 py-2 text-2xl leading-none text-neutral-500">
-              ☰
-            </button>
+            <DrawerMenu />
           </div>
         </nav>
       </header>
