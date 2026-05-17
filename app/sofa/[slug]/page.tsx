@@ -1,31 +1,11 @@
-import { notFound } from "next/navigation";
-import { ServiceLandingPage } from "@/app/components/CategoryPages";
-import { getService, getAllSlugs } from "@/lib/site-config";
+import Sofacushionlanding from "@/app/components/landing/Sofacushionlanding";
 
-export function generateStaticParams() {
-  return getAllSlugs("sofa").map((slug) => ({ slug }));
-}
+export const metadata = {
+  title: "소파 쿠션 꺼짐 복원 | Re'Story",
+  description:
+    "   소파 쿠션 꺼짐 복원, 사진 한 장이면 복원 가능 여부 바로 안내드립니다.",
+};
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const service = getService("sofa", slug);
-  return {
-    title: service ? `${service.title} | Re'Story` : "Re'Story",
-    description: service?.description,
-  };
-}
-
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const service = getService("sofa", slug);
-  if (!service) return notFound();
-  return <ServiceLandingPage service={service} />;
+export default function Page() {
+  return <Sofacushionlanding />;
 }
