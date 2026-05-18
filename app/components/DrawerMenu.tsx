@@ -11,24 +11,78 @@ const serviceIcons: Record<
   { icon: string; label: string; href: string }[]
 > = {
   repair: [
-    { icon: "🔧", label: "상부장 수리", href: "/repair/sangbujang" },
-    { icon: "💧", label: "하부장 밑판", href: "/repair/habujang" },
-    { icon: "🚪", label: "문짝 떨어짐", href: "/repair/door-fall" },
-    { icon: "🔩", label: "경첩 교체", href: "/repair/hinge" },
-    { icon: "📦", label: "서랍 레일", href: "/repair/drawer-rail" },
-    { icon: "🛏️", label: "침대 프레임", href: "/repair/bed-frame" },
-    { icon: "🍽️", label: "식탁 다리", href: "/repair/table-leg" },
+    {
+      icon: "/images/icon/icon-upper.png",
+      label: "상부장 수리",
+      href: "/repair/sangbujang",
+    },
+    {
+      icon: "/images/icon/icon-down.png",
+      label: "하부장 밑판",
+      href: "/repair/habujang",
+    },
+    {
+      icon: "/images/icon/icon-door-drop.png",
+      label: "문짝 떨어짐",
+      href: "/repair/door-fall",
+    },
+    {
+      icon: "/images/icon/icon-door-gear.png",
+      label: "경첩 교체",
+      href: "/repair/hinge",
+    },
+    {
+      icon: "/images/icon/icon-rail.png",
+      label: "서랍 레일",
+      href: "/repair/drawer-rail",
+    },
+    {
+      icon: "/images/icon/icon-bed.png",
+      label: "침대 프레임",
+      href: "/repair/bed-frame",
+    },
+    {
+      icon: "/images/icon/icon-table.png",
+      label: "식탁 다리",
+      href: "/repair/table-leg",
+    },
   ],
   kitchen: [
-    { icon: "🪵", label: "싱크대 문짝", href: "/kitchen/sink-door" },
-    { icon: "❄️", label: "냉장고장", href: "/kitchen/fridge-cabinet" },
-    { icon: "🗄️", label: "로청장", href: "/kitchen/rocheong" },
+    {
+      icon: "/images/icon/icon-door-reform.png",
+      label: "싱크대 문짝",
+      href: "/kitchen/sink-door",
+    },
+    {
+      icon: "/images/icon/icon-refre.png",
+      label: "냉장고장",
+      href: "/kitchen/fridge-cabinet",
+    },
+    {
+      icon: "/images/icon/icon-robo.png",
+      label: "로청장",
+      href: "/kitchen/rocheong",
+    },
   ],
   leather: [
-    { icon: "🪑", label: "식당 의자", href: "/leather/restaurant-chair" },
-    { icon: "✂️", label: "기타 가죽", href: "/leather/custom" },
+    {
+      icon: "/images/icon/icon-chair-reform.png",
+      label: "식당 의자",
+      href: "/leather/restaurant-chair",
+    },
+    {
+      icon: "/images/icon/icon-chair-reform.png",
+      label: "기타 가죽",
+      href: "/leather/custom",
+    },
   ],
-  sofa: [{ icon: "🛋️", label: "소파 꺼짐 복원", href: "/sofa" }],
+  sofa: [
+    {
+      icon: "/images/icon/icon-sofa-sag.png",
+      label: "소파 꺼짐 복원",
+      href: "/sofa",
+    },
+  ],
 };
 
 const PHONE = "tel:010-9127-3024";
@@ -146,7 +200,14 @@ export default function DrawerMenu() {
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className="flex flex-col items-center gap-1.5 rounded-xl py-3 px-1 transition-colors hover:bg-[#f0f4ff]">
-                    <span className="text-[24px]">{item.icon}</span>
+                    {/* <span className="text-[24px]">{item.icon}</span> */}
+                    <Image
+                      src={item.icon}
+                      alt={item.label}
+                      width={52}
+                      height={52}
+                      className="h-52 w-52 object-contain"
+                    />
                     <span className="text-[11px] font-semibold text-neutral-700 text-center leading-tight whitespace-nowrap">
                       {item.label}
                     </span>
