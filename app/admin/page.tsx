@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
+import Image from "next/image";
 
 function getSupabase() {
   return createClient(
@@ -42,7 +43,7 @@ const TECHS: Tech[] = ["고관호", "고현호", "이주형", "강영훈"];
 const STATUSES: Status[] = ["대기", "배정", "완료", "취소"];
 
 const TECH_COLOR: Record<string, string> = {
-  고관호: "#2fae8a",
+  고관호: "#e32e40",
   고현호: "#60a5fa",
   이주형: "#f59e0b",
   강영훈: "#f472b6",
@@ -1188,14 +1189,22 @@ export default function AdminDashboard() {
     return (
       <main
         className="min-h-screen flex items-center justify-center px-6"
-        style={{ backgroundColor: "#111" }}>
+        style={{ backgroundColor: "#1f66ff" }}>
         <div className="w-full max-w-xs flex flex-col items-center gap-6">
           <div className="text-center">
+            <Image
+              src="/images/logo.png"
+              alt="Re'Story"
+              width={216}
+              height={216}
+              className="w-[216px]  object-contain absolute -top-[-140px]"
+              priority
+            />
             <p className="text-3xl mb-2">🛠</p>
             <h1 className="text-xl font-black" style={{ color: "white" }}>
               리스토리 관리자
             </h1>
-            <p className="text-sm mt-1" style={{ color: "#555" }}>
+            <p className="text-sm mt-1" style={{ color: "#" }}>
               이름을 선택하고 비밀번호를 입력하세요
             </p>
           </div>
