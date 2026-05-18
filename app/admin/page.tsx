@@ -1191,13 +1191,13 @@ export default function AdminDashboard() {
         className="min-h-screen flex items-center justify-center px-6"
         style={{ backgroundColor: "#1f66ff" }}>
         <div className="w-full max-w-xs flex flex-col items-center gap-6">
-          <div className="text-center">
+          <div className="text-center relative pt-[140px]">
             <Image
               src="/images/logo.png"
               alt="Re'Story"
               width={216}
               height={216}
-              className="w-[216px]  object-contain absolute -top-[-140px]"
+              className="w-[216px]  object-contain absolute top-[-10px]"
               priority
             />
             <p className="text-3xl mb-2">🛠</p>
