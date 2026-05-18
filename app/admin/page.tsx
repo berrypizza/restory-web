@@ -798,7 +798,7 @@ function JobCard({
                     <div className="min-w-0">
                       <p
                         className="text-xs font-black mb-0.5"
-                        style={{ color: "#2fae8a" }}>
+                        style={{ color: "#1f66ff" }}>
                         메모 보기
                       </p>
                       <p className="text-xs truncate" style={{ color: "#888" }}>
@@ -811,9 +811,9 @@ function JobCard({
                       <span
                         className="text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
                         style={{
-                          backgroundColor: "#2fae8a22",
-                          color: "#2fae8a",
-                          border: "1px solid #2fae8a44",
+                          backgroundColor: "#1f66ff22",
+                          color: "#1f66ff",
+                          border: "1px solid #1f66ff44",
                         }}>
                         탭
                       </span>
@@ -1201,7 +1201,7 @@ export default function AdminDashboard() {
               priority
             />
             <p className="text-3xl mb-2">🛠</p>
-            <h1 className="text-xl font-black" style={{ color: "white" }}>
+            <h1 className="text-xl font-black" style={{ color: "#1f66ff" }}>
               리스토리 관리자
             </h1>
             <p className="text-sm mt-1" style={{ color: "#" }}>
@@ -1491,8 +1491,17 @@ export default function AdminDashboard() {
           className="flex items-center justify-between mb-6 pb-4"
           style={{ borderBottom: "1px solid #222" }}>
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: "white" }}>
-              리스토리 관리
+            <h1
+              className="text-2xl font-bold"
+              style={{ color: "#1ㄹ66ㄹㄹ  " }}>
+              <Image
+                src="/images/logo.png"
+                alt="Re'Story"
+                width={120}
+                height={120}
+                className="inline-block object-contain mr-2"
+              />
+              리스토리 관리 페이지
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <span
@@ -1553,7 +1562,7 @@ export default function AdminDashboard() {
                   setShowForm(true);
                 }}
                 className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
-                style={{ backgroundColor: "#2fae8a" }}>
+                style={{ backgroundColor: "#1f66ff" }}>
                 + 접수
               </button>
             )}
@@ -1569,7 +1578,7 @@ export default function AdminDashboard() {
               onClick={() => setTab(t)}
               className="flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all"
               style={{
-                backgroundColor: tab === t ? "#2fae8a" : "transparent",
+                backgroundColor: tab === t ? "#1f66ff" : "transparent",
                 color: tab === t ? "white" : "#777",
               }}>
               {t}
@@ -1877,7 +1886,7 @@ export default function AdminDashboard() {
                         setShowForm(true);
                       }}
                       className="text-xs px-3 py-1.5 rounded-lg font-bold"
-                      style={{ backgroundColor: "#2fae8a", color: "white" }}>
+                      style={{ backgroundColor: "#1f66ff", color: "white" }}>
                       + 추가
                     </button>
                   )}
@@ -2193,7 +2202,7 @@ export default function AdminDashboard() {
                   onClick={() => setStatusFilter(s as Status | "전체")}
                   className="rounded-full px-3 py-1.5 text-xs font-semibold"
                   style={{
-                    backgroundColor: statusFilter === s ? "#2fae8a" : "#1c1c1c",
+                    backgroundColor: statusFilter === s ? "#1f66ff" : "#1c1c1c",
                     color: statusFilter === s ? "white" : "#777",
                     border: "1px solid #2e2e2e",
                   }}>
