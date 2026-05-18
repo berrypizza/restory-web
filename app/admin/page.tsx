@@ -1058,7 +1058,7 @@ function JobCard({
             <button
               onClick={handleComplete}
               className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
-              style={{ backgroundColor: "#2fae8a" }}>
+              style={{ backgroundColor: "#1f66ff" }}>
               ✓ 완료 처리
             </button>
           ) : (
@@ -2923,7 +2923,7 @@ export default function AdminDashboard() {
               onClick={save}
               disabled={saving}
               className="mt-1 rounded-xl py-3.5 text-sm font-bold text-white"
-              style={{ backgroundColor: "#2fae8a", opacity: saving ? 0.7 : 1 }}>
+              style={{ backgroundColor: "#1f66ff", opacity: saving ? 0.7 : 1 }}>
               {saving ? "저장 중..." : editId ? "수정 완료" : "접수 저장"}
             </button>
           </div>
