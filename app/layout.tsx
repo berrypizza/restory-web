@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/app/components/Navbar";
+import LayoutBody from "@/app/components/LayoutBody";
 
 export const metadata: Metadata = {
   title: "Re'Story - 가구 출장 수리 전문",
@@ -26,8 +26,7 @@ export default function RootLayout({
           fontFamily:
             "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
         }}>
-        <Navbar />
-        {children}
+        <LayoutBody>{children}</LayoutBody>
       </body>
     </html>
   );
