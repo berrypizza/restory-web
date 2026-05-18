@@ -1526,47 +1526,49 @@ export default function AdminDashboard() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => load()}
-              className="rounded-xl px-3 py-2.5 text-sm font-bold"
-              style={{
-                backgroundColor: "#1c1c1c",
-                color: "#888",
-                border: "1px solid #2e2e2e",
-              }}>
-              ↻
-            </button>
+        </div>
+
+        {/* 접수 자물쇠 등 */}
+        <div className="flex items-center justify-end gap-2 right-0 mb-4">
+          <button
+            onClick={() => load()}
+            className="rounded-xl px-3 py-2.5 text-sm font-bold"
+            style={{
+              backgroundColor: "#1c1c1c",
+              color: "#888",
+              border: "1px solid #2e2e2e",
+            }}>
+            ↻
+          </button>
+          <button
+            onClick={() => {
+              try {
+                localStorage.removeItem("restory_admin_expiry");
+                localStorage.removeItem("restory_logged_name");
+              } catch {}
+              setLoggedUser(null);
+              setSelectedName("");
+            }}
+            className="rounded-xl px-3 py-2.5 text-sm font-bold"
+            style={{
+              backgroundColor: "#1c1c1c",
+              color: "#666",
+              border: "1px solid #2e2e2e",
+            }}>
+            🔒
+          </button>
+          {isAdmin && (
             <button
               onClick={() => {
-                try {
-                  localStorage.removeItem("restory_admin_expiry");
-                  localStorage.removeItem("restory_logged_name");
-                } catch {}
-                setLoggedUser(null);
-                setSelectedName("");
+                setForm(emptyForm());
+                setEditId(null);
+                setShowForm(true);
               }}
-              className="rounded-xl px-3 py-2.5 text-sm font-bold"
-              style={{
-                backgroundColor: "#1c1c1c",
-                color: "#666",
-                border: "1px solid #2e2e2e",
-              }}>
-              🔒
+              className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
+              style={{ backgroundColor: "#1f66ff" }}>
+              + 접수
             </button>
-            {isAdmin && (
-              <button
-                onClick={() => {
-                  setForm(emptyForm());
-                  setEditId(null);
-                  setShowForm(true);
-                }}
-                className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
-                style={{ backgroundColor: "#1f66ff" }}>
-                + 접수
-              </button>
-            )}
-          </div>
+          )}
         </div>
 
         <div
