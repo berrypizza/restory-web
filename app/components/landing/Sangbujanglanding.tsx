@@ -584,6 +584,7 @@ export default function SangbujangLanding() {
         </FadeIn>
       </section>
 
+      {/* 유투브 영상 섹션 임돠 */}
       <section
         className="px-5 py-14 text-white md:py-20"
         style={{ background: "#1a1a1a" }}>
