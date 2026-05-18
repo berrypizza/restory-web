@@ -47,17 +47,17 @@ const TECH_COLOR: Record<string, string> = {
   고현호: "#60a5fa",
   이주형: "#f59e0b",
   강영훈: "#f472b6",
-  "": "#666",
+  "": "#64748b",
 };
 
 const STATUS_STYLE: Record<
   Status,
   { bg: string; color: string; border: string }
 > = {
-  대기: { bg: "#2a2a2a", color: "#999", border: "#3a3a3a" },
-  배정: { bg: "#2fae8a22", color: "#2fae8a", border: "#2fae8a55" },
-  완료: { bg: "#1a3a2a", color: "#4ade80", border: "#2fae8a44" },
-  취소: { bg: "#3a202022", color: "#ef4444", border: "#ef444433" },
+  대기: { bg: "#f3f4f6", color: "#6b7280", border: "#e5e7eb" },
+  배정: { bg: "#eaf1ff", color: "#1f66ff", border: "#a9c4ff" },
+  완료: { bg: "#eff6ff", color: "#1f66ff", border: "#bfd3ff" },
+  취소: { bg: "#fef2f2", color: "#ef4444", border: "#ef444433" },
 };
 
 function nowKST() {
@@ -224,26 +224,28 @@ function PhotoCapture({
     <>
       <div
         className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-        style={{ backgroundColor: "rgba(0,0,0,0.92)" }}>
+        style={{ backgroundColor: "rgba(15,23,42,0.45)" }}>
         <div
           className="w-full max-w-sm rounded-2xl overflow-hidden flex flex-col"
           style={{
-            backgroundColor: "#1e1e1e",
-            border: "1px solid #333",
+            backgroundColor: "#ffffff",
+            border: "1px solid #dbe3f0",
             maxHeight: "88vh",
           }}>
           <div
             className="flex items-center justify-between px-4 py-3 flex-shrink-0"
-            style={{ borderBottom: "1px solid #2a2a2a" }}>
+            style={{ borderBottom: "1px solid #f3f4f6" }}>
             <div>
               <span className="text-sm font-bold" style={{ color: "white" }}>
                 완료 사진
               </span>
-              <span className="text-xs ml-2" style={{ color: "#666" }}>
+              <span className="text-xs ml-2" style={{ color: "#64748b" }}>
                 {list.length}장
               </span>
             </div>
-            <button onClick={onCancel} style={{ color: "#666", fontSize: 18 }}>
+            <button
+              onClick={onCancel}
+              style={{ color: "#64748b", fontSize: 18 }}>
               ✕
             </button>
           </div>
@@ -251,7 +253,7 @@ function PhotoCapture({
             {list.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 gap-2">
                 <p className="text-3xl">📷</p>
-                <p className="text-sm" style={{ color: "#666" }}>
+                <p className="text-sm" style={{ color: "#64748b" }}>
                   사진이 없어요
                 </p>
                 {revertStatus && (
@@ -266,7 +268,7 @@ function PhotoCapture({
                   <div
                     key={url}
                     className="relative rounded-xl overflow-hidden"
-                    style={{ aspectRatio: "1", border: "1px solid #2a2a2a" }}>
+                    style={{ aspectRatio: "1", border: "1px solid #f3f4f6" }}>
                     <img
                       src={url}
                       alt={`사진 ${idx + 1}`}
@@ -286,7 +288,10 @@ function PhotoCapture({
                           a.click();
                         }}
                         className="flex-1 rounded-lg py-1 text-xs"
-                        style={{ backgroundColor: "#ffffff18", color: "#ddd" }}>
+                        style={{
+                          backgroundColor: "#ffffff18",
+                          color: "#1f2937",
+                        }}>
                         ⬇
                       </button>
                       <button
@@ -309,10 +314,10 @@ function PhotoCapture({
           </div>
           <div
             className="flex gap-2 p-3 flex-shrink-0"
-            style={{ borderTop: "1px solid #2a2a2a" }}>
+            style={{ borderTop: "1px solid #f3f4f6" }}>
             <label
               className="flex-1 rounded-xl py-2.5 text-xs font-bold text-center cursor-pointer"
-              style={{ backgroundColor: "#2a2a2a", color: "#bbb" }}>
+              style={{ backgroundColor: "#f3f4f6", color: "#475569" }}>
               📷 카메라
               <input
                 type="file"
@@ -325,7 +330,7 @@ function PhotoCapture({
             </label>
             <label
               className="flex-1 rounded-xl py-2.5 text-xs font-bold text-center cursor-pointer"
-              style={{ backgroundColor: "#2a2a2a", color: "#bbb" }}>
+              style={{ backgroundColor: "#f3f4f6", color: "#475569" }}>
               🖼 갤러리
               <input
                 type="file"
@@ -340,7 +345,7 @@ function PhotoCapture({
               disabled={uploading}
               className="flex-1 rounded-xl py-2.5 text-xs font-bold text-white"
               style={{
-                backgroundColor: "#2fae8a",
+                backgroundColor: "#1f66ff",
                 opacity: uploading ? 0.7 : 1,
               }}>
               {uploading ? uploadProgress || "저장중..." : "확인 ✓"}
@@ -351,7 +356,7 @@ function PhotoCapture({
       {lightbox && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-          style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
+          style={{ backgroundColor: "rgba(15,23,42,0.82)" }}
           onClick={() => setLightbox(null)}>
           <img
             src={lightbox}
@@ -445,7 +450,7 @@ function JobCard({
       {showCelebration && (
         <div
           className="fixed inset-0 z-[80] flex flex-col items-center justify-center pointer-events-none"
-          style={{ backgroundColor: "rgba(0,0,0,0.85)" }}>
+          style={{ backgroundColor: "rgba(15,23,42,0.72)" }}>
           <style>{`@keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } } @keyframes pop-in { 0% { transform: scale(0.3); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } } @keyframes fade-up { 0% { transform: translateY(16px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } } .confetti-piece { position: fixed; width: 10px; height: 10px; animation: confetti-fall linear forwards; }`}</style>
           {[...Array(20)].map((_, i) => (
             <div
@@ -455,12 +460,12 @@ function JobCard({
                 left: `${5 + ((i * 4.5) % 95)}%`,
                 top: `-10px`,
                 backgroundColor: [
-                  "#2fae8a",
+                  "#1f66ff",
                   "#60a5fa",
                   "#f59e0b",
                   "#f472b6",
                   "#a78bfa",
-                  "#34d399",
+                  "#93c5fd",
                 ][i % 6],
                 width: i % 3 === 0 ? 8 : 12,
                 height: i % 3 === 0 ? 12 : 8,
@@ -473,10 +478,10 @@ function JobCard({
             <div
               className="w-28 h-28 rounded-full flex items-center justify-center mb-6"
               style={{
-                backgroundColor: "#00ffa2",
+                backgroundColor: "#1f66ff",
                 boxShadow: "0 0 60px #00ffa288",
               }}>
-              <span style={{ fontSize: 56, color: "#023120" }}>✓</span>
+              <span style={{ fontSize: 56, color: "#ffffff" }}>✓</span>
             </div>
           </div>
           <div style={{ animation: "fade-up 0.4s ease-out 0.3s both" }}>
@@ -485,15 +490,15 @@ function JobCard({
             </p>
             <p
               className="text-xl font-semibold text-center mb-1"
-              style={{ color: "#e4e4e4" }}>
+              style={{ color: "#111827" }}>
               {job.name}님 완료
             </p>
-            <p className="text-sm text-center" style={{ color: "#aaa" }}>
+            <p className="text-sm text-center" style={{ color: "#64748b" }}>
               당신이 있어서 리스토리입니다
             </p>
             <p
               className="text-base text-center mt-1 font-medium"
-              style={{ color: "#00ffa2" }}>
+              style={{ color: "#1f66ff" }}>
               ✨ 고마워요 ✨
             </p>
           </div>
@@ -507,7 +512,7 @@ function JobCard({
           return (
             <div
               className="fixed inset-0 z-[70] flex flex-col select-none"
-              style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
+              style={{ backgroundColor: "rgba(15,23,42,0.82)" }}
               onClick={() => setLightboxUrl(null)}
               onTouchStart={(e) => {
                 (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
@@ -530,7 +535,7 @@ function JobCard({
                   className="text-sm font-bold px-2.5 py-1 rounded-full"
                   style={{
                     backgroundColor: "rgba(255,255,255,0.1)",
-                    color: "#bbb",
+                    color: "#475569",
                   }}>
                   {currentIdx + 1} / {currentList.length}
                 </span>
@@ -592,7 +597,8 @@ function JobCard({
                       style={{
                         width: i === currentIdx ? 20 : 6,
                         height: 6,
-                        backgroundColor: i === currentIdx ? "#2fae8a" : "#444",
+                        backgroundColor:
+                          i === currentIdx ? "#1f66ff" : "#94a3b8",
                       }}
                     />
                   ))}
@@ -619,13 +625,14 @@ function JobCard({
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          backgroundColor: "#1c1c1c",
-          border: "1px solid #2e2e2e",
-          borderLeft: `4px solid ${techColor}`,
+          backgroundColor: "#ffffff",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 2px 12px rgba(15,23,42,0.05)",
+          borderLeft: `7px solid ${techColor}`,
         }}>
         <div
           className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap"
-          style={{ borderBottom: "1px solid #252525" }}>
+          style={{ borderBottom: "1px solid #f8fafc" }}>
           <select
             value={job.status}
             onChange={(e) =>
@@ -639,13 +646,13 @@ function JobCard({
               </option>
             ))}
           </select>
-          <span className="text-xs font-medium" style={{ color: "#bbb" }}>
+          <span className="text-xs font-medium" style={{ color: "#475569" }}>
             {formatFullDate(job.visit_date)}
           </span>
           {job.visit_time && (
             <span
               className="text-xs font-bold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: "#252525", color: "#e5e5e5" }}>
+              style={{ backgroundColor: "#f8fafc", color: "#111827" }}>
               {formatTime(job.visit_time)}
             </span>
           )}
@@ -664,9 +671,9 @@ function JobCard({
             <span
               className="text-xs font-bold px-2 py-0.5 rounded-full"
               style={{
-                backgroundColor: "#2fae8a22",
-                color: "#2fae8a",
-                border: "1px solid #2fae8a44",
+                backgroundColor: "#eaf1ff",
+                color: "#1f66ff",
+                border: "1px solid #bfd3ff",
               }}>
               🔨 시공완료
             </span>
@@ -715,11 +722,15 @@ function JobCard({
           </select>
         </div>
 
+        {/* 여기 부터가 밖 카드? */}
         <div className="flex items-start gap-3 px-3 py-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <span className="text-base font-bold" style={{ color: "white" }}>
-                {job.name || "?"}
+              <span
+                className="text-base font-bold"
+                style={{ color: "#111827" }}>
+                {job.name || "?"}{" "}
+                <span className="text-neutral-500">고객님</span>
               </span>
               {job.phone && (
                 <div className="flex items-center gap-1.5">
@@ -734,17 +745,23 @@ function JobCard({
                   </span>
                   <a
                     href={`tel:${job.phone}`}
-                    className="flex items-center justify-center rounded-xl font-bold"
+                    className="flex items-center justify-center rounded-full bg-[#ffffff] shadow-[0_2px_12px_rgba(15,23,42,0.06)]"
                     style={{
                       width: 36,
                       height: 36,
-                      backgroundColor: "#ef4444",
+                      backgroundColor: "#e32e40",
                       color: "white",
                       fontSize: 18,
                       textDecoration: "none",
                       flexShrink: 0,
                     }}>
-                    📞
+                    <Image
+                      src="/images/phone-icon.png"
+                      alt="전화기 아이콘"
+                      width={48}
+                      height={48}
+                      className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
+                    />
                   </a>
                 </div>
               )}
@@ -757,9 +774,9 @@ function JobCard({
                   rel="noopener noreferrer"
                   className="text-xs font-medium px-2 py-0.5 rounded-full inline-flex items-center gap-1"
                   style={{
-                    backgroundColor: "#1a4a3a",
-                    color: "#4ade80",
-                    border: "1px solid #2fae8a44",
+                    backgroundColor: "#eff6ff",
+                    color: "#1f66ff",
+                    border: "1px solid #bfd3ff",
                     textDecoration: "none",
                   }}>
                   <span style={{ fontSize: 10 }}>📍</span>
@@ -767,7 +784,7 @@ function JobCard({
                 </a>
               )}
               {job.symptom && (
-                <span className="text-xs" style={{ color: "#aaa" }}>
+                <span className="text-xs" style={{ color: "#64748b" }}>
                   {job.symptom}
                 </span>
               )}
@@ -776,7 +793,7 @@ function JobCard({
               {job.price > 0 && (
                 <span
                   className="text-sm font-bold"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#1f66ff" }}>
                   {formatPrice(job.price)}
                 </span>
               )}
@@ -789,9 +806,9 @@ function JobCard({
                   onClick={() => setMemoOpen((v) => !v)}
                   className="w-full flex items-center justify-between rounded-xl px-3 py-3 text-left"
                   style={{
-                    backgroundColor: memoOpen ? "#1e2a1e" : "#1c2a1c",
-                    border: `1px solid ${memoOpen ? "#2fae8a66" : "#2fae8a44"}`,
-                    boxShadow: memoOpen ? "none" : "0 0 0 1px #2fae8a22",
+                    backgroundColor: memoOpen ? "#f8fbff" : "#f8fbff",
+                    border: `1px solid ${memoOpen ? "#2fae8a66" : "#bfd3ff"}`,
+                    boxShadow: memoOpen ? "none" : "0 0 0 1px #eaf1ff",
                   }}>
                   <div className="flex items-center gap-2 min-w-0">
                     <span style={{ fontSize: 15, flexShrink: 0 }}>💬</span>
@@ -801,7 +818,9 @@ function JobCard({
                         style={{ color: "#1f66ff" }}>
                         메모 보기
                       </p>
-                      <p className="text-xs truncate" style={{ color: "#888" }}>
+                      <p
+                        className="text-xs truncate"
+                        style={{ color: "#6b7280" }}>
                         {job.memo}
                       </p>
                     </div>
@@ -811,16 +830,16 @@ function JobCard({
                       <span
                         className="text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
                         style={{
-                          backgroundColor: "#1f66ff22",
+                          backgroundColor: "#eaf1ff",
                           color: "#1f66ff",
-                          border: "1px solid #1f66ff44",
+                          border: "1px solid #bfd3ff",
                         }}>
                         탭
                       </span>
                     )}
                     <span
                       style={{
-                        color: "#2fae8a",
+                        color: "#1f66ff",
                         fontSize: 16,
                         display: "inline-block",
                         transition: "transform 0.2s",
@@ -834,13 +853,13 @@ function JobCard({
                   <div
                     className="rounded-b-xl px-4 py-3 -mt-0.5"
                     style={{
-                      backgroundColor: "#162116",
-                      border: "1px solid #2fae8a44",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #bfd3ff",
                       borderTop: "none",
                     }}>
                     <p
                       className="text-sm leading-relaxed whitespace-pre-wrap"
-                      style={{ color: "#ddd" }}>
+                      style={{ color: "#1f2937" }}>
                       {job.memo}
                     </p>
                   </div>
@@ -862,11 +881,11 @@ function JobCard({
                     className="flex items-center gap-1.5 mt-1 px-2 py-1 rounded-lg"
                     style={{
                       backgroundColor: expired
-                        ? "#3a202022"
+                        ? "#fef2f2"
                         : daysLeft <= 30
                           ? "#f59e0b18"
-                          : "#2fae8a12",
-                      border: `1px solid ${expired ? "#ef444433" : daysLeft <= 30 ? "#f59e0b33" : "#2fae8a33"}`,
+                          : "#f4f8ff",
+                      border: `1px solid ${expired ? "#ef444433" : daysLeft <= 30 ? "#f59e0b33" : "#d6e4ff"}`,
                       display: "inline-flex",
                       width: "fit-content",
                     }}>
@@ -878,7 +897,7 @@ function JobCard({
                           ? "#ef4444"
                           : daysLeft <= 30
                             ? "#f59e0b"
-                            : "#2fae8a",
+                            : "#1f66ff",
                       }}>
                       AS {expired ? "만료" : `${job.as_until} 까지`}
                       {!expired && daysLeft <= 30 && ` (${daysLeft}일 남음)`}
@@ -941,7 +960,7 @@ function JobCard({
                   <div>
                     <span
                       className="text-xs font-bold mb-1.5 inline-block"
-                      style={{ color: "#2fae8a" }}>
+                      style={{ color: "#1f66ff" }}>
                       ✓ 완료사진
                     </span>
                     <div className="flex gap-1.5 flex-wrap">
@@ -959,7 +978,7 @@ function JobCard({
                               height: 64,
                               width: 64,
                               objectFit: "cover",
-                              border: "1px solid #2fae8a44",
+                              border: "1px solid #bfd3ff",
                             }}
                           />
                           {idx === 3 && photos.length > 4 && (
@@ -988,9 +1007,9 @@ function JobCard({
                 onClick={() => onEdit(job)}
                 className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
                 style={{
-                  backgroundColor: "#2a2a2a",
-                  color: "#ccc",
-                  border: "1px solid #3a3a3a",
+                  backgroundColor: "#f3f4f6",
+                  color: "#334155",
+                  border: "1px solid #e5e7eb",
                 }}>
                 수정
               </button>
@@ -1010,7 +1029,7 @@ function JobCard({
 
         <div
           className="flex gap-2 px-3 pb-3"
-          style={{ borderTop: "1px solid #252525", paddingTop: 10 }}>
+          style={{ borderTop: "1px solid #f8fafc", paddingTop: 10 }}>
           {job.is_measurement ? (
             <div className="flex gap-2 flex-1">
               <button
@@ -1038,7 +1057,7 @@ function JobCard({
                     });
                   }}
                   className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
-                  style={{ backgroundColor: "#2fae8a" }}>
+                  style={{ backgroundColor: "#1f66ff" }}>
                   🔨 시공 완료
                 </button>
               )}
@@ -1046,9 +1065,9 @@ function JobCard({
                 <span
                   className="rounded-xl px-3 py-2.5 text-xs font-bold flex items-center flex-shrink-0"
                   style={{
-                    backgroundColor: "#2fae8a18",
-                    color: "#2fae8a",
-                    border: "1px solid #2fae8a33",
+                    backgroundColor: "#eff6ff",
+                    color: "#1f66ff",
+                    border: "1px solid #d6e4ff",
                   }}>
                   ✓ 시공완료
                 </span>
@@ -1069,9 +1088,9 @@ function JobCard({
               }}
               className="flex-1 rounded-xl py-2.5 text-sm font-bold"
               style={{
-                backgroundColor: photos.length > 0 ? "#2fae8a22" : "#252525",
-                color: photos.length > 0 ? "#2fae8a" : "#aaa",
-                border: `1px solid ${photos.length > 0 ? "#2fae8a44" : "#333"}`,
+                backgroundColor: photos.length > 0 ? "#eaf1ff" : "#f8fafc",
+                color: photos.length > 0 ? "#1f66ff" : "#64748b",
+                border: `1px solid ${photos.length > 0 ? "#bfd3ff" : "#dbe3f0"}`,
               }}>
               {photos.length > 0
                 ? `📷 사진 관리 (${photos.length}장)`
@@ -1189,8 +1208,17 @@ export default function AdminDashboard() {
     return (
       <main
         className="min-h-screen flex items-center justify-center px-6"
-        style={{ backgroundColor: "#1f66ff" }}>
-        <div className="w-full max-w-xs flex flex-col items-center gap-6">
+        style={{
+          background: "linear-gradient(180deg,#1f66ff 0%, #4f8fff 100%)",
+        }}>
+        <div
+          className="w-full max-w-xs flex flex-col items-center gap-6 rounded-[28px] px-5 py-8"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.94)",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 20px 50px rgba(15,23,42,0.18)",
+            backdropFilter: "blur(12px)",
+          }}>
           <div className="text-center relative pt-[140px]">
             <Image
               src="/images/logo.png"
@@ -1204,7 +1232,9 @@ export default function AdminDashboard() {
             <h1 className="text-xl font-black" style={{ color: "#1f66ff" }}>
               리스토리 관리자
             </h1>
-            <p className="text-sm mt-1" style={{ color: "#" }}>
+            <p
+              className="text-sm mt-1"
+              style={{ color: "rgba(255,255,255,0.78)" }}>
               이름을 선택하고 비밀번호를 입력하세요
             </p>
           </div>
@@ -1227,10 +1257,10 @@ export default function AdminDashboard() {
                   style={{
                     backgroundColor:
                       selectedName === name
-                        ? TECH_COLOR[name] || "#2fae8a"
-                        : "#1c1c1c",
-                    color: selectedName === name ? "white" : "#666",
-                    border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#2fae8a" : "#2e2e2e"}`,
+                        ? TECH_COLOR[name] || "#1f66ff"
+                        : "#ffffff",
+                    color: selectedName === name ? "white" : "#64748b",
+                    border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#1f66ff" : "#e5e7eb"}`,
                   }}>
                   {name === ADMIN_NAME ? "🏅 " : ""}
                   {name}
@@ -1252,8 +1282,8 @@ export default function AdminDashboard() {
                 disabled={!selectedName}
                 className="w-full rounded-2xl px-4 py-3.5 text-base pr-12"
                 style={{
-                  backgroundColor: "#1c1c1c",
-                  border: `1px solid ${pwError ? "#ef4444" : "#2e2e2e"}`,
+                  backgroundColor: "#ffffff",
+                  border: `1px solid ${pwError ? "#ef4444" : "#e5e7eb"}`,
                   color: "white",
                   outline: "none",
                   fontFamily: "inherit",
@@ -1266,7 +1296,7 @@ export default function AdminDashboard() {
                   type="button"
                   onClick={() => setShowPw((v) => !v)}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
-                  style={{ color: "#555" }}>
+                  style={{ color: "#94a3b8" }}>
                   {showPw ? "🙈" : "👁"}
                 </button>
               )}
@@ -1286,8 +1316,8 @@ export default function AdminDashboard() {
               className="w-full rounded-2xl py-3.5 text-base font-bold text-white"
               style={{
                 backgroundColor: selectedName
-                  ? TECH_COLOR[selectedName] || "#2fae8a"
-                  : "#333",
+                  ? TECH_COLOR[selectedName] || "#1f66ff"
+                  : "#dbe3f0",
                 opacity: selectedName ? 1 : 0.5,
               }}>
               입장
@@ -1392,9 +1422,9 @@ export default function AdminDashboard() {
   );
 
   const inputStyle: React.CSSProperties = {
-    backgroundColor: "#1a1a1a",
-    border: "1px solid #383838",
-    color: "#e5e5e5",
+    backgroundColor: "#ffffff",
+    border: "1px solid #dbe3f0",
+    color: "#111827",
     borderRadius: 10,
     padding: "9px 12px",
     fontSize: 14,
@@ -1425,7 +1455,7 @@ export default function AdminDashboard() {
   const MonthSelector = () => (
     <div
       className="flex items-center justify-between mb-4 rounded-xl p-1.5"
-      style={{ backgroundColor: "#1c1c1c", border: "1px solid #2e2e2e" }}>
+      style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
       <button
         onClick={() => {
           const d = new Date(monthFilter + "-01");
@@ -1433,10 +1463,10 @@ export default function AdminDashboard() {
           setMonthFilter(d.toISOString().slice(0, 7));
         }}
         className="px-4 py-2 rounded-lg text-xl font-bold"
-        style={{ color: "#e5e5e5" }}>
+        style={{ color: "#111827" }}>
         ‹
       </button>
-      <span className="text-sm font-bold" style={{ color: "white" }}>
+      <span className="text-sm font-bold" style={{ color: "#111827" }}>
         {formatYearMonth(monthFilter)}
       </span>
       <button
@@ -1446,7 +1476,7 @@ export default function AdminDashboard() {
           setMonthFilter(d.toISOString().slice(0, 7));
         }}
         className="px-4 py-2 rounded-lg text-xl font-bold"
-        style={{ color: "#e5e5e5" }}>
+        style={{ color: "#111827" }}>
         ›
       </button>
     </div>
@@ -1465,9 +1495,9 @@ export default function AdminDashboard() {
       className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
       style={{
         backgroundColor:
-          value !== "전체" ? TECH_COLOR[value] + "22" : "#1c1c1c",
-        color: value !== "전체" ? TECH_COLOR[value] : "#bbb",
-        border: `1px solid ${value !== "전체" ? TECH_COLOR[value] + "44" : "#2e2e2e"}`,
+          value !== "전체" ? TECH_COLOR[value] + "22" : "#ffffff",
+        color: value !== "전체" ? TECH_COLOR[value] : "#475569",
+        border: `1px solid ${value !== "전체" ? TECH_COLOR[value] + "44" : "#e5e7eb"}`,
         outline: "none",
       }}>
       <option value="전체">전체 기사</option>
@@ -1485,15 +1515,13 @@ export default function AdminDashboard() {
   return (
     <main
       className="min-h-screen px-3 py-5"
-      style={{ backgroundColor: "#111", color: "#e5e5e5" }}>
+      style={{ backgroundColor: "#f5f7fb", color: "#111827" }}>
       <div className="mx-auto max-w-3xl">
         <div
           className="flex items-center justify-between mb-6 pb-4"
-          style={{ borderBottom: "1px solid #222" }}>
+          style={{ borderBottom: "1px solid #e5e7eb" }}>
           <div>
-            <h1
-              className="text-2xl font-bold"
-              style={{ color: "#1ㄹ66ㄹㄹ  " }}>
+            <h1 className="text-2xl font-bold" style={{ color: "#111827" }}>
               <Image
                 src="/images/logo.png"
                 alt="Re'Story"
@@ -1506,21 +1534,21 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-2 mt-1">
               <span
                 className="h-1.5 w-1.5 rounded-full inline-block"
-                style={{ backgroundColor: TECH_COLOR[loggedUser] || "#2fae8a" }}
+                style={{ backgroundColor: TECH_COLOR[loggedUser] || "#1f66ff" }}
               />
               <span
-                className="text-xs font-bold"
-                style={{ color: TECH_COLOR[loggedUser] || "#2fae8a" }}>
+                className="text-2xl font-bold"
+                style={{ color: TECH_COLOR[loggedUser] || "#1f66ff" }}>
                 {isAdmin ? "🏅 " : ""}
                 {loggedUser}
               </span>
               {isAdmin && (
-                <span className="text-xs" style={{ color: "#555" }}>
+                <span className="text-2xl" style={{ color: "#94a3b8" }}>
                   · 전체 관리
                 </span>
               )}
               {!isAdmin && (
-                <span className="text-xs" style={{ color: "#555" }}>
+                <span className="text-2xl" style={{ color: "#94a3b8" }}>
                   · 내 일정만 표시
                 </span>
               )}
@@ -1534,9 +1562,9 @@ export default function AdminDashboard() {
             onClick={() => load()}
             className="rounded-xl px-3 py-2.5 text-sm font-bold"
             style={{
-              backgroundColor: "#1c1c1c",
-              color: "#888",
-              border: "1px solid #2e2e2e",
+              backgroundColor: "#ffffff",
+              color: "#6b7280",
+              border: "1px solid #e5e7eb",
             }}>
             ↻
           </button>
@@ -1551,9 +1579,9 @@ export default function AdminDashboard() {
             }}
             className="rounded-xl px-3 py-2.5 text-sm font-bold"
             style={{
-              backgroundColor: "#1c1c1c",
-              color: "#666",
-              border: "1px solid #2e2e2e",
+              backgroundColor: "#ffffff",
+              color: "#64748b",
+              border: "1px solid #e5e7eb",
             }}>
             🔒
           </button>
@@ -1573,15 +1601,19 @@ export default function AdminDashboard() {
 
         <div
           className="flex gap-1 mb-5 rounded-xl p-1"
-          style={{ backgroundColor: "#1c1c1c", border: "1px solid #2a2a2a" }}>
+          style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 2px 10px rgba(15,23,42,0.04)",
+          }}>
           {(["달력", "오늘", "전체", "통계"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className="flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all"
+              className="flex-1 rounded-lg py-2.5 text-m font-semibold transition-all"
               style={{
                 backgroundColor: tab === t ? "#1f66ff" : "transparent",
-                color: tab === t ? "white" : "#777",
+                color: tab === t ? "white" : "#6b7280",
               }}>
               {t}
               {t === "통계" && reviewPending.length > 0 && (
@@ -1598,7 +1630,7 @@ export default function AdminDashboard() {
         <div className="relative mb-4">
           <span
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base pointer-events-none"
-            style={{ color: "#555" }}>
+            style={{ color: "#94a3b8" }}>
             🔍
           </span>
           <input
@@ -1608,11 +1640,11 @@ export default function AdminDashboard() {
             placeholder="이름 또는 전화번호로 검색"
             style={{
               width: "100%",
-              backgroundColor: "#1a1a1a",
-              border: `1px solid ${searchQuery ? "#2fae8a55" : "#2a2a2a"}`,
+              backgroundColor: "#ffffff",
+              border: `1px solid ${searchQuery ? "#a9c4ff" : "#f3f4f6"}`,
               borderRadius: 12,
               padding: "10px 36px 10px 38px",
-              color: "white",
+              color: "#1f66ff",
               fontSize: 14,
               outline: "none",
               fontFamily: "inherit",
@@ -1624,7 +1656,7 @@ export default function AdminDashboard() {
             <button
               onClick={() => setSearchQuery("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold"
-              style={{ backgroundColor: "#333", color: "#888" }}>
+              style={{ backgroundColor: "#dbe3f0", color: "#6b7280" }}>
               ✕
             </button>
           )}
@@ -1633,12 +1665,12 @@ export default function AdminDashboard() {
         {searchQuery && (
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-bold" style={{ color: "#2fae8a" }}>
+              <span className="text-xs font-bold" style={{ color: "#1f66ff" }}>
                 검색 결과
               </span>
               <span
                 className="text-xs px-2 py-0.5 rounded-full font-medium"
-                style={{ backgroundColor: "#2fae8a22", color: "#2fae8a" }}>
+                style={{ backgroundColor: "#eaf1ff", color: "#1f66ff" }}>
                 {jobs.filter(matchSearch).length}건
               </span>
             </div>
@@ -1646,11 +1678,11 @@ export default function AdminDashboard() {
               <div
                 className="rounded-2xl py-10 text-center"
                 style={{
-                  backgroundColor: "#1a1a1a",
-                  border: "1px solid #222",
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #e5e7eb",
                 }}>
                 <p className="text-2xl mb-2">🔍</p>
-                <p className="text-sm" style={{ color: "#555" }}>
+                <p className="text-sm" style={{ color: "#94a3b8" }}>
                   검색 결과 없음
                 </p>
               </div>
@@ -1675,7 +1707,7 @@ export default function AdminDashboard() {
         )}
 
         {loading && (
-          <div className="text-center py-20" style={{ color: "#555" }}>
+          <div className="text-center py-20" style={{ color: "#94a3b8" }}>
             불러오는 중...
           </div>
         )}
@@ -1692,15 +1724,15 @@ export default function AdminDashboard() {
                 }}
                 className="px-3 py-2 rounded-lg text-lg font-bold"
                 style={{
-                  backgroundColor: "#1c1c1c",
-                  color: "#e5e5e5",
-                  border: "1px solid #2e2e2e",
+                  backgroundColor: "#ffffff",
+                  color: "#111827",
+                  border: "1px solid #e5e7eb",
                 }}>
                 ‹
               </button>
               <span
                 className="flex-1 text-center text-base font-bold"
-                style={{ color: "white" }}>
+                style={{ color: "#111827" }}>
                 {calYear}년 {calMonth + 1}월
               </span>
               <button
@@ -1712,9 +1744,9 @@ export default function AdminDashboard() {
                 }}
                 className="px-3 py-2 rounded-lg text-lg font-bold"
                 style={{
-                  backgroundColor: "#1c1c1c",
-                  color: "#e5e5e5",
-                  border: "1px solid #2e2e2e",
+                  backgroundColor: "#ffffff",
+                  color: "#111827",
+                  border: "1px solid #e5e7eb",
                 }}>
                 ›
               </button>
@@ -1752,9 +1784,11 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-1.5">
                 <span
                   className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: "#555" }}
+                  style={{ backgroundColor: "#94a3b8" }}
                 />
-                <span className="text-xs font-medium" style={{ color: "#666" }}>
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: "#64748b" }}>
                   미배정
                 </span>
               </div>
@@ -1765,7 +1799,8 @@ export default function AdminDashboard() {
                   key={d}
                   className="text-center text-xs py-2 font-bold"
                   style={{
-                    color: i === 0 ? "#ef6666" : i === 6 ? "#60a5fa" : "#888",
+                    color:
+                      i === 0 ? "#ef6666" : i === 6 ? "#60a5fa" : "#6b7280",
                   }}>
                   {d}
                 </div>
@@ -1789,12 +1824,12 @@ export default function AdminDashboard() {
                     onClick={() => setSelectedDay(isSelected ? null : dateStr)}
                     className="rounded-xl p-1.5 min-h-[72px] flex flex-col items-start text-left"
                     style={{
-                      backgroundColor: isSelected ? "#1a3a2e" : "#181818",
+                      backgroundColor: isSelected ? "#eaf1ff" : "#ffffff",
                       border: isSelected
-                        ? "1px solid #2fae8a"
+                        ? "1px solid #1f66ff"
                         : isToday
-                          ? "1px solid #2fae8a55"
-                          : "1px solid #242424",
+                          ? "1px solid #a9c4ff"
+                          : "1px solid #e5e7eb",
                     }}>
                     <span
                       className="text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full"
@@ -1804,8 +1839,8 @@ export default function AdminDashboard() {
                             ? "#ef6666"
                             : dow === 6
                               ? "#60a5fa"
-                              : "#e5e5e5",
-                        backgroundColor: isToday ? "#2fae8a" : "transparent",
+                              : "#111827",
+                        backgroundColor: isToday ? "#1f66ff" : "transparent",
                       }}>
                       {day}
                     </span>
@@ -1823,7 +1858,7 @@ export default function AdminDashboard() {
                             />
                             <span
                               className="truncate font-semibold"
-                              style={{ color: "#e5e5e5", fontSize: 10 }}>
+                              style={{ color: "#111827", fontSize: 10 }}>
                               {j.name}
                               {j.symptom ? ` · ${j.symptom}` : ""}
                             </span>
@@ -1831,14 +1866,14 @@ export default function AdminDashboard() {
                           {j.visit_time && (
                             <span
                               className="pl-3"
-                              style={{ color: "#666", fontSize: 9 }}>
+                              style={{ color: "#64748b", fontSize: 9 }}>
                               {formatTime(j.visit_time)}
                             </span>
                           )}
                         </div>
                       ))}
                       {dayJobs.length > 3 && (
-                        <span style={{ color: "#666", fontSize: 10 }}>
+                        <span style={{ color: "#64748b", fontSize: 10 }}>
                           +{dayJobs.length - 3}건
                         </span>
                       )}
@@ -1851,22 +1886,22 @@ export default function AdminDashboard() {
             {selectedDay && (
               <div
                 className="mt-4 rounded-2xl overflow-hidden"
-                style={{ border: "1px solid #2a2a2a" }}>
+                style={{ border: "1px solid #f3f4f6" }}>
                 <div
                   className="flex items-center justify-between px-4 py-3"
                   style={{
-                    backgroundColor: "#1c1c1c",
-                    borderBottom: "1px solid #2a2a2a",
+                    backgroundColor: "#ffffff",
+                    borderBottom: "1px solid #f3f4f6",
                   }}>
                   <div className="flex items-center gap-2">
                     <span
                       className="text-sm font-bold"
-                      style={{ color: "white" }}>
+                      style={{ color: "#111827" }}>
                       {formatDate(selectedDay)}
                     </span>
                     <span
                       className="text-xs px-2 py-0.5 rounded-full font-medium"
-                      style={{ backgroundColor: "#2a2a2a", color: "#bbb" }}>
+                      style={{ backgroundColor: "#f3f4f6", color: "#475569" }}>
                       {selectedJobs.length}건
                     </span>
                     {calTechFilter !== "전체" && (
@@ -1887,7 +1922,7 @@ export default function AdminDashboard() {
                         setEditId(null);
                         setShowForm(true);
                       }}
-                      className="text-xs px-3 py-1.5 rounded-lg font-bold"
+                      className="text-[20px] px-3 py-1.5 rounded-lg font-bold"
                       style={{ backgroundColor: "#1f66ff", color: "white" }}>
                       + 추가
                     </button>
@@ -1896,14 +1931,14 @@ export default function AdminDashboard() {
                 {selectedJobs.length === 0 ? (
                   <div
                     className="text-center py-10"
-                    style={{ backgroundColor: "#111", color: "#444" }}>
+                    style={{ backgroundColor: "#f5f7fb", color: "#94a3b8" }}>
                     <p className="text-2xl mb-2">📋</p>
                     <p className="text-sm">일정 없음</p>
                   </div>
                 ) : (
                   <div
                     className="flex flex-col gap-0"
-                    style={{ backgroundColor: "#111" }}>
+                    style={{ backgroundColor: "#f5f7fb" }}>
                     {[...selectedJobs]
                       .sort((a, b) => {
                         if (!a.visit_time && !b.visit_time) return 0;
@@ -1920,25 +1955,25 @@ export default function AdminDashboard() {
                                 job.visit_time.slice(0, 2)) && (
                               <div
                                 className="flex items-center gap-2 px-4 py-2"
-                                style={{ borderBottom: "1px solid #1e1e1e" }}>
+                                style={{ borderBottom: "1px solid #ffffff" }}>
                                 <span
                                   className="text-xs font-bold"
-                                  style={{ color: "#555" }}>
+                                  style={{ color: "#94a3b8" }}>
                                   {formatTime(job.visit_time)}
                                 </span>
                                 <div
                                   className="flex-1 h-px"
-                                  style={{ backgroundColor: "#1e1e1e" }}
+                                  style={{ backgroundColor: "#ffffff" }}
                                 />
                               </div>
                             )}
                           {!job.visit_time && idx === 0 && (
                             <div
                               className="px-4 py-2"
-                              style={{ borderBottom: "1px solid #1e1e1e" }}>
+                              style={{ borderBottom: "1px solid #ffffff" }}>
                               <span
                                 className="text-xs font-bold"
-                                style={{ color: "#555" }}>
+                                style={{ color: "#94a3b8" }}>
                                 시간 미정
                               </span>
                             </div>
@@ -1948,10 +1983,10 @@ export default function AdminDashboard() {
                             arr[idx - 1].visit_time && (
                               <div
                                 className="px-4 py-2"
-                                style={{ borderBottom: "1px solid #1e1e1e" }}>
+                                style={{ borderBottom: "1px solid #ffffff" }}>
                                 <span
                                   className="text-xs font-bold"
-                                  style={{ color: "#555" }}>
+                                  style={{ color: "#94a3b8" }}>
                                   시간 미정
                                 </span>
                               </div>
@@ -1987,7 +2022,7 @@ export default function AdminDashboard() {
             const statReviewPending = isAdmin
               ? reviewPending
               : reviewPending.filter((j) => j.tech === loggedUser);
-            const myColor = TECH_COLOR[loggedUser!] || "#2fae8a";
+            const myColor = TECH_COLOR[loggedUser!] || "#1f66ff";
             return (
               <div className="flex flex-col gap-4">
                 <MonthSelector />
@@ -1995,12 +2030,12 @@ export default function AdminDashboard() {
                   <div
                     className="rounded-2xl p-5"
                     style={{
-                      backgroundColor: "#1c1c1c",
-                      border: "1px solid #2e2e2e",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #e5e7eb",
                     }}>
                     <p
                       className="text-xs mb-2 font-medium"
-                      style={{ color: "#777" }}>
+                      style={{ color: "#6b7280" }}>
                       {formatYearMonth(monthFilter)} {isAdmin ? "전체" : "내"}{" "}
                       매출
                     </p>
@@ -2013,12 +2048,12 @@ export default function AdminDashboard() {
                   <div
                     className="rounded-2xl p-5"
                     style={{
-                      backgroundColor: "#1c1c1c",
-                      border: "1px solid #2e2e2e",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #e5e7eb",
                     }}>
                     <p
                       className="text-xs mb-2 font-medium"
-                      style={{ color: "#777" }}>
+                      style={{ color: "#6b7280" }}>
                       {formatYearMonth(monthFilter)} {isAdmin ? "전체" : "내"}{" "}
                       완료
                     </p>
@@ -2028,7 +2063,7 @@ export default function AdminDashboard() {
                       {statDone.length}
                       <span
                         className="text-base ml-1"
-                        style={{ color: "#888" }}>
+                        style={{ color: "#6b7280" }}>
                         건
                       </span>
                     </p>
@@ -2046,7 +2081,7 @@ export default function AdminDashboard() {
                       key={tech}
                       className="rounded-2xl p-5"
                       style={{
-                        backgroundColor: "#1c1c1c",
+                        backgroundColor: "#ffffff",
                         border: `1px solid ${color}33`,
                       }}>
                       <div className="flex items-center justify-between mb-3">
@@ -2066,7 +2101,7 @@ export default function AdminDashboard() {
                       {isAdmin && (
                         <div
                           className="h-2 rounded-full overflow-hidden"
-                          style={{ backgroundColor: "#2a2a2a" }}>
+                          style={{ backgroundColor: "#f3f4f6" }}>
                           <div
                             className="h-full rounded-full"
                             style={{
@@ -2082,8 +2117,8 @@ export default function AdminDashboard() {
                 <div
                   className="rounded-2xl p-5"
                   style={{
-                    backgroundColor: "#1c1c1c",
-                    border: "1px solid #2e2e2e",
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #e5e7eb",
                   }}>
                   <p
                     className="text-sm font-bold mb-3 flex items-center gap-2"
@@ -2098,7 +2133,7 @@ export default function AdminDashboard() {
                     )}
                   </p>
                   {statReviewPending.length === 0 ? (
-                    <p className="text-sm" style={{ color: "#666" }}>
+                    <p className="text-sm" style={{ color: "#64748b" }}>
                       모두 요청 완료! 👍
                     </p>
                   ) : (
@@ -2110,12 +2145,12 @@ export default function AdminDashboard() {
                         <div>
                           <span
                             className="text-sm font-medium"
-                            style={{ color: "#e5e5e5" }}>
+                            style={{ color: "#111827" }}>
                             {job.name}
                           </span>
                           <span
                             className="text-xs ml-2"
-                            style={{ color: "#666" }}>
+                            style={{ color: "#64748b" }}>
                             {job.region} · {formatDate(job.visit_date)}
                           </span>
                         </div>
@@ -2151,9 +2186,9 @@ export default function AdminDashboard() {
                 }}
                 className="px-3 py-2 rounded-lg text-lg font-bold"
                 style={{
-                  backgroundColor: "#1c1c1c",
-                  color: "#e5e5e5",
-                  border: "1px solid #2e2e2e",
+                  backgroundColor: "#ffffff",
+                  color: "#111827",
+                  border: "1px solid #e5e7eb",
                 }}>
                 ‹
               </button>
@@ -2163,9 +2198,9 @@ export default function AdminDashboard() {
                 onChange={(e) => setDateFilter(e.target.value)}
                 className="flex-1 text-center text-sm font-bold rounded-xl py-2"
                 style={{
-                  backgroundColor: "#1c1c1c",
+                  backgroundColor: "#ffffff",
                   color: "white",
-                  border: "1px solid #2e2e2e",
+                  border: "1px solid #e5e7eb",
                   outline: "none",
                 }}
               />
@@ -2177,9 +2212,9 @@ export default function AdminDashboard() {
                 }}
                 className="px-3 py-2 rounded-lg text-lg font-bold"
                 style={{
-                  backgroundColor: "#1c1c1c",
-                  color: "#e5e5e5",
-                  border: "1px solid #2e2e2e",
+                  backgroundColor: "#ffffff",
+                  color: "#111827",
+                  border: "1px solid #e5e7eb",
                 }}>
                 ›
               </button>
@@ -2204,9 +2239,9 @@ export default function AdminDashboard() {
                   onClick={() => setStatusFilter(s as Status | "전체")}
                   className="rounded-full px-3 py-1.5 text-xs font-semibold"
                   style={{
-                    backgroundColor: statusFilter === s ? "#1f66ff" : "#1c1c1c",
-                    color: statusFilter === s ? "white" : "#777",
-                    border: "1px solid #2e2e2e",
+                    backgroundColor: statusFilter === s ? "#1f66ff" : "#ffffff",
+                    color: statusFilter === s ? "white" : "#6b7280",
+                    border: "1px solid #e5e7eb",
                   }}>
                   {s}
                 </button>
@@ -2214,12 +2249,12 @@ export default function AdminDashboard() {
             </div>
             <div
               className="rounded-2xl overflow-hidden"
-              style={{ border: "1px solid #2a2a2a" }}>
+              style={{ border: "1px solid #f3f4f6" }}>
               <div
                 className="flex items-center justify-between px-4 py-3"
                 style={{
-                  backgroundColor: "#1c1c1c",
-                  borderBottom: "1px solid #2a2a2a",
+                  backgroundColor: "#ffffff",
+                  borderBottom: "1px solid #f3f4f6",
                 }}>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span
@@ -2229,12 +2264,12 @@ export default function AdminDashboard() {
                   </span>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium"
-                    style={{ backgroundColor: "#2a2a2a", color: "#bbb" }}>
+                    style={{ backgroundColor: "#f3f4f6", color: "#475569" }}>
                     {filtered.length}건
                   </span>
                   <span
                     className="text-xs font-medium"
-                    style={{ color: "#2fae8a" }}>
+                    style={{ color: "#1f66ff" }}>
                     완료 {filtered.filter((j) => j.status === "완료").length}건
                     ·{" "}
                     {formatPrice(
@@ -2256,7 +2291,7 @@ export default function AdminDashboard() {
                       setShowForm(true);
                     }}
                     className="text-xs px-3 py-1.5 rounded-lg font-bold"
-                    style={{ backgroundColor: "#2fae8a", color: "white" }}>
+                    style={{ backgroundColor: "#1f66ff", color: "white" }}>
                     + 추가
                   </button>
                 )}
@@ -2264,14 +2299,14 @@ export default function AdminDashboard() {
               {filtered.length === 0 ? (
                 <div
                   className="text-center py-12"
-                  style={{ backgroundColor: "#111", color: "#444" }}>
+                  style={{ backgroundColor: "#f5f7fb", color: "#94a3b8" }}>
                   <p className="text-3xl mb-2">📋</p>
                   <p className="text-sm">일정 없음</p>
                 </div>
               ) : (
                 <div
                   className="flex flex-col gap-0"
-                  style={{ backgroundColor: "#111" }}>
+                  style={{ backgroundColor: "#f5f7fb" }}>
                   {[...filtered]
                     .sort((a, b) => {
                       if (!a.visit_time && !b.visit_time) return 0;
@@ -2287,15 +2322,15 @@ export default function AdminDashboard() {
                               job.visit_time.slice(0, 2)) && (
                             <div
                               className="flex items-center gap-2 px-4 py-2"
-                              style={{ borderBottom: "1px solid #1e1e1e" }}>
+                              style={{ borderBottom: "1px solid #ffffff" }}>
                               <span
                                 className="text-xs font-bold"
-                                style={{ color: "#555" }}>
+                                style={{ color: "#94a3b8" }}>
                                 {formatTime(job.visit_time)}
                               </span>
                               <div
                                 className="flex-1 h-px"
-                                style={{ backgroundColor: "#1e1e1e" }}
+                                style={{ backgroundColor: "#ffffff" }}
                               />
                             </div>
                           )}
@@ -2303,10 +2338,10 @@ export default function AdminDashboard() {
                           (idx === 0 || arr[idx - 1].visit_time) && (
                             <div
                               className="px-4 py-2"
-                              style={{ borderBottom: "1px solid #1e1e1e" }}>
+                              style={{ borderBottom: "1px solid #ffffff" }}>
                               <span
                                 className="text-xs font-bold"
-                                style={{ color: "#555" }}>
+                                style={{ color: "#94a3b8" }}>
                                 시간 미정
                               </span>
                             </div>
@@ -2340,9 +2375,9 @@ export default function AdminDashboard() {
                     className="rounded-full px-3 py-1.5 text-xs font-semibold"
                     style={{
                       backgroundColor:
-                        statusFilter === s ? "#2fae8a" : "#1c1c1c",
-                      color: statusFilter === s ? "white" : "#777",
-                      border: "1px solid #2e2e2e",
+                        statusFilter === s ? "#1f66ff" : "#ffffff",
+                      color: statusFilter === s ? "white" : "#6b7280",
+                      border: "1px solid #e5e7eb",
                     }}>
                     {s}
                   </button>
@@ -2364,10 +2399,10 @@ export default function AdminDashboard() {
             </div>
             <div
               className="flex gap-3 mb-4 text-xs font-medium"
-              style={{ color: "#666" }}>
+              style={{ color: "#64748b" }}>
               <span>{filtered.length}건</span>
               <span>·</span>
-              <span style={{ color: "#2fae8a" }}>
+              <span style={{ color: "#1f66ff" }}>
                 완료 {filtered.filter((j) => j.status === "완료").length}건
               </span>
               <span>·</span>
@@ -2384,7 +2419,7 @@ export default function AdminDashboard() {
               </span>
             </div>
             {filtered.length === 0 ? (
-              <div className="text-center py-16" style={{ color: "#444" }}>
+              <div className="text-center py-16" style={{ color: "#94a3b8" }}>
                 <p className="text-4xl mb-3">📋</p>
                 <p className="text-sm">접수된 작업이 없어요</p>
               </div>
@@ -2413,8 +2448,8 @@ export default function AdminDashboard() {
           <div
             className="w-full max-w-md rounded-2xl p-5 flex flex-col gap-3"
             style={{
-              backgroundColor: "#1c1c1c",
-              border: "1px solid #383838",
+              backgroundColor: "#ffffff",
+              border: "1px solid #dbe3f0",
               maxHeight: "90vh",
               overflowY: "auto",
             }}>
@@ -2427,7 +2462,7 @@ export default function AdminDashboard() {
                   setShowForm(false);
                   setEditId(null);
                 }}
-                style={{ color: "#666", fontSize: 20 }}>
+                style={{ color: "#64748b", fontSize: 20 }}>
                 ✕
               </button>
             </div>
@@ -2450,7 +2485,7 @@ export default function AdminDashboard() {
               <label key={f.key} className="flex flex-col gap-1.5">
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#6b7280" }}>
                   {f.label}
                 </span>
                 <input
@@ -2467,7 +2502,7 @@ export default function AdminDashboard() {
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#6b7280" }}>
                   방문일
                 </span>
                 <input
@@ -2482,7 +2517,7 @@ export default function AdminDashboard() {
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#6b7280" }}>
                   도착 시간
                 </span>
                 <div className="flex items-center gap-1">
@@ -2504,9 +2539,9 @@ export default function AdminDashboard() {
                     }
                     className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                     style={{
-                      backgroundColor: "#252525",
-                      color: "#aaa",
-                      border: "1px solid #383838",
+                      backgroundColor: "#f8fafc",
+                      color: "#64748b",
+                      border: "1px solid #dbe3f0",
                     }}>
                     －
                   </button>
@@ -2520,9 +2555,9 @@ export default function AdminDashboard() {
                     }
                     className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                     style={{
-                      backgroundColor: "#252525",
-                      color: "#aaa",
-                      border: "1px solid #383838",
+                      backgroundColor: "#f8fafc",
+                      color: "#64748b",
+                      border: "1px solid #dbe3f0",
                     }}>
                     ＋
                   </button>
@@ -2530,7 +2565,9 @@ export default function AdminDashboard() {
               </label>
             </div>
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold" style={{ color: "#888" }}>
+              <span
+                className="text-xs font-semibold"
+                style={{ color: "#6b7280" }}>
                 금액 (원)
               </span>
               <input
@@ -2550,7 +2587,7 @@ export default function AdminDashboard() {
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#6b7280" }}>
                   기사
                 </span>
                 <select
@@ -2570,7 +2607,7 @@ export default function AdminDashboard() {
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#6b7280" }}>
                   상태
                 </span>
                 <select
@@ -2588,9 +2625,11 @@ export default function AdminDashboard() {
               </label>
             </div>
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold" style={{ color: "#888" }}>
+              <span
+                className="text-xs font-semibold"
+                style={{ color: "#6b7280" }}>
                 🛡 AS 만료일
-                <span className="ml-1 font-normal" style={{ color: "#555" }}>
+                <span className="ml-1 font-normal" style={{ color: "#94a3b8" }}>
                   (기본 1년)
                 </span>
               </span>
@@ -2613,9 +2652,9 @@ export default function AdminDashboard() {
                   }
                   className="rounded-xl px-3 py-2 text-xs font-bold flex-shrink-0"
                   style={{
-                    backgroundColor: "#252525",
-                    color: "#aaa",
-                    border: "1px solid #383838",
+                    backgroundColor: "#f8fafc",
+                    color: "#64748b",
+                    border: "1px solid #dbe3f0",
                   }}>
                   1년
                 </button>
@@ -2635,18 +2674,20 @@ export default function AdminDashboard() {
               }
               className="flex items-center justify-between rounded-xl px-4 py-3"
               style={{
-                backgroundColor: form.is_measurement ? "#a855f718" : "#1a1a1a",
-                border: `1px solid ${form.is_measurement ? "#a855f755" : "#383838"}`,
+                backgroundColor: form.is_measurement ? "#a855f718" : "#ffffff",
+                border: `1px solid ${form.is_measurement ? "#a855f755" : "#dbe3f0"}`,
               }}>
               <div className="flex items-center gap-2.5">
                 <span className="text-base">📐</span>
                 <div className="text-left">
                   <p
                     className="text-sm font-bold"
-                    style={{ color: form.is_measurement ? "#a855f7" : "#ccc" }}>
+                    style={{
+                      color: form.is_measurement ? "#a855f7" : "#334155",
+                    }}>
                     실측 방문
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: "#555" }}>
+                  <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>
                     체크 시 완료해도 매출에 포함 안 됨
                   </p>
                 </div>
@@ -2656,7 +2697,7 @@ export default function AdminDashboard() {
                 style={{
                   width: 44,
                   height: 24,
-                  backgroundColor: form.is_measurement ? "#a855f7" : "#333",
+                  backgroundColor: form.is_measurement ? "#a855f7" : "#dbe3f0",
                   position: "relative",
                 }}>
                 <div
@@ -2679,11 +2720,11 @@ export default function AdminDashboard() {
                 className="rounded-xl p-4 flex flex-col gap-3"
                 style={{
                   backgroundColor: "#0d2018",
-                  border: "1px solid #2fae8a44",
+                  border: "1px solid #bfd3ff",
                 }}>
-                <p className="text-xs font-bold" style={{ color: "#2fae8a" }}>
+                <p className="text-xs font-bold" style={{ color: "#1f66ff" }}>
                   🔨 시공 날짜 · 시간{" "}
-                  <span className="font-normal" style={{ color: "#555" }}>
+                  <span className="font-normal" style={{ color: "#94a3b8" }}>
                     (미정이면 비워두세요)
                   </span>
                 </p>
@@ -2737,9 +2778,9 @@ export default function AdminDashboard() {
                         }
                         className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                         style={{
-                          backgroundColor: "#252525",
-                          color: "#aaa",
-                          border: "1px solid #383838",
+                          backgroundColor: "#f8fafc",
+                          color: "#64748b",
+                          border: "1px solid #dbe3f0",
                         }}>
                         －
                       </button>
@@ -2756,9 +2797,9 @@ export default function AdminDashboard() {
                         }
                         className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                         style={{
-                          backgroundColor: "#252525",
-                          color: "#aaa",
-                          border: "1px solid #383838",
+                          backgroundColor: "#f8fafc",
+                          color: "#64748b",
+                          border: "1px solid #dbe3f0",
                         }}>
                         ＋
                       </button>
@@ -2792,7 +2833,7 @@ export default function AdminDashboard() {
                 className="text-xs font-semibold"
                 style={{ color: "#f59e0b" }}>
                 📷 접수 사진{" "}
-                <span className="font-normal" style={{ color: "#555" }}>
+                <span className="font-normal" style={{ color: "#94a3b8" }}>
                   (고장 상태)
                 </span>
               </span>
@@ -2850,7 +2891,7 @@ export default function AdminDashboard() {
                 <label
                   className="flex items-center gap-2 rounded-xl px-3 py-2.5 cursor-pointer"
                   style={{
-                    backgroundColor: "#1a1a1a",
+                    backgroundColor: "#ffffff",
                     border: "1px dashed #f59e0b55",
                     color: "#f59e0b",
                   }}>
@@ -2906,7 +2947,9 @@ export default function AdminDashboard() {
             </label>
 
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold" style={{ color: "#888" }}>
+              <span
+                className="text-xs font-semibold"
+                style={{ color: "#6b7280" }}>
                 메모
               </span>
               <textarea
