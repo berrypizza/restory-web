@@ -2,10 +2,14 @@
   "name": "리스토리 관리자",
   "short_name": "리스토리",
   "description": "리스토리 작업 관리 앱",
-  "start_url": "/",
-  "scope": "/",
+
+  "start_url": "/admin",
+  "scope": "/admin",
+
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
+
   "background_color": "#f5f7fb",
   "theme_color": "#1f66ff",
 
