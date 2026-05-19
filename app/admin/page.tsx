@@ -1232,9 +1232,7 @@ export default function AdminDashboard() {
             <h1 className="text-xl font-black" style={{ color: "#1f66ff" }}>
               리스토리 관리자
             </h1>
-            <p
-              className="text-sm mt-1"
-              style={{ color: "rgba(255,255,255,0.78)" }}>
+            <p className="text-sm mt-1" style={{ color: "#1f66ff" }}>
               이름을 선택하고 비밀번호를 입력하세요
             </p>
           </div>
@@ -1284,7 +1282,7 @@ export default function AdminDashboard() {
                 style={{
                   backgroundColor: "#ffffff",
                   border: `1px solid ${pwError ? "#ef4444" : "#e5e7eb"}`,
-                  color: "white",
+                  color: "#1f66ff",
                   outline: "none",
                   fontFamily: "inherit",
                   boxSizing: "border-box",
