@@ -1221,11 +1221,11 @@ export default function AdminDashboard() {
           }}>
           <div className="text-center relative pt-[140px]">
             <Image
-              src="/images/logo.png"
+              src="/images/logo-circle.png"
               alt="Re'Story"
-              width={216}
-              height={216}
-              className="w-[216px]  object-contain absolute top-[-10px]"
+              width={116}
+              height={116}
+              className="w-[116px]  object-contain absolute left-1/2 -translate-x-1/2 top-[10px]  "
               priority
             />
             <p className="text-3xl mb-2">🛠</p>
@@ -1519,16 +1519,25 @@ export default function AdminDashboard() {
           className="flex items-center justify-between mb-6 pb-4"
           style={{ borderBottom: "1px solid #e5e7eb" }}>
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: "#111827" }}>
+            <div
+              className="flex text-2xl font-bold mb-[16px] items-center"
+              style={{ color: "#111827" }}>
               <Image
-                src="/images/logo.png"
+                src="/images/logo-circle.png"
                 alt="Re'Story"
-                width={120}
-                height={120}
+                width={70}
+                height={70}
                 className="inline-block object-contain mr-2"
               />
-              리스토리 관리 페이지
-            </h1>
+              <div>
+                <span className="text-[#1f66ff]">리스토리</span> <br />
+                <span
+                  className="text-[#1f66ff] text-next-sm"
+                  style={{ color: "#4c596b" }}>
+                  관리 페이지
+                </span>{" "}
+              </div>
+            </div>
             <div className="flex items-center gap-2 mt-1">
               <span
                 className="h-1.5 w-1.5 rounded-full inline-block"
@@ -1804,7 +1813,7 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-7 gap-0.5">
+            <div className="grid grid-cols-7 gap-0">
               {calDays.map((day, i) => {
                 if (!day) return <div key={`e-${i}`} />;
                 const dateStr = `${calYear}-${pad(calMonth + 1)}-${pad(day)}`;
@@ -1832,8 +1841,9 @@ export default function AdminDashboard() {
                     <span
                       className="text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full"
                       style={{
-                        color:
-                          dow === 0
+                        color: isToday
+                          ? "#ffffff"
+                          : dow === 0
                             ? "#ef6666"
                             : dow === 6
                               ? "#60a5fa"
