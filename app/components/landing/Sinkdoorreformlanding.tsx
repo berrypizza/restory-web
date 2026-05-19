@@ -9,80 +9,72 @@ import FadeIn from "@/app/components/FadeIn";
    ═══════════════════════════════════════════ */
 const REVIEWS = [
   {
-    name: "김**",
-    area: "서울 송파구",
-    text: "상부장이 처져서 그릇 넣기가 무서웠는데, 합판으로 교체하고 나니 흔들림이 전혀 없어요. 보양도 꼼꼼히 해주셔서 감동!",
+    name: "정**",
+    area: "서울 마포구",
+    text: "주방 문짝이 낡아서 전체 교체할까 했는데, 문짝만 바꾸니 새 싱크대 같아요. 비용도 1/5 수준!",
     rating: 5,
   },
   {
-    name: "이**",
-    area: "경기 용인시",
-    text: "다른 데는 교체하라고만 했는데 여기서 수리로 해결됐어요. 비용도 1/3 수준이었습니다.",
+    name: "한**",
+    area: "경기 수원시",
+    text: "색상도 원하는 걸로 골랐는데 기존 싱크대랑 완벽하게 맞아요. 대만족입니다.",
     rating: 5,
   },
   {
-    name: "박**",
-    area: "인천 부평구",
-    text: "옆부분이 벌어져서 문의했는데 사진으로 바로 가능하다고 해주시고, 다음날 바로 와주셨어요.",
+    name: "윤**",
+    area: "인천 남동구",
+    text: "오래된 아파트라 싱크대가 누렇게 변했는데, 문짝 교체하니 주방이 환해졌어요.",
     rating: 5,
   },
   {
-    name: "최**",
-    area: "서울 강서구",
-    text: "집진기 사용하시는 거 보고 놀랐어요. 먼지 하나 없이 깨끗하게 마무리해주셨습니다.",
+    name: "송**",
+    area: "서울 강남구",
+    text: "시공 시간도 짧고, 주방 사용 못 하는 기간이 거의 없어서 좋았습니다.",
     rating: 5,
   },
 ];
 
 const FAQ = [
   {
-    q: "상부장 수리, 교체보다 정말 저렴한가요?",
-    a: "네. 대부분의 경우 교체 비용의 1/3~1/5 수준으로 수리 가능합니다. 사진 보내주시면 정확한 비용 범위를 먼저 안내드립니다.",
+    q: "문짝만 교체해도 새것처럼 되나요?",
+    a: "네. 싱크대 본체(캐비닛)가 멀쩡하면 문짝만 교체해도 새 싱크대처럼 바뀝니다. 색상·재질도 원하는 대로 선택 가능합니다.",
   },
   {
-    q: "합판 시공목이 왜 중요한가요?",
-    a: "PB(파티클보드)는 습기에 약해서 시간이 지나면 다시 처짐이 발생합니다. 합판은 내구성이 훨씬 뛰어나 장기적으로 안전합니다.",
+    q: "전체 교체 대비 비용은 얼마나 절약되나요?",
+    a: "보통 전체 교체의 1/3~1/5 수준입니다. 현장 상태에 따라 다르며, 사진 보내주시면 정확한 비용 범위를 안내드립니다.",
   },
   {
-    q: "수리 시간은 얼마나 걸리나요?",
-    a: "상부장 1세트 기준 약 2~3시간 소요됩니다. 현장 상태에 따라 달라질 수 있으며, 사전에 안내드립니다.",
+    q: "시공 시간은 얼마나 걸리나요?",
+    a: "문짝 교체 기준 약 1~2시간 소요됩니다. 당일 시공 완료되며, 바로 사용 가능합니다.",
   },
   {
-    q: "하부장 수리도 같이 가능한가요?",
-    a: "네. 하부장 물먹음, 경첩 교체, 레일 교체 등 방문 시 함께 작업 가능합니다. 추가 출장비 없이 진행됩니다.",
+    q: "기존 싱크대 색상과 맞출 수 있나요?",
+    a: "다양한 색상·패턴 샘플을 보유하고 있어 기존 주방 인테리어에 맞게 선택하실 수 있습니다.",
   },
   {
-    q: "A/S 3년은 어떤 범위인가요?",
-    a: "수리 부위의 처짐 재발, 시공목 이탈 등에 대해 무상으로 재시공해드립니다.",
+    q: "A/S는 어떻게 되나요?",
+    a: "시공 후 3년간 무상 A/S를 제공합니다. 문짝 들뜸, 경첩 문제 등 무상으로 재시공해드립니다.",
   },
 ];
 
 const EXTRAS = [
+  { icon: "🔩", title: "경첩 교체", desc: "문짝 교체 시 경첩도 새것으로 교체" },
+  { icon: "💧", title: "하부장 물먹음", desc: "습기로 인한 부풀음·변형 수리" },
   {
-    icon: "💧",
-    title: "하부장 물먹음",
-    desc: "싱크대 아래 습기로 인한 부풀음·변형 수리",
-  },
-  {
-    icon: "🔩",
-    title: "경첩 교체",
-    desc: "문짝 처짐·소음의 원인, 경첩 교체로 해결",
-  },
-  {
-    icon: "🚪",
-    title: "문짝 교체",
-    desc: "장 전체 교체 필요 없이, 문짝 교체로 새것처럼!",
+    icon: "📐",
+    title: "상부장 처짐",
+    desc: "상부장 처짐·뜸 증상 함께 수리 가능",
   },
 ];
 
 const PHONE = "tel:010-9127-3024";
-const KAKAO_URL = "https://pf.kakao.com/_aHYsX/chat";
+const KAKAO_URL = "https://pf.kakao.com/_CHANGE_ME/chat";
 const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
 
 /* ═══════════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════════ */
-export default function SangbujangLanding() {
+export default function SinkdoorReformLanding() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
 
@@ -100,17 +92,35 @@ export default function SangbujangLanding() {
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
       {/* HERO IMAGE */}
-      <section
-        className="flex justify-center"
-        style={{ background: "#1f66ff" }}>
+      <section className="relative" style={{ background: "#1f66ff" }}>
         <Image
-          src="/images/hero-sangbujang.png"
-          alt="리스토리의 싱크대 상부장 수리"
+          src="/images/hero-door.png"
+          alt="리스토리 싱크대 도어 리폼"
           width={1080}
           height={1350}
-          className="w-full max-w-3xl h-auto"
+          className="w-full h-auto"
           priority
         />
+        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent md:pb-20">
+          <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
+            <p className="text-[13px] text-[#1f66ff] font-bold md:text-[15px]">
+              <Image
+                src="/images/logo.png"
+                alt="리스토리"
+                width={30}
+                height={30}
+                className="inline-block mr-2"
+              />
+              리스토리 도어 리폼
+            </p>
+            <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
+              새 주방을 만드는
+            </p>
+            <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
+              가장 쉽고 저렴한 방법
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* HERO CTA BUTTONS */}
@@ -132,11 +142,157 @@ export default function SangbujangLanding() {
         <p
           className="mx-auto mt-3 max-w-3xl text-center text-[13px] font-semibold md:text-[14px]"
           style={{ color: "rgba(255,255,255,0.6)" }}>
-          사진 한 장이면 수리 가능 여부 바로 안내드립니다
+          사진 한 장이면 도어 교체 가능 여부 바로 안내드립니다
         </p>
       </section>
 
-      {/* TRUST — 증명서 */}
+      {/* PHOTO REVIEWS */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f5f5f5" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
+                ★★★★★
+              </p>
+              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
+                실제 고객님들이 인정한
+                <br />
+                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
+                  솔직후기
+                </span>
+              </h2>
+              <p className="mt-3 text-[22px] font-medium text-neutral-600">
+                평점 5점 만점에
+              </p>
+              <p
+                className="mt-1 text-[40px] font-black md:text-[52px]"
+                style={{ color: "#1a5cff" }}>
+                4.9
+                <span className="text-[20px] font-bold text-neutral-400 md:text-[24px]">
+                  점
+                </span>
+              </p>
+            </div>
+          </FadeIn>
+          <FadeIn delay={150}>
+            <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
+              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
+                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                  <Image
+                    src="/images/door/review-1.jpg"
+                    alt="도어 리폼 후기 1"
+                    width={400}
+                    height={300}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4 md:p-6">
+                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
+                    서울 마포구 정**
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
+                    문짝만 바꿨는데
+                    <br />새 주방 같아요!
+                  </p>
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
+                    20년 된 아파트인데 싱크대가 완전 새것처럼 됐어요. 색상도 딱
+                    맞게 해주셔서 감동!
+                  </p>
+                </div>
+              </div>
+              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
+                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                  <Image
+                    src="/images/door/review-2.jpg"
+                    alt="도어 리폼 후기 2"
+                    width={400}
+                    height={300}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4 md:p-6">
+                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
+                    경기 수원시 한**
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
+                    비용 1/5로
+                    <br />
+                    이렇게 달라질 줄이야
+                  </p>
+                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
+                    전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요.
+                    결과물도 완벽합니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* WHY DOOR */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#fafafa" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <div className="text-center">
+              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
+                싱크대 전체를 바꿔야 하나요?
+              </p>
+              <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
+                문짝만 바꿔도 새것처럼!
+              </h2>
+            </div>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <div className="mx-auto my-8 flex flex-col items-center md:my-10">
+              <div className="h-10 w-px bg-neutral-300" />
+              <div className="mt-6 text-center">
+                <p className="text-[30px] font-black md:text-[45px]">
+                  전체 교체 비용의
+                </p>
+                <p
+                  className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[26px]"
+                  style={{ background: "#1f66ff", color: "#ffffff" }}>
+                  1/3~1/5 수준으로 해결!
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+          <FadeIn delay={200}>
+            <div className="grid grid-cols-2 gap-3 md:gap-5">
+              {[
+                { img: "/images/door/before-after-1.jpg", label: "시공 전" },
+                { img: "/images/door/before-after-2.jpg", label: "시공 후" },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                  <div className="aspect-[4/3] overflow-hidden bg-neutral-100">
+                    <Image
+                      src={item.img}
+                      alt={item.label}
+                      width={400}
+                      height={300}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 text-center">
+                    <p className="text-[16px] font-extrabold md:text-[18px]">
+                      {item.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* TRUST */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -179,90 +335,6 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* PHOTO REVIEWS */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f5f5f5" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
-                ★★★★★
-              </p>
-              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
-                실제 고객님들이 인정한
-                <br />
-                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
-                  솔직후기
-                </span>
-              </h2>
-              <p className="mt-3 text-[22px] font-medium text-neutral-600 md:text-[22px]">
-                평점 5점 만점에
-              </p>
-              <p
-                className="mt-1 text-[40px] font-black md:text-[52px]"
-                style={{ color: "#1a5cff" }}>
-                4.9
-                <span className="text-[20px] font-bold text-neutral-400 md:text-[24px]">
-                  점
-                </span>
-              </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={150}>
-            <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/review-photo-1.jpg"
-                    alt="수리 후기 사진 1"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 영등포구 김현*
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    사장님이 친절하시고 직원분들이 엄청
-                    <br /> 열심히 일해주십니다
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    현장에서 여러번 가구 배치를 요청드렸는데 불편해한 기색없이
-                    운반해주셔서 감사합니다. 반장하세요!
-                  </p>
-                </div>
-              </div>
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/review-photo-2.jpg"
-                    alt="수리 후기 사진 2"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 강서구 이승*
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    디테일하게 <br /> 신경 써주시는 곳이에요!
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    상부장이 떨어졌는데, 합판으로 튼튼하게 고쳐주셨어요. 작업
-                    후에도 먼지 하나 없이 깨끗하게 청소해주셔서 감동했습니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
       {/* SPECIALS */}
       <section
         className="px-5 pt-10 text-center text-white md:pt-16"
@@ -275,7 +347,7 @@ export default function SangbujangLanding() {
             왜 유명하냐고요?
           </p>
           <h2 className="mt-2 text-[40px] font-black md:text-[55px]">
-            리스토리 수리는 특별합니다!
+            리스토리 도어 리폼은 특별합니다!
           </h2>
         </FadeIn>
       </section>
@@ -292,13 +364,13 @@ export default function SangbujangLanding() {
                   Special 01
                 </span>
                 <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  상부장 또!! 떨어지면{" "}
+                  시공 후 문제 생기면{" "}
                   <span className="text-[#1a5cff]">책임</span>져 주나요?
                 </h3>
               </div>
               <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
                 <Image
-                  src="/images/special-01.png"
+                  src="/images/special-1-2.png"
                   alt="본사 안심 보상제"
                   width={600}
                   height={400}
@@ -358,7 +430,7 @@ export default function SangbujangLanding() {
           <FadeIn>
             <div className="text-center">
               <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                수리 고수들만 모인
+                도어 리폼 고수들만 모인
               </p>
               <h2 className="mt-1 text-[30px] font-black md:text-[45px]">
                 리스토리의 자부심
@@ -366,7 +438,7 @@ export default function SangbujangLanding() {
               <p
                 className="mx-auto mt-3 inline-block rounded-lg px-5 py-1.5 text-[18px] font-black md:text-[22px]"
                 style={{ background: "#1a5cff", color: "#fff" }}>
-                안심인증수리
+                안심인증시공
               </p>
             </div>
           </FadeIn>
@@ -379,7 +451,7 @@ export default function SangbujangLanding() {
                   A사
                 </span>
                 <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
-                  일반 수리
+                  일반 시공
                 </p>
               </div>
               <div
@@ -394,17 +466,17 @@ export default function SangbujangLanding() {
                   리스토리
                 </span>
                 <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
-                  안심 인증 수리
+                  안심 인증 시공
                 </p>
               </div>
               {[
-                { a: "시공목 PB 사용", b: "시공목 전부 합판 사용" },
-                { a: "보양 처리 없음", b: "작업 전 전부 보양 처리" },
+                { a: "일반 엣지", b: "하이 조인트 엣지" },
                 {
-                  a: "추가 금액 발생\n가능성 有",
-                  b: "집진기 사용\n깨끗한 현장",
+                  a: "기존 문짝 위에 덧붙이기",
+                  b: "문짝 자체를 새것으로 교체",
                 },
-                { a: "A/S 발생 시 연락 두절", b: "A/S 발생 시 책임 캐어" },
+                { a: "~E1 레벨 보드", b: "친환경 E0~ 레벨 보드" },
+                { a: "A/S 1년 또는 없음", b: "무상 A/S 3년 보장" },
               ].map((row, i) => (
                 <React.Fragment key={i}>
                   <div className="border-t border-neutral-200 bg-white px-4 py-5 text-center md:py-6">
@@ -426,17 +498,64 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
-      {/* 본사 책임 AS 이미지 */}
+      {/* 제로 조인트 */}
       <section
         className="flex justify-center"
         style={{ background: "#1a1b4b" }}>
         <Image
-          src="/images/safe.png"
+          src="/images/door/safe.png"
           alt="리스토리 본사 책임 AS"
           width={1080}
           height={1350}
           className="w-full max-w-3xl h-auto"
         />
+      </section>
+
+      {/* 리스토리만의 특별 서비스 — 경첩 무료 교체 */}
+      <section
+        className="px-5 py-12 text-center text-white md:py-20"
+        style={{
+          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
+        }}>
+        <FadeIn>
+          <Image
+            src="/images/finger-imoji.png"
+            alt="손가락 이모지"
+            width={100}
+            height={100}
+            className="mx-auto mb-10 w-[100px] h-auto md:w-[200px] md:h-auto"
+          />
+          <p
+            className="mb-2 text-[35px] font-medium tracking-widest md:text-[50px]"
+            style={{ color: "rgb(255, 255, 255)" }}>
+            리스토리만의{" "}
+          </p>
+          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
+            <span style={{ color: "#ffffff" }}>특별 서비스 하나 더!</span>
+          </p>
+          <div className="mx-auto mt-6 max-w-sm border border-white/25 rounded-lg bg-[#ffffff]/20 px-5 py-8 md:mt-10 md:max-w-md shadow-lg">
+            <Image
+              src="/images/sink-door-gear.png"
+              alt="경첩 이미지"
+              width={300}
+              height={300}
+              className="mx-auto mt-4 mb-4 w-[300px] h-auto md:w-[300px] md:h-auto"
+            />
+            <p
+              className="mt-1 text-[40px] font-semibold md:text-[55px]"
+              style={{ color: "#ffffff" }}>
+              도어 경첩
+            </p>
+            <p
+              className="mt-1 text-[25px] font-semibold md:text-[35px]"
+              style={{ color: "#ffffff" }}>
+              무료 교체 서비스 제공!
+            </p>
+          </div>
+          <p className="mt-4 text-[16px] font-normal text-white/79">
+            *교체하시는 문짝 경첩은 리스토리에서 서비스로 교체해드립니다.
+          </p>
+        </FadeIn>
       </section>
 
       {/* SELF CHECK */}
@@ -447,33 +566,33 @@ export default function SangbujangLanding() {
               SELF CHECK
             </p>
             <h2 className="text-[30px] font-black leading-[1.4] md:text-[45px]">
-              이 중 하나라도 해당되면
+              이런 상태라면
               <br />
-              <span className="text-[#e53e3e]">지금 바로 연락하세요</span>
+              <span className="text-[#e53e3e]">도어 교체 시기입니다</span>
             </h2>
           </FadeIn>
           <FadeIn delay={120}>
             <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
               {[
                 {
-                  img: "/images/symptom-1.jpg",
-                  title: "장 안쪽 터짐",
-                  desc: "장 내부 pb 프레임이\n부서지는 상태",
+                  img: "/images/door/symptom-1.jpg",
+                  title: "문짝 변색·누렇게",
+                  desc: "세월에 의한 변색으로\n주방이 어두워진 상태",
                 },
                 {
-                  img: "/images/symptom-2.jpg",
-                  title: "윗부분 처짐",
-                  desc: "상부장 전체가 아래로\n내려앉는 증상",
+                  img: "/images/door/symptom-2.jpg",
+                  title: "필름 벗겨짐",
+                  desc: "문짝 표면 필름이\n들뜨거나 벗겨진 상태",
                 },
                 {
-                  img: "/images/symptom-3.jpg",
-                  title: "옆부분 뜸",
-                  desc: "측면이 벌어지며\n흔들리는 상태",
+                  img: "/images/door/symptom-3.jpg",
+                  title: "문짝 파손",
+                  desc: "충격이나 습기로\n문짝이 파손된 상태",
                 },
                 {
-                  img: "/images/symptom-4.jpg",
-                  title: "상부장 추락",
-                  desc: "싱크대 상부장이\n떨어진 상태",
+                  img: "/images/door/symptom-4.jpg",
+                  title: "경첩 고장",
+                  desc: "문이 안 닫히거나\n처지는 상태",
                 },
               ].map((s, i) => (
                 <div
@@ -512,24 +631,24 @@ export default function SangbujangLanding() {
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
-              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[30px] font-extrabold text-white md:text-[45px]">
-                ⚡ 우선 배정
+              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[20px] font-extrabold text-white md:text-[35px]">
+                ⚡ 빠른 시공
               </div>
-              <h3 className="mt-7 text-[30px] font-black leading-[1.45] md:text-[45px]">
-                상부장은 떨어지면
+              <h3 className="mt-1 text-[30px] font-black leading-[1.45] md:text-[45px]">
+                문짝 교체는
                 <br />
-                <span className="text-[#e53e3e]">더 큰 문제</span>가 생깁니다
+                <span className="text-[#e53e3e]">당일 시공</span> 가능합니다
               </h3>
               <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
-                그릇·가전 파손, 바닥 훼손, 부상 위험까지.
+                사진 접수 → 실측 방문 → 샘플 고르신 후 3일 후에 → 당일 방문
+                시공.
                 <br />
-                그래서{" "}
                 <strong
-                  className="text-neutral-900 text-[18px] font-bold md:text-[22px]"
+                  className="text-[18px] font-bold md:text-[22px]"
                   style={{ color: "#1f66ff" }}>
-                  상부장 수리 고객은 우선 배정
+                  주방 사용 중단 없이 완료
                 </strong>
-                으로 빠르게 방문합니다.
+                됩니다.
               </p>
             </div>
           </FadeIn>
@@ -543,29 +662,35 @@ export default function SangbujangLanding() {
           background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
         }}>
         <FadeIn>
-          <p className="text-[100px]">🥇</p>
+          <Image
+            src="/images/door/door-medal.png"
+            alt="리스토리 로고"
+            width={250}
+            height={250}
+            className="mx-auto mb-4 w-[250px] h-auto md:w-[300px] md:h-auto"
+          />
           <p
             className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
             style={{ color: "rgb(255, 255, 255)" }}>
             미친 자신감의 이유
           </p>
           <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>500</span>건+
+            <span style={{ color: "#ffffff" }}>1,000</span>건+
           </p>
           <p
             className="mt-1 text-[25px] font-semibold md:text-[35px]"
             style={{ color: "rgba(255, 255, 255, 0.79)" }}>
-            매년 상부장 수리 시공 실적
+            매년 도어 리폼 시공 실적
           </p>
           <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
             {[
-              { n: "98%", l: "수리 성공률" },
+              { n: "99%", l: "시공 만족도" },
               { n: "3년", l: "무상 A/S" },
               { n: "4.9", l: "고객 평점" },
             ].map((s, i) => (
               <div
                 key={i}
-                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg">
+                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg shadow-md md:px-6 md:py-4">
                 <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
                 <p
                   className="mt-1 text-[18px] font-semibold md:text-[22px]"
@@ -576,37 +701,6 @@ export default function SangbujangLanding() {
             ))}
           </div>
         </FadeIn>
-      </section>
-
-      {/* YOUTUBE */}
-      <section
-        className="px-5 py-14 text-white md:py-20"
-        style={{ background: "#1a1a1a" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p
-              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
-              style={{ color: "rgba(255,255,255,0.35)" }}>
-              YOUTUBE
-            </p>
-            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
-              실제 시공 영상을 확인하세요
-            </h2>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div className="aspect-video">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube.com/embed/유튜브ID"
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </div>
       </section>
 
       {/* PROCESS */}
@@ -620,7 +714,7 @@ export default function SangbujangLanding() {
                 처음부터 끝까지 쉽고 빠르게
               </p>
               <h2 className="mt-2 text-[26px] font-black md:text-[34px]">
-                리스토리 <span className="text-[#1a5cff]">수리절차</span>
+                리스토리 <span className="text-[#1a5cff]">시공절차</span>
               </h2>
             </div>
           </FadeIn>
@@ -631,25 +725,25 @@ export default function SangbujangLanding() {
                   icon: "/images/icon_step1.png",
                   step: "01",
                   title: "사진 접수",
-                  desc: "카카오톡 또는\n사진접수",
+                  desc: "현재 싱크대\n사진 보내기",
                 },
                 {
                   icon: "/images/icon_step2.png",
                   step: "02",
-                  title: "상태 확인",
-                  desc: "수리 가능 여부\n비용 안내",
+                  title: "실측 방문",
+                  desc: "방문해서 실측\n샘플 눈으로 보고 선택",
                 },
                 {
                   icon: "/images/icon_step3.png",
                   step: "03",
-                  title: "출장 방문",
-                  desc: "우선 배정\n빠른 방문",
+                  title: "방문 시공",
+                  desc: "실측 후 영업일 3일\n이내 방문 시공",
                 },
                 {
                   icon: "/images/icon_step4.png",
                   step: "04",
-                  title: "시공",
-                  desc: "보양→수리→\n청소→완료",
+                  title: "완료",
+                  desc: "당일 완료\n바로 사용",
                 },
               ].map((p, i) => (
                 <div key={i} className="flex flex-col items-center">
@@ -726,6 +820,37 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
+      {/* YOUTUBE */}
+      <section
+        className="px-5 py-14 text-white md:py-20"
+        style={{ background: "#1a1a1a" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <p
+              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
+              style={{ color: "rgba(255,255,255,0.35)" }}>
+              YOUTUBE
+            </p>
+            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
+              실제 시공 영상을 확인하세요
+            </h2>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
+              <div className="aspect-video">
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube.com/embed/유튜브ID"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -786,14 +911,15 @@ export default function SangbujangLanding() {
         }}>
         <FadeIn>
           <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            상부장, 지금이
+            싱크대 문짝 리폼
             <br />
-            <span style={{ color: "#ffe066" }}>가장 저렴한</span> 타이밍입니다
+            <span style={{ color: "#ffe066" }}>가장 저렴하게</span> 주방을
+            바꾸는 방법
           </h2>
           <p
             className="mt-3 text-[14px] leading-[1.7] md:text-[17px]"
             style={{ color: "rgba(255,255,255,0.7)" }}>
-            사진 한 장이면 수리 가능 여부
+            사진 한 장이면 교체 가능 여부
             <br />
             바로 안내드립니다
           </p>
@@ -821,19 +947,17 @@ export default function SangbujangLanding() {
             </a>
           </div>
           <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
-            {["합판 시공목", "보양 처리", "집진기 사용", "3년 A/S"].map(
-              (badge) => (
-                <span
-                  key={badge}
-                  className="rounded-full px-3 py-1 text-[11px] font-semibold md:text-[13px]"
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.5)",
-                  }}>
-                  {badge}
-                </span>
-              ),
-            )}
+            {["고급 필름", "100+ 색상", "당일 시공", "3년 A/S"].map((badge) => (
+              <span
+                key={badge}
+                className="rounded-full px-3 py-1 text-[11px] font-semibold md:text-[13px]"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  color: "rgba(255,255,255,0.5)",
+                }}>
+                {badge}
+              </span>
+            ))}
           </div>
         </FadeIn>
       </section>
