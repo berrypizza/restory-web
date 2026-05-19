@@ -1512,7 +1512,7 @@ export default function AdminDashboard() {
 
   return (
     <main
-      className="min-h-screen px-3 py-5"
+      className="min-h-screen px-2 py-5"
       style={{ backgroundColor: "#f5f7fb", color: "#111827" }}>
       <div className="mx-auto max-w-3xl">
         <div
