@@ -788,6 +788,100 @@ function JobCard({
                   {job.symptom}
                 </span>
               )}
+              {job.tech && (
+                <div
+                  className="mt-3 relative overflow-hidden rounded-2xl p-4"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #ffffff 0%, #eef4ff 55%, #e6dcff 100%)",
+                    border: "1px solid #bfd3ff",
+                    boxShadow: "0 10px 28px rgba(31,102,255,0.12)",
+                  }}>
+                  <div
+                    className="absolute right-3 top-0 w-8 h-10 flex items-start justify-center pt-1"
+                    style={{
+                      background: "linear-gradient(180deg,#4169ff,#6b7cff)",
+                      clipPath: "polygon(0 0,100% 0,100% 100%,50% 75%,0 100%)",
+                      color: "white",
+                    }}>
+                    ♛
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 pr-2">
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        <span className="text-[11px] font-black px-2 py-1 rounded-md bg-[#6d4cff] text-white">
+                          👑 베스트
+                        </span>
+                        <span className="text-[11px] font-black px-2 py-1 rounded-md bg-[#eaf1ff] text-[#1f66ff]">
+                          🛡 안심케어
+                        </span>
+                      </div>
+
+                      <div
+                        className="text-xs mb-2"
+                        style={{ color: "#475569" }}>
+                        서울 인천 경기
+                      </div>
+
+                      <div
+                        className="text-sm font-black mb-2"
+                        style={{ color: "#111827" }}>
+                        {job.tech} 기사님
+                      </div>
+
+                      <div
+                        className="text-xs mb-3"
+                        style={{ color: "#64748b" }}>
+                        가구수리
+                      </div>
+
+                      <div className="flex items-center gap-1 text-xs mb-4">
+                        <span style={{ color: "#f59e0b" }}>⭐</span>
+                        <span
+                          className="font-bold"
+                          style={{ color: "#111827" }}>
+                          4.9
+                        </span>
+                        <span style={{ color: "#94a3b8" }}>(296)</span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 text-[10px] font-bold">
+                        <span
+                          className="flex items-center gap-1"
+                          style={{ color: "#64748b" }}>
+                          🟣 우수인증
+                        </span>
+                        <span
+                          className="flex items-center gap-1"
+                          style={{ color: "#64748b" }}>
+                          💗 친절상담
+                        </span>
+                        <span
+                          className="flex items-center gap-1"
+                          style={{ color: "#64748b" }}>
+                          🔵 안심기사
+                        </span>
+                      </div>
+                    </div>
+
+                    <Image
+                      src={`/images/knight/knights-${TECHS.indexOf(job.tech) + 1}.png`}
+                      alt={`${job.tech} 기사님`}
+                      width={96}
+                      height={112}
+                      className="object-cover flex-shrink-0 rounded-2xl"
+                      style={{
+                        width: 96,
+                        height: 112,
+                        objectFit: "cover",
+                        objectPosition: "top center",
+                        boxShadow: "0 12px 26px rgba(31,102,255,0.22)",
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               {job.price > 0 && (
