@@ -5,84 +5,30 @@ import Link from "next/link";
 import Image from "next/image";
 import { businessLines } from "@/lib/site-config";
 
-/* ?�?� ?�비???�이�?매핑 ?�?� */
+/* ── 서비스 아이콘 매핑 ── */
 const serviceIcons: Record<
   string,
   { icon: string; label: string; href: string }[]
 > = {
   repair: [
-    {
-      icon: "/images/icon/icon-upper.png",
-      label: "?��???처짐",
-      href: "/repair/sangbujang",
-    },
-    {
-      icon: "/images/icon/icon-down.png",
-      label: "?��???밑판",
-      href: "/repair/habujang",
-    },
-    {
-      icon: "/images/icon/icon-door-drop.png",
-      label: "문짝 ?�어�?,
-      href: "/repair/door-fall",
-    },
-    {
-      icon: "/images/icon/icon-door-gear.png",
-      label: "경첩 교체",
-      href: "/repair/hinge",
-    },
-    {
-      icon: "/images/icon/icon-rail.png",
-      label: "?�랍 ?�일",
-      href: "/repair/drawer-rail",
-    },
-    {
-      icon: "/images/icon/icon-bed.png",
-      label: "침�? ?�레??,
-      href: "/repair/bed-frame",
-    },
-    {
-      icon: "/images/icon/icon-table.png",
-      label: "?�탁 ?�리",
-      href: "/repair/table-leg",
-    },
+    { icon: "🔧", label: "상부장 수리", href: "/repair/sangbujang" },
+    { icon: "💧", label: "하부장 밑판", href: "/repair/habujang" },
+    { icon: "🚪", label: "문짝 떨어짐", href: "/repair/door-fall" },
+    { icon: "🔩", label: "경첩 교체", href: "/repair/hinge" },
+    { icon: "📦", label: "서랍 레일", href: "/repair/drawer-rail" },
+    { icon: "🛏️", label: "침대 프레임", href: "/repair/bed-frame" },
+    { icon: "🍽️", label: "식탁 다리", href: "/repair/table-leg" },
   ],
   kitchen: [
-    {
-      icon: "/images/icon/icon-door-reform.png",
-      label: "?�크?� 문짝",
-      href: "/kitchen/sink-door",
-    },
-    {
-      icon: "/images/icon/icon-refre.png",
-      label: "?�장고장",
-      href: "/kitchen/fridge-cabinet",
-    },
-    {
-      icon: "/images/icon/icon-robo.png",
-      label: "로청??,
-      href: "/kitchen/rocheong",
-    },
+    { icon: "🪵", label: "싱크대 문짝", href: "/kitchen/sink-door" },
+    { icon: "❄️", label: "냉장고장", href: "/kitchen/fridge-cabinet" },
+    { icon: "🗄️", label: "로청장", href: "/kitchen/rocheong" },
   ],
   leather: [
-    {
-      icon: "/images/icon/icon-chair-reform.png",
-      label: "?�자 천갈??,
-      href: "/leather/restaurant-chair",
-    },
-    {
-      icon: "/images/icon/icon-chair-reform.png",
-      label: "기�? 가�?,
-      href: "/leather/custom",
-    },
+    { icon: "🪑", label: "식당 의자", href: "/leather/restaurant-chair" },
+    { icon: "✂️", label: "기타 가죽", href: "/leather/custom" },
   ],
-  sofa: [
-    {
-      icon: "/images/icon/icon-sofa-sag.png",
-      label: "?�파 꺼짐 복원",
-      href: "/sofa",
-    },
-  ],
+  sofa: [{ icon: "🛋️", label: "소파 꺼짐 복원", href: "/sofa" }],
 };
 
 const PHONE = "tel:010-9127-3024";
@@ -108,10 +54,10 @@ export default function DrawerMenu() {
 
   return (
     <>
-      {/* ?�버�?버튼 */}
+      {/* 햄버거 버튼 */}
       <button
         onClick={() => setOpen(true)}
-        aria-label="?�체 ?�비??메뉴 ?�기"
+        aria-label="전체 서비스 메뉴 열기"
         className="flex flex-col justify-center items-center gap-[5px] w-9 h-9 rounded-lg transition-all hover:bg-neutral-100"
         style={{ border: "1px solid #e5e5e5" }}>
         <span
@@ -128,7 +74,7 @@ export default function DrawerMenu() {
         />
       </button>
 
-      {/* 배경 ?�버?�이 */}
+      {/* 배경 오버레이 */}
       <div
         onClick={() => setOpen(false)}
         className="fixed inset-0 z-[60] transition-all duration-300"
@@ -140,7 +86,7 @@ export default function DrawerMenu() {
         }}
       />
 
-      {/* ?�로???�널 */}
+      {/* 드로어 패널 */}
       <div
         className="fixed top-0 right-0 z-[70] h-full flex flex-col"
         style={{
@@ -150,7 +96,7 @@ export default function DrawerMenu() {
           transition: "transform 0.35s cubic-bezier(0.32, 0, 0.15, 1)",
           boxShadow: open ? "-12px 0 40px rgba(0,0,0,0.1)" : "none",
         }}>
-        {/* ?�더 */}
+        {/* 헤더 */}
         <div
           className="flex items-center justify-between px-5 py-4 flex-shrink-0"
           style={{ borderBottom: "1px solid #eee" }}>
@@ -165,19 +111,21 @@ export default function DrawerMenu() {
               />
             </Link>
             <span className="text-[13px] font-bold text-[#1f66ff]">
-              ?�체 ?�비??            </span>
+              전체 서비스
+            </span>
           </div>
           <button
             onClick={() => setOpen(false)}
-            aria-label="메뉴 ?�기"
+            aria-label="메뉴 닫기"
             className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors hover:bg-neutral-100"
             style={{ color: "#999", fontSize: 16 }}>
-            ??          </button>
+            ✕
+          </button>
         </div>
 
-        {/* ?�크�??�역 */}
+        {/* 스크롤 영역 */}
         <nav className="flex-1 overflow-y-auto">
-          {/* ?�?� ?�비??카테고리 그리???�?� */}
+          {/* ── 서비스 카테고리 그리드 ── */}
           {businessLines.map((line) => (
             <div key={line.id} className="px-5 pt-6 pb-2">
               <div className="flex items-center justify-between mb-4">
@@ -188,7 +136,8 @@ export default function DrawerMenu() {
                   href={line.href}
                   onClick={() => setOpen(false)}
                   className="text-[12px] font-bold text-[#1f66ff] hover:underline">
-                  ?�체보기 ??                </Link>
+                  전체보기 →
+                </Link>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {(serviceIcons[line.id] || []).map((item) => (
@@ -197,14 +146,7 @@ export default function DrawerMenu() {
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className="flex flex-col items-center gap-1.5 rounded-xl py-3 px-1 transition-colors hover:bg-[#f0f4ff]">
-                    {/* <span className="text-[24px]">{item.icon}</span> */}
-                    <Image
-                      src={item.icon}
-                      alt={item.label}
-                      width={52}
-                      height={52}
-                      className="h-52 w-52 object-contain"
-                    />
+                    <span className="text-[24px]">{item.icon}</span>
                     <span className="text-[11px] font-semibold text-neutral-700 text-center leading-tight whitespace-nowrap">
                       {item.label}
                     </span>
@@ -219,32 +161,33 @@ export default function DrawerMenu() {
             style={{ height: 1, backgroundColor: "#eee" }}
           />
 
-          {/* ?�?� 바로가�??�?� */}
+          {/* ── 바로가기 ── */}
           <div className="px-5 pt-3 pb-2">
             <p className="text-[11px] font-bold text-neutral-400 tracking-wider mb-3">
-              바로가�?            </p>
+              바로가기
+            </p>
             <div className="flex flex-col gap-1.5">
               {[
                 {
-                  label: "?�� ?�진?�로 견적 받기",
+                  label: "📷 사진으로 견적 받기",
                   href: PHOTO_URL,
                   external: true,
                   highlight: true,
                 },
                 {
-                  label: "?�� ?�업 ?��? 보기",
+                  label: "🔍 작업 사례 보기",
                   href: "/reviews",
                   external: false,
                   highlight: false,
                 },
                 {
-                  label: "�?고객 ?�기",
+                  label: "⭐ 고객 후기",
                   href: "/reviews",
                   external: false,
                   highlight: false,
                 },
                 {
-                  label: "???�주 묻는 질문",
+                  label: "❓ 자주 묻는 질문",
                   href: "/faq",
                   external: false,
                   highlight: false,
@@ -274,7 +217,8 @@ export default function DrawerMenu() {
                           : "#ccc",
                         fontSize: 12,
                       }}>
-                      ??                    </span>
+                      →
+                    </span>
                   </a>
                 ) : (
                   <Link
@@ -289,7 +233,7 @@ export default function DrawerMenu() {
                     <span className="text-[14px] font-bold text-neutral-900">
                       {item.label}
                     </span>
-                    <span style={{ color: "#ccc", fontSize: 12 }}>??/span>
+                    <span style={{ color: "#ccc", fontSize: 12 }}>→</span>
                   </Link>
                 ),
               )}
@@ -301,10 +245,10 @@ export default function DrawerMenu() {
             style={{ height: 1, backgroundColor: "#eee" }}
           />
 
-          {/* ?�?� ?�담?�기 ?�?� */}
+          {/* ── 상담하기 ── */}
           <div className="px-5 pt-3 pb-2">
             <p className="text-[11px] font-bold text-neutral-400 tracking-wider mb-3">
-              ?�담?�기
+              상담하기
             </p>
             <div className="flex flex-col gap-1.5">
               <a
@@ -316,16 +260,16 @@ export default function DrawerMenu() {
                 style={{ backgroundColor: "#FEE500" }}>
                 <Image
                   src="/images/kakao-logo.png"
-                  alt="카카?�톡"
+                  alt="카카오톡"
                   width={24}
                   height={24}
                   className="h-6 w-6 object-contain"
                 />
                 <span className="text-[14px] font-bold text-neutral-900">
-                  ?�시�?카톡 ?�담
+                  실시간 카톡 상담
                 </span>
                 <span className="ml-auto text-[11px] font-bold text-neutral-500 bg-white/60 px-2 py-0.5 rounded-full">
-                  빠른 ?��?
+                  빠른 답변
                 </span>
               </a>
               <a
@@ -338,13 +282,13 @@ export default function DrawerMenu() {
                 }}>
                 <Image
                   src="/images/phone-icon.png"
-                  alt="?�화"
+                  alt="전화"
                   width={24}
                   height={24}
                   className="h-6 w-6 object-contain"
                 />
                 <span className="text-[14px] font-bold text-neutral-900">
-                  ?�화 ?�담
+                  전화 상담
                 </span>
                 <span className="ml-auto text-[13px] font-semibold text-[#1f66ff]">
                   010-9127-3024
@@ -358,20 +302,20 @@ export default function DrawerMenu() {
             style={{ height: 1, backgroundColor: "#eee" }}
           />
 
-          {/* ?�?� ?�영 ?�보 ?�?� */}
+          {/* ── 운영 정보 ── */}
           <div className="px-5 pt-3 pb-6">
             <p className="text-[11px] font-bold text-neutral-400 tracking-wider mb-3">
-              ?�영 ?�보
+              운영 정보
             </p>
             <div
               className="rounded-2xl p-4"
               style={{ backgroundColor: "#fafafa", border: "1px solid #eee" }}>
               <div className="flex flex-col gap-2.5">
                 {[
-                  { label: "?�비??지??, value: "?�울 · 경기 · ?�천 ??지?? },
-                  { label: "?�담 ?�간", value: "매일 09:00 ~ 22:00" },
-                  { label: "방문 가?�일", value: "??~ ?�요?? },
-                  { label: "긴급 ?�공", value: "?��???추락 ???�선 배정" },
+                  { label: "서비스 지역", value: "서울 · 경기 · 인천 전 지역" },
+                  { label: "상담 시간", value: "매일 09:00 ~ 22:00" },
+                  { label: "방문 가능일", value: "월 ~ 토요일" },
+                  { label: "긴급 시공", value: "상부장 추락 등 우선 배정" },
                 ].map((info, i) => (
                   <div key={i} className="flex items-center justify-between">
                     <span className="text-[12px] text-neutral-400">
@@ -387,7 +331,7 @@ export default function DrawerMenu() {
           </div>
         </nav>
 
-        {/* ?�단 고정 ??CTA */}
+        {/* 하단 고정 — CTA */}
         <div
           className="flex-shrink-0 px-5 py-4"
           style={{ borderTop: "1px solid #eee", backgroundColor: "#fff" }}>
@@ -400,10 +344,10 @@ export default function DrawerMenu() {
             style={{
               background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
             }}>
-            ?�� ?�진 보내�?무료 견적 받기
+            📷 사진 보내고 무료 견적 받기
           </a>
           <p className="mt-2 text-center text-[11px] text-neutral-400">
-            ?�진 ???�이�??�리·리폼 가???��? 바로 ?�내
+            사진 한 장이면 수리·리폼 가능 여부 바로 안내
           </p>
         </div>
       </div>
