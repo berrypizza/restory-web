@@ -594,18 +594,16 @@ export default function SangbujangLanding() {
             </h2>
           </FadeIn>
           <FadeIn delay={100}>
-            <div className="flex aspect-video flex-col items-center justify-center rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div
-                className="mb-4 flex h-14 w-14 items-center justify-center rounded-full md:h-20 md:w-20"
-                style={{ background: "rgba(255,255,255,0.1)" }}>
-                <span className="ml-1 text-[28px] md:text-[36px]">▶</span>
+            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
+              <div className="aspect-video">
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube.com/embed/유튜브ID"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
-              <p
-                className="text-[14px] text-center font-semibold md:text-[16px]"
-                style={{ color: "rgba(255,255,255,0.45)" }}>
-                유튜브 영상 준비 중입니다...
-                <br /> 곧 멋진 시공 영상으로 찾아뵐게요!
-              </p>
             </div>
           </FadeIn>
         </div>

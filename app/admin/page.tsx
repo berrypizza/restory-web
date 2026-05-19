@@ -796,6 +796,10 @@ function JobCard({
                   </span>
                 )}
               </div>
+            </div>
+
+            {/* 기사님 정보란 */}
+            <div>
               {job.tech && (
                 <div
                   className="mt-3 relative overflow-hidden rounded-2xl p-4"
@@ -815,8 +819,8 @@ function JobCard({
                     ♛
                   </div>
 
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1 pr-2">
+                  <div className="flex items-start justify-between gap-0.5">
+                    <div className="min-w-0 flex-1 pr-1">
                       <div className="flex flex-wrap gap-1.5 mb-3">
                         <span className="text-[11px] font-black px-2 py-1 rounded-md bg-[#6d4cff] text-white">
                           👑 베스트
@@ -833,7 +837,7 @@ function JobCard({
                       </div>
 
                       <div
-                        className="text-sm font-black mb-2"
+                        className="text-medium font-black mb-2"
                         style={{ color: "#111827" }}>
                         {job.tech} 기사님
                       </div>
@@ -907,7 +911,7 @@ function JobCard({
                     <span style={{ fontSize: 15, flexShrink: 0 }}>💬</span>
                     <div className="min-w-0">
                       <p
-                        className="text-xs font-black mb-0.5"
+                        className="text-medium font-black mb-0.5"
                         style={{ color: "#1f66ff" }}>
                         메모 보기
                       </p>
