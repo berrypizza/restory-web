@@ -50,6 +50,13 @@ const TECH_COLOR: Record<string, string> = {
   "": "#64748b",
 };
 
+const TECH_PHOTO: Record<string, string> = {
+  고관호: "/images/knight/knights-1.png",
+  고현호: "/images/knight/knights-2.png",
+  이주형: "/images/knight/knights-3.png",
+  강영훈: "/images/knight/knights-4.png",
+};
+
 const STATUS_STYLE: Record<
   Status,
   { bg: string; color: string; border: string }
@@ -1643,27 +1650,48 @@ export default function AdminDashboard() {
                 </span>{" "}
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <span
-                className="h-1.5 w-1.5 rounded-full inline-block"
-                style={{ backgroundColor: TECH_COLOR[loggedUser] || "#1f66ff" }}
-              />
-              <span
-                className="text-2xl font-bold"
-                style={{ color: TECH_COLOR[loggedUser] || "#1f66ff" }}>
-                {isAdmin ? "🏅 " : ""}
-                {loggedUser}
-              </span>
-              {isAdmin && (
-                <span className="text-2xl" style={{ color: "#94a3b8" }}>
-                  · 전체 관리
-                </span>
+
+            <div className="flex items-center gap-3 mt-2">
+              {/* ★ 기사 프로필 사진 */}
+              {loggedUser && TECH_PHOTO[loggedUser] && (
+                <Image
+                  src={TECH_PHOTO[loggedUser]}
+                  alt={`${loggedUser} 프로필`}
+                  width={70}
+                  height={70}
+                  className="rounded-xl object-cover flex-shrink-0"
+                  style={{
+                    width: 70,
+                    height: 70,
+                    objectFit: "cover",
+                    objectPosition: "top center",
+                    boxShadow: `0 12px 12px ${TECH_COLOR[loggedUser] || "#1f66ff"}33`,
+                  }}
+                />
               )}
-              {!isAdmin && (
-                <span className="text-2xl" style={{ color: "#94a3b8" }}>
-                  · 내 일정만 표시
-                </span>
-              )}
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <div className="flex flex-col leading-tight text-left">
+                    <span
+                      className="text-2xl font-bold"
+                      style={{ color: TECH_COLOR[loggedUser] || "#1f66ff" }}>
+                      {loggedUser} {isAdmin ? "🏅 " : ""}
+                    </span>
+                    {isAdmin && (
+                      <span
+                        className="text-xl font-semibold"
+                        style={{ color: "#415672" }}>
+                        전체 관리
+                      </span>
+                    )}
+                    {!isAdmin && (
+                      <span className="text-xl" style={{ color: "#94a3b8" }}>
+                        내 일정만 표시
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
