@@ -490,10 +490,10 @@ function JobCard({
             </p>
             <p
               className="text-xl font-semibold text-center mb-1"
-              style={{ color: "#111827" }}>
+              style={{ color: "#ffffff" }}>
               {job.name}님 완료
             </p>
-            <p className="text-sm text-center" style={{ color: "#64748b" }}>
+            <p className="text-sm text-center" style={{ color: "#ffffff" }}>
               당신이 있어서 리스토리입니다
             </p>
             <p
@@ -651,8 +651,8 @@ function JobCard({
           </span>
           {job.visit_time && (
             <span
-              className="text-xs font-bold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: "#f8fafc", color: "#111827" }}>
+              className="text-medium font-bold px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: "#f8fafc", color: "#1f66ff" }}>
               {formatTime(job.visit_time)}
             </span>
           )}
@@ -735,21 +735,20 @@ function JobCard({
               {job.phone && (
                 <div className="flex items-center gap-1.5">
                   <span
-                    className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    className="text-xs font-medium px-2 py-2 rounded-xl"
                     style={{
                       backgroundColor: "#ef444418",
-                      color: "#ef9494",
+                      color: "#e32e40",
                       border: "1px solid #ef444430",
                     }}>
                     {job.phone}
                   </span>
                   <a
                     href={`tel:${job.phone}`}
-                    className="flex items-center justify-center rounded-full bg-[#ffffff] shadow-[0_2px_12px_rgba(15,23,42,0.06)]"
+                    className="flex items-center justify-center border-2 border-transparent rounded-xl  bg-gradient-to-r from-[#e32e40] to-[#ff707e]"
                     style={{
                       width: 36,
                       height: 36,
-                      backgroundColor: "#e32e40",
                       color: "white",
                       fontSize: 18,
                       textDecoration: "none",
@@ -772,7 +771,7 @@ function JobCard({
                   href={naverMapUrl(job.region)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium px-2 py-0.5 rounded-full inline-flex items-center gap-1"
+                  className="text-xs font-medium px-2 py-0.5 rounded-xl inline-flex items-center gap-1"
                   style={{
                     backgroundColor: "#eff6ff",
                     color: "#1f66ff",
@@ -1169,7 +1168,7 @@ function JobCard({
           ) : job.status !== "완료" ? (
             <button
               onClick={handleComplete}
-              className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
+              className="flex-1 border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] text-sm font-bold text-white"
               style={{ backgroundColor: "#1f66ff" }}>
               ✓ 완료 처리
             </button>
@@ -1616,16 +1615,16 @@ export default function AdminDashboard() {
     <main
       className="min-h-screen px-2 py-5"
       style={{ backgroundColor: "#f5f7fb", color: "#111827" }}>
-      <div className="mx-auto max-w-3xl">
+      <div className="w-full">
         <div
           className="flex items-center justify-between mb-6 pb-4"
           style={{ borderBottom: "1px solid #e5e7eb" }}>
-          <div>
+          <div className="w-full">
             <div
-              className="flex text-2xl font-bold mb-[16px] items-center border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff]"
+              className="w-full flex text-2xl font-bold mb-[16px] items-center border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff]"
               style={{ color: "#111827" }}>
               <Image
-                src="/images/logo-circle.png"
+                src="/images/logo-circle-sm.png"
                 alt="Re'Story"
                 width={70}
                 height={70}
@@ -1635,7 +1634,7 @@ export default function AdminDashboard() {
                 <span className="text-[#ffffff]">리스토리</span> <br />
                 <span
                   className="text-[#1f66ff] text-next-sm"
-                  style={{ color: "#4c596b" }}>
+                  style={{ color: "#2e3947" }}>
                   관리 페이지
                 </span>{" "}
               </div>
@@ -1732,7 +1731,7 @@ export default function AdminDashboard() {
               {t}
               {t === "통계" && reviewPending.length > 0 && (
                 <span
-                  className="ml-1 text-xs px-1.5 py-0.5 rounded-full"
+                  className="ml-1 text-xs px-0.5 py-0.5 rounded-full"
                   style={{ backgroundColor: "#ef4444", color: "white" }}>
                   {reviewPending.length}
                 </span>
