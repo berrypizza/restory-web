@@ -784,10 +784,19 @@ function JobCard({
                 </a>
               )}
               {job.symptom && (
-                <span className="text-xs" style={{ color: "#64748b" }}>
+                <span className="text-xl font-bold text-[#1f66ff]">
                   {job.symptom}
                 </span>
-              )}
+              )}{" "}
+              <div className="flex flex-wrap border-2 border-r-[#e32e40] border-b-[#e32e40] border-t-transparent border-l-transparent rounded-xl px-2 py-0.5 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] items-center gap-3">
+                {job.price > 0 && (
+                  <span
+                    className="text-lg  font-bold"
+                    style={{ color: "#ffffff" }}>
+                    {formatPrice(job.price)}
+                  </span>
+                )}
+              </div>
               {job.tech && (
                 <div
                   className="mt-3 relative overflow-hidden rounded-2xl p-4"
@@ -881,15 +890,6 @@ function JobCard({
                     />
                   </div>
                 </div>
-              )}
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              {job.price > 0 && (
-                <span
-                  className="text-sm font-bold"
-                  style={{ color: "#1f66ff" }}>
-                  {formatPrice(job.price)}
-                </span>
               )}
             </div>
 
@@ -1023,10 +1023,9 @@ function JobCard({
                                   setLightboxList(list);
                                   setLightboxUrl(url);
                                 }}
-                                className="rounded-xl cursor-pointer"
+                                className="rounded-xl  cursor-pointer"
                                 style={{
-                                  height: 64,
-                                  width: 64,
+                                  width: "max(100%, 500px)",
                                   objectFit: "cover",
                                   border: "1px solid #f59e0b44",
                                 }}
@@ -1197,10 +1196,22 @@ function JobCard({
   );
 }
 
-const ADMIN_NAMES = ["고관호", "고현호"];
+type UserRole = "admin" | "tech";
+
+const USERS: {
+  id: string;
+  name: Tech;
+  role: UserRole;
+  password: string;
+}[] = [
+  { id: "고관호", name: "고관호", role: "admin", password: "su3024" },
+  { id: "kohh1115", name: "고현호", role: "admin", password: "7071" },
+  { id: "juhyung", name: "이주형", role: "tech", password: "su2000" },
+  { id: "younghun", name: "강영훈", role: "tech", password: "su2000" },
+];
 export default function AdminDashboard() {
   const [loggedUser, setLoggedUser] = useState<string | null>(null);
-  const [selectedName, setSelectedName] = useState<Tech | "">("");
+  const [idInput, setIdInput] = useState("");
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -1221,14 +1232,19 @@ export default function AdminDashboard() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const isAdmin = ADMIN_NAMES.includes(loggedUser || "");
+  const currentUser = USERS.find((u) => u.name === loggedUser);
+  const isAdmin = currentUser?.role === "admin";
+
   useEffect(() => {
     try {
       const expiry = localStorage.getItem("restory_admin_expiry");
       const name = localStorage.getItem("restory_logged_name");
+
       if (expiry && Date.now() < parseInt(expiry) && name) {
         setLoggedUser(name);
-        if (!ADMIN_NAMES.includes(name)) {
+
+        const savedUser = USERS.find((u) => u.name === name);
+        if (savedUser?.role !== "admin") {
           setTechFilter(name as Tech);
           setCalTechFilter(name as Tech);
         }
@@ -1268,34 +1284,35 @@ export default function AdminDashboard() {
   }, [load, loggedUser]);
 
   const handleLogin = () => {
-    if (!selectedName) {
+    if (!idInput.trim() || !pwInput.trim()) {
       setPwError(true);
       return;
     }
-    const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
-    const techPw = process.env.NEXT_PUBLIC_TECH_PASSWORD || "su2000";
-    const isAdminLogin =
-      ADMIN_NAMES.includes(selectedName) && pwInput === adminPw;
 
-    const isTechLogin =
-      !ADMIN_NAMES.includes(selectedName) && pwInput === techPw;
-    if (isAdminLogin || isTechLogin) {
-      try {
-        localStorage.setItem(
-          "restory_admin_expiry",
-          String(Date.now() + 24 * 60 * 60 * 1000),
-        );
-        localStorage.setItem("restory_logged_name", selectedName);
-      } catch {}
-      setLoggedUser(selectedName);
-      setPwError(false);
-      if (!ADMIN_NAMES.includes(selectedName)) {
-        setTechFilter(selectedName as Tech);
-        setCalTechFilter(selectedName as Tech);
-      }
-    } else {
+    const user = USERS.find(
+      (u) => u.id === idInput.trim() && u.password === pwInput,
+    );
+
+    if (!user) {
       setPwError(true);
       setPwInput("");
+      return;
+    }
+
+    try {
+      localStorage.setItem(
+        "restory_admin_expiry",
+        String(Date.now() + 24 * 60 * 60 * 1000),
+      );
+      localStorage.setItem("restory_logged_name", user.name);
+    } catch {}
+
+    setLoggedUser(user.name);
+    setPwError(false);
+
+    if (user.role !== "admin") {
+      setTechFilter(user.name);
+      setCalTechFilter(user.name);
     }
   };
 
@@ -1320,40 +1337,42 @@ export default function AdminDashboard() {
               alt="Re'Story"
               width={116}
               height={116}
-              className="w-[116px]  object-contain absolute left-1/2 -translate-x-1/2 top-[10px]  "
+              className="w-[116px] object-contain absolute left-1/2 -translate-x-1/2 top-[10px]"
               priority
             />
+
             <p className="text-3xl mb-2">🛠</p>
+
             <h1 className="text-xl font-black" style={{ color: "#1f66ff" }}>
               리스토리 관리자
             </h1>
+
             <p className="text-sm mt-1" style={{ color: "#1f66ff" }}>
-              이름을 선택하고 비밀번호를 입력하세요
+              아이디와 비밀번호를 입력하세요
             </p>
           </div>
+
           <div className="w-full flex flex-col gap-3">
-            <div className="grid grid-cols-2 gap-2">
-              {TECHS.map((name) => (
-                <button
-                  key={name}
-                  type="button"
-                  onClick={() => {
-                    setSelectedName(name as Tech);
-                    setPwError(false);
-                  }}
-                  className="rounded-2xl py-3.5 text-sm font-bold transition-all"
-                  style={{
-                    backgroundColor:
-                      selectedName === name
-                        ? TECH_COLOR[name] || "#1f66ff"
-                        : "#ffffff",
-                    color: selectedName === name ? "white" : "#64748b",
-                    border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#1f66ff" : "#e5e7eb"}`,
-                  }}>
-                  {ADMIN_NAMES.includes(name) ? "🏅 " : ""} {name}
-                </button>
-              ))}
-            </div>
+            <input
+              type="text"
+              value={idInput}
+              onChange={(e) => {
+                setIdInput(e.target.value);
+                setPwError(false);
+              }}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              placeholder="아이디"
+              className="w-full rounded-2xl px-4 py-3.5 text-base"
+              style={{
+                backgroundColor: "#ffffff",
+                border: `1px solid ${pwError ? "#ef4444" : "#e5e7eb"}`,
+                color: "#1f66ff",
+                outline: "none",
+                fontFamily: "inherit",
+                boxSizing: "border-box",
+              }}
+            />
+
             <div className="relative">
               <input
                 type={showPw ? "text" : "password"}
@@ -1363,10 +1382,7 @@ export default function AdminDashboard() {
                   setPwError(false);
                 }}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                placeholder={
-                  selectedName ? "비밀번호 입력" : "이름을 먼저 선택하세요"
-                }
-                disabled={!selectedName}
+                placeholder="비밀번호"
                 className="w-full rounded-2xl px-4 py-3.5 text-base pr-12"
                 style={{
                   backgroundColor: "#ffffff",
@@ -1375,37 +1391,34 @@ export default function AdminDashboard() {
                   outline: "none",
                   fontFamily: "inherit",
                   boxSizing: "border-box",
-                  opacity: selectedName ? 1 : 0.5,
                 }}
               />
-              {selectedName && (
-                <button
-                  type="button"
-                  onClick={() => setShowPw((v) => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
-                  style={{ color: "#94a3b8" }}>
-                  {showPw ? "🙈" : "👁"}
-                </button>
-              )}
+
+              <button
+                type="button"
+                onClick={() => setShowPw((v) => !v)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
+                style={{ color: "#94a3b8" }}>
+                {showPw ? "🙈" : "👁"}
+              </button>
             </div>
+
             {pwError && (
               <p
                 className="text-sm text-center font-medium"
                 style={{ color: "#ef4444" }}>
-                {!selectedName
-                  ? "이름을 선택해주세요"
-                  : "비밀번호가 틀렸습니다"}
+                아이디 또는 비밀번호가 틀렸습니다
               </p>
             )}
+
             <button
               onClick={handleLogin}
-              disabled={!selectedName}
+              disabled={!idInput.trim() || !pwInput.trim()}
               className="w-full rounded-2xl py-3.5 text-base font-bold text-white"
               style={{
-                backgroundColor: selectedName
-                  ? TECH_COLOR[selectedName] || "#1f66ff"
-                  : "#dbe3f0",
-                opacity: selectedName ? 1 : 0.5,
+                backgroundColor:
+                  idInput.trim() && pwInput.trim() ? "#1f66ff" : "#dbe3f0",
+                opacity: idInput.trim() && pwInput.trim() ? 1 : 0.65,
               }}>
               입장
             </button>
@@ -1609,7 +1622,7 @@ export default function AdminDashboard() {
           style={{ borderBottom: "1px solid #e5e7eb" }}>
           <div>
             <div
-              className="flex text-2xl font-bold mb-[16px] items-center"
+              className="flex text-2xl font-bold mb-[16px] items-center border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff]"
               style={{ color: "#111827" }}>
               <Image
                 src="/images/logo-circle.png"
@@ -1619,7 +1632,7 @@ export default function AdminDashboard() {
                 className="inline-block object-contain mr-2"
               />
               <div>
-                <span className="text-[#1f66ff]">리스토리</span> <br />
+                <span className="text-[#ffffff]">리스토리</span> <br />
                 <span
                   className="text-[#1f66ff] text-next-sm"
                   style={{ color: "#4c596b" }}>
@@ -1671,7 +1684,8 @@ export default function AdminDashboard() {
                 localStorage.removeItem("restory_logged_name");
               } catch {}
               setLoggedUser(null);
-              setSelectedName("");
+              setIdInput("");
+              setPwInput("");
             }}
             className="rounded-xl px-3 py-2.5 text-sm font-bold"
             style={{
@@ -1688,7 +1702,7 @@ export default function AdminDashboard() {
                 setEditId(null);
                 setShowForm(true);
               }}
-              className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
+              className="border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] text-sm font-bold text-white"
               style={{ backgroundColor: "#1f66ff" }}>
               + 접수
             </button>
@@ -1706,9 +1720,13 @@ export default function AdminDashboard() {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className="flex-1 rounded-lg py-2.5 text-m font-semibold transition-all"
+              className="flex-1 border-2 border-transparent rounded-xl px-3 py-2 text-m font-semibold transition-all"
               style={{
-                backgroundColor: tab === t ? "#1f66ff" : "transparent",
+                background:
+                  tab === t
+                    ? "linear-gradient(to right, #1f66ff, #4f8fff)"
+                    : "transparent",
+
                 color: tab === t ? "white" : "#6b7280",
               }}>
               {t}
@@ -2019,8 +2037,8 @@ export default function AdminDashboard() {
                         setEditId(null);
                         setShowForm(true);
                       }}
-                      className="text-[20px] px-3 py-1.5 rounded-lg font-bold"
-                      style={{ backgroundColor: "#1f66ff", color: "white" }}>
+                      className="text-[20px] border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] font-bold"
+                      style={{ color: "white" }}>
                       + 추가
                     </button>
                   )}
@@ -2138,7 +2156,7 @@ export default function AdminDashboard() {
                     </p>
                     <p
                       className="text-2xl font-bold"
-                      style={{ color: isAdmin ? "white" : myColor }}>
+                      style={{ color: isAdmin ? "#1f66ff" : myColor }}>
                       {formatPrice(statRevenue)}
                     </p>
                   </div>
@@ -2156,7 +2174,7 @@ export default function AdminDashboard() {
                     </p>
                     <p
                       className="text-2xl font-bold"
-                      style={{ color: isAdmin ? "white" : myColor }}>
+                      style={{ color: isAdmin ? "#1f66ff" : myColor }}>
                       {statDone.length}
                       <span
                         className="text-base ml-1"
@@ -2387,8 +2405,11 @@ export default function AdminDashboard() {
                       setEditId(null);
                       setShowForm(true);
                     }}
-                    className="text-xs px-3 py-1.5 rounded-lg font-bold"
-                    style={{ backgroundColor: "#1f66ff", color: "white" }}>
+                    className="text-xs border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] font-bold"
+                    style={{
+                      background: "linear-gradient(to right, #1f66ff, #4f8fff)",
+                      color: "white",
+                    }}>
                     + 추가
                   </button>
                 )}
