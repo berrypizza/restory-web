@@ -1197,8 +1197,7 @@ function JobCard({
   );
 }
 
-const ADMIN_NAME = "고관호";
-
+const ADMIN_NAMES = ["고관호", "고현호"];
 export default function AdminDashboard() {
   const [loggedUser, setLoggedUser] = useState<string | null>(null);
   const [selectedName, setSelectedName] = useState<Tech | "">("");
@@ -1222,15 +1221,14 @@ export default function AdminDashboard() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const isAdmin = loggedUser === ADMIN_NAME;
-
+  const isAdmin = ADMIN_NAMES.includes(loggedUser || "");
   useEffect(() => {
     try {
       const expiry = localStorage.getItem("restory_admin_expiry");
       const name = localStorage.getItem("restory_logged_name");
       if (expiry && Date.now() < parseInt(expiry) && name) {
         setLoggedUser(name);
-        if (name !== ADMIN_NAME) {
+        if (!ADMIN_NAMES.includes(name)) {
           setTechFilter(name as Tech);
           setCalTechFilter(name as Tech);
         }
@@ -1276,8 +1274,11 @@ export default function AdminDashboard() {
     }
     const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
     const techPw = process.env.NEXT_PUBLIC_TECH_PASSWORD || "su2000";
-    const isAdminLogin = selectedName === ADMIN_NAME && pwInput === adminPw;
-    const isTechLogin = selectedName !== ADMIN_NAME && pwInput === techPw;
+    const isAdminLogin =
+      ADMIN_NAMES.includes(selectedName) && pwInput === adminPw;
+
+    const isTechLogin =
+      !ADMIN_NAMES.includes(selectedName) && pwInput === techPw;
     if (isAdminLogin || isTechLogin) {
       try {
         localStorage.setItem(
@@ -1288,7 +1289,7 @@ export default function AdminDashboard() {
       } catch {}
       setLoggedUser(selectedName);
       setPwError(false);
-      if (selectedName !== ADMIN_NAME) {
+      if (!ADMIN_NAMES.includes(selectedName)) {
         setTechFilter(selectedName as Tech);
         setCalTechFilter(selectedName as Tech);
       }
@@ -1332,12 +1333,7 @@ export default function AdminDashboard() {
           </div>
           <div className="w-full flex flex-col gap-3">
             <div className="grid grid-cols-2 gap-2">
-              {(
-                [
-                  ADMIN_NAME,
-                  ...TECHS.filter((t) => t !== ADMIN_NAME),
-                ] as string[]
-              ).map((name) => (
+              {TECHS.map((name) => (
                 <button
                   key={name}
                   type="button"
@@ -1354,8 +1350,7 @@ export default function AdminDashboard() {
                     color: selectedName === name ? "white" : "#64748b",
                     border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#1f66ff" : "#e5e7eb"}`,
                   }}>
-                  {name === ADMIN_NAME ? "🏅 " : ""}
-                  {name}
+                  {ADMIN_NAMES.includes(name) ? "🏅 " : ""} {name}
                 </button>
               ))}
             </div>
