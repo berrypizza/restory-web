@@ -703,6 +703,37 @@ export default function SinkdoorReformLanding() {
         </FadeIn>
       </section>
 
+      {/* YOUTUBE */}
+      <section
+        className="px-5 py-14 text-white md:py-20"
+        style={{ background: "#1a1a1a" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <p
+              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
+              style={{ color: "rgba(255,255,255,0.35)" }}>
+              YOUTUBE
+            </p>
+            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
+              실제 시공 영상을 확인하세요
+            </h2>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
+              <div className="aspect-video">
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube.com/embed/유튜브ID"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* PROCESS */}
       <section
         className="px-5 py-14 md:py-20"
@@ -817,37 +848,6 @@ export default function SinkdoorReformLanding() {
               </FadeIn>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* YOUTUBE */}
-      <section
-        className="px-5 py-14 text-white md:py-20"
-        style={{ background: "#1a1a1a" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p
-              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
-              style={{ color: "rgba(255,255,255,0.35)" }}>
-              YOUTUBE
-            </p>
-            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
-              실제 시공 영상을 확인하세요
-            </h2>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div className="aspect-video">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube.com/embed/유튜브ID"
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-          </FadeIn>
         </div>
       </section>
 
