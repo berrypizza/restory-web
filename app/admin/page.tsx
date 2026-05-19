@@ -1615,7 +1615,7 @@ export default function AdminDashboard() {
     <main
       className="min-h-screen px-2 py-5"
       style={{ backgroundColor: "#f5f7fb", color: "#111827" }}>
-      <div className="w-full">
+      <div className="w-full max-w-5xl mx-auto">
         <div
           className="flex items-center justify-between mb-6 pb-4"
           style={{ borderBottom: "1px solid #e5e7eb" }}>
