@@ -903,8 +903,8 @@ function JobCard({
                   onClick={() => setMemoOpen((v) => !v)}
                   className="w-full flex items-center justify-between rounded-xl px-3 py-3 text-left"
                   style={{
-                    backgroundColor: memoOpen ? "#e32e4036" : "#f8fbff",
-                    border: `1px solid ${memoOpen ? "#e32e40a9" : "#bfd3ff"}`,
+                    backgroundColor: memoOpen ? "#c8e0ff" : "#f8fbff",
+                    border: `1px solid ${memoOpen ? "#bfd3ff" : "#bfd3ff"}`,
                     boxShadow: memoOpen ? "none" : "0 0 0 1px #eaf1ff",
                   }}>
                   <div className="flex items-center gap-2 min-w-0">
@@ -948,10 +948,10 @@ function JobCard({
                 </button>
                 {memoOpen && (
                   <div
-                    className="rounded-xl px-4 py-3 -mt-0.5"
+                    className="rounded-xl px-4 py-3 -mt-0.5 shadow-2xl"
                     style={{
                       backgroundColor: "#ffffff",
-                      border: "1px solid #e32e40a9",
+                      border: "1px solid #bfd3ff",
                       borderTop: "none",
                     }}>
                     <p
