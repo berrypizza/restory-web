@@ -1008,8 +1008,8 @@ function JobCard({
                 {getIntakePhotos().length > 0 && (
                   <div>
                     <span
-                      className="text-xs font-bold mb-1.5 inline-block"
-                      style={{ color: "#f59e0b" }}>
+                      className="text-medium font-bold mb-1.5 inline-block"
+                      style={{ color: "#1f66ff" }}>
                       📷 접수사진
                     </span>
                     <div className="flex gap-1.5 flex-wrap">
