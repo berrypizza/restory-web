@@ -1681,7 +1681,7 @@ export default function AdminDashboard() {
                       <span
                         className="text-xl font-semibold"
                         style={{ color: "#415672" }}>
-                        전체 관리
+                        전체 관리 권한
                       </span>
                     )}
                     {!isAdmin && (
