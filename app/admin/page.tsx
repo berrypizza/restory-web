@@ -1030,7 +1030,7 @@ function JobCard({
                                 style={{
                                   width: "max(100%, 500px)",
                                   objectFit: "cover",
-                                  border: "1px solid #f59e0b44",
+                                  border: "1px solid #1f66ff",
                                 }}
                               />
                               {idx === 3 && list.length > 4 && (
