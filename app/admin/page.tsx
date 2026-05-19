@@ -2959,8 +2959,8 @@ export default function AdminDashboard() {
                             alt={`접수 ${idx + 1}`}
                             className="rounded-xl"
                             style={{
-                              height: 72,
-                              width: 72,
+                              height: 172,
+                              width: 172,
                               objectFit: "cover",
                               border: "1px solid #f59e0b44",
                             }}

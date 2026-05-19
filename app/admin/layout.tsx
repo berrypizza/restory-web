@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "리스토리 관리자",
   description: "리스토리 기사 전용 관리 앱",
   // 루트 layout의 manifest.json을 덮어씀
-  manifest: "/manifest.json",
+  manifest: "/manifest-admin.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
