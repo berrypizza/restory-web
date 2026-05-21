@@ -79,74 +79,77 @@ export default function Navbar() {
 
       {/* 카테고리 nav — sticky 고정 */}
       <header className="sticky top-0 z-50 border-b border-neutral-100 bg-white shadow-[0_1px_0_rgba(0,0,0,0.08)]">
-        <nav
-          className="mx-auto flex h-14 max-w-6xl items-center gap-2 overflow-x-auto overflow-y-hidden px-4 md:overflow-visible"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-          {businessLines.map((line) => {
-            const isActive = pathname.startsWith(`/${line.id}`);
-            return (
-              <div
-                key={line.id}
-                className="group relative flex h-full shrink-0 items-center">
-                <Link
-                  href={line.href}
-                  className={`relative flex h-full items-center px-5 text-base font-black transition ${
-                    isActive
-                      ? "text-[#1f66ff]"
-                      : "text-neutral-950 hover:text-[#1f66ff]"
-                  }`}>
-                  {line.title}
-                  {isActive && (
-                    <span
-                      className="absolute bottom-0 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-[#1f66ff]"
-                      style={{ width: "calc(100% - 40px)" }}
-                    />
-                  )}
-                </Link>
+        <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
+          <nav
+            className="flex-1 flex h-full items-center gap-2 overflow-x-auto overflow-y-hidden"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            <style>{`.nav-scroll::-webkit-scrollbar{display:none}`}</style>
+            {businessLines.map((line) => {
+              const isActive = pathname.startsWith(`/${line.id}`);
+              return (
+                <div
+                  key={line.id}
+                  className="group relative flex h-full shrink-0 items-center">
+                  <Link
+                    href={line.href}
+                    className={`relative flex h-full items-center px-5 text-base font-black transition ${
+                      isActive
+                        ? "text-[#1f66ff]"
+                        : "text-neutral-950 hover:text-[#1f66ff]"
+                    }`}>
+                    {line.title}
+                    {isActive && (
+                      <span
+                        className="absolute bottom-0 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-[#1f66ff]"
+                        style={{ width: "calc(100% - 40px)" }}
+                      />
+                    )}
+                  </Link>
 
-                {/* 드롭다운 */}
-                <div className="invisible absolute left-0 top-full z-50 w-[760px] translate-y-2 rounded-b-3xl border border-t-0 border-neutral-200 bg-white opacity-0 shadow-2xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                  <div className="grid grid-cols-[190px_1fr]">
-                    <div className="bg-[#edf3ff] p-6">
-                      <p className="text-lg font-black text-neutral-950">
-                        {line.title}
-                      </p>
-                      <p className="mt-3 text-sm font-medium leading-relaxed text-neutral-600">
-                        {line.subtitle}
-                      </p>
-                      <Link
-                        href={line.href}
-                        className="mt-6 inline-flex rounded-xl bg-[#1f66ff] px-4 py-3 text-xs font-black text-white">
-                        전체 보기
-                      </Link>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-4 p-6 lg:grid-cols-3">
-                      {line.services.map((service) => (
+                  {/* 드롭다운 */}
+                  <div className="invisible absolute left-0 top-full z-50 w-[760px] translate-y-2 rounded-b-3xl border border-t-0 border-neutral-200 bg-white opacity-0 shadow-2xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                    <div className="grid grid-cols-[190px_1fr]">
+                      <div className="bg-[#edf3ff] p-6">
+                        <p className="text-lg font-black text-neutral-950">
+                          {line.title}
+                        </p>
+                        <p className="mt-3 text-sm font-medium leading-relaxed text-neutral-600">
+                          {line.subtitle}
+                        </p>
                         <Link
-                          key={service.slug}
-                          href={`/${line.id}/${service.slug}`}
-                          className="rounded-2xl p-3 transition hover:bg-neutral-50">
-                          <p className="text-sm font-black text-neutral-950">
-                            {service.shortTitle}
-                          </p>
-                          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-500">
-                            {service.description}
-                          </p>
+                          href={line.href}
+                          className="mt-6 inline-flex rounded-xl bg-[#1f66ff] px-4 py-3 text-xs font-black text-white">
+                          전체 보기
                         </Link>
-                      ))}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-4 p-6 lg:grid-cols-3">
+                        {line.services.map((service) => (
+                          <Link
+                            key={service.slug}
+                            href={`/${line.id}/${service.slug}`}
+                            className="rounded-2xl p-3 transition hover:bg-neutral-50">
+                            <p className="text-sm font-black text-neutral-950">
+                              {service.shortTitle}
+                            </p>
+                            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-500">
+                              {service.description}
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          {/* 햄버거 → DrawerMenu */}
-          <div className="ml-auto flex h-full items-center">
+            {/* 햄버거 → DrawerMenu */}
+          </nav>
+          <div className="flex-shrink-0 flex h-full items-center pl-3">
             <DrawerMenu />
           </div>
-        </nav>
+        </div>
       </header>
     </>
   );
