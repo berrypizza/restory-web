@@ -213,7 +213,7 @@ function MobileCarousel() {
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           WebkitOverflowScrolling: "touch",
-          touchAction: "pan-x",
+          touchAction: "auto",
         }}>
         {reviews.map((r, i) => (
           <div
