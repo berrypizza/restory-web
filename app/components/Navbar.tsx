@@ -81,8 +81,13 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 border-b border-neutral-100 bg-white shadow-[0_1px_0_rgba(0,0,0,0.08)]">
         <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
           <nav
-            className="flex-1 flex h-full items-center gap-2 overflow-x-auto overflow-y-hidden"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            className="nav-scroll flex-1 flex h-full items-center gap-2 overflow-x-auto overflow-y-hidden"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              WebkitOverflowScrolling: "touch",
+              touchAction: "pan-x",
+            }}>
             <style>{`.nav-scroll::-webkit-scrollbar{display:none}`}</style>
             {businessLines.map((line) => {
               const isActive = pathname.startsWith(`/${line.id}`);
