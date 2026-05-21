@@ -176,7 +176,7 @@ export default function DrawerMenu() {
                 },
                 {
                   label: "🔍 작업 사례 보기",
-                  href: "/reviews",
+                  href: "/cases",
                   external: false,
                   highlight: false,
                 },
