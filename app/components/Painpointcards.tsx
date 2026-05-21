@@ -29,7 +29,7 @@ const cards = [
 
 function CardContent({ card }: { card: (typeof cards)[0] }) {
   return (
-    <div className="rounded-[24px] bg-gradient-to-b from-[#f8faff] to-[#edf2fb] p-7 shadow-[0_2px_12px_rgba(15,23,42,0.04)] h-full flex flex-col">
+    <div className="rounded-[24px] bg-gradient-to-b from-[#f8faff] to-[#edf2fb] p-7 shadow-[0_2px_12px_rgba(15,23,42,0.04)] h-full flex flex-col text-center items-center">
       <h3 className="text-xl font-black leading-[1.4] tracking-tight text-neutral-950 whitespace-pre-line md:text-2xl">
         {card.title}
       </h3>
@@ -60,7 +60,7 @@ function CardContent({ card }: { card: (typeof cards)[0] }) {
         </div>
       )}
       {card.questions && (
-        <div className="mt-6 flex flex-col items-start gap-2.5">
+        <div className="mt-6 flex flex-col items-center gap-2.5">
           {card.questions.map((q, i) => (
             <div
               key={i}

@@ -35,7 +35,7 @@ export default function BusinessLineCards() {
         <h2
           className="mb-7 text-xl font-black tracking-tight md:text-2xl"
           style={{ color: "#111827" }}>
-          한 번의 클릭, 최대한의 혜택
+          리스토리 서비스 라인업!
         </h2>
 
         {/* ── 데스크탑 ── */}
@@ -129,7 +129,7 @@ export default function BusinessLineCards() {
         </div>
 
         {/* 서비스 전체보기 */}
-        <div className="mt-8 flex justify-center">
+        {/* <div className="mt-8 flex justify-center">
           <Link
             href="/repair"
             className="rounded-xl px-8 py-3.5 text-sm font-bold transition hover:bg-gray-50"
@@ -140,7 +140,7 @@ export default function BusinessLineCards() {
             }}>
             서비스 전체보기
           </Link>
-        </div>
+        </div> */}
       </div>
     </section>
   );
