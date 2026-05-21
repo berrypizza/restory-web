@@ -16,9 +16,9 @@ export default function MainPage() {
       <HeroSection />
       <IconMenu />
       <PainPointCards />
+      <BusinessLineCards />
       <YoutubeSection />
       <ReviewSection />
-      <BusinessLineCards />
     </main>
   );
 }
