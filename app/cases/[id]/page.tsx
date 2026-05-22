@@ -31,7 +31,7 @@ export default function CaseDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white pb-28">
+    <main className="min-h-screen bg-white pb-28 mx-auto max-w-2xl px-4 pt-5">
       {/* 상단 네비 */}
       <div
         className="sticky top-0 z-30 bg-white px-4 py-3 flex items-center gap-3"
