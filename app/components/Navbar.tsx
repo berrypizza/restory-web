@@ -97,6 +97,26 @@ export default function Navbar() {
               touchAction: "pan-x",
             }}>
             <style>{`.nav-scroll::-webkit-scrollbar{display:none}`}</style>
+
+            {/* 홈 */}
+            <div className="relative flex h-full shrink-0 items-center">
+              <Link
+                href="/"
+                className={`relative flex h-full items-center px-3 font-bold transition ${
+                  pathname === "/"
+                    ? "text-[#1f66ff]"
+                    : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
+                }`}>
+                홈
+                {pathname === "/" && (
+                  <span
+                    className="absolute bottom-0 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-[#1f66ff]"
+                    style={{ width: "calc(100%)" }}
+                  />
+                )}
+              </Link>
+            </div>
+
             {businessLines.map((line) => {
               const isActive = pathname.startsWith(`/${line.id}`);
               return (
