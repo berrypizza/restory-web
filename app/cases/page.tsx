@@ -5,11 +5,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { cases, CASE_CATEGORIES, type CaseCategory } from "@/lib/case-data";
 
+const PER_PAGE = 6;
+
 export default function CasesPage() {
   const [cat, setCat] = useState<CaseCategory>("전체");
+  const [page, setPage] = useState(1);
 
   const filtered =
     cat === "전체" ? cases : cases.filter((c) => c.category === cat);
+
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  const changeCat = (c: CaseCategory) => {
+    setCat(c);
+    setPage(1);
+  };
 
   return (
     <main className="min-h-screen bg-white">
@@ -29,13 +40,13 @@ export default function CasesPage() {
 
           {/* 카테고리 탭 */}
           <div
-            className="flex gap-2 overflow-x-auto pb-1"
+            className="cat-tabs flex gap-2 overflow-x-auto pb-1"
             style={{ scrollbarWidth: "none" }}>
             <style>{`.cat-tabs::-webkit-scrollbar{display:none}`}</style>
             {CASE_CATEGORIES.map((c) => (
               <button
                 key={c}
-                onClick={() => setCat(c)}
+                onClick={() => changeCat(c)}
                 className="flex-shrink-0 rounded-full px-4 py-2 text-sm font-bold transition-all"
                 style={{
                   backgroundColor: cat === c ? "#1f66ff" : "#f3f4f6",
@@ -50,7 +61,7 @@ export default function CasesPage() {
 
       {/* 사례 리스트 */}
       <div className="mx-auto max-w-3xl px-4 py-4">
-        {filtered.length === 0 ? (
+        {paged.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-3xl mb-3">📋</p>
             <p className="text-sm" style={{ color: "#94a3b8" }}>
@@ -59,13 +70,13 @@ export default function CasesPage() {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {filtered.map((item) => (
+            {paged.map((item) => (
               <Link
                 key={item.id}
                 href={`/cases/${item.id}`}
                 className="flex gap-4 rounded-2xl p-3 transition hover:bg-gray-50"
                 style={{ border: "1px solid #f3f4f6", textDecoration: "none" }}>
-                {/* 썸네일 (before 이미지) */}
+                {/* 썸네일 */}
                 <div
                   className="flex-shrink-0 rounded-xl overflow-hidden"
                   style={{ width: 88, height: 88, backgroundColor: "#f3f4f6" }}>
@@ -115,6 +126,51 @@ export default function CasesPage() {
                 </div>
               </Link>
             ))}
+          </div>
+        )}
+
+        {/* 페이지네이션 */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8 mb-4">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
+              style={{
+                color: page === 1 ? "#d1d5db" : "#64748b",
+                border: "1px solid #e5e7eb",
+                backgroundColor: "#fff",
+                cursor: page === 1 ? "default" : "pointer",
+              }}>
+              ‹
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
+                style={{
+                  backgroundColor: page === p ? "#1f66ff" : "#fff",
+                  color: page === p ? "white" : "#64748b",
+                  border: page === p ? "none" : "1px solid #e5e7eb",
+                }}>
+                {p}
+              </button>
+            ))}
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
+              style={{
+                color: page === totalPages ? "#d1d5db" : "#64748b",
+                border: "1px solid #e5e7eb",
+                backgroundColor: "#fff",
+                cursor: page === totalPages ? "default" : "pointer",
+              }}>
+              ›
+            </button>
           </div>
         )}
       </div>

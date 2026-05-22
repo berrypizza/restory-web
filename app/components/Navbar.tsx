@@ -8,15 +8,8 @@ import { businessLines } from "@/lib/site-config";
 import DrawerMenu from "@/app/components/DrawerMenu";
 
 const quickLinks = [
-  { label: "질문/답변", href: "/faq" },
   { label: "작업사례", href: "/cases" },
-  { label: "후기", href: "/reviews" },
   { label: "이벤트", href: "/events" },
-  {
-    label: "사진접수",
-    href: "https://blog.naver.com/sofaresq/224129090889",
-    external: true,
-  },
 ];
 
 export default function Navbar() {
@@ -61,25 +54,14 @@ export default function Navbar() {
             </Link>
 
             <nav className="hidden items-center gap-7 text-sm font-extrabold text-neutral-900 md:flex">
-              {quickLinks.map((item) =>
-                item.external ? (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition hover:text-[#1f66ff]">
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="transition hover:text-[#1f66ff]">
-                    {item.label}
-                  </Link>
-                ),
-              )}
+              {quickLinks.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="transition hover:text-[#1f66ff]">
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </div>
 
@@ -132,7 +114,7 @@ export default function Navbar() {
                     {isActive && (
                       <span
                         className="absolute bottom-0 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-[#1f66ff]"
-                        style={{ width: "calc(100% )" }}
+                        style={{ width: "calc(100%)" }}
                       />
                     )}
                   </Link>
@@ -174,10 +156,8 @@ export default function Navbar() {
                 </div>
               );
             })}
-
-            {/* 햄버거 → DrawerMenu (데스크탑만, 모바일은 로고 줄에 있음) */}
           </nav>
-          <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3 z-50000">
+          <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3">
             <DrawerMenu />
           </div>
         </div>
