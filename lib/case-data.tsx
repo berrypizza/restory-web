@@ -28,6 +28,18 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 
 export const cases: CaseItem[] = [
   {
+    id: "case-009",
+    category: "싱크대 리폼",
+    title: "인천 싱크대 문짝 리폼",
+    region: "인천",
+    summary: "싱크대 문짝만 교체로 새로운 주방 느낌",
+    beforeImg: "/images/cases/case-009-before.jpg",
+    afterImg: "/images/cases/case-009-after.jpg",
+    blogUrl: "https://blog.naver.com/kohh1115/224259313207",
+    date: "2026-04-20",
+    tags: ["문짝 교체", "싱크대 리폼"],
+  },
+  {
     id: "case-001",
     category: "싱크대 수리",
     title: "인천 서구 상부장 처짐 수리",

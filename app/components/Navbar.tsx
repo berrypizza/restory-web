@@ -177,7 +177,7 @@ export default function Navbar() {
 
             {/* 햄버거 → DrawerMenu (데스크탑만, 모바일은 로고 줄에 있음) */}
           </nav>
-          <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3">
+          <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3 z-50000">
             <DrawerMenu />
           </div>
         </div>
