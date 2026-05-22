@@ -30,13 +30,13 @@ export default function IconMenu() {
                 alt={line.title}
                 width={48}
                 height={48}
-                className="h-10 w-10 object-contain md:h-12 md:w-12"
+                className="h-48 w-48 object-contain md:h-48 md:w-48"
                 priority
               />
             </div>
 
             {/* 라벨 */}
-            <p className="text-center text-xs font-bold leading-tight text-neutral-700 md:text-sm">
+            <p className="text-center text-sm font-medium leading-tight text-neutral-700 md:text-sm">
               {line.title}
             </p>
           </Link>

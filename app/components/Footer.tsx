@@ -28,7 +28,7 @@ export default function Footer() {
         </div>
 
         <div style={{ borderTop: "1px solid #eee", marginBottom: 24 }}>
-          <button
+          {/* <button
             onClick={() => setContactOpen((v) => !v)}
             className="flex items-center justify-between w-full py-4"
             style={{
@@ -36,27 +36,27 @@ export default function Footer() {
               border: "none",
               cursor: "pointer",
               fontFamily: "inherit",
+            }}> */}
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "#ccc",
             }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#ccc",
-              }}>
-              Contact Us
-            </span>
-            <span
-              style={{
-                color: "#ccc",
-                fontSize: 12,
-                transform: contactOpen ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease",
-              }}>
-              ▾
-            </span>
-          </button>
+            Contact Us
+          </span>
+          <span
+            style={{
+              color: "#ccc",
+              fontSize: 12,
+              transform: contactOpen ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 0.3s ease",
+            }}>
+            ▾
+          </span>
+          {/* </button> */}
           <div
             style={{
               maxHeight: contactOpen ? 160 : 0,
@@ -101,10 +101,11 @@ export default function Footer() {
                   gap: 3,
                 }}>
                 <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>
-                  리스토리 · 대표자 TODO · 사업자등록번호 TODO
+                  상호 리스토리 스튜디오 · 대표자 고현호 · 사업자등록번호
+                  692-55-00721
                 </p>
                 <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>
-                  주소 TODO
+                  주소 인천광역시 서구 염곡로498번안길 5-13. 302호(가정동)
                 </p>
               </div>
             </div>

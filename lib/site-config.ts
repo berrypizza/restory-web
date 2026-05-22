@@ -102,7 +102,7 @@ export const businessLines: BusinessLineConfig[] = [
       {
         slug: "sofa-frame",
         title: "소파 목대·스프링 수리",
-        shortTitle: "소파 목대",
+        shortTitle: "소파 목대 내부 수리",
         description: "소파 내부 목대가 부서지거나 스프링이 파손된 경우.",
         hero: "겉은 멀쩡한데\n앉으면 삐걱거립니다.",
         painPoints: [
