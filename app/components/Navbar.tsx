@@ -7,7 +7,17 @@ import { usePathname } from "next/navigation";
 import { businessLines } from "@/lib/site-config";
 import DrawerMenu from "@/app/components/DrawerMenu";
 
-const quickLinks = ["질문/답변", "작업사례", "후기", "이벤트", "사진접수"];
+const quickLinks = [
+  { label: "질문/답변", href: "/faq" },
+  { label: "작업사례", href: "/cases" },
+  { label: "후기", href: "/reviews" },
+  { label: "이벤트", href: "/events" },
+  {
+    label: "사진접수",
+    href: "https://blog.naver.com/sofaresq/224129090889",
+    external: true,
+  },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -45,20 +55,31 @@ export default function Navbar() {
                 className="h-19 w-auto object-contain"
                 priority
               />{" "}
-              <h1 className="pl-[6px] text-[17px] font-bold text-[#1f66ff]">
+              <h1 className="pl-[6px] text-[17px] font-black text-[#1f66ff]">
                 리스토리
               </h1>
             </Link>
 
             <nav className="hidden items-center gap-7 text-sm font-extrabold text-neutral-900 md:flex">
-              {quickLinks.map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="transition hover:text-[#1f66ff]">
-                  {item}
-                </a>
-              ))}
+              {quickLinks.map((item) =>
+                item.external ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition hover:text-[#1f66ff]">
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="transition hover:text-[#1f66ff]">
+                    {item.label}
+                  </Link>
+                ),
+              )}
             </nav>
           </div>
 
@@ -102,7 +123,7 @@ export default function Navbar() {
                   className="group relative flex h-full shrink-0 items-center">
                   <Link
                     href={line.href}
-                    className={`relative flex h-full items-center px-2 text-base font-bold transition ${
+                    className={`relative flex h-full items-center px-3 text-black font-bold transition ${
                       isActive
                         ? "text-[#1f66ff]"
                         : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
