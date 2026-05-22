@@ -28,6 +28,30 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 
 export const cases: CaseItem[] = [
   {
+    id: "case-011",
+    category: "가죽 리폼",
+    title: "관악구 가죽 리폼",
+    region: "서울 관악구",
+    summary: "가죽 리폼으로 새로운 공간 분위기 연출",
+    beforeImg: "/images/cases/case-011-before.jpg",
+    afterImg: "/images/cases/case-011-after.jpg",
+    blogUrl: "https://blog.naver.com/kohh1115/224167034363",
+    date: "2026-02-01",
+    tags: ["문짝 교체", "싱크대 리폼"],
+  },
+  {
+    id: "case-010",
+    category: "싱크대 리폼",
+    title: "관악구 싱크대 문짝 리폼",
+    region: "서울 관악구",
+    summary: "싱크대 문짝만 교체로 새로운 주방",
+    beforeImg: "/images/cases/case-010-before.jpeg",
+    afterImg: "/images/cases/case-010-after.jpeg",
+    blogUrl: "https://blog.naver.com/kohh1115/224229109558",
+    date: "2026-03-25",
+    tags: ["문짝 교체", "싱크대 리폼"],
+  },
+  {
     id: "case-009",
     category: "싱크대 리폼",
     title: "인천 싱크대 문짝 리폼",

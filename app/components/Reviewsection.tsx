@@ -234,17 +234,17 @@ export default function ReviewSection() {
       <div className="mx-auto max-w-5xl">
         <div className="flex items-center justify-between mb-6 md:mb-8">
           <h2
-            className="text-xl font-black md:text-2xl"
+            className="text-2xl font-black md:text-2xl"
             style={{ color: "#111827" }}>
             후기
           </h2>
           <a
-            href="https://blog.naver.com/sofaresq"
+            href="/cases"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-bold"
-            style={{ color: "#64748b", textDecoration: "none" }}>
-            전체보기 ›
+            className="text-sm font-bold border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff]"
+            style={{ color: "#ffffff", textDecoration: "none" }}>
+            작업 사례 보기 ›
           </a>
         </div>
 
