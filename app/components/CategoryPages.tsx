@@ -48,23 +48,50 @@ export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
   return (
     <main className="bg-white">
       {/* 히어로 */}
-      <section className="px-6 py-14 md:py-20">
-        <div className="mx-auto max-w-5xl">
-          <p
-            className="mb-3 text-sm font-bold tracking-widest"
-            style={{ color: "#1f66ff" }}>
-            RE&apos;STORY
-          </p>
-          <h1
-            className="text-3xl md:text-5xl font-black leading-tight"
-            style={{ color: "#111827" }}>
-            {nl(line.hero)}
-          </h1>
-          <p
-            className="mt-5 max-w-2xl text-base md:text-lg leading-relaxed"
-            style={{ color: "#64748b" }}>
-            {nl(line.description)}
-          </p>
+      <section className="px-4 py-8 md:px-6 md:py-12">
+        <div
+          className="relative mx-auto max-w-6xl overflow-hidden rounded-2xl md:rounded-3xl"
+          style={{
+            background:
+              "linear-gradient(135deg, #e8f0fe 0%, #dbe6ffc0 50%, #e32e4077 100%)",
+          }}>
+          {/* 콘텐츠 래퍼 */}
+          <div className="relative z-10 px-6 pt-8 pb-40 md:px-10 md:py-16 md:pb-16">
+            <h1
+              className="text-3xl md:text-5xl font-black leading-tight"
+              style={{ color: "#111827" }}>
+              {nl(line.hero)}
+            </h1>
+            <p
+              className="mt-5 max-w-2xl text-base md:text-lg leading-relaxed"
+              style={{ color: "#64748b" }}>
+              {nl(line.description)}
+            </p>
+            <a
+              href="tel:010-9127-3024"
+              className="flex items-center gap-2 mb-5"
+              style={{ textDecoration: "none" }}></a>
+            <a
+              href="https://pf.kakao.com/_aHYsX/chat"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-sm font-black text-white md:rounded-2xl md:px-10 md:py-4 md:text-base transition hover:opacity-90"
+              style={{
+                background: "linear-gradient(to right, #1f66ff, #4f8fff)",
+              }}>
+              문의하기 🔍
+            </a>
+          </div>
+
+          {/* 사람 이미지 — 오른쪽 아래 겹치기 (아정당 스타일) */}
+          <Image
+            src="/images/bro.png"
+            alt="리스토리 상담"
+            width={280}
+            height={320}
+            className="absolute bottom-0 right-0 object-contain object-bottom pointer-events-none md:right-8"
+            style={{ width: "clamp(180px, 45vw, 360px)", height: "auto" }}
+          />
         </div>
       </section>
 
