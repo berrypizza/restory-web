@@ -30,9 +30,9 @@ export const cases: CaseItem[] = [
   {
     id: "case-026",
     category: "싱크대 리폼",
-    title: "싱크대 상부장 처짐 리폼 사례",
+    title: "싱크대 문짝 리폼 사례",
     region: "당하동",
-    summary: "처지는 상부장 리폼 완료!",
+    summary: "깔끔한 화이트 톤으로 톤업!",
     beforeImg: "/images/cases/case-026-before.jpg",
     afterImg: "/images/cases/case-026-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115/224132059623",
