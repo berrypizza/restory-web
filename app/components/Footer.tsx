@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -36,31 +38,30 @@ export default function Footer() {
               border: "none",
               cursor: "pointer",
               fontFamily: "inherit",
-            }}> */}
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 500,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "#ccc",
             }}>
-            Contact Us
-          </span>
-          <span
-            style={{
-              color: "#ccc",
-              fontSize: 12,
-              transform: contactOpen ? "rotate(180deg)" : "rotate(0deg)",
-              transition: "transform 0.3s ease",
-            }}>
-            ▾
-          </span>
-          {/* </button> */}
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "#ccc",
+              }}>
+              Contact Us
+            </span>
+            <span
+              style={{
+                color: "#ccc",
+                fontSize: 12,
+                transform: contactOpen ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s ease",
+              }}>
+              ▾
+            </span>
+          </button> */}
+
           <div
             style={{
-              maxHeight: contactOpen ? 160 : 0,
-              overflow: "hidden",
               transition: "max-height 0.35s ease",
             }}>
             <div
@@ -73,16 +74,22 @@ export default function Footer() {
                 gap: 8,
               }}>
               <a
-                href="tel:01000000000"
+                href="tel:010-9127-3024"
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
                   textDecoration: "none",
                 }}>
-                <span style={{ fontSize: 12, color: "#ccc" }}>📞</span>
+                <Image
+                  src="/images/phone-icon.png"
+                  alt="전화기 아이콘"
+                  width={24}
+                  height={24}
+                  className="h-[24px] w-[24px] object-contain md:h-[56px] md:w-[56px]"
+                />{" "}
                 <span style={{ fontSize: 13, color: "#888" }}>
-                  010-0000-0000
+                  010-9127-3024{" "}
                 </span>
               </a>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -101,7 +108,7 @@ export default function Footer() {
                   gap: 3,
                 }}>
                 <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>
-                  상호 리스토리 스튜디오 · 대표자 고현호 · 사업자등록번호
+                  상호 리스토리 스튜디오· 대표자 고현호 · 사업자등록번호
                   692-55-00721
                 </p>
                 <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>
