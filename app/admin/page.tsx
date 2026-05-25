@@ -57,6 +57,13 @@ const TECH_PHOTO: Record<string, string> = {
   강영훈: "/images/knight/knights-4.png",
 };
 
+const TECH_HOME: Record<string, string> = {
+  고관호: "인천 서구 가정동 612-18",
+  고현호: "인천 서구 가정동 612-18",
+  이주형: "인천 서구 가정동 612-18",
+  강영훈: "인천 서구 가정동 612-18",
+};
+
 const STATUS_STYLE: Record<
   Status,
   { bg: string; color: string; border: string }
@@ -1227,7 +1234,7 @@ export default function AdminDashboard() {
   const [showPw, setShowPw] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"오늘" | "전체" | "달력" | "통계">("달력");
+  const [tab, setTab] = useState<"동선" | "전체" | "달력" | "통계">("달력");
   const [statusFilter, setStatusFilter] = useState<Status | "전체">("전체");
   const [techFilter, setTechFilter] = useState<Tech | "전체">("전체");
   const [calTechFilter, setCalTechFilter] = useState<Tech | "전체">("전체");
@@ -1241,6 +1248,141 @@ export default function AdminDashboard() {
   const [calMonth, setCalMonth] = useState(nowKST().getMonth());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [routeResults, setRouteResults] = useState<
+    Record<string, { duration: number; distance: number }>
+  >({});
+  const [routeLoading, setRouteLoading] = useState(false);
+  const fetchRoute = useCallback(
+    async (startAddr: string, goalAddr: string, key: string) => {
+      try {
+        const geocode = async (addr: string) => {
+          const res = await fetch(
+            `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(addr)}`,
+            {
+              headers: {
+                "X-NCP-APIGW-API-KEY-ID":
+                  process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID || "bhcbxlgjfw",
+                "X-NCP-APIGW-API-KEY":
+                  process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_SECRET || "",
+              },
+            },
+          );
+          const data = await res.json();
+          if (data.addresses?.length > 0) {
+            return `${data.addresses[0].x},${data.addresses[0].y}`;
+          }
+          return null;
+        };
+
+        const start = await geocode(startAddr);
+        const goal = await geocode(goalAddr);
+        if (!start || !goal) return;
+
+        const res = await fetch(`/api/directions?start=${start}&goal=${goal}`);
+        const data = await res.json();
+
+        if (data.route?.traoptimal?.[0]?.summary) {
+          const { duration, distance } = data.route.traoptimal[0].summary;
+          setRouteResults((prev) => ({
+            ...prev,
+            [key]: {
+              duration: Math.round(duration / 60000),
+              distance: Math.round(distance / 1000),
+            },
+          }));
+        }
+      } catch (err) {
+        console.error("경로 조회 실패:", err);
+      }
+    },
+    [],
+  );
+
+  const geocode = useCallback(async (addr: string): Promise<string | null> => {
+    try {
+      const res = await fetch(`/api/geocode?query=${encodeURIComponent(addr)}`);
+      const data = await res.json();
+      if (data.addresses?.length > 0) {
+        return `${data.addresses[0].x},${data.addresses[0].y}`;
+      }
+    } catch {}
+    return null;
+  }, []);
+
+  const loadRoutes = useCallback(
+    async (routeJobs: Job[], techName?: string) => {
+      if (routeJobs.length < 1) return;
+      setRouteLoading(true);
+      setRouteResults({});
+
+      // 출발지 → 첫 번째 건
+      // 출발지 → 첫 번째 건
+      const homeAddr = techName ? TECH_HOME[techName] : null;
+      if (homeAddr && routeJobs.length > 0) {
+        const key = `home-${routeJobs[0].id}`;
+        try {
+          const start = await geocode(homeAddr);
+          const goal = await geocode(routeJobs[0].region);
+          if (start && goal) {
+            const firstTime = routeJobs[0].visit_time;
+            const depDate = routeJobs[0].visit_date;
+            const depParam =
+              firstTime && depDate
+                ? `&departure_time=${depDate}T${firstTime}:00`
+                : "";
+            const res = await fetch(
+              `/api/directions?start=${start}&goal=${goal}${depParam}`,
+            );
+            const data = await res.json();
+            if (data.route?.traoptimal?.[0]?.summary) {
+              const { duration, distance } = data.route.traoptimal[0].summary;
+              setRouteResults((prev) => ({
+                ...prev,
+                [key]: {
+                  duration: Math.round(duration / 60000),
+                  distance: Math.round(distance / 1000),
+                },
+              }));
+            }
+          }
+        } catch {}
+      }
+
+      // 건 → 건 이동
+      for (let i = 0; i < routeJobs.length - 1; i++) {
+        const a = routeJobs[i];
+        const b = routeJobs[i + 1];
+        const key = `${a.id}-${b.id}`;
+        try {
+          const start = await geocode(a.region);
+          const goal = await geocode(b.region);
+          if (!start || !goal) continue;
+          const depTime = a.visit_time;
+          const depDate = a.visit_date;
+          const depParam =
+            depTime && depDate
+              ? `&departure_time=${depDate}T${depTime}:00`
+              : "";
+          const res = await fetch(
+            `/api/directions?start=${start}&goal=${goal}${depParam}`,
+          );
+          const data = await res.json();
+          if (data.route?.traoptimal?.[0]?.summary) {
+            const { duration, distance } = data.route.traoptimal[0].summary;
+            setRouteResults((prev) => ({
+              ...prev,
+              [key]: {
+                duration: Math.round(duration / 60000),
+                distance: Math.round(distance / 1000),
+              },
+            }));
+          }
+        } catch {}
+      }
+      setRouteLoading(false);
+    },
+    [geocode],
+  );
 
   const currentUser = USERS.find((u) => u.name === loggedUser);
   const isAdmin = currentUser?.role === "admin";
@@ -1514,7 +1656,7 @@ export default function AdminDashboard() {
   };
 
   const filtered = jobs.filter((j) => {
-    if (tab === "오늘" && j.visit_date !== dateFilter) return false;
+    if (tab === "동선" && j.visit_date !== dateFilter) return false;
     if (tab === "전체" && !j.visit_date?.startsWith(monthFilter)) return false;
     if (statusFilter !== "전체" && j.status !== statusFilter) return false;
     if (techFilter !== "전체" && j.tech !== techFilter) return false;
@@ -1619,7 +1761,7 @@ export default function AdminDashboard() {
     </select>
   );
 
-  // 이 아래부터는 JSX return — 달력/오늘/전체/통계 탭 + 접수폼 모달
+  // 이 아래부터는 JSX return — 달력/동선/전체/통계 탭 + 접수폼 모달
   // 수리담과 100% 동일 로직, 브랜드명만 "리스토리"로 변경
 
   return (
@@ -1747,7 +1889,7 @@ export default function AdminDashboard() {
             border: "1px solid #e5e7eb",
             boxShadow: "0 2px 10px rgba(15,23,42,0.04)",
           }}>
-          {(["달력", "오늘", "전체", "통계"] as const).map((t) => (
+          {(["달력", "동선", "전체", "통계"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -2350,194 +2492,492 @@ export default function AdminDashboard() {
             );
           })()}
 
-        {!loading && tab === "오늘" && (
+        {!loading && tab === "동선" && (
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <button
-                onClick={() => {
-                  const d = new Date(dateFilter);
-                  d.setDate(d.getDate() - 1);
-                  setDateFilter(d.toISOString().slice(0, 10));
-                }}
-                className="px-3 py-2 rounded-lg text-lg font-bold"
-                style={{
-                  backgroundColor: "#ffffff",
-                  color: "#111827",
-                  border: "1px solid #e5e7eb",
-                }}>
-                ‹
-              </button>
-              <input
-                type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="flex-1 text-center text-sm font-bold rounded-xl py-2"
-                style={{
-                  backgroundColor: "#ffffff",
-                  color: "white",
-                  border: "1px solid #e5e7eb",
-                  outline: "none",
-                }}
-              />
-              <button
-                onClick={() => {
-                  const d = new Date(dateFilter);
-                  d.setDate(d.getDate() + 1);
-                  setDateFilter(d.toISOString().slice(0, 10));
-                }}
-                className="px-3 py-2 rounded-lg text-lg font-bold"
-                style={{
-                  backgroundColor: "#ffffff",
-                  color: "#111827",
-                  border: "1px solid #e5e7eb",
-                }}>
-                ›
-              </button>
-              {isAdmin ? (
-                <TechFilterSelect value={techFilter} onChange={setTechFilter} />
-              ) : (
-                <span
-                  className="text-xs font-bold px-3 py-2 rounded-xl"
-                  style={{
-                    backgroundColor: TECH_COLOR[loggedUser!] + "22",
-                    color: TECH_COLOR[loggedUser!],
-                    border: `1px solid ${TECH_COLOR[loggedUser!]}44`,
-                  }}>
-                  {loggedUser}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-1 mb-4">
-              {(["전체", ...STATUSES] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s as Status | "전체")}
-                  className="rounded-full px-3 py-1.5 text-xs font-semibold"
-                  style={{
-                    backgroundColor: statusFilter === s ? "#1f66ff" : "#ffffff",
-                    color: statusFilter === s ? "white" : "#6b7280",
-                    border: "1px solid #e5e7eb",
-                  }}>
-                  {s}
-                </button>
-              ))}
-            </div>
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ border: "1px solid #f3f4f6" }}>
-              <div
-                className="flex items-center justify-between px-4 py-3"
-                style={{
-                  backgroundColor: "#ffffff",
-                  borderBottom: "1px solid #f3f4f6",
-                }}>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span
-                    className="text-sm font-bold"
-                    style={{ color: "white" }}>
-                    {formatDate(dateFilter)} 일정
-                  </span>
-                  <span
-                    className="text-xs px-2 py-0.5 rounded-full font-medium"
-                    style={{ backgroundColor: "#f3f4f6", color: "#475569" }}>
-                    {filtered.length}건
-                  </span>
-                  <span
-                    className="text-xs font-medium"
-                    style={{ color: "#1f66ff" }}>
-                    완료 {filtered.filter((j) => j.status === "완료").length}건
-                    ·{" "}
-                    {formatPrice(
-                      filtered
-                        .filter(
-                          (j) =>
-                            j.status === "완료" &&
-                            (!j.is_measurement || j.install_completed),
-                        )
-                        .reduce((s, j) => s + (j.price || 0), 0),
+            {/* 미니 달력 */}
+            {(() => {
+              const df = new Date(dateFilter);
+              const miniYear = df.getFullYear();
+              const miniMonth = df.getMonth();
+              const miniDays = getCalendarDays(miniYear, miniMonth);
+              return (
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <button
+                      onClick={() => {
+                        const d = new Date(miniYear, miniMonth - 1);
+                        setDateFilter(
+                          `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`,
+                        );
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-lg font-bold"
+                      style={{
+                        backgroundColor: "#ffffff",
+                        color: "#111827",
+                        border: "1px solid #e5e7eb",
+                      }}>
+                      ‹
+                    </button>
+                    <span
+                      className="flex-1 text-center text-sm font-bold"
+                      style={{ color: "#111827" }}>
+                      {miniYear}년 {miniMonth + 1}월
+                    </span>
+                    <button
+                      onClick={() => {
+                        const d = new Date(miniYear, miniMonth + 1);
+                        setDateFilter(
+                          `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`,
+                        );
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-lg font-bold"
+                      style={{
+                        backgroundColor: "#ffffff",
+                        color: "#111827",
+                        border: "1px solid #e5e7eb",
+                      }}>
+                      ›
+                    </button>
+                    {isAdmin ? (
+                      <TechFilterSelect
+                        value={techFilter}
+                        onChange={setTechFilter}
+                      />
+                    ) : (
+                      <span
+                        className="text-xs font-bold px-3 py-2 rounded-xl"
+                        style={{
+                          backgroundColor: TECH_COLOR[loggedUser!] + "22",
+                          color: TECH_COLOR[loggedUser!],
+                          border: `1px solid ${TECH_COLOR[loggedUser!]}44`,
+                        }}>
+                        {loggedUser}
+                      </span>
                     )}
-                  </span>
-                </div>
-                {isAdmin && (
-                  <button
-                    onClick={() => {
-                      setForm({ ...emptyForm(), visit_date: dateFilter });
-                      setEditId(null);
-                      setShowForm(true);
-                    }}
-                    className="text-xs border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] font-bold"
-                    style={{
-                      background: "linear-gradient(to right, #1f66ff, #4f8fff)",
-                      color: "white",
-                    }}>
-                    + 추가
-                  </button>
-                )}
-              </div>
-              {filtered.length === 0 ? (
-                <div
-                  className="text-center py-12"
-                  style={{ backgroundColor: "#f5f7fb", color: "#94a3b8" }}>
-                  <p className="text-3xl mb-2">📋</p>
-                  <p className="text-sm">일정 없음</p>
-                </div>
-              ) : (
-                <div
-                  className="flex flex-col gap-0"
-                  style={{ backgroundColor: "#f5f7fb" }}>
-                  {[...filtered]
-                    .sort((a, b) => {
-                      if (!a.visit_time && !b.visit_time) return 0;
-                      if (!a.visit_time) return 1;
-                      if (!b.visit_time) return -1;
-                      return a.visit_time.localeCompare(b.visit_time);
-                    })
-                    .map((job, idx, arr) => (
-                      <div key={job.id}>
-                        {job.visit_time &&
-                          (idx === 0 ||
-                            arr[idx - 1].visit_time?.slice(0, 2) !==
-                              job.visit_time.slice(0, 2)) && (
-                            <div
-                              className="flex items-center gap-2 px-4 py-2"
-                              style={{ borderBottom: "1px solid #ffffff" }}>
-                              <span
-                                className="text-xs font-bold"
-                                style={{ color: "#94a3b8" }}>
-                                {formatTime(job.visit_time)}
-                              </span>
-                              <div
-                                className="flex-1 h-px"
-                                style={{ backgroundColor: "#ffffff" }}
-                              />
-                            </div>
-                          )}
-                        {!job.visit_time &&
-                          (idx === 0 || arr[idx - 1].visit_time) && (
-                            <div
-                              className="px-4 py-2"
-                              style={{ borderBottom: "1px solid #ffffff" }}>
-                              <span
-                                className="text-xs font-bold"
-                                style={{ color: "#94a3b8" }}>
-                                시간 미정
-                              </span>
-                            </div>
-                          )}
-                        <div className="px-3 py-2">
-                          <JobCard
-                            job={job}
-                            onUpdate={update}
-                            onEdit={startEdit}
-                            onDelete={remove}
-                            isAdmin={isAdmin}
-                          />
-                        </div>
+                  </div>
+                  <div className="grid grid-cols-7 mb-0.5">
+                    {["일", "월", "화", "수", "목", "금", "토"].map((d, i) => (
+                      <div
+                        key={d}
+                        className="text-center text-[10px] py-1 font-bold"
+                        style={{
+                          color:
+                            i === 0
+                              ? "#ef6666"
+                              : i === 6
+                                ? "#60a5fa"
+                                : "#94a3b8",
+                        }}>
+                        {d}
                       </div>
                     ))}
+                  </div>
+                  <div className="grid grid-cols-7 gap-0">
+                    {miniDays.map((day, i) => {
+                      if (!day) return <div key={`me-${i}`} />;
+                      const ds = `${miniYear}-${pad(miniMonth + 1)}-${pad(day)}`;
+                      const allDJ = jobsByDate[ds] ?? [];
+                      const dayJ =
+                        techFilter === "전체"
+                          ? allDJ
+                          : allDJ.filter((j) => j.tech === techFilter);
+                      const isSel = ds === dateFilter;
+                      const isT = ds === todayStr;
+                      const dow = i % 7;
+                      return (
+                        <button
+                          key={ds}
+                          onClick={() => setDateFilter(ds)}
+                          className="rounded-lg p-0.5 min-h-[48px] flex flex-col items-center"
+                          style={{
+                            backgroundColor: isSel ? "#1f66ff" : "#ffffff",
+                            border:
+                              isT && !isSel
+                                ? "1px solid #a9c4ff"
+                                : "1px solid #f3f4f6",
+                          }}>
+                          <span
+                            className="text-[10px] font-bold"
+                            style={{
+                              color: isSel
+                                ? "#ffffff"
+                                : dow === 0
+                                  ? "#ef6666"
+                                  : dow === 6
+                                    ? "#60a5fa"
+                                    : "#111827",
+                            }}>
+                            {day}
+                          </span>
+                          {dayJ.length > 0 && (
+                            <div className="flex flex-wrap justify-center gap-px mt-0.5">
+                              {(() => {
+                                const c: Record<string, number> = {};
+                                dayJ.forEach((j) => {
+                                  const k = j.tech || "";
+                                  c[k] = (c[k] || 0) + 1;
+                                });
+                                return Object.entries(c).map(([t, n]) => (
+                                  <span
+                                    key={t}
+                                    className="rounded-full text-center"
+                                    style={{
+                                      width: 12,
+                                      height: 12,
+                                      fontSize: 7,
+                                      fontWeight: 800,
+                                      lineHeight: "12px",
+                                      color: isSel
+                                        ? TECH_COLOR[t] || TECH_COLOR[""]
+                                        : "#fff",
+                                      backgroundColor: isSel
+                                        ? "#ffffff"
+                                        : TECH_COLOR[t] || TECH_COLOR[""],
+                                    }}>
+                                    {n}
+                                  </span>
+                                ));
+                              })()}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              )}
-            </div>
+              );
+            })()}
+
+            {(() => {
+              const dayJobs = jobs
+                .filter(
+                  (j) => j.visit_date === dateFilter && j.status !== "취소",
+                )
+                .filter((j) => techFilter === "전체" || j.tech === techFilter)
+                .sort((a, b) =>
+                  (a.visit_time || "99:99").localeCompare(
+                    b.visit_time || "99:99",
+                  ),
+                );
+
+              const techGroups: Record<string, Job[]> = {};
+              dayJobs.forEach((j) => {
+                const key = j.tech || "미배정";
+                if (!techGroups[key]) techGroups[key] = [];
+                techGroups[key].push(j);
+              });
+
+              if (Object.keys(techGroups).length === 0) {
+                return (
+                  <div
+                    className="text-center py-16 rounded-2xl"
+                    style={{
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #e5e7eb",
+                    }}>
+                    <p className="text-3xl mb-2">🗺</p>
+                    <p className="text-sm" style={{ color: "#94a3b8" }}>
+                      이 날 일정이 없어요
+                    </p>
+                  </div>
+                );
+              }
+
+              return Object.entries(techGroups).map(([tech, techJobs]) => {
+                const color = TECH_COLOR[tech] || TECH_COLOR[""];
+                return (
+                  <div
+                    key={tech}
+                    className="mb-4 rounded-2xl overflow-hidden"
+                    style={{ border: `1px solid ${color}33` }}>
+                    <div
+                      className="flex items-center justify-between px-4 py-3"
+                      style={{
+                        backgroundColor: color + "12",
+                        borderBottom: `1px solid ${color}22`,
+                      }}>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: color }}
+                        />
+                        <span className="text-sm font-black" style={{ color }}>
+                          {tech} 기사님
+                        </span>
+                        <span
+                          className="text-xs px-2 py-0.5 rounded-full font-bold"
+                          style={{ backgroundColor: color + "22", color }}>
+                          {techJobs.length}건
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => loadRoutes(techJobs, tech)}
+                        disabled={routeLoading}
+                        className="text-xs font-bold px-3 py-1.5 rounded-xl"
+                        style={{
+                          backgroundColor: routeLoading ? "#f3f4f6" : color,
+                          color: routeLoading ? "#94a3b8" : "white",
+                        }}>
+                        {routeLoading ? "계산중..." : "🗺 동선 계산"}
+                      </button>
+                    </div>
+
+                    <div style={{ backgroundColor: "#f5f7fb" }}>
+                      {/* 출발지 → 첫 번째 건 */}
+                      {TECH_HOME[tech] && (
+                        <>
+                          <div
+                            className="px-4 py-3"
+                            style={{ borderBottom: "1px solid #ffffff" }}>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span
+                                className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                                style={{
+                                  backgroundColor: "#94a3b8",
+                                  color: "white",
+                                }}>
+                                🏠
+                              </span>
+                              <span
+                                className="text-sm font-bold"
+                                style={{ color: "#64748b" }}>
+                                출발지
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5 pl-8">
+                              <span style={{ fontSize: 10 }}>📍</span>
+                              <span
+                                className="text-xs"
+                                style={{ color: "#94a3b8" }}>
+                                {TECH_HOME[tech]}
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            className="flex items-center gap-2 px-4 py-2"
+                            style={{ backgroundColor: "#ffffff" }}>
+                            <div
+                              className="flex flex-col items-center gap-0.5 pl-2"
+                              style={{ color: "#cbd5e1" }}>
+                              <span style={{ fontSize: 8 }}>●</span>
+                              <span style={{ fontSize: 10, lineHeight: 1 }}>
+                                │
+                              </span>
+                              <span style={{ fontSize: 10, lineHeight: 1 }}>
+                                │
+                              </span>
+                              <span style={{ fontSize: 8 }}>●</span>
+                            </div>
+                            {routeResults[`home-${techJobs[0]?.id}`] ? (
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="text-xs font-black px-2.5 py-1 rounded-lg"
+                                  style={{
+                                    backgroundColor: "#94a3b8",
+                                    color: "white",
+                                  }}>
+                                  🚗{" "}
+                                  {
+                                    routeResults[`home-${techJobs[0].id}`]
+                                      .duration
+                                  }
+                                  분
+                                </span>
+                                <span
+                                  className="text-xs"
+                                  style={{ color: "#94a3b8" }}>
+                                  {
+                                    routeResults[`home-${techJobs[0].id}`]
+                                      .distance
+                                  }
+                                  km
+                                </span>
+                              </div>
+                            ) : (
+                              <span
+                                className="text-xs"
+                                style={{ color: "#cbd5e1" }}>
+                                ↕ 출발
+                              </span>
+                            )}
+                          </div>
+                        </>
+                      )}
+                      {techJobs.map((job, idx) => (
+                        <div key={job.id}>
+                          <div
+                            className="px-4 py-3"
+                            style={{ borderBottom: "1px solid #ffffff" }}>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span
+                                className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black"
+                                style={{
+                                  backgroundColor: color,
+                                  color: "white",
+                                }}>
+                                {idx + 1}
+                              </span>
+                              <span
+                                className="text-sm font-bold"
+                                style={{ color: "#111827" }}>
+                                {job.name} 고객님
+                              </span>
+                              {job.visit_time && (
+                                <span
+                                  className="text-xs font-bold px-2 py-0.5 rounded-full"
+                                  style={{
+                                    backgroundColor: "#eaf1ff",
+                                    color: "#1f66ff",
+                                  }}>
+                                  {formatTime(job.visit_time)}
+                                </span>
+                              )}
+                              {job.price > 0 && (
+                                <span
+                                  className="text-xs font-bold ml-auto"
+                                  style={{ color: "#1f66ff" }}>
+                                  {formatPrice(job.price)}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1.5 pl-8">
+                              <span style={{ fontSize: 10 }}>📍</span>
+                              <span
+                                className="text-xs"
+                                style={{ color: "#64748b" }}>
+                                {job.region}
+                              </span>
+                            </div>
+                            {job.symptom && (
+                              <div className="pl-8 mt-1">
+                                <span
+                                  className="text-xs font-medium"
+                                  style={{ color: "#475569" }}>
+                                  {job.symptom}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {idx < techJobs.length - 1 && (
+                            <div
+                              className="flex items-center gap-2 px-4 py-2"
+                              style={{ backgroundColor: "#ffffff" }}>
+                              <div
+                                className="flex flex-col items-center gap-0.5 pl-2"
+                                style={{ color: "#cbd5e1" }}>
+                                <span style={{ fontSize: 8 }}>●</span>
+                                <span style={{ fontSize: 10, lineHeight: 1 }}>
+                                  │
+                                </span>
+                                <span style={{ fontSize: 10, lineHeight: 1 }}>
+                                  │
+                                </span>
+                                <span style={{ fontSize: 8 }}>●</span>
+                              </div>
+                              {routeResults[
+                                `${job.id}-${techJobs[idx + 1].id}`
+                              ] ? (
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className="text-xs font-black px-2.5 py-1 rounded-lg"
+                                    style={{
+                                      backgroundColor: "#1f66ff",
+                                      color: "white",
+                                    }}>
+                                    🚗{" "}
+                                    {
+                                      routeResults[
+                                        `${job.id}-${techJobs[idx + 1].id}`
+                                      ].duration
+                                    }
+                                    분
+                                  </span>
+                                  <span
+                                    className="text-xs"
+                                    style={{ color: "#94a3b8" }}>
+                                    {
+                                      routeResults[
+                                        `${job.id}-${techJobs[idx + 1].id}`
+                                      ].distance
+                                    }
+                                    km
+                                  </span>
+                                </div>
+                              ) : (
+                                <span
+                                  className="text-xs"
+                                  style={{ color: "#cbd5e1" }}>
+                                  ↕ 이동
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {Object.keys(routeResults).filter(
+                      (k) =>
+                        k === `home-${techJobs[0]?.id}` ||
+                        techJobs.some(
+                          (j, i) =>
+                            i < techJobs.length - 1 &&
+                            k === `${j.id}-${techJobs[i + 1].id}`,
+                        ),
+                    ).length > 0 && (
+                      <div
+                        className="flex items-center justify-between px-4 py-3"
+                        style={{
+                          backgroundColor: "#ffffff",
+                          borderTop: `1px solid ${color}22`,
+                        }}>
+                        <span
+                          className="text-xs font-bold"
+                          style={{ color: "#64748b" }}>
+                          총 이동
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className="text-sm font-black"
+                            style={{ color }}>
+                            🚗{" "}
+                            {Object.entries(routeResults)
+                              .filter(
+                                ([k]) =>
+                                  k === `home-${techJobs[0]?.id}` ||
+                                  techJobs.some(
+                                    (j, i) =>
+                                      i < techJobs.length - 1 &&
+                                      k === `${j.id}-${techJobs[i + 1].id}`,
+                                  ),
+                              )
+                              .reduce((s, [, v]) => s + v.duration, 0)}
+                            분
+                          </span>
+                          <span
+                            className="text-xs"
+                            style={{ color: "#94a3b8" }}>
+                            {Object.entries(routeResults)
+                              .filter(
+                                ([k]) =>
+                                  k === `home-${techJobs[0]?.id}` ||
+                                  techJobs.some(
+                                    (j, i) =>
+                                      i < techJobs.length - 1 &&
+                                      k === `${j.id}-${techJobs[i + 1].id}`,
+                                  ),
+                              )
+                              .reduce((s, [, v]) => s + v.distance, 0)}
+                            km
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              });
+            })()}
           </div>
         )}
 
