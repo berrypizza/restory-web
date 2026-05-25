@@ -1326,10 +1326,29 @@ export default function AdminDashboard() {
           if (start && goal) {
             const firstTime = routeJobs[0].visit_time;
             const depDate = routeJobs[0].visit_date;
-            const depParam =
-              firstTime && depDate
-                ? `&departure_time=${depDate}T${firstTime}:00`
-                : "";
+
+            let depParam = "";
+
+            if (firstTime && depDate) {
+              const [h, m] = firstTime.split(":").map(Number);
+              const d = new Date(
+                `${depDate}T${String(h).padStart(2, "0")}:${String(m || 0).padStart(2, "0")}:00`,
+              );
+              d.setHours(d.getHours() - 1);
+
+              const yyyy = d.getFullYear();
+              const mm = String(d.getMonth() + 1).padStart(2, "0");
+              const dd = String(d.getDate()).padStart(2, "0");
+              const hh = String(d.getHours()).padStart(2, "0");
+              const mi = String(d.getMinutes()).padStart(2, "0");
+
+              depParam = `&departure_time=${yyyy}-${mm}-${dd}T${hh}:${mi}:00`;
+
+              console.log("첫 출발 계산:", {
+                첫일정: routeJobs[0].visit_date + " " + routeJobs[0].visit_time,
+                적용출발시간: depParam,
+              });
+            }
             const res = await fetch(
               `/api/directions?start=${start}&goal=${goal}${depParam}`,
             );
