@@ -1967,7 +1967,7 @@ export default function AdminDashboard() {
                   <button
                     key={dateStr}
                     onClick={() => setSelectedDay(isSelected ? null : dateStr)}
-                    className="rounded-xl p-1.5 min-h-[72px] flex flex-col items-start text-left"
+                    className="rounded-xl p-0.5 min-h-[72px] flex flex-col items-start text-left"
                     style={{
                       backgroundColor: isSelected ? "#eaf1ff" : "#ffffff",
                       border: isSelected
@@ -1990,54 +1990,68 @@ export default function AdminDashboard() {
                       }}>
                       {day}
                     </span>
-                    <div className="flex flex-col gap-0.5 w-full">
-                      {dayJobs.slice(0, 3).map((j) => (
-                        <div
-                          key={j.id}
-                          className="flex flex-col overflow-hidden">
-                          <div className="flex items-center gap-1">
+                    <div className="flex flex-col gap-px w-full mt-0.5">
+                      {(() => {
+                        const counts: Record<string, number> = {};
+                        dayJobs.forEach((j) => {
+                          const key = j.tech || "미배정";
+                          counts[key] = (counts[key] || 0) + 1;
+                        });
+                        return Object.entries(counts).map(([tech, count]) => (
+                          <div
+                            key={tech}
+                            className="flex items-center gap-0.5 truncate"
+                            style={{ lineHeight: 1.4 }}>
                             <span
-                              className="h-1.5 w-1.5 rounded-full flex-shrink-0"
+                              className="flex-shrink-0 rounded-full text-center"
                               style={{
-                                backgroundColor: TECH_COLOR[j.tech || ""],
-                              }}
-                            />
+                                width: 13,
+                                height: 13,
+                                fontSize: 8,
+                                fontWeight: 800,
+                                color: "#fff",
+                                backgroundColor:
+                                  TECH_COLOR[tech] || TECH_COLOR[""],
+                                lineHeight: "13px",
+                              }}>
+                              {count}
+                            </span>
                             <span
-                              className="truncate font-semibold"
-                              style={{ color: "#111827", fontSize: 10 }}>
-                              {j.name}
-                              {j.symptom ? ` · ${j.symptom}` : ""}
+                              className="truncate"
+                              style={{
+                                fontSize: 9,
+                                fontWeight: 700,
+                                color: TECH_COLOR[tech] || TECH_COLOR[""],
+                              }}>
+                              {tech === "미배정" ? "미정" : tech}
                             </span>
                           </div>
-                          {j.visit_time && (
-                            <span
-                              className="pl-3"
-                              style={{ color: "#64748b", fontSize: 9 }}>
-                              {formatTime(j.visit_time)}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                      {dayJobs.length > 3 && (
-                        <span style={{ color: "#64748b", fontSize: 10 }}>
-                          +{dayJobs.length - 3}건
-                        </span>
-                      )}
+                        ));
+                      })()}
                     </div>
                   </button>
                 );
               })}
             </div>
 
+            {/* 하루 일정 상세보기 영역 — 기사명, 방문시간, 증상, 메모 등등 + 수정/삭제 버튼 */}
             {selectedDay && (
               <div
                 className="mt-4 rounded-2xl overflow-hidden"
-                style={{ border: "1px solid #f3f4f6" }}>
+                style={{
+                  background:
+                    "linear-gradient(135deg, #ffffff 0%, #eef4ff 55%, #e6dcff 100%)",
+                  border: "1px solid #bfd3ff",
+                  boxShadow: "0 10px 28px rgba(31,102,255,0.12)",
+                }}>
+                {" "}
                 <div
                   className="flex items-center justify-between px-4 py-3"
                   style={{
-                    backgroundColor: "#ffffff",
-                    borderBottom: "1px solid #f3f4f6",
+                    background:
+                      "linear-gradient(135deg, #ffffff 0%, #eef4ff 55%, #e6dcff 100%)",
+                    border: "1px solid #bfd3ff",
+                    boxShadow: "0 10px 28px rgba(31,102,255,0.12)",
                   }}>
                   <div className="flex items-center gap-2">
                     <span
@@ -2050,6 +2064,21 @@ export default function AdminDashboard() {
                       style={{ backgroundColor: "#f3f4f6", color: "#475569" }}>
                       {selectedJobs.length}건
                     </span>
+                    {isAdmin &&
+                      (() => {
+                        const total = selectedJobs
+                          .filter(
+                            (j) => !j.is_measurement && j.status !== "취소",
+                          )
+                          .reduce((s, j) => s + (j.price || 0), 0);
+                        return (
+                          <p
+                            className="text-xl font-bold mt-1 w-full"
+                            style={{ color: "#1f66ff" }}>
+                            예상 매출:{formatPrice(total)}
+                          </p>
+                        );
+                      })()}
                     {calTechFilter !== "전체" && (
                       <span
                         className="text-xs px-2 py-0.5 rounded-full font-bold"
@@ -2068,7 +2097,7 @@ export default function AdminDashboard() {
                         setEditId(null);
                         setShowForm(true);
                       }}
-                      className="text-[20px] border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] font-bold"
+                      className="text-[20px] border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] font-bold shadow-xl"
                       style={{ color: "white" }}>
                       + 추가
                     </button>
