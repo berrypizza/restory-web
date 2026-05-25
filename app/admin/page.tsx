@@ -1248,9 +1248,19 @@ export default function AdminDashboard() {
   const [calMonth, setCalMonth] = useState(nowKST().getMonth());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [routeResults, setRouteResults] = useState<
-    Record<string, { duration: number; distance: number }>
-  >({});
+  type RouteResult = {
+    duration: number;
+    distance: number;
+    departAt?: string;
+    arriveAt?: string;
+    targetAt?: string;
+    gapMin?: number;
+    workMin?: number;
+  };
+
+  const [routeResults, setRouteResults] = useState<Record<string, RouteResult>>(
+    {},
+  );
   const [routeLoading, setRouteLoading] = useState(false);
   const fetchRoute = useCallback(
     async (startAddr: string, goalAddr: string, key: string) => {
@@ -1309,96 +1319,191 @@ export default function AdminDashboard() {
     return null;
   }, []);
 
+  function makeDateTime(date: string, time: string) {
+    const [h, m] = (time || "00:00").split(":").map(Number);
+
+    return new Date(
+      `${date}T${String(h).padStart(2, "0")}:${String(m || 0).padStart(
+        2,
+        "0",
+      )}:00`,
+    );
+  }
+
+  function toIsoLocal(d: Date) {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mi = String(d.getMinutes()).padStart(2, "0");
+
+    return `${yyyy}-${mm}-${dd}T${hh}:${mi}:00`;
+  }
+
+  function displayTime(d: Date) {
+    const h = d.getHours();
+    const m = d.getMinutes();
+    const ampm = h < 12 ? "AM" : "PM";
+    const h12 = h % 12 || 12;
+
+    return m > 0 ? `${ampm} ${h12}시 ${m}분` : `${ampm} ${h12}시`;
+  }
+
+  function diffMinutes(a: Date, b: Date) {
+    return Math.round((a.getTime() - b.getTime()) / 60000);
+  }
+
   const loadRoutes = useCallback(
     async (routeJobs: Job[], techName?: string) => {
       if (routeJobs.length < 1) return;
+
       setRouteLoading(true);
       setRouteResults({});
 
-      // 출발지 → 첫 번째 건
-      // 출발지 → 첫 번째 건
-      const homeAddr = techName ? TECH_HOME[techName] : null;
-      if (homeAddr && routeJobs.length > 0) {
-        const key = `home-${routeJobs[0].id}`;
-        try {
+      const callDirection = async (
+        start: string,
+        goal: string,
+        departureDate: Date,
+      ) => {
+        const depParam = `&departure_time=${toIsoLocal(departureDate)}`;
+
+        const res = await fetch(
+          `/api/directions?start=${start}&goal=${goal}${depParam}`,
+        );
+
+        const data = await res.json();
+        const summary = data.route?.traoptimal?.[0]?.summary;
+
+        if (!summary) return null;
+
+        return {
+          duration: Math.round(summary.duration / 60000),
+          distance: Math.round(summary.distance / 1000),
+        };
+      };
+
+      try {
+        const homeAddr = techName ? TECH_HOME[techName] : null;
+
+        // 출발지 → 첫 번째 일정
+        if (homeAddr && routeJobs.length > 0) {
+          const firstJob = routeJobs[0];
+          const key = `home-${firstJob.id}`;
+
           const start = await geocode(homeAddr);
-          const goal = await geocode(routeJobs[0].region);
-          if (start && goal) {
-            const firstTime = routeJobs[0].visit_time;
-            const depDate = routeJobs[0].visit_date;
+          const goal = await geocode(firstJob.region);
 
-            let depParam = "";
-
-            if (firstTime && depDate) {
-              const [h, m] = firstTime.split(":").map(Number);
-              const d = new Date(
-                `${depDate}T${String(h).padStart(2, "0")}:${String(m || 0).padStart(2, "0")}:00`,
-              );
-              d.setHours(d.getHours() - 1);
-
-              const yyyy = d.getFullYear();
-              const mm = String(d.getMonth() + 1).padStart(2, "0");
-              const dd = String(d.getDate()).padStart(2, "0");
-              const hh = String(d.getHours()).padStart(2, "0");
-              const mi = String(d.getMinutes()).padStart(2, "0");
-
-              depParam = `&departure_time=${yyyy}-${mm}-${dd}T${hh}:${mi}:00`;
-
-              console.log("첫 출발 계산:", {
-                첫일정: routeJobs[0].visit_date + " " + routeJobs[0].visit_time,
-                적용출발시간: depParam,
-              });
-            }
-            const res = await fetch(
-              `/api/directions?start=${start}&goal=${goal}${depParam}`,
+          if (start && goal && firstJob.visit_date && firstJob.visit_time) {
+            const targetAt = makeDateTime(
+              firstJob.visit_date,
+              firstJob.visit_time,
             );
-            const data = await res.json();
-            if (data.route?.traoptimal?.[0]?.summary) {
-              const { duration, distance } = data.route.traoptimal[0].summary;
+
+            const baseDepartAt = new Date(targetAt);
+            baseDepartAt.setHours(baseDepartAt.getHours() - 1);
+
+            const firstResult = await callDirection(start, goal, baseDepartAt);
+
+            if (firstResult) {
+              const recommendDepartAt = new Date(targetAt);
+              recommendDepartAt.setMinutes(
+                recommendDepartAt.getMinutes() - firstResult.duration,
+              );
+
+              const finalResult =
+                (await callDirection(start, goal, recommendDepartAt)) ||
+                firstResult;
+
+              const finalDepartAt = new Date(targetAt);
+              finalDepartAt.setMinutes(
+                finalDepartAt.getMinutes() - finalResult.duration,
+              );
+
+              const arriveAt = new Date(finalDepartAt);
+              arriveAt.setMinutes(arriveAt.getMinutes() + finalResult.duration);
+
               setRouteResults((prev) => ({
                 ...prev,
                 [key]: {
-                  duration: Math.round(duration / 60000),
-                  distance: Math.round(distance / 1000),
+                  ...finalResult,
+                  departAt: displayTime(finalDepartAt),
+                  arriveAt: displayTime(arriveAt),
+                  targetAt: displayTime(targetAt),
+                  gapMin: diffMinutes(targetAt, arriveAt),
                 },
               }));
             }
           }
-        } catch {}
-      }
+        }
 
-      // 건 → 건 이동
-      for (let i = 0; i < routeJobs.length - 1; i++) {
-        const a = routeJobs[i];
-        const b = routeJobs[i + 1];
-        const key = `${a.id}-${b.id}`;
-        try {
+        // 일정 → 다음 일정
+        for (let i = 0; i < routeJobs.length - 1; i++) {
+          const a = routeJobs[i];
+          const b = routeJobs[i + 1];
+          const key = `${a.id}-${b.id}`;
+
           const start = await geocode(a.region);
           const goal = await geocode(b.region);
-          if (!start || !goal) continue;
-          const depTime = a.visit_time;
-          const depDate = a.visit_date;
-          const depParam =
-            depTime && depDate
-              ? `&departure_time=${depDate}T${depTime}:00`
-              : "";
-          const res = await fetch(
-            `/api/directions?start=${start}&goal=${goal}${depParam}`,
-          );
-          const data = await res.json();
-          if (data.route?.traoptimal?.[0]?.summary) {
-            const { duration, distance } = data.route.traoptimal[0].summary;
+
+          if (
+            !start ||
+            !goal ||
+            !a.visit_date ||
+            !a.visit_time ||
+            !b.visit_date ||
+            !b.visit_time
+          )
+            continue;
+
+          const currentStartAt = makeDateTime(a.visit_date, a.visit_time);
+          const nextTargetAt = makeDateTime(b.visit_date, b.visit_time);
+
+          const baseDepartAt = new Date(nextTargetAt);
+          baseDepartAt.setHours(baseDepartAt.getHours() - 1);
+
+          const firstResult = await callDirection(start, goal, baseDepartAt);
+
+          if (firstResult) {
+            const recommendDepartAt = new Date(nextTargetAt);
+            recommendDepartAt.setMinutes(
+              recommendDepartAt.getMinutes() - firstResult.duration,
+            );
+
+            const finalResult =
+              (await callDirection(start, goal, recommendDepartAt)) ||
+              firstResult;
+
+            const finalDepartAt = new Date(nextTargetAt);
+            finalDepartAt.setMinutes(
+              finalDepartAt.getMinutes() - finalResult.duration,
+            );
+
+            const arriveAt = new Date(finalDepartAt);
+            arriveAt.setMinutes(arriveAt.getMinutes() + finalResult.duration);
+
+            const workMin = Math.max(
+              0,
+              Math.round(
+                (finalDepartAt.getTime() - currentStartAt.getTime()) / 60000,
+              ),
+            );
+
             setRouteResults((prev) => ({
               ...prev,
               [key]: {
-                duration: Math.round(duration / 60000),
-                distance: Math.round(distance / 1000),
+                ...finalResult,
+                departAt: displayTime(finalDepartAt),
+                arriveAt: displayTime(arriveAt),
+                targetAt: displayTime(nextTargetAt),
+                gapMin: diffMinutes(nextTargetAt, arriveAt),
+                workMin,
               },
             }));
           }
-        } catch {}
+        }
+      } finally {
+        setRouteLoading(false);
       }
-      setRouteLoading(false);
     },
     [geocode],
   );
@@ -2788,7 +2893,8 @@ export default function AdminDashboard() {
                               <span style={{ fontSize: 8 }}>●</span>
                             </div>
                             {routeResults[`home-${techJobs[0]?.id}`] ? (
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-col gap-1">
+                                {" "}
                                 <span
                                   className="text-xs font-black px-2.5 py-1 rounded-lg"
                                   style={{
@@ -2811,6 +2917,21 @@ export default function AdminDashboard() {
                                   }
                                   km
                                 </span>
+                                <div
+                                  className="text-xs font-bold"
+                                  style={{ color: "#64748b" }}>
+                                  추천 출발 시간{" "}
+                                  {
+                                    routeResults[`home-${techJobs[0].id}`]
+                                      .departAt
+                                  }
+                                  {" · "}
+                                  도착{" "}
+                                  {
+                                    routeResults[`home-${techJobs[0].id}`]
+                                      .arriveAt
+                                  }
+                                </div>
                               </div>
                             ) : (
                               <span
@@ -2897,31 +3018,76 @@ export default function AdminDashboard() {
                               {routeResults[
                                 `${job.id}-${techJobs[idx + 1].id}`
                               ] ? (
-                                <div className="flex items-center gap-2">
-                                  <span
-                                    className="text-xs font-black px-2.5 py-1 rounded-lg"
-                                    style={{
-                                      backgroundColor: "#1f66ff",
-                                      color: "white",
-                                    }}>
-                                    🚗{" "}
-                                    {
-                                      routeResults[
+                                <div className="flex flex-col gap-1">
+                                  <div className="flex items-center gap-2">
+                                    <span
+                                      className="text-xs font-black px-2.5 py-1 rounded-lg"
+                                      style={{
+                                        backgroundColor: "#1f66ff",
+                                        color: "white",
+                                      }}>
+                                      🚗{" "}
+                                      {
+                                        routeResults[
+                                          `${job.id}-${techJobs[idx + 1].id}`
+                                        ].duration
+                                      }
+                                      분
+                                    </span>
+
+                                    <span
+                                      className="text-xs"
+                                      style={{ color: "#94a3b8" }}>
+                                      {
+                                        routeResults[
+                                          `${job.id}-${techJobs[idx + 1].id}`
+                                        ].distance
+                                      }
+                                      km
+                                    </span>
+                                  </div>
+
+                                  {routeResults[
+                                    `${job.id}-${techJobs[idx + 1].id}`
+                                  ].workMin !== undefined && (
+                                    <div
+                                      className="text-xs font-bold"
+                                      style={{ color: "#1f66ff" }}>
+                                      추천 작업시간{" "}
+                                      {Math.floor(
+                                        routeResults[
+                                          `${job.id}-${techJobs[idx + 1].id}`
+                                        ].workMin! / 60,
+                                      )}
+                                      시간{" "}
+                                      {routeResults[
                                         `${job.id}-${techJobs[idx + 1].id}`
-                                      ].duration
-                                    }
-                                    분
-                                  </span>
-                                  <span
-                                    className="text-xs"
-                                    style={{ color: "#94a3b8" }}>
-                                    {
-                                      routeResults[
-                                        `${job.id}-${techJobs[idx + 1].id}`
-                                      ].distance
-                                    }
-                                    km
-                                  </span>
+                                      ].workMin! % 60}
+                                      분
+                                    </div>
+                                  )}
+
+                                  {routeResults[
+                                    `${job.id}-${techJobs[idx + 1].id}`
+                                  ].departAt && (
+                                    <div
+                                      className="text-xs font-bold"
+                                      style={{ color: "#64748b" }}>
+                                      추천 출발 시간{" "}
+                                      {
+                                        routeResults[
+                                          `${job.id}-${techJobs[idx + 1].id}`
+                                        ].departAt
+                                      }
+                                      {" · "}
+                                      도착{" "}
+                                      {
+                                        routeResults[
+                                          `${job.id}-${techJobs[idx + 1].id}`
+                                        ].arriveAt
+                                      }
+                                    </div>
+                                  )}
                                 </div>
                               ) : (
                                 <span
