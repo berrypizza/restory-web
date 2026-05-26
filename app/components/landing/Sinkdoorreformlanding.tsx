@@ -94,38 +94,40 @@ export default function SinkdoorReformLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      {/* HERO IMAGE */}
-      <section className="relative" style={{ background: "#1f66ff" }}>
-        <Image
-          src="/images/hero-door.webp"
-          alt="리스토리 싱크대 도어 리폼"
-          width={1080}
-          height={1350}
-          className="w-full h-auto"
-          priority
-          sizes="(max-width: 768px) 100vw, 768px"
-        />
-        <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent md:pb-20">
-          <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
-            <p className="text-[13px] text-[#1f66ff] font-bold md:text-[15px]">
-              <Image
-                src="/images/logo.png"
-                alt="리스토리"
-                width={30}
-                height={30}
-                className="inline-block mr-2"
-              />
-              리스토리 도어 리폼
-            </p>
-            <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
-              새 주방을 만드는
-            </p>
-            <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
-              가장 쉽고 저렴한 방법
-            </p>
+      <FadeIn>
+        {/* HERO IMAGE */}
+        <section className="relative" style={{ background: "#1f66ff" }}>
+          <Image
+            src="/images/hero-door.webp"
+            alt="리스토리 싱크대 도어 리폼"
+            width={1080}
+            height={1350}
+            className="w-full h-auto"
+            priority
+            sizes="(max-width: 768px) 100vw, 768px"
+          />
+          <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent md:pb-20">
+            <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
+              <p className="text-[13px] text-[#1f66ff] font-bold md:text-[15px]">
+                <Image
+                  src="/images/logo.png"
+                  alt="리스토리"
+                  width={30}
+                  height={30}
+                  className="inline-block mr-2"
+                />
+                리스토리 도어 리폼
+              </p>
+              <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
+                새 주방을 만드는
+              </p>
+              <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
+                가장 쉽고 저렴한 방법
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </FadeIn>
 
       {/* HERO CTA BUTTONS */}
       <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>

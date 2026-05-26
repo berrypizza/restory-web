@@ -102,20 +102,22 @@ export default function SangbujangLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      {/* HERO IMAGE */}
-      <section
-        className="flex justify-center"
-        style={{ background: "#1f66ff" }}>
-        <Image
-          src="/images/hero-sangbujang.webp"
-          alt="리스토리의 싱크대 상부장 수리"
-          width={1080}
-          height={1350}
-          className="w-full max-w-3xl h-auto"
-          priority
-          sizes="(max-width: 768px) 100vw, 768px"
-        />
-      </section>
+      <FadeIn>
+        {/* HERO IMAGE */}
+        <section
+          className="flex justify-center"
+          style={{ background: "#1f66ff" }}>
+          <Image
+            src="/images/hero-sangbujang.webp"
+            alt="리스토리의 싱크대 상부장 수리"
+            width={1080}
+            height={1350}
+            className="w-full max-w-3xl h-auto"
+            priority
+            sizes="(max-width: 768px) 100vw, 768px"
+          />
+        </section>
+      </FadeIn>
 
       {/* HERO CTA BUTTONS */}
       <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
