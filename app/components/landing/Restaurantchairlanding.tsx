@@ -101,7 +101,7 @@ export default function RestaurantChairLanding() {
       {/* HERO IMAGE */}
       <section className="relative" style={{ background: "#1f66ff" }}>
         <Image
-          src="/images/chair/hero-chair.jpg"
+          src="/images/chair/hero-chair.webp"
           alt="리스토리 식당 의자 가죽 교체"
           width={1080}
           height={1350}

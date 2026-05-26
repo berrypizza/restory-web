@@ -107,7 +107,7 @@ export default function SangbujangLanding() {
         className="flex justify-center"
         style={{ background: "#1f66ff" }}>
         <Image
-          src="/images/hero-sangbujang.png"
+          src="/images/hero-sangbujang.webp"
           alt="리스토리의 싱크대 상부장 수리"
           width={1080}
           height={1350}

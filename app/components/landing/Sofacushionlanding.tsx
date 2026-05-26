@@ -105,7 +105,7 @@ export default function SofaCushionLanding() {
       {/* HERO IMAGE */}
       <section className="relative" style={{ background: "#1f66ff" }}>
         <Image
-          src="/images/sofa/hero-sofa-2.jpg"
+          src="/images/sofa/hero-sofa-2.webp"
           alt="리스토리 소파 쿠션 복원 서비스"
           width={1080}
           height={1350}

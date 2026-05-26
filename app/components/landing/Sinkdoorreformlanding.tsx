@@ -97,7 +97,7 @@ export default function SinkdoorReformLanding() {
       {/* HERO IMAGE */}
       <section className="relative" style={{ background: "#1f66ff" }}>
         <Image
-          src="/images/hero-door.png"
+          src="/images/hero-door.webp"
           alt="리스토리 싱크대 도어 리폼"
           width={1080}
           height={1350}

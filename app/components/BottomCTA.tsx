@@ -52,7 +52,7 @@ export default function BottomCTA() {
 
         {/* 사람 이미지 — 오른쪽 아래 겹치기 (아정당 스타일) */}
         <Image
-          src="/images/bro.png"
+          src="/images/bro.webp"
           alt="리스토리 상담"
           width={280}
           height={320}
