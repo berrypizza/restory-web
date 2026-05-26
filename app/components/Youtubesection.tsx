@@ -25,7 +25,7 @@ export default function YoutubeSection() {
             직접 보시면 압니다
           </h2>
           <p className="mt-3 text-base" style={{ color: "#64748b" }}>
-            실제 현장 수리 과정을 영상으로 확인하세요
+            실제 현장 시공 과정을 영상으로 확인하세요
           </p>
         </div>
 
