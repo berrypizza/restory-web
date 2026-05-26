@@ -141,11 +141,13 @@ export default function EventsPage() {
                           color: isEnded ? "#94a3b8" : "#1f66ff",
                         }}>
                         {new Date(event.startDate).toLocaleDateString("ko-KR", {
+                          year: "numeric",
                           month: "long",
                           day: "numeric",
                         })}{" "}
                         ~{" "}
                         {new Date(event.endDate).toLocaleDateString("ko-KR", {
+                          year: "numeric",
                           month: "long",
                           day: "numeric",
                         })}
