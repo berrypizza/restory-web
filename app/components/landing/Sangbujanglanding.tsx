@@ -113,6 +113,7 @@ export default function SangbujangLanding() {
           height={1350}
           className="w-full max-w-3xl h-auto"
           priority
+          sizes="(max-width: 768px) 100vw, 768px"
         />
       </section>
 

@@ -111,6 +111,7 @@ export default function SofaCushionLanding() {
           height={1350}
           className="w-full h-auto"
           priority
+          sizes="(max-width: 768px) 100vw, 768px"
         />
         <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent">
           <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">

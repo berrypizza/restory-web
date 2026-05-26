@@ -4,8 +4,7 @@ const nextConfig: NextConfig = {
   // 이미지 최적화
   images: {
     // WebP/AVIF 포맷 자동 변환 (용량 50~80% 감소)
-    formats: ["image/avif", "image/webp"],
-    // 필요한 사이즈만 생성 (불필요한 리사이징 방지)
+    formats: ["image/webp"], // 필요한 사이즈만 생성 (불필요한 리사이징 방지)
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     // 외부 이미지 도메인 (Supabase 스토리지 등)
