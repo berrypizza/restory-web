@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { cases, CASE_CATEGORIES, type CaseCategory } from "@/lib/case-data";
@@ -8,7 +9,11 @@ import { cases, CASE_CATEGORIES, type CaseCategory } from "@/lib/case-data";
 const PER_PAGE = 6;
 
 export default function CasesPage() {
-  const [cat, setCat] = useState<CaseCategory>("전체");
+  const searchParams = useSearchParams();
+  const initialCat = (searchParams.get("cat") as CaseCategory) || "전체";
+  const [cat, setCat] = useState<CaseCategory>(
+    CASE_CATEGORIES.includes(initialCat) ? initialCat : "전체",
+  );
   const [page, setPage] = useState(1);
 
   const filtered =
