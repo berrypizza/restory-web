@@ -42,10 +42,10 @@ export default function HeroSection() {
           </div>
           <div className="flex items-end justify-center self-end">
             <Image
-              src="/images/team.webp"
+              src="/images/team-v2.webp"
               alt="리스토리 팀"
-              width={560}
-              height={500}
+              width={633}
+              height={448}
               className="object-contain object-bottom w-full"
               priority
             />
