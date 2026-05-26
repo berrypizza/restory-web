@@ -5,10 +5,11 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { cases, CASE_CATEGORIES, type CaseCategory } from "@/lib/case-data";
+import { Suspense } from "react";
 
 const PER_PAGE = 6;
 
-export default function CasesPage() {
+function CasesPageContent() {
   const searchParams = useSearchParams();
   const initialCat = (searchParams.get("cat") as CaseCategory) || "전체";
   const [cat, setCat] = useState<CaseCategory>(
@@ -180,5 +181,13 @@ export default function CasesPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function CasesPage() {
+  return (
+    <Suspense fallback={null}>
+      <CasesPageContent />
+    </Suspense>
   );
 }
