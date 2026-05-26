@@ -695,7 +695,7 @@ export default function SangbujangLanding() {
           <FadeIn delay={200}>
             <div className="mt-6 flex justify-center">
               <Link
-                href="/cases"
+                href="/cases?cat=싱크대 수리"
                 className="flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-[15px] font-extrabold text-white md:px-10 md:py-4 md:text-[17px]"
                 style={{ background: "#1a5cff", textDecoration: "none" }}>
                 📋 더 많은 실제 사례 보러가기 ›
