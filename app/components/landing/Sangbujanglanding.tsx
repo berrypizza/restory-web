@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import FadeIn from "@/app/components/FadeIn";
-
+import Link from "next/link";
+import { cases } from "@/lib/case-data";
 /* ═══════════════════════════════════════════
    DATA
    ═══════════════════════════════════════════ */
@@ -498,6 +499,207 @@ export default function SangbujangLanding() {
                   </div>
                 </div>
               ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* 실제 수리 사례 슬라이더 */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#ffffff" }}>
+        <div className="mx-auto max-w-3xl">
+          <FadeIn>
+            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
+              REAL CASES
+            </p>
+            <h2 className="text-[24px] font-black leading-[1.4] md:text-[32px]">
+              실제 수리 사례를 확인하세요
+            </h2>
+            <p className="mt-1 text-[13px] text-neutral-500 md:text-[15px]">
+              좌우로 넘겨 보세요
+            </p>
+          </FadeIn>
+          <FadeIn delay={120}>
+            {(() => {
+              const CASE_ITEMS = cases
+                .filter((c) => c.category === "싱크대 수리")
+                .slice(0, 8);
+              function CaseSlider() {
+                const [idx, setIdx] = React.useState(0);
+                const pausedRef = React.useRef(false);
+                const dragRef = React.useRef({
+                  startX: 0,
+                  dragging: false,
+                  moved: false,
+                });
+                const maxIdx = CASE_ITEMS.length - 1;
+
+                const go = React.useCallback(
+                  (dir: number) => {
+                    setIdx((prev) => {
+                      const next = prev + dir;
+                      if (next < 0) return maxIdx;
+                      if (next > maxIdx) return 0;
+                      return next;
+                    });
+                  },
+                  [maxIdx],
+                );
+
+                // 자동 슬라이드
+                React.useEffect(() => {
+                  const timer = setInterval(() => {
+                    if (!pausedRef.current) go(1);
+                  }, 3500);
+                  return () => clearInterval(timer);
+                }, [go]);
+
+                // 드래그 핸들러
+                const onDragStart = (x: number) => {
+                  dragRef.current = { startX: x, dragging: true, moved: false };
+                  pausedRef.current = true;
+                };
+                const onDragEnd = (x: number) => {
+                  if (!dragRef.current.dragging) return;
+                  const diff = dragRef.current.startX - x;
+                  if (Math.abs(diff) > 40) {
+                    dragRef.current.moved = true;
+                    go(diff > 0 ? 1 : -1);
+                  }
+                  dragRef.current.dragging = false;
+                  setTimeout(() => {
+                    pausedRef.current = false;
+                  }, 3500);
+                };
+
+                // 카드 너비 비율 (모바일: 75vw 느낌, 데스크탑: 33%)
+                const cardPercent = 80; // 모바일 기준 %
+
+                return (
+                  <>
+                    <div
+                      className="relative select-none mt-8"
+                      onMouseEnter={() => {
+                        pausedRef.current = true;
+                      }}
+                      onMouseLeave={() => {
+                        pausedRef.current = false;
+                        dragRef.current.dragging = false;
+                      }}
+                      onMouseDown={(e) => onDragStart(e.clientX)}
+                      onMouseUp={(e) => onDragEnd(e.clientX)}
+                      onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
+                      onTouchEnd={(e) => onDragEnd(e.changedTouches[0].clientX)}
+                      style={{ cursor: "grab" }}>
+                      {/* 카드 트랙 */}
+                      <div className="overflow-hidden rounded-2xl">
+                        <div
+                          className="flex gap-3 transition-transform duration-500 ease-in-out pointer-events-none"
+                          style={{
+                            transform: `translateX(-${idx * (cardPercent + 1.2)}%)`,
+                          }}>
+                          {CASE_ITEMS.map((item) => (
+                            <div
+                              key={item.id}
+                              className="flex-shrink-0"
+                              style={{ width: `${cardPercent}%` }}>
+                              <Link
+                                href={`/cases/${item.id}`}
+                                onClick={(e) => {
+                                  if (dragRef.current.moved) e.preventDefault();
+                                }}
+                                draggable={false}
+                                className="block overflow-hidden rounded-2xl border border-neutral-200 bg-white"
+                                style={{ textDecoration: "none" }}>
+                                <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+                                  <Image
+                                    src={item.beforeImg}
+                                    alt={item.title}
+                                    width={400}
+                                    height={300}
+                                    className="h-full w-full object-cover"
+                                    draggable={false}
+                                  />
+                                  <div
+                                    className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-bold"
+                                    style={{
+                                      backgroundColor: "#ef4444",
+                                      color: "white",
+                                    }}>
+                                    BEFORE
+                                  </div>
+                                </div>
+                                <div className="p-4">
+                                  <span
+                                    className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                                    style={{
+                                      backgroundColor: "#1f66ff15",
+                                      color: "#1f66ff",
+                                    }}>
+                                    {item.category}
+                                  </span>
+                                  <p
+                                    className="mt-2 text-[15px] font-extrabold truncate"
+                                    style={{ color: "#111827" }}>
+                                    {item.title}
+                                  </p>
+                                  <p
+                                    className="mt-1 text-[12px] line-clamp-2"
+                                    style={{ color: "#64748b" }}>
+                                    {item.summary}
+                                  </p>
+                                  <div className="mt-2">
+                                    <span
+                                      className="text-[11px]"
+                                      style={{ color: "#94a3b8" }}>
+                                      {item.region}
+                                    </span>
+                                  </div>
+                                </div>
+                              </Link>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 도트 인디케이터 */}
+                    <div className="flex justify-center gap-1.5 mt-4">
+                      {CASE_ITEMS.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            setIdx(i);
+                            pausedRef.current = true;
+                            setTimeout(() => {
+                              pausedRef.current = false;
+                            }, 3500);
+                          }}
+                          className="rounded-full transition-all"
+                          style={{
+                            width: i === idx ? 20 : 6,
+                            height: 6,
+                            backgroundColor: i === idx ? "#1f66ff" : "#d1d5db",
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </>
+                );
+              }
+
+              return <CaseSlider />;
+            })()}
+          </FadeIn>
+          <FadeIn delay={200}>
+            <div className="mt-6 flex justify-center">
+              <Link
+                href="/cases"
+                className="flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-[15px] font-extrabold text-white md:px-10 md:py-4 md:text-[17px]"
+                style={{ background: "#1a5cff", textDecoration: "none" }}>
+                📋 더 많은 실제 사례 보러가기 ›
+              </Link>
             </div>
           </FadeIn>
         </div>
