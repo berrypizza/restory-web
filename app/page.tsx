@@ -6,6 +6,7 @@ import YoutubeSection from "./components/Youtubesection";
 import ReviewSection from "./components/Reviewsection";
 import BottomCTA from "./components/BottomCTA";
 import EventBanner from "./components/EventBanner";
+import FloatingCTA from "./components/landing/shared/FloatingCTA";
 
 export const metadata = {
   title: "Re'Story - 싱크대수리 · 싱크대리폼 · 가죽교체",
@@ -24,6 +25,7 @@ export default function MainPage() {
       <EventBanner />
 
       <BottomCTA />
+      <FloatingCTA />
     </main>
   );
 }
