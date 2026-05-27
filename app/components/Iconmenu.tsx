@@ -28,9 +28,9 @@ export default function IconMenu() {
               <Image
                 src={iconMap[line.id]}
                 alt={line.title}
-                width={48}
-                height={48}
-                className="h-48 w-48 object-contain md:h-48 md:w-48"
+                width={70}
+                height={70}
+                className="h-[48px] w-[48px] object-contain md:h-[70px] md:w-[70px]"
                 priority
               />
             </div>
