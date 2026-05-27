@@ -17,6 +17,7 @@ export type { Tip, TipCategory } from "./types";
 import sangbujangRepairVsReplace from "./contents/sangbujang-repair-vs-replace";
 import sinkDoorReplaceVsFullKitchenReplace from "./contents/sink-door-replace-vs-full-kitchen-replace";
 import chairReupholsteryVsBuyNew from "./contents/chair-reupholstery-vs-buy-new";
+import sofaRestorationVsBuyNew from "./contents/sofa-restoration-vs-buy-new";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -28,7 +29,7 @@ const tipModules = [
   sangbujangRepairVsReplace,
   sinkDoorReplaceVsFullKitchenReplace,
   chairReupholsteryVsBuyNew,
-
+  sofaRestorationVsBuyNew,
   // sofaSelfCheck,
   // chairReplaceTiming,
   // doorReformGuide,
