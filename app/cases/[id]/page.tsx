@@ -173,7 +173,7 @@ export default function CaseDetailPage() {
         {/* CTA */}
         <div className="mt-6 flex flex-col gap-2.5">
           <a
-            href="https://pf.kakao.com/_aHYsX/chat"
+            href="http://pf.kakao.com/_hQExjX/chat"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-black transition hover:opacity-90"
@@ -181,7 +181,7 @@ export default function CaseDetailPage() {
             💬 카카오톡 상담하기
           </a>
           <a
-            href="tel:010-9127-3024"
+            href="tel:010-6855-0957"
             className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-black text-white"
             style={{
               background: "linear-gradient(to right, #1f66ff, #4f8fff)",

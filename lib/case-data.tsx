@@ -28,6 +28,18 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 
 export const cases: CaseItem[] = [
   {
+    id: "case-030",
+    category: "싱크대 수리",
+    title: "마포구 싱크대 상부장 처짐",
+    region: "마포구",
+    summary: "상부장 처짐 수리 사례",
+    beforeImg: "/images/cases/case-030-before.jpg",
+    afterImg: "/images/cases/case-030-after.jpg",
+    blogUrl: "https://blog.naver.com/restory99/224297244006",
+    date: "2026-05-26",
+    tags: ["싱크대 수리", "상부장 처짐"],
+  },
+  {
     id: "case-029",
     category: "싱크대 수리",
     title: "마포구 싱크대 상부장 처짐",
