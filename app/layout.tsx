@@ -1,11 +1,69 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import LayoutBody from "@/app/components/LayoutBody";
 import Footer from "./components/Footer";
+import { LocalBusinessJsonLd } from "@/app/components/JsonLd";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#1f66ff",
+};
 
 export const metadata: Metadata = {
-  title: "Re'Story - 가구 출장 수리 전문",
-  description: "사진 한 장이면 수리 가능 여부 바로 안내드립니다.",
+  metadataBase: new URL("https://restorystudio.co.kr"),
+  title: {
+    default: "리스토리 Re'Story - 가구 출장 수리 리폼 전문",
+    template: "%s | 리스토리 Re'Story",
+  },
+  description:
+    "싱크대 상부장 수리, 싱크대 문짝 리폼, 식당 의자 가죽 교체, 소파 쿠션 복원. 사진 한 장이면 수리 견적 바로 안내. 서울·경기·인천 전 지역 출장.",
+  keywords: [
+    "싱크대 상부장 수리",
+    "싱크대 문짝 교체",
+    "싱크대 리폼",
+    "식당 의자 가죽 교체",
+    "소파 쿠션 복원",
+    "가구 수리",
+    "가구 출장 수리",
+    "리스토리",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: "리스토리 Re'Story",
+    title: "리스토리 Re'Story - 가구 출장 수리 리폼 전문",
+    description:
+      "싱크대 수리, 싱크대 리폼, 의자 가죽 교체, 소파 복원. 사진만 보내면 견적 바로 안내.",
+    url: "https://restorystudio.co.kr",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "리스토리 - 가구 출장 수리 전문",
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    // 네이버·구글 서치콘솔 등록 후 여기에 값 넣기
+    // google: "구글_서치콘솔_인증코드",
+    // other: { "naver-site-verification": "네이버_인증코드" },
+  },
+  alternates: {
+    canonical: "https://restorystudio.co.kr",
+  },
 };
 
 export default function RootLayout({
@@ -27,6 +85,7 @@ export default function RootLayout({
           fontFamily:
             "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
         }}>
+        <LocalBusinessJsonLd />
         <LayoutBody>{children}</LayoutBody>
         <Footer />
       </body>

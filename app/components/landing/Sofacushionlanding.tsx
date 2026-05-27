@@ -6,6 +6,7 @@ import FadeIn from "@/app/components/FadeIn";
 import Link from "next/link";
 import { cases } from "@/lib/case-data";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
+import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 
 /* ═══════════════════════════════════════════
    DATA
@@ -102,6 +103,14 @@ export default function SofaCushionLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
+      {/* seo */}
+      <ServiceJsonLd
+        name="싱크대 상부장 수리"
+        description="싱크대 상부장 처짐·추락 증상 합판 시공목으로 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S."
+        url="https://restorystudio.co.kr/repair/sangbujang"
+      />
+      <FAQJsonLd faqs={FAQ} />
+
       <FadeIn>
         {/* HERO IMAGE */}
         <section className="relative" style={{ background: "#1f66ff" }}>

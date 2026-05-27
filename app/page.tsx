@@ -7,10 +7,15 @@ import ReviewSection from "./components/Reviewsection";
 import BottomCTA from "./components/BottomCTA";
 import EventBanner from "./components/EventBanner";
 import FloatingCTA from "./components/landing/shared/FloatingCTA";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Re'Story - 싱크대수리 · 싱크대리폼 · 가죽교체",
-  description: "사진 한 장으로 수리와 리폼 가능 여부를 먼저 안내드립니다.",
+export const metadata: Metadata = {
+  title: "리스토리 Re'Story - 가구 출장 수리 리폼 전문",
+  description:
+    "싱크대 상부장 수리, 싱크대 문짝 리폼, 식당 의자 가죽 교체, 소파 쿠션 복원. 사진 한 장이면 수리 견적 바로 안내드립니다. 서울·경기·인천 전 지역 출장.",
+  alternates: {
+    canonical: "https://restorystudio.co.kr",
+  },
 };
 
 export default function MainPage() {
