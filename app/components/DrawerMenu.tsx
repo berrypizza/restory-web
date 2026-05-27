@@ -252,6 +252,12 @@ export default function DrawerMenu() {
                       external: false,
                       highlight: false,
                     },
+                    {
+                      label: "🍯 꿀팁 계시판",
+                      href: "/tips",
+                      external: false,
+                      highlight: false,
+                    },
                     // {
                     //   label: "❓ 자주 묻는 질문",
                     //   href: "/faq",
