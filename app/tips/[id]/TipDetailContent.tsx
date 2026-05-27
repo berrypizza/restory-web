@@ -301,7 +301,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
          하단 고정 배너 — 카테고리별 랜딩 유도
          아정당 스타일: 둥근 다크 배너
          ═══════════════════════════════════════ */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 safe-bottom md:pb-5 mb-5">
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 safe-bottom md:pb-5 mb-7">
         <Link
           href={banner.href}
           className="mx-auto flex max-w-3xl items-center justify-between rounded-2xl px-5 py-4"
