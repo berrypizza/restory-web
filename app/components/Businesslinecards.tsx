@@ -71,7 +71,7 @@ export default function BusinessLineCards() {
                   width={130}
                   height={130}
                   className="absolute right-4 bottom-0 object-contain group-hover:scale-105 transition-transform"
-                  style={{ width: 120, height: 120 }}
+                  style={{ width: 130, height: 130 }}
                 />
               </div>
 
@@ -109,7 +109,7 @@ export default function BusinessLineCards() {
                   width={80}
                   height={80}
                   className="object-contain"
-                  style={{ width: 72, height: 72 }}
+                  style={{ width: 80, height: 80 }}
                 />
               </div>
 
