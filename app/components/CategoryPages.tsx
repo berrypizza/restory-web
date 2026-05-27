@@ -68,11 +68,11 @@ export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
               {nl(line.description)}
             </p>
             <a
-              href="tel:010-9127-3024"
+              href="tel:010-6855-0957"
               className="flex items-center gap-2 mb-5"
               style={{ textDecoration: "none" }}></a>
             <a
-              href="https://pf.kakao.com/_aHYsX/chat"
+              href="http://pf.kakao.com/_hQExjX/chat"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-sm font-black text-white md:rounded-2xl md:px-10 md:py-4 md:text-base transition hover:opacity-90"
@@ -181,7 +181,7 @@ export function ServiceLandingPage({
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="tel:010-9127-3024"
+              href="tel:010-6855-0957"
               className="rounded-2xl px-6 py-4 text-center text-sm font-black text-white"
               style={{
                 background: "linear-gradient(to right, #1f66ff, #4f8fff)",

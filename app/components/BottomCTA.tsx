@@ -22,7 +22,7 @@ export default function BottomCTA() {
             클릭 한 번이면 끝!
           </p>
           <a
-            href="tel:010-9127-3024"
+            href="tel:010-6855-0957"
             className="flex items-center gap-2 mb-5"
             style={{ textDecoration: "none" }}>
             <Image
@@ -35,11 +35,11 @@ export default function BottomCTA() {
             <span
               className="text-2xl font-black md:text-4xl"
               style={{ color: "#1f66ff" }}>
-              010-9127-3024
+              010-6855-0957
             </span>
           </a>
           <a
-            href="https://pf.kakao.com/_aHYsX/chat"
+            href="http://pf.kakao.com/_hQExjX/chat"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-sm font-black text-white md:rounded-2xl md:px-10 md:py-4 md:text-base transition hover:opacity-90"

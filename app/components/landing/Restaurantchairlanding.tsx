@@ -75,8 +75,8 @@ const EXTRAS = [
   },
 ];
 
-const PHONE = "tel:010-9127-3024";
-const KAKAO_URL = "https://pf.kakao.com/_aHYsX/chat";
+const PHONE = "tel:010-6855-0957";
+const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
 
 /* ═══════════════════════════════════════════
@@ -1013,7 +1013,7 @@ export default function RestaurantChairLanding() {
                 href={PHONE}
                 className="flex items-center justify-center gap-2 rounded-full px-10 py-4 text-[17px] font-extrabold text-white md:px-12 md:py-5 md:text-[19px]"
                 style={{ background: "#1a5cff" }}>
-                📞 간편접수 010-9127-3024
+                📞 간편접수 010-6855-0957
               </a>
             </div>
           </FadeIn>

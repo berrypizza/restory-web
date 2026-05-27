@@ -9,8 +9,8 @@ interface FloatingCTAProps {
 }
 
 export default function FloatingCTA({
-  phone = "tel:010-9127-3024",
-  kakaoUrl = "https://pf.kakao.com/_aHYsX/chat",
+  phone = "tel:010-6855-0957",
+  kakaoUrl = "http://pf.kakao.com/_hQExjX/chat",
 }: FloatingCTAProps) {
   const [showSticky, setShowSticky] = useState(false);
 

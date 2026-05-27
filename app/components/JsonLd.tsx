@@ -8,7 +8,7 @@ export function LocalBusinessJsonLd() {
     image: "https://restorystudio.co.kr/images/og-image.png",
     description:
       "싱크대 상부장 수리, 싱크대 문짝 리폼, 식당 의자 가죽 교체, 소파 쿠션 복원 전문. 서울·경기·인천 전 지역 출장.",
-    telephone: "010-9127-3024",
+    telephone: "010-6855-0957",
     areaServed: [
       { "@type": "State", name: "서울특별시" },
       { "@type": "State", name: "경기도" },
@@ -109,7 +109,7 @@ export function ServiceJsonLd({
     provider: {
       "@type": "HomeAndConstructionBusiness",
       name: "리스토리 Re'Story",
-      telephone: "010-9127-3024",
+      telephone: "010-6855-0957",
       url: "https://restorystudio.co.kr",
     },
     areaServed: ["서울특별시", "경기도", "인천광역시"],

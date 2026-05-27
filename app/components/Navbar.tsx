@@ -72,7 +72,7 @@ export default function Navbar() {
             </div>
             {/* 데스크탑: 전화문의 + 사진접수 버튼 */}
             <a
-              href="tel:010-9127-3024"
+              href="tel:010-6855-0957"
               className="hidden md:inline-flex rounded-xl bg-neutral-100 px-4 py-2 text-xs font-black text-neutral-800">
               전화문의
             </a>

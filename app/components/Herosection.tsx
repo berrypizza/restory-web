@@ -34,7 +34,7 @@ export default function HeroSection() {
                 📷 사진 보내고 확인
               </a>
               <a
-                href="tel:010-9127-3024"
+                href="tel:010-6855-0957"
                 className="rounded-2xl border-2 border-white/40 px-7 py-4 text-center text-sm font-black text-white transition hover:bg-white/10">
                 📞 전화 문의
               </a>
@@ -114,7 +114,7 @@ export default function HeroSection() {
             📷 사진 보내고 확인
           </a>
           <a
-            href="tel:010-9127-3024"
+            href="tel:010-6855-0957"
             className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-black text-white"
             style={{
               background: "linear-gradient(to right, #1f66ff, #4f8fff)",

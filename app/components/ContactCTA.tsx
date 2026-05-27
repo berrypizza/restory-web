@@ -1,7 +1,7 @@
 import React from "react";
 import FadeIn from "@/app/components/FadeIn";
 
-const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_aHYsX/chat";
+const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_hQExjX/chat";
 
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
@@ -95,7 +95,7 @@ export default function ContactCTA() {
                 📷 사진 접수
               </a>
               <a
-                href="tel:010-9127-3024"
+                href="tel:010-6855-0957"
                 className="rounded-xl px-5 py-3.5 font-semibold text-center transition-opacity hover:opacity-80"
                 style={{
                   border: "1px solid #e5e5e5",
