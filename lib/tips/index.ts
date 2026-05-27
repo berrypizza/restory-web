@@ -14,8 +14,9 @@ export type { Tip, TipCategory } from "./types";
 
 // ── 각 글 import ──────────────────────────
 // 새 글 추가 시 여기에 한 줄 추가
-import sangbujangRepairVsReplace from "./sangbujang-repair-vs-replace";
-import sinkDoorReplaceVsFullKitchenReplace from "./sink-door-replace-vs-full-kitchen-replace";
+import sangbujangRepairVsReplace from "./contents/sangbujang-repair-vs-replace";
+import sinkDoorReplaceVsFullKitchenReplace from "./contents/sink-door-replace-vs-full-kitchen-replace";
+import chairReupholsteryVsBuyNew from "./contents/chair-reupholstery-vs-buy-new";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -26,6 +27,8 @@ import sinkDoorReplaceVsFullKitchenReplace from "./sink-door-replace-vs-full-kit
 const tipModules = [
   sangbujangRepairVsReplace,
   sinkDoorReplaceVsFullKitchenReplace,
+  chairReupholsteryVsBuyNew,
+
   // sofaSelfCheck,
   // chairReplaceTiming,
   // doorReformGuide,

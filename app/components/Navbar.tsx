@@ -10,6 +10,7 @@ import DrawerMenu from "@/app/components/DrawerMenu";
 const quickLinks = [
   { label: "작업사례", href: "/cases" },
   { label: "이벤트", href: "/events" },
+  { label: "꿀팁 계시판", href: "/tips" },
 ];
 
 export default function Navbar() {

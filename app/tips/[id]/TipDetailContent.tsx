@@ -3,7 +3,41 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { tips, type Tip } from "@/lib/tips";
+import { tips, type Tip, type TipCategory } from "@/lib/tips";
+
+/* ═══════════════════════════════════════════
+   카테고리별 하단 배너 데이터
+   ═══════════════════════════════════════════ */
+
+const CATEGORY_BANNER: Record<
+  TipCategory,
+  { text: string; sub: string; href: string; emoji: string }
+> = {
+  "싱크대 수리": {
+    text: "싱크대 수리 해도 또 떨어지면 어쩌지....?",
+    sub: "본사 책임 AS 3년 보장으로 안심!",
+    href: "/repair/sangbujang",
+    emoji: "🔧",
+  },
+  "싱크대 리폼": {
+    text: "문짝 교체로 새 주방 만들기, 가능할까?",
+    sub: "전체 교체의 1/5 비용으로 해결!",
+    href: "/kitchen/sink-door",
+    emoji: "🔨",
+  },
+  "의자 천갈이": {
+    text: "가죽 교체 했는데 금방 또 찢어지면 어쩌지...?",
+    sub: "국내산 고급 가죽만 고집!!",
+    href: "/leather/restaurant-chair",
+    emoji: "🪑",
+  },
+  "소파 리폼": {
+    text: "복원 하고 또 소파 꺼지면 어쩌지..?",
+    sub: "본사 책임 AS 3년 보장으로 안심!",
+    href: "/sofa",
+    emoji: "🛋️",
+  },
+};
 
 /* ═══════════════════════════════════════════
    마크다운 → HTML 변환기
@@ -29,7 +63,6 @@ function parseMarkdown(md: string): string {
     .replace(/^- (.+)$/gm, '<li class="tip-li">$1</li>')
     .replace(/^\d+\. (.+)$/gm, '<li class="tip-li-num">$1</li>');
 
-  // li 그룹핑
   html = html.replace(
     /(<li class="tip-li">[\s\S]*?<\/li>(\n|$))+/g,
     (match) => `<ul class="tip-ul">${match}</ul>`,
@@ -39,13 +72,11 @@ function parseMarkdown(md: string): string {
     (match) => `<ol class="tip-ol">${match}</ol>`,
   );
 
-  // 테이블
   const lines = html.split("\n");
   let inTable = false;
   const result: string[] = [];
 
   for (const line of lines) {
-    // 테이블 행 감지 (| 로 시작하고 끝남)
     const trimmed = line.trim();
     const isTableRow = trimmed.startsWith("|") && trimmed.endsWith("|");
     const isSeparator = isTableRow && /^\|[\s\-:|]+\|$/.test(trimmed);
@@ -100,7 +131,7 @@ function parseMarkdown(md: string): string {
 
 const PHONE = "tel:010-9127-3024";
 const KAKAO_URL = "https://pf.kakao.com/_aHYsX/chat";
-const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
+const PHOTO_URL = "https://pf.kakao.com/_aHYsX/chat";
 
 export default function TipDetailContent({ tip }: { tip: Tip }) {
   const related = tips
@@ -108,15 +139,16 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
     .slice(0, 4);
 
   const contentHtml = parseMarkdown(tip.content);
+  const banner = CATEGORY_BANNER[tip.category];
 
   return (
     <main
-      className="bg-white min-h-screen"
+      className="bg-white min-h-screen pb-[72px]"
       style={{
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      {/* BREADCRUMB - 아정당 스타일 상단 경로 */}
+      {/* BREADCRUMB */}
       <div className="border-b border-neutral-100 bg-white px-5 py-3">
         <div className="mx-auto max-w-3xl text-[12px] text-neutral-400 md:text-[13px]">
           <Link
@@ -170,7 +202,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
             dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
 
-          {/* CTA BOX - 아정당 하단 CTA 스타일 */}
+          {/* CTA BOX */}
           <div
             className="mt-12 rounded-2xl overflow-hidden"
             style={{
@@ -211,7 +243,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
             </div>
           </div>
 
-          {/* RELATED - 관련 꿀팁 */}
+          {/* RELATED */}
           {related.length > 0 && (
             <div className="mt-10">
               <h3 className="text-[17px] font-black md:text-[19px]">
@@ -229,9 +261,9 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
                         <Image
                           src={r.thumbnail}
                           alt={r.title}
-                          width={160}
-                          height={120}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="80px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center">
@@ -264,6 +296,31 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
           </div>
         </div>
       </article>
+
+      {/* ═══════════════════════════════════════
+         하단 고정 배너 — 카테고리별 랜딩 유도
+         아정당 스타일: 둥근 다크 배너
+         ═══════════════════════════════════════ */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 safe-bottom md:pb-5 mb-5">
+        <Link
+          href={banner.href}
+          className="mx-auto flex max-w-3xl items-center justify-between rounded-2xl px-5 py-4"
+          style={{
+            background: "#e32e40",
+            textDecoration: "none",
+            boxShadow: "0 4px 20px rgba(227, 46, 64, 0.4)",
+          }}>
+          <div className="min-w-0">
+            <p className="text-[15px] font-extrabold text-white truncate md:text-[16px]">
+              {banner.text}
+            </p>
+            <p className="mt-0.5 text-[12px] font-medium text-white/70 md:text-[13px]">
+              {banner.sub}
+            </p>
+          </div>
+          <span className="flex-shrink-0 ml-3 text-white text-[20px]">›</span>
+        </Link>
+      </div>
 
       {/* 마크다운 콘텐츠 스타일 */}
       <style jsx global>{`
@@ -396,6 +453,9 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
           .tip-content .tip-table {
             font-size: 15px;
           }
+        }
+        .safe-bottom {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
         }
       `}</style>
     </main>

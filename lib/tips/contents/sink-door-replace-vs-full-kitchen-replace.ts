@@ -1,4 +1,4 @@
-import type { Tip } from "./types";
+import type { Tip } from "../types";
 
 const tip: Tip = {
   id: "sink-door-replace-vs-full-kitchen-replace",
