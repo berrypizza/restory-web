@@ -122,7 +122,7 @@ const tip: Tip = {
 교체 가능 여부와 예상 비용 범위를 안내해드립니다.
 
 - **전화**: 010-6855-0957
-- **카카오톡**: [리스토리 채널](https://pf.kakao.com/_aHYsX/chat)
+- **카카오톡**: [리스토리 채널](http://pf.kakao.com/_hQExjX/chat)
 `,
 };
 
