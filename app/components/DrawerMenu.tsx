@@ -185,48 +185,6 @@ export default function DrawerMenu() {
 
             {/* 스크롤 영역 */}
             <nav className="flex-1 overflow-y-auto">
-              {/* ── 서비스 카테고리 그리드 ── */}
-              {businessLines.map((line) => (
-                <div key={line.id} className="px-5 pt-6 pb-2">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[15px] font-black text-neutral-900">
-                      {line.title}
-                    </h3>
-                    <Link
-                      href={line.href}
-                      onClick={() => setOpen(false)}
-                      className="text-[12px] font-bold text-[#1f66ff] hover:underline">
-                      전체보기 →
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-4 gap-2">
-                    {(serviceIcons[line.id] || []).map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        className="flex flex-col items-center gap-1.5 rounded-xl py-3 px-1 transition-colors hover:bg-[#f0f4ff]">
-                        <Image
-                          src={item.icon}
-                          alt={item.label}
-                          width={36}
-                          height={36}
-                          className="w-9 h-9 object-contain"
-                        />
-                        <span className="text-[11px] font-semibold text-neutral-700 text-center leading-tight whitespace-nowrap">
-                          {item.label}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              <div
-                className="mx-5 my-3"
-                style={{ height: 1, backgroundColor: "#eee" }}
-              />
-
               {/* ── 바로가기 ── */}
               <div className="px-5 pt-3 pb-2">
                 <p className="text-[11px] font-bold text-neutral-400 tracking-wider mb-3">
@@ -315,6 +273,47 @@ export default function DrawerMenu() {
                   )}
                 </div>
               </div>
+              {/* ── 서비스 카테고리 그리드 ── */}
+              {businessLines.map((line) => (
+                <div key={line.id} className="px-5 pt-6 pb-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[15px] font-black text-neutral-900">
+                      {line.title}
+                    </h3>
+                    <Link
+                      href={line.href}
+                      onClick={() => setOpen(false)}
+                      className="text-[12px] font-bold text-[#1f66ff] hover:underline">
+                      전체보기 →
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(serviceIcons[line.id] || []).map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className="flex flex-col items-center gap-1.5 rounded-xl py-3 px-1 transition-colors hover:bg-[#f0f4ff]">
+                        <Image
+                          src={item.icon}
+                          alt={item.label}
+                          width={36}
+                          height={36}
+                          className="w-9 h-9 object-contain"
+                        />
+                        <span className="text-[11px] font-semibold text-neutral-700 text-center leading-tight whitespace-nowrap">
+                          {item.label}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div
+                className="mx-5 my-3"
+                style={{ height: 1, backgroundColor: "#eee" }}
+              />
 
               <div
                 className="mx-5 my-3"
