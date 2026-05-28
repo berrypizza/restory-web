@@ -129,9 +129,9 @@ function parseMarkdown(md: string): string {
   return result.join("\n");
 }
 
-const PHONE = "tel:010-9127-3024";
-const KAKAO_URL = "https://pf.kakao.com/_aHYsX/chat";
-const PHOTO_URL = "https://pf.kakao.com/_aHYsX/chat";
+const PHONE = "tel:010-6855-0957";
+const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHOTO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
 export default function TipDetailContent({ tip }: { tip: Tip }) {
   const related = tips
