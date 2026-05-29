@@ -465,12 +465,12 @@ export default function HabujangLanding() {
                   desc: "그릇 무게를 버티지 못해\n바닥이 처진 상태",
                 },
                 {
-                  img: "/images/habujang/symptom-3.jpg",
+                  img: "/images/habujang/symptom-3.png",
                   title: "곰팡이·악취",
                   desc: "물 먹은 PB에서\n곰팡이가 발생한 상태",
                 },
                 {
-                  img: "/images/habujang/symptom-4.jpg",
+                  img: "/images/habujang/symptom-4.png",
                   title: "밑판 파손·구멍",
                   desc: "PB가 삭아서\n구멍이 난 상태",
                 },
