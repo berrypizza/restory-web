@@ -19,6 +19,7 @@ import sinkDoorReplaceVsFullKitchenReplace from "./contents/sink-door-replace-vs
 import chairReupholsteryVsBuyNew from "./contents/chair-reupholstery-vs-buy-new";
 import sofaRestorationVsBuyNew from "./contents/sofa-restoration-vs-buy-new";
 import kitchendoormeasureguide from "./contents/kitchen-door-measure-guide";
+import sangbujangpbvsplywood from "./contents/sangbujang-pb-vs-plywood";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -32,6 +33,7 @@ const tipModules = [
   chairReupholsteryVsBuyNew,
   sofaRestorationVsBuyNew,
   kitchendoormeasureguide,
+  sangbujangpbvsplywood,
   // sofaSelfCheck,
   // chairReplaceTiming,
   // doorReformGuide,
