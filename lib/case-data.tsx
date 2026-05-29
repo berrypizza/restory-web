@@ -1,13 +1,23 @@
-export type CaseCategory =
+export type ParentCategory =
   | "전체"
   | "싱크대 수리"
   | "싱크대 리폼"
   | "가죽 리폼"
   | "소파 복원";
 
+export type CaseCategory =
+  | "전체"
+  | "싱크대 수리"
+  | "상부장 처짐"
+  | "하부장 밑판 교체"
+  | "싱크대 리폼"
+  | "가죽 리폼"
+  | "소파 복원";
+
 export interface CaseItem {
   id: string;
-  category: CaseCategory;
+  category: CaseCategory; // 세부 카테고리 (슬라이더 필터 등에 사용)
+  parentCategory: ParentCategory; // 부모 카테고리 (탭 필터에 사용)
   title: string;
   region: string;
   summary: string;
@@ -18,7 +28,7 @@ export interface CaseItem {
   tags: string[];
 }
 
-export const CASE_CATEGORIES: CaseCategory[] = [
+export const PARENT_CATEGORIES: ParentCategory[] = [
   "전체",
   "싱크대 수리",
   "싱크대 리폼",
@@ -26,10 +36,68 @@ export const CASE_CATEGORIES: CaseCategory[] = [
   "소파 복원",
 ];
 
+// 부모 카테고리별 서브카테고리 정의
+export const SUB_CATEGORIES: Partial<Record<ParentCategory, CaseCategory[]>> = {
+  "싱크대 수리": ["상부장 처짐", "하부장 밑판 교체"],
+};
+
+// 하위 호환용
+export const CASE_CATEGORIES: CaseCategory[] = [
+  "전체",
+  "싱크대 수리",
+  "상부장 처짐",
+  "하부장 밑판 교체",
+  "싱크대 리폼",
+  "가죽 리폼",
+  "소파 복원",
+];
+
 export const cases: CaseItem[] = [
+  // ─── 신규 추가 ───────────────────────────────────────────
+  {
+    id: "case-034",
+    category: "하부장 밑판 교체",
+    parentCategory: "싱크대 수리",
+    title: "곰팡이 때문에 하부장 밑판 교체 사례",
+    region: "주안",
+    summary: "휘어버린 하부장 밑판 교체 사례",
+    beforeImg: "/images/cases/case-034-before.jpeg",
+    afterImg: "/images/cases/case-034-after.jpeg",
+    blogUrl: "https://blog.naver.com/kohh1515-/223714065910",
+    date: "2026-05-31",
+    tags: ["하부장", "밑판 교체", "지판 교체"],
+  },
+  {
+    id: "case-033",
+    category: "하부장 밑판 교체",
+    parentCategory: "싱크대 수리",
+    title: "하부장 밑판 교체 사례",
+    region: "부평",
+    summary: "휘어버린 하부장 밑판 교체 사례",
+    beforeImg: "/images/cases/case-033-before.jpeg",
+    afterImg: "/images/cases/case-033-after.jpeg",
+    blogUrl: "https://blog.naver.com/kohh1515-/223508450821",
+    date: "2026-05-30",
+    tags: ["하부장", "밑판 교체", "지판 교체"],
+  },
+  {
+    id: "case-031",
+    category: "하부장 밑판 교체",
+    parentCategory: "싱크대 수리",
+    title: "하부장 밑판 교체 사례",
+    region: "일산",
+    summary: "물 먹어 부풀어 오른 하부장 밑판 교체 사례",
+    beforeImg: "/images/cases/case-032-before.jpg",
+    afterImg: "/images/cases/case-032-after.jpg",
+    blogUrl: "https://blog.naver.com/restory99/224299421979",
+    date: "2026-05-29",
+    tags: ["하부장", "밑판 교체", "지판 교체"],
+  },
+  // ─── 기존 데이터 (원본 그대로) ────────────────────────────
   {
     id: "case-030",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "마포구 싱크대 상부장 처짐",
     region: "마포구",
     summary: "상부장 처짐 수리 사례",
@@ -41,7 +109,8 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-029",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "마포구 싱크대 상부장 처짐",
     region: "마포구",
     summary: "상부장 처짐 수리 사례",
@@ -53,7 +122,8 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-028",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "은평구 싱크대 상부장 처짐",
     region: "은평구",
     summary: "상부장 처짐 수리 사례",
@@ -65,7 +135,8 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-027",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "싱크대 상부장 처짐",
     region: "인천",
     summary: "상부장 처짐 수리 사례",
@@ -78,6 +149,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-026",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "싱크대 문짝 리폼 사례",
     region: "당하동",
     summary: "깔끔한 화이트 톤으로 톤업!",
@@ -89,7 +161,8 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-025",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "싱크대 상부장 처짐 수리 사례",
     region: "당하동",
     summary: "처지는 상부장 수리 완료!",
@@ -102,6 +175,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-024",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "회사 중역 테이블 가죽 리폼 사례",
     region: "서울",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -114,6 +188,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-023",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "회사 의자 팔걸이 가죽 교체 사례",
     region: "인천",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -126,6 +201,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-022",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "주방 문짝 리폼 사례",
     region: "인천",
     summary: "싱크대 리폼으로 새로운 주방 느낌",
@@ -138,6 +214,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-021",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "인천 주방 문짝 리폼 사례",
     region: "인천 신현동",
     summary: "싱크대 리폼으로 새로운 주방 느낌",
@@ -150,6 +227,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-020",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "인천 싱크대 리폼 사례",
     region: "인천 신현동",
     summary: "싱크대 리폼으로 새로운 주방 느낌",
@@ -162,6 +240,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-019",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "인천 싱크대 리폼 사례",
     region: "인천 주안",
     summary: "싱크대 리폼으로 새로운 주방 느낌",
@@ -174,6 +253,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-018",
     category: "소파 복원",
+    parentCategory: "소파 복원",
     title: "인천 소파 수리 사례",
     region: "인천 주안",
     summary: "소파 내부 스프링 문제 해결",
@@ -186,6 +266,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-017",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "인천 싱크대 문짝 리폼",
     region: "인천 부평구",
     summary: "싱크대 문짝 리폼으로 새로운 주방 느낌",
@@ -197,7 +278,8 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-016",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "인천 싱크대 상부장 처짐",
     region: "인천 서구",
     summary: "싱크대 상부장 처짐 수리",
@@ -210,6 +292,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-015",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "사우나 의자 가죽 리폼",
     region: "그랜드 cc",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -222,6 +305,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-014",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "회의 테이블 가죽 교체",
     region: "서울",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -234,6 +318,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-013",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "양천구 목동 의자 가죽 리폼",
     region: "서울 양천구",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -246,6 +331,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-012",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "강서구 회사 중역 테이블 가죽 리폼",
     region: "서울 강서구",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -258,6 +344,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-011",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "관악구 가죽 리폼",
     region: "서울 관악구",
     summary: "가죽 리폼으로 새로운 공간 분위기 연출",
@@ -270,6 +357,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-010",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "관악구 싱크대 문짝 리폼",
     region: "서울 관악구",
     summary: "싱크대 문짝만 교체로 새로운 주방",
@@ -282,6 +370,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-009",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "인천 싱크대 문짝 리폼",
     region: "인천",
     summary: "싱크대 문짝만 교체로 새로운 주방 느낌",
@@ -293,7 +382,8 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-001",
-    category: "싱크대 수리",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
     title: "인천 서구 상부장 처짐 수리",
     region: "인천 서구",
     summary:
@@ -306,19 +396,21 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-002",
-    category: "싱크대 수리",
-    title: "서울 구로구 하부장 서랍레일 교체",
-    region: "서울 구로구",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
+    title: "상부장 추락 사례",
+    region: "부천 작동",
     summary: "서랍이 안 닫히는 증상. 레일 부식으로 3단 서랍레일 전체 교체.",
     beforeImg: "/images/cases/case-002-before.jpg",
     afterImg: "/images/cases/case-002-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq",
     date: "2026-05-08",
-    tags: ["하부장", "서랍레일", "부식"],
+    tags: ["상부장", "추락", "부식"],
   },
   {
     id: "case-003",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "경기 부천시 주방 문짝 전체 교체",
     region: "경기 부천시",
     summary:
@@ -332,6 +424,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-004",
     category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
     title: "서울 강서구 싱크대 상판 + 문짝 리폼",
     region: "서울 강서구",
     summary:
@@ -345,6 +438,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-005",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "강남 레스토랑 의자 30개 천갈이",
     region: "서울 강남구",
     summary: "가죽 벗겨진 레스토랑 의자 30개. 영업 중 작업으로 하루 만에 완료.",
@@ -357,6 +451,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-006",
     category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
     title: "카페 소파 부스석 가죽 교체",
     region: "경기 일산",
     summary: "10년 된 카페 부스석 가죽 갈라짐. 인조가죽으로 전체 교체.",
@@ -369,6 +464,7 @@ export const cases: CaseItem[] = [
   {
     id: "case-007",
     category: "소파 복원",
+    parentCategory: "소파 복원",
     title: "인천 송도 3인 소파 꺼짐 복원",
     region: "인천 송도",
     summary:
@@ -382,13 +478,14 @@ export const cases: CaseItem[] = [
   {
     id: "case-008",
     category: "소파 복원",
-    title: "서울 마포구 가죽소파 염색 + 복원",
+    parentCategory: "소파 복원",
+    title: "서울 마포구 가죽소파 꺼짐 복원",
     region: "서울 마포구",
-    summary: "천연가죽 소파 색 바램 + 표면 갈라짐. 클리닝 후 재염색으로 복원.",
+    summary: "소파 꺼짐 심해서 앉으면 바닥 느낌. 내부 스프링 + 고밀도 폼 보강.",
     beforeImg: "/images/cases/case-008-before.jpg",
     afterImg: "/images/cases/case-008-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq",
     date: "2026-04-10",
-    tags: ["가죽소파", "염색", "클리닝"],
+    tags: ["가죽소파", "꺼짐", "복원"],
   },
 ];

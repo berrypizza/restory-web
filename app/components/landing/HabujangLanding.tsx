@@ -521,7 +521,7 @@ export default function HabujangLanding() {
           <FadeIn delay={120}>
             {(() => {
               const CASE_ITEMS = cases
-                .filter((c) => c.category === "싱크대 수리")
+                .filter((c) => c.category === "하부장 밑판 교체")
                 .slice(0, 8);
 
               function CaseSlider() {
@@ -608,7 +608,7 @@ export default function HabujangLanding() {
                                 style={{ textDecoration: "none" }}>
                                 <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
                                   <Image
-                                    src={item.afterImg}
+                                    src={item.beforeImg}
                                     alt={item.title}
                                     width={400}
                                     height={300}
@@ -618,10 +618,10 @@ export default function HabujangLanding() {
                                   <div
                                     className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-bold"
                                     style={{
-                                      backgroundColor: "#1f66ff",
+                                      backgroundColor: "#e32e40",
                                       color: "white",
                                     }}>
-                                    AFTER
+                                    BEFORE
                                   </div>
                                 </div>
                                 <div className="p-4">
@@ -687,7 +687,7 @@ export default function HabujangLanding() {
           <FadeIn delay={200}>
             <div className="mt-6 flex justify-center">
               <Link
-                href="/cases?cat=싱크대 수리"
+                href="/cases?cat=하부장 밑판 교체"
                 className="flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-[15px] font-extrabold text-white md:px-10 md:py-4 md:text-[17px]"
                 style={{ background: "#1a5cff", textDecoration: "none" }}>
                 📋 더 많은 실제 사례 보러가기 ›
