@@ -25,19 +25,16 @@ export default function Navbar() {
 
   return (
     <>
-      {/* 스크롤 시 접히는 영역 — sticky 밖 */}
       <div
         className={`bg-white overflow-hidden transition-transform duration-300 ${
           scrolled ? "-translate-y-full" : "translate-y-0"
         }`}>
-        {/* 파란 배너 */}
         <div className="bg-[#1f66ff] text-white">
           <div className="mx-auto flex h-9 max-w-6xl items-center justify-center px-4 text-xs font-bold md:text-sm">
             사진 한 장으로 수리·리폼 가능 여부 먼저 확인
           </div>
         </div>
 
-        {/* 로고 + 퀵링크 + 버튼 */}
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center">
@@ -48,13 +45,13 @@ export default function Navbar() {
                 height={76}
                 className="h-19 w-auto object-contain"
                 priority
-              />{" "}
+              />
               <h1 className="pl-[6px] text-[17px] font-black text-[#1f66ff]">
                 리스토리
               </h1>
             </Link>
 
-            <nav className="hidden items-center gap-7 text-sm font-extrabold text-neutral-900 md:flex">
+            <nav className="hidden md:flex items-center gap-7 text-sm font-extrabold text-neutral-900">
               {quickLinks.map((item) => (
                 <Link
                   key={item.label}
@@ -67,11 +64,16 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* 모바일: 햄버거만 */}
+            <Link
+              href="/tips"
+              className="md:hidden transition text-[#7a5200] border border-[#f5c542] rounded-xl px-3 py-1.5 bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
+              꿀팁
+            </Link>
+
             <div className="md:hidden">
               <DrawerMenu />
             </div>
-            {/* 데스크탑: 전화문의 + 사진접수 버튼 */}
+
             <a
               href="tel:010-6855-0957"
               className="hidden md:inline-flex rounded-xl bg-neutral-100 px-4 py-2 text-xs font-black text-neutral-800">
@@ -86,7 +88,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 카테고리 nav — sticky 고정 */}
       <header className="sticky top-0 z-50 border-b border-neutral-100 bg-white shadow-[0_1px_0_rgba(0,0,0,0.08)]">
         <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
           <nav
@@ -99,7 +100,6 @@ export default function Navbar() {
             }}>
             <style>{`.nav-scroll::-webkit-scrollbar{display:none}`}</style>
 
-            {/* 홈 */}
             <div className="relative flex h-full shrink-0 items-center">
               <Link
                 href="/"
@@ -120,6 +120,7 @@ export default function Navbar() {
 
             {businessLines.map((line) => {
               const isActive = pathname.startsWith(`/${line.id}`);
+
               return (
                 <div
                   key={line.id}
@@ -140,7 +141,6 @@ export default function Navbar() {
                     )}
                   </Link>
 
-                  {/* 드롭다운 — 데스크탑만 */}
                   <div className="hidden md:block invisible absolute left-0 top-full z-50 w-[760px] translate-y-2 rounded-b-3xl border border-t-0 border-neutral-200 bg-white opacity-0 shadow-2xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                     <div className="grid grid-cols-[190px_1fr]">
                       <div className="bg-[#edf3ff] p-6">
@@ -178,6 +178,7 @@ export default function Navbar() {
               );
             })}
           </nav>
+
           <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3">
             <DrawerMenu />
           </div>

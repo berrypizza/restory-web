@@ -113,19 +113,18 @@ export default function DrawerMenu() {
       <button
         onClick={() => setOpen(true)}
         aria-label="전체 서비스 메뉴 열기"
-        className="flex flex-col justify-center items-center gap-[5px] w-9 h-9 rounded-lg transition-all hover:bg-neutral-100"
-        style={{ border: "1px solid #e5e5e5" }}>
+        className="flex flex-col justify-center items-center gap-[5px] w-[38px] h-[38px] border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] transition-all hover:bg-neutral-100">
         <span
           className="block rounded-full"
-          style={{ width: 16, height: 2, backgroundColor: "#1a1a1a" }}
+          style={{ width: 16, height: 2, backgroundColor: "#ffffff" }}
         />
         <span
           className="block rounded-full"
-          style={{ width: 12, height: 2, backgroundColor: "#999" }}
+          style={{ width: 16, height: 2, backgroundColor: "#ffffff" }}
         />
         <span
           className="block rounded-full"
-          style={{ width: 16, height: 2, backgroundColor: "#1a1a1a" }}
+          style={{ width: 16, height: 2, backgroundColor: "#ffffff" }}
         />
       </button>
 
