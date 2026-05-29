@@ -22,31 +22,31 @@ const serviceIcons: Record<
       label: "하부장 밑판",
       href: "/repair/habujang",
     },
-    {
-      icon: "/images/icon/icon-door-drop.png",
-      label: "문짝 떨어짐",
-      href: "/repair/door-fall",
-    },
-    {
-      icon: "/images/icon/icon-door-gear.png",
-      label: "경첩 교체",
-      href: "/repair/hinge",
-    },
-    {
-      icon: "/images/icon/icon-rail.png",
-      label: "서랍 레일",
-      href: "/repair/drawer-rail",
-    },
-    {
-      icon: "/images/icon/icon-bed.png",
-      label: "침대 프레임",
-      href: "/repair/bed-frame",
-    },
-    {
-      icon: "/images/icon/icon-table.png",
-      label: "식탁 다리",
-      href: "/repair/table-leg",
-    },
+    // {
+    //   icon: "/images/icon/icon-door-drop.png",
+    //   label: "문짝 떨어짐",
+    //   href: "/repair/door-fall",
+    // },
+    // {
+    //   icon: "/images/icon/icon-door-gear.png",
+    //   label: "경첩 교체",
+    //   href: "/repair/hinge",
+    // },
+    // {
+    //   icon: "/images/icon/icon-rail.png",
+    //   label: "서랍 레일",
+    //   href: "/repair/drawer-rail",
+    // },
+    // {
+    //   icon: "/images/icon/icon-bed.png",
+    //   label: "침대 프레임",
+    //   href: "/repair/bed-frame",
+    // },
+    // {
+    //   icon: "/images/icon/icon-table.png",
+    //   label: "식탁 다리",
+    //   href: "/repair/table-leg",
+    // },
   ],
   kitchen: [
     {
@@ -71,11 +71,11 @@ const serviceIcons: Record<
       label: "식당 의자",
       href: "/leather/restaurant-chair",
     },
-    {
-      icon: "/images/icon/icon-chair-reform.png",
-      label: "기타 가죽",
-      href: "/leather/custom",
-    },
+    // {
+    //   icon: "/images/icon/icon-chair-reform.png",
+    //   label: "기타 가죽",
+    //   href: "/leather/custom",
+    // },
   ],
   sofa: [
     {
