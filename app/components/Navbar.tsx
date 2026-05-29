@@ -90,7 +90,7 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 border-b border-neutral-100 bg-white shadow-[0_1px_0_rgba(0,0,0,0.08)]">
         <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
           <nav
-            className="nav-scroll flex-1 flex h-full items-center gap-2 overflow-x-auto overflow-y-hidden"
+            className="nav-scroll flex-1 flex h-full items-center gap-0.5 overflow-x-auto overflow-y-hidden"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -103,7 +103,7 @@ export default function Navbar() {
             <div className="relative flex h-full shrink-0 items-center">
               <Link
                 href="/"
-                className={`relative flex h-full items-center px-3 font-bold transition ${
+                className={`relative flex h-full items-center px-2 font-bold transition ${
                   pathname === "/"
                     ? "text-[#1f66ff]"
                     : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
@@ -126,7 +126,7 @@ export default function Navbar() {
                   className="group relative flex h-full shrink-0 items-center">
                   <Link
                     href={line.href}
-                    className={`relative flex h-full items-center px-3 text-black font-bold transition ${
+                    className={`relative flex h-full items-center px-2 text-black font-bold transition ${
                       isActive
                         ? "text-[#1f66ff]"
                         : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"

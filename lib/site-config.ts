@@ -53,7 +53,7 @@ export const businessLines: BusinessLineConfig[] = [
       {
         slug: "habujang",
         title: "하부장 밑판 교체",
-        shortTitle: "하부장 밑판",
+        shortTitle: "하부장 밑판 교체",
         description: "하부장 밑판이 물에 불거나 파손된 경우 교체합니다.",
         hero: "물 먹은 밑판,\n그대로 두면 곰팡이까지.",
         painPoints: [
