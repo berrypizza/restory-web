@@ -170,7 +170,7 @@ export default function SangbujangLanding() {
             <div className="flex mt-10 justify-center gap-5 md:gap-10">
               {[
                 { src: "/images/cert-2.png", alt: "생산물배상책임 보험증서" },
-                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
+                { src: "/images/cert-5.png", alt: "리스토리 A/S 보증서" },
               ].map((cert, i) => (
                 <div
                   key={i}
