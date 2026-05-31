@@ -14,7 +14,7 @@ const serviceIcons: Record<
   repair: [
     {
       icon: "/images/icon/icon-upper.png",
-      label: "상부장 수리",
+      label: "상부장 처짐",
       href: "/repair/sangbujang",
     },
     {
