@@ -55,6 +55,19 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 export const cases: CaseItem[] = [
   // ─── 신규 추가 ───────────────────────────────────────────
   {
+    id: "case-035",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
+    title: "상부장 처짐 수리 사례",
+    region: "광명",
+    summary: "상부장 처짐 수리 사례",
+    beforeImg: "/images/cases/case-035-before.jpg",
+    afterImg: "/images/cases/case-035-after.jpg",
+    blogUrl: "https://blog.naver.com/restory99/224301324764",
+    date: "2026-05-31",
+    tags: ["상부장 수리", "상부장 처짐"],
+  },
+  {
     id: "case-034",
     category: "하부장 밑판 교체",
     parentCategory: "싱크대 수리",
