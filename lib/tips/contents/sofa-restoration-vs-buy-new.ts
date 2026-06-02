@@ -9,7 +9,7 @@ const tip: Tip = {
   tags: ["소파복원", "소파수리", "가죽복원", "비용비교"],
   thumbnail: "/images/tips/sofa-tip-1.png",
   createdAt: "2026-05-27",
-  views: 0,
+  views: 16654,
   readingTime: 5,
   content: `
 ## 소파가 낡아 보이는데… 새로 사야 할까?

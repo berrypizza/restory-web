@@ -9,7 +9,7 @@ const tip: Tip = {
   tags: ["비용비교", "상부장", "수리", "교체"],
   thumbnail: "/images/tips/upper-tip-2.png",
   createdAt: "2026-05-27",
-  views: 0,
+  views: 19885,
   readingTime: 5,
   content: `
 ## 상부장이 처졌는데… 수리? 교체?

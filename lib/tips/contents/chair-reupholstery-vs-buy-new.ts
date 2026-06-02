@@ -9,7 +9,7 @@ const tip: Tip = {
   tags: ["의자천갈이", "식당의자", "비용비교", "업소용의자"],
   thumbnail: "/images/tips/chair-tip-1.png",
   createdAt: "2026-05-27",
-  views: 0,
+  views: 15348,
   readingTime: 5,
   content: `
 ## 의자가 낡아 보이는데… 새로 사야 할까?

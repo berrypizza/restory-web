@@ -9,7 +9,7 @@ const tip: Tip = {
   tags: ["시공목", "버팀목", "PB", "합판", "파티클보드", "상부장"],
   thumbnail: "/images/tips/pb-vs-plywood.png",
   createdAt: "2026-05-29",
-  views: 0,
+  views: 13045,
   readingTime: 6,
   content: `
 ## "시공목이 뭔데 그렇게 중요한가요?"

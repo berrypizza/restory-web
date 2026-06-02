@@ -9,7 +9,7 @@ const tip: Tip = {
   tags: ["문짝측정", "싱크대문짝", "싱크대리폼", "경첩측정"],
   thumbnail: "/images/tips/kitchen-measure-tip-1.png",
   createdAt: "2026-05-29",
-  views: 0,
+  views: 12240,
   readingTime: 5,
   content: `
 ## 문짝 측정, 생각보다 어렵지 않습니다!

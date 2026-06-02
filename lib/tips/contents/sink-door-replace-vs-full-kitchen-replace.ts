@@ -9,7 +9,7 @@ const tip: Tip = {
   tags: ["문짝교체", "싱크대리폼", "비용비교", "주방리폼"],
   thumbnail: "/images/tips/kitchen-door-tip-1.png",
   createdAt: "2026-05-28",
-  views: 0,
+  views: 17751,
   readingTime: 5,
   content: `
 ## 싱크대가 오래돼 보이는데… 문짝만 바꿔도 될까?
