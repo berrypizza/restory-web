@@ -55,6 +55,19 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 export const cases: CaseItem[] = [
   // ─── 신규 추가 ───────────────────────────────────────────
   {
+    id: "case-038",
+    category: "상부장 처짐",
+    parentCategory: "싱크대 수리",
+    title: "상부장 처짐 수리 사례",
+    region: "서울 강서구 화곡동",
+    summary: "상부장 처짐 수리 사례",
+    beforeImg: "/images/cases/case-038-before.jpg",
+    afterImg: "/images/cases/case-038-after.jpg",
+    blogUrl: "https://blog.naver.com/sofaresq/224166325873",
+    date: "2026-01-31",
+    tags: ["상부장 수리", "상부장 처짐"],
+  },
+  {
     id: "case-037",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
