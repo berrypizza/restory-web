@@ -182,7 +182,7 @@ export const cases: CaseItem[] = [
     beforeImg: "/images/cases/case-025-before.jpg",
     afterImg: "/images/cases/case-025-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115/224125798234",
-    date: "2026-12-28",
+    date: "2025-12-28",
     tags: ["싱크대 수리", "상부장 처짐"],
   },
   {
