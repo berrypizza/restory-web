@@ -210,7 +210,7 @@ export default function DrawerMenu() {
                       highlight: false,
                     },
                     {
-                      label: "🍯 꿀팁 계시판",
+                      label: "🍯 꿀팁 게시판",
                       href: "/tips",
                       external: false,
                       highlight: false,
