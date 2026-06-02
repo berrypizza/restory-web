@@ -207,6 +207,7 @@ function CasesPageContent() {
                     <span style={{ color: "#d1d5db" }}>·</span>
                     <span className="text-[11px]" style={{ color: "#94a3b8" }}>
                       {new Date(item.date).toLocaleDateString("ko-KR", {
+                        year: "numeric",
                         month: "short",
                         day: "numeric",
                       })}
