@@ -48,12 +48,15 @@ function CasesPageContent() {
   const subCategories =
     parentCat !== "전체" ? SUB_CATEGORIES[parentCat] : undefined;
 
-  const filtered = cases.filter((c) => {
-    if (parentCat === "전체") return true;
-    if (c.parentCategory !== parentCat) return false;
-    if (subCat !== "전체" && subCategories) return c.category === subCat;
-    return true;
-  });
+  // 날짜순으로 해주는 필터 (최신순이 제일 앞에 오도록)
+  const filtered = cases
+    .filter((c) => {
+      if (parentCat === "전체") return true;
+      if (c.parentCategory !== parentCat) return false;
+      if (subCat !== "전체" && subCategories) return c.category === subCat;
+      return true;
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
