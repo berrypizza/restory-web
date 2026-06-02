@@ -657,6 +657,10 @@ export default function SinkdoorReformLanding() {
             {(() => {
               const CASE_ITEMS = cases
                 .filter((c) => c.category === "싱크대 리폼")
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime(),
+                )
                 .slice(0, 8);
 
               function CaseSlider() {

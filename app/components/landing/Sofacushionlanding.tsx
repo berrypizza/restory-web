@@ -617,6 +617,10 @@ export default function SofaCushionLanding() {
             {(() => {
               const CASE_ITEMS = cases
                 .filter((c) => c.category === "소파 복원")
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime(),
+                )
                 .slice(0, 8);
 
               function CaseSlider() {

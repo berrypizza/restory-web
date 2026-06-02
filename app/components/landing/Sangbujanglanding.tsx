@@ -538,6 +538,10 @@ export default function SangbujangLanding() {
             {(() => {
               const CASE_ITEMS = cases
                 .filter((c) => c.category === "상부장 처짐")
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime(),
+                )
                 .slice(0, 8);
               function CaseSlider() {
                 const [idx, setIdx] = React.useState(0);

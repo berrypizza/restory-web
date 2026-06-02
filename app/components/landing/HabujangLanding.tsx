@@ -522,6 +522,10 @@ export default function HabujangLanding() {
             {(() => {
               const CASE_ITEMS = cases
                 .filter((c) => c.category === "하부장 밑판 교체")
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime(),
+                )
                 .slice(0, 8);
 
               function CaseSlider() {

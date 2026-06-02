@@ -686,8 +686,11 @@ export default function RestaurantChairLanding() {
             {(() => {
               const CASE_ITEMS = cases
                 .filter((c) => c.category === "가죽 리폼")
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime(),
+                )
                 .slice(0, 8);
-
               function CaseSlider() {
                 const [idx, setIdx] = React.useState(0);
                 const pausedRef = React.useRef(false);
