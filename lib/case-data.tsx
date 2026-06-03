@@ -55,6 +55,19 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 export const cases: CaseItem[] = [
   // ─── 신규 추가 ───────────────────────────────────────────
   {
+    id: "case-039",
+    category: "가죽 리폼",
+    parentCategory: "가죽 리폼",
+    title: "당구장 팔걸이 가죽 리폼 사례",
+    region: "서울 강서구 화곡동",
+    summary: "가죽 리폼 사례",
+    beforeImg: "/images/cases/case-039-before.jpg",
+    afterImg: "/images/cases/case-039-after.jpg",
+    blogUrl: "https://blog.naver.com/sofaresq/224304866033",
+    date: "2026-06-03",
+    tags: ["가죽 리폼", "의자 천갈이"],
+  },
+  {
     id: "case-038",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
