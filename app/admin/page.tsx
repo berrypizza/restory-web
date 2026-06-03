@@ -647,9 +647,7 @@ function JobCard({
             ? "1px solid #a855f755"
             : "1px solid #e5e7eb",
           boxShadow: "0 2px 12px rgba(15,23,42,0.05)",
-          borderLeft: job.is_measurement
-            ? "7px solid #a855f7"
-            : `7px solid ${techColor}`,
+          borderLeft: `7px solid ${techColor}`,
         }}>
         {/* 실측 배너 */}
         {job.is_measurement && (
