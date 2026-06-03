@@ -59,7 +59,7 @@ export const cases: CaseItem[] = [
     category: "가죽 리폼",
     parentCategory: "가죽 리폼",
     title: "당구장 팔걸이 가죽 리폼 사례",
-    region: "서울 강서구 화곡동",
+    region: "인천",
     summary: "가죽 리폼 사례",
     beforeImg: "/images/cases/case-039-before.jpg",
     afterImg: "/images/cases/case-039-after.jpg",
