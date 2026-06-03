@@ -643,10 +643,40 @@ function JobCard({
         className="rounded-2xl overflow-hidden"
         style={{
           backgroundColor: "#ffffff",
-          border: "1px solid #e5e7eb",
+          border: job.is_measurement
+            ? "1px solid #a855f755"
+            : "1px solid #e5e7eb",
           boxShadow: "0 2px 12px rgba(15,23,42,0.05)",
-          borderLeft: `7px solid ${techColor}`,
+          borderLeft: job.is_measurement
+            ? "7px solid #a855f7"
+            : `7px solid ${techColor}`,
         }}>
+        {/* 실측 배너 */}
+        {job.is_measurement && (
+          <div
+            className="flex items-center gap-2 px-4 py-2.5"
+            style={{
+              background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
+            }}>
+            <span className="text-base">📐</span>
+            <span className="text-sm font-black text-white tracking-wide">
+              실측 방문
+            </span>
+            <span
+              className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.2)",
+                color: "white",
+              }}>
+              {job.install_completed
+                ? "시공 완료"
+                : job.install_date
+                  ? `시공 ${formatDate(job.install_date)}`
+                  : "시공일 미정"}
+            </span>
+          </div>
+        )}
+
         <div
           className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap"
           style={{ borderBottom: "1px solid #f8fafc" }}>
