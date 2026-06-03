@@ -109,9 +109,12 @@ function formatTime(t: string) {
   return min > 0 ? `${ampm} ${h12}시 ${min}분` : `${ampm} ${h12}시`;
 }
 function formatPrice(p: number) {
-  return p >= 10000
-    ? `${Math.round(p / 10000)}만원`
-    : `${p.toLocaleString()}원`;
+  if (p >= 10000) {
+    const man = Math.floor(p / 10000);
+    const cheon = Math.floor((p % 10000) / 1000);
+    return cheon > 0 ? `${man}만 ${cheon}천원` : `${man}만원`;
+  }
+  return `${p.toLocaleString()}원`;
 }
 function reviewSms(job: Job) {
   return encodeURIComponent(
