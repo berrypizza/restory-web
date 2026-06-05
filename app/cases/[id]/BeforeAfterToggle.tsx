@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { CaseItem } from "@/lib/case-data";
 
 export default function BeforeAfterToggle({ item }: { item: CaseItem }) {
   const [view, setView] = useState<"before" | "after">("before");
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = item.afterImg;
+  }, [item.afterImg]);
+
+  const currentImg = view === "before" ? item.beforeImg : item.afterImg;
 
   return (
     <>
@@ -40,10 +47,13 @@ export default function BeforeAfterToggle({ item }: { item: CaseItem }) {
         className="relative overflow-hidden rounded-2xl mb-6"
         style={{ backgroundColor: "#f3f4f6", aspectRatio: "4/3" }}>
         <Image
-          src={view === "before" ? item.beforeImg : item.afterImg}
+          key={currentImg}
+          src={currentImg}
           alt={`${item.title} ${view === "before" ? "수리 전" : "수리 후"}`}
           fill
+          sizes="(max-width: 768px) 100vw, 672px"
           className="object-cover transition-opacity duration-300"
+          priority={view === "before"}
         />
 
         <div
