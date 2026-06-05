@@ -116,6 +116,24 @@ export default async function CaseDetailPage({
 
         <BeforeAfterToggle item={item} />
 
+        {/* 작업내용 */}
+
+        {item.content && (
+          <section className="mb-8">
+            <h3
+              className="text-xl font-black mb-4"
+              style={{ color: "#111827" }}>
+              작업 내용
+            </h3>
+
+            <p
+              className="leading-8 whitespace-pre-line"
+              style={{ color: "#475569" }}>
+              {item.content}
+            </p>
+          </section>
+        )}
+
         <div className="flex flex-wrap gap-2 mb-8">
           {item.tags.map((tag) => (
             <span

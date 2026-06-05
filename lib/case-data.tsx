@@ -21,6 +21,7 @@ export interface CaseItem {
   title: string;
   region: string;
   summary: string;
+  content?: string; // 상세 페이지에서 보여줄 추가 설명이나 작업 과정 등
   beforeImg: string;
   afterImg: string;
   blogUrl: string;
@@ -62,6 +63,22 @@ export const cases: CaseItem[] = [
     region: "청라",
     summary:
       "오랜된 문짝 교체 리폼 사례, pet 마감으로 제로조인트로 깔끔하게 리폼. 상부장과 하부장 모두 교체로 새 주방 느낌 완성!",
+    content: `
+이번 현장은 인천 청라 아파트 싱크대 문짝 교체 리폼 사례입니다.
+
+기존 문짝은 필름 들뜸과 변색이 심했고,
+상부장과 하부장 전체적으로 노후화가 진행된 상태였습니다.
+
+고객님께서는 전체 싱크대 교체 대신
+문짝만 교체하는 방법을 선택하셨습니다.
+
+PET 제로조인트 도어를 사용해
+깔끔한 마감과 내구성을 확보했고,
+기존 몸통은 그대로 사용하여 비용 부담을 줄였습니다.
+
+시공 후에는 새 주방처럼 깔끔한 분위기로 바뀌었으며,
+전체 교체 대비 비용을 크게 절감할 수 있었습니다.
+`,
     beforeImg: "/images/cases/case-043-before.jpg",
     afterImg: "/images/cases/case-043-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224306662990",
@@ -85,6 +102,15 @@ export const cases: CaseItem[] = [
     region: "검단",
     summary:
       "인천 검단 아파트 주방에서 상부장이 앞으로 기울어지는 증상이 발생했습니다. 기존 시공목과 고정부를 점검한 뒤 합판 시공목으로 보강하여 상부장 처짐 문제를 안전하게 수리한 사례입니다.",
+    content: `
+이번 현장은 인천 검단 아파트 싱크대 상부장 수리 사례입니다.
+
+고객님께서는 상부장이 앞으로 기울어지는 것 같고 문짝 간격도 맞지 않는다고 문의를 주셨습니다. 점검 결과 기존 시공목과 고정부 일부가 약해지면서 상부장이 조금씩 처진 상태였습니다.
+
+상부장을 분리하지 않고 내부 구조를 점검한 뒤 합판 시공목으로 보강 작업을 진행했습니다. 고정부도 함께 재정비하여 흔들림 없이 사용할 수 있도록 수리했습니다.
+
+수리 후에는 문짝 정렬도 정상적으로 맞춰졌고 상부장 추락에 대한 불안감도 해소할 수 있었습니다.
+`,
     beforeImg: "/images/cases/case-042-before.jpg",
     afterImg: "/images/cases/case-042-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224206983682",
@@ -108,6 +134,15 @@ export const cases: CaseItem[] = [
     region: "부평",
     summary:
       "부평 주방에서 상부장이 파손되고 문짝 정렬이 틀어진 상태였습니다. 손상 부위를 보강하고 필요한 부분은 교체하여 안전하게 사용할 수 있도록 복원한 사례입니다.",
+    content: `
+부평 지역에서 진행한 상부장 파손 수리 사례입니다.
+
+상부장 한쪽이 손상되면서 문짝 정렬이 틀어지고 사용이 어려운 상태였습니다. 고객님께서는 전체 교체보다 수리가 가능한지 먼저 문의를 주셨습니다.
+
+현장 점검 후 파손 부위를 보강하고 사용이 어려운 부분은 새 자재로 교체하여 복원 작업을 진행했습니다.
+
+수리 후에는 문짝 개폐가 정상적으로 가능해졌고 전체 교체 없이 비용 부담을 줄일 수 있었습니다.
+`,
     beforeImg: "/images/cases/case-041-before.jpg",
     afterImg: "/images/cases/case-041-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224184145515",
@@ -131,6 +166,15 @@ export const cases: CaseItem[] = [
     region: "부천",
     summary:
       "부천 아파트 싱크대 상부장이 내려앉아 문짝이 제대로 닫히지 않는 상태였습니다. 내부 구조를 점검한 뒤 상부장을 보강하여 처짐 문제를 해결한 수리 사례입니다.",
+    content: `
+부천 아파트에서 진행한 상부장 처짐 수리 사례입니다.
+
+상부장이 내려앉으면서 문짝이 닫히지 않고 틈이 벌어지는 증상이 발생했습니다. 장기간 사용하면서 고정부가 약해진 것이 원인이었습니다.
+
+기존 구조를 확인한 뒤 상부장 내부 시공목을 보강하고 고정 상태를 재정비했습니다.
+
+수리 완료 후에는 상부장이 원래 위치로 복원되었고 문짝도 정상적으로 열고 닫을 수 있게 되었습니다.
+`,
     beforeImg: "/images/cases/case-040-before.jpg",
     afterImg: "/images/cases/case-040-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224215191203",
@@ -154,6 +198,15 @@ export const cases: CaseItem[] = [
     region: "인천",
     summary:
       "인천 당구장 팔걸이 가죽이 벗겨지고 헤진 상태였습니다. 내구성이 좋은 가죽으로 교체하여 깔끔한 외관과 사용감을 되살린 가죽 리폼 사례입니다.",
+    content: `
+인천 당구장에서 진행한 팔걸이 가죽 리폼 사례입니다.
+
+사용 빈도가 높은 공간이다 보니 팔걸이 부분의 가죽이 벗겨지고 표면이 갈라진 상태였습니다. 오래 사용한 흔적이 눈에 띄어 매장 이미지에도 영향을 주고 있었습니다.
+
+기존 가죽을 제거한 뒤 내구성이 좋은 소재로 새롭게 교체 작업을 진행했습니다.
+
+리폼 후에는 깔끔한 외관을 되찾았고 손님들이 직접 사용하는 공간인 만큼 만족도도 높았습니다.
+`,
     beforeImg: "/images/cases/case-039-before.jpg",
     afterImg: "/images/cases/case-039-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224304866033",
@@ -177,6 +230,15 @@ export const cases: CaseItem[] = [
     region: "서울 강서구 화곡동",
     summary:
       "서울 강서구 화곡동 주방에서 상부장이 앞으로 기울어지는 증상이 발생했습니다. 시공목 보강과 고정 작업을 통해 상부장 추락 위험을 예방한 수리 사례입니다.",
+    content: `
+서울 강서구 화곡동에서 진행한 상부장 수리 사례입니다.
+
+주방 상부장이 앞으로 기울어져 있어 고객님께서 추락 위험 때문에 문의를 주셨습니다. 실제 점검 결과 고정 상태가 약해져 있었습니다.
+
+내부 시공목을 보강하고 고정 부위를 다시 잡아주는 작업을 진행했습니다.
+
+수리 후에는 상부장이 안정적으로 고정되었고 흔들림 없이 사용할 수 있게 되었습니다.
+`,
     beforeImg: "/images/cases/case-038-before.jpg",
     afterImg: "/images/cases/case-038-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224166325873",
@@ -200,6 +262,15 @@ export const cases: CaseItem[] = [
     region: "사당",
     summary:
       "사당 아파트 주방 상부장이 처지면서 문짝 간격이 벌어진 상태였습니다. 구조 보강 작업을 통해 상부장을 원래 위치로 복원한 사례입니다.",
+    content: `
+사당 지역 아파트 주방에서 진행한 상부장 처짐 수리 사례입니다.
+
+상부장이 내려앉으면서 문짝 간격이 맞지 않고 보기에도 기울어져 있는 상태였습니다.
+
+기존 구조를 점검한 뒤 시공목 보강과 고정 작업을 함께 진행했습니다. 추가 손상이 발생하지 않도록 전체 균형도 함께 맞춰주었습니다.
+
+수리 후에는 문짝 정렬이 정상적으로 복원되었고 상부장 사용에도 문제가 없도록 마무리했습니다.
+`,
     beforeImg: "/images/cases/case-037-before.jpg",
     afterImg: "/images/cases/case-037-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224231352969",
@@ -224,6 +295,15 @@ export const cases: CaseItem[] = [
     region: "강서구 화곡동",
     summary:
       "강서구 화곡동 주방에서 상부장이 내려앉아 사용이 어려운 상태였습니다. 합판 시공목과 고정 보강 작업으로 안전하게 복원한 상부장 수리 사례입니다.",
+    content: `
+강서구 화곡동 아파트에서 진행한 상부장 수리 사례입니다.
+
+상부장이 점점 내려앉으면서 문짝이 비뚤어지고 사용이 불편한 상태였습니다. 장기간 사용으로 인해 내부 고정력이 약해진 것이 원인이었습니다.
+
+합판 시공목을 사용해 구조를 보강하고 상부장을 다시 안정적으로 고정했습니다.
+
+작업 후에는 문짝 정렬과 수평 상태가 회복되었으며 안전하게 사용할 수 있도록 수리를 완료했습니다.
+`,
     beforeImg: "/images/cases/case-036-before.jpg",
     afterImg: "/images/cases/case-036-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224274486122",
@@ -247,6 +327,15 @@ export const cases: CaseItem[] = [
     region: "광명",
     summary:
       "광명 아파트 싱크대 상부장이 기울어지고 흔들리는 증상이 발생했습니다. 내부 고정부를 보강하여 상부장 처짐 문제를 해결한 현장 사례입니다.",
+    content: `
+광명 아파트 주방에서 진행한 상부장 처짐 수리 사례입니다.
+
+상부장이 벽에서 살짝 벌어지고 흔들리는 증상이 발생해 고객님께서 불안감을 느끼고 계셨습니다.
+
+고정부 상태를 확인한 뒤 내부 보강 작업을 진행했고 약해진 부분은 새 자재로 보완했습니다.
+
+수리 후에는 상부장이 안정적으로 고정되었고 추가 처짐 없이 사용할 수 있는 상태로 복원되었습니다.
+`,
     beforeImg: "/images/cases/case-035-before.jpg",
     afterImg: "/images/cases/case-035-after.jpg",
     blogUrl: "https://blog.naver.com/restory99/224301324764",
@@ -270,6 +359,15 @@ export const cases: CaseItem[] = [
     region: "주안",
     summary:
       "주안 주방 하부장 밑판이 물을 먹어 휘어지고 부식된 상태였습니다. 손상된 밑판을 교체하여 수납 공간을 다시 사용할 수 있도록 복원한 사례입니다.",
+    content: `
+주안 지역 주방에서 진행한 하부장 밑판 교체 사례입니다.
+
+싱크대 누수로 인해 하부장 밑판이 물을 먹고 휘어지면서 수납 공간 사용이 어려운 상태였습니다.
+
+손상된 밑판을 철거한 뒤 새 자재로 교체 작업을 진행했습니다. 내부 청소와 마감도 함께 진행하여 위생적인 상태로 복원했습니다.
+
+교체 후에는 수납 공간을 다시 사용할 수 있게 되었고 보기에도 훨씬 깔끔해졌습니다.
+`,
     beforeImg: "/images/cases/case-034-before.jpeg",
     afterImg: "/images/cases/case-034-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223714065910",
@@ -293,6 +391,15 @@ export const cases: CaseItem[] = [
     region: "부평",
     summary:
       "부평 주방 하부장 내부에 누수 흔적으로 밑판이 썩어 있었습니다. 부식된 밑판을 새 자재로 교체하여 내구성을 높인 수리 사례입니다.",
+    content: `
+부평 아파트 주방 하부장 밑판 교체 사례입니다.
+
+오랜 기간 누수 흔적이 있었던 현장으로 하부장 내부가 부식되고 밑판이 약해진 상태였습니다.
+
+기존 손상 부위를 제거한 뒤 새 밑판으로 교체하고 내부 구조를 정리했습니다.
+
+작업 후에는 하부장 사용이 가능해졌고 추가 손상을 예방할 수 있도록 마감까지 진행했습니다.
+`,
     beforeImg: "/images/cases/case-033-before.jpeg",
     afterImg: "/images/cases/case-033-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223508450821",
@@ -316,6 +423,15 @@ export const cases: CaseItem[] = [
     region: "일산",
     summary:
       "일산 주방 하부장 밑판이 장기간 습기에 노출되어 부풀어 오른 상태였습니다. 손상 부위를 제거하고 새 밑판으로 교체한 사례입니다.",
+    content: `
+일산 아파트 주방에서 진행한 하부장 밑판 교체 사례입니다.
+
+장기간 습기에 노출되면서 하부장 밑판이 부풀어 오르고 변형된 상태였습니다.
+
+손상된 부분을 제거하고 새 밑판으로 교체했으며 내부 상태도 함께 점검했습니다.
+
+교체 후에는 하부장이 안정적으로 복원되었고 수납 공간도 정상적으로 사용할 수 있게 되었습니다.
+`,
     beforeImg: "/images/cases/case-032-before.jpg",
     afterImg: "/images/cases/case-032-after.jpg",
     blogUrl: "https://blog.naver.com/restory99/224299421979",
@@ -340,6 +456,15 @@ export const cases: CaseItem[] = [
     region: "마포구",
     summary:
       "서울 마포구 아파트 주방에서 상부장이 앞으로 기울어지는 증상이 발생했습니다. 기존 고정부를 점검하고 시공목을 보강하여 상부장 처짐 문제를 안전하게 해결한 사례입니다.",
+    content: `
+서울 마포구 아파트에서 진행한 상부장 처짐 수리 사례입니다.
+
+상부장이 앞으로 기울어지면서 고객님께서 추락 위험 때문에 문의를 주셨습니다. 점검 결과 기존 시공목과 고정부 일부가 약해져 있는 상태였습니다.
+
+상부장 내부를 보강하고 고정부를 다시 잡아주는 작업을 진행했습니다.
+
+수리 후에는 상부장이 안정적으로 고정되었고 문짝 정렬도 정상적으로 복원되었습니다.
+`,
     beforeImg: "/images/cases/case-030-before.jpg",
     afterImg: "/images/cases/case-030-after.jpg",
     blogUrl: "https://blog.naver.com/restory99/224297244006",
