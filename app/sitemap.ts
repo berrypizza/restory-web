@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { cases } from "@/lib/case-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://restorystudio.co.kr";
@@ -25,7 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/sofa", priority: 0.9, changeFrequency: "weekly" as const },
     { path: "/cases", priority: 0.8, changeFrequency: "weekly" as const },
     { path: "/events", priority: 0.7, changeFrequency: "weekly" as const },
-    // 서브 랜딩들
     {
       path: "/repair/habujang",
       priority: 0.7,
@@ -103,10 +103,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  return staticPages.map((page) => ({
+  const staticEntries = staticPages.map((page) => ({
     url: `${base}${page.path}`,
     lastModified: now,
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));
+
+  // 케이스 개별 페이지 동적 추가
+  const caseEntries = cases.map((c) => ({
+    url: `${base}/cases/${c.id}`,
+    lastModified: c.date ? new Date(c.date).toISOString() : now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticEntries, ...caseEntries];
 }
