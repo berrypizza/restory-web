@@ -55,6 +55,19 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 export const cases: CaseItem[] = [
   // ─── 신규 추가 ───────────────────────────────────────────
   {
+    id: "case-043",
+    category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
+    title: "인천 청라 싱크대 도어 상하부장 문짝 교체 리폼 사례",
+    region: "청라",
+    summary: "상부장 수리 사례",
+    beforeImg: "/images/cases/case-043-before.jpg",
+    afterImg: "/images/cases/case-043-after.jpg",
+    blogUrl: "https://blog.naver.com/sofaresq/224306662990",
+    date: "2026-06-05",
+    tags: ["싱크대 문짝 교체", "싱크대 리폼", "주방 리폼"],
+  },
+  {
     id: "case-042",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
