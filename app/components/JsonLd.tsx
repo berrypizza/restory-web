@@ -23,7 +23,7 @@ export function LocalBusinessJsonLd() {
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: "4.9",
-      reviewCount: "500",
+      reviewCount: "519",
       bestRating: "5",
     },
     priceRange: "₩₩",
@@ -116,7 +116,7 @@ export function ServiceJsonLd({
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: "4.9",
-      reviewCount: "500",
+      reviewCount: "519",
       bestRating: "5",
     },
   };
