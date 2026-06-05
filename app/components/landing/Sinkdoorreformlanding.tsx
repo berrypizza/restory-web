@@ -280,8 +280,8 @@ export default function SinkdoorReformLanding() {
           <FadeIn delay={200}>
             <div className="grid grid-cols-2 gap-3 md:gap-5">
               {[
-                { img: "/images/door/before-after-1.jpg", label: "시공 전" },
-                { img: "/images/door/before-after-2.jpg", label: "시공 후" },
+                { img: "/images/door/before-after-3.jpg", label: "시공 전" },
+                { img: "/images/door/before-after-4.jpg", label: "시공 후" },
               ].map((item, i) => (
                 <div
                   key={i}
