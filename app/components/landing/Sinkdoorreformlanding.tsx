@@ -281,7 +281,7 @@ export default function SinkdoorReformLanding() {
             <div className="grid grid-cols-2 gap-3 md:gap-5">
               {[
                 { img: "/images/door/before-after-3.jpg", label: "시공 전" },
-                { img: "/images/door/before-after-4.jpg", label: "시공 후" },
+                { img: "/images/door/before-after-5.jpg", label: "시공 후" },
               ].map((item, i) => (
                 <div
                   key={i}
