@@ -94,17 +94,41 @@ export default async function CaseDetailPage({
           className="flex items-center justify-between rounded-2xl px-5 py-4 transition hover:shadow-md"
           style={{
             backgroundColor: "#f8fbff",
+            border: "1px solid #b7d1ff",
+            textDecoration: "none",
+          }}>
+          <div>
+            <p
+              className="text-medium font-black mb-0.5"
+              style={{ color: "#1f66ff" }}>
+              블로그에서 자세히 보기
+            </p>
+            <p className="text-xs" style={{ color: "#748aa8" }}>
+              작업 과정과 상세 후기를 확인하세요
+            </p>
+          </div>
+          <span className="text-lg" style={{ color: "#1f66ff" }}>
+            ›
+          </span>
+        </a>
+        <a
+          href="https://cafe.naver.com/f-e/cafes/22748193/menus/85?viewType=L"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between rounded-2xl mt-2 px-5 py-4 transition hover:shadow-md"
+          style={{
+            backgroundColor: "#1f66ff",
             border: "1px solid #dbe8ff",
             textDecoration: "none",
           }}>
           <div>
             <p
-              className="text-sm font-black mb-0.5"
-              style={{ color: "#1f66ff" }}>
-              블로그에서 자세히 보기
+              className="text-medium font-black mb-0.5"
+              style={{ color: "#ffffff" }}>
+              궁금한 점 문의하기
             </p>
-            <p className="text-xs" style={{ color: "#94a3b8" }}>
-              작업 과정과 상세 후기를 확인하세요
+            <p className="text-xs" style={{ color: "#ffffffde" }}>
+              사소한 질문이라도 언제든지 환영입니다!
             </p>
           </div>
           <span className="text-lg" style={{ color: "#1f66ff" }}>

@@ -215,6 +215,12 @@ export default function DrawerMenu() {
                       external: false,
                       highlight: false,
                     },
+                    {
+                      label: "🤔 고객 문의함",
+                      href: "https://cafe.naver.com/f-e/cafes/22748193/menus/85?viewType=L",
+                      external: false,
+                      highlight: false,
+                    },
                     // {
                     //   label: "❓ 자주 묻는 질문",
                     //   href: "/faq",
