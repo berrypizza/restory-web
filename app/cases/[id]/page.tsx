@@ -2,11 +2,53 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cases } from "@/lib/case-data";
 import BeforeAfterToggle from "./BeforeAfterToggle";
+import type { Metadata } from "next";
 
 export function generateStaticParams() {
   return cases.map((item) => ({
     id: item.id,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const item = cases.find((c) => c.id === id);
+
+  if (!item) {
+    return {};
+  }
+
+  return {
+    title: item.title,
+    description: item.summary,
+    alternates: {
+      canonical: `https://restorystudio.co.kr/cases/${item.id}`,
+    },
+    openGraph: {
+      title: item.title,
+      description: item.summary,
+      url: `https://restorystudio.co.kr/cases/${item.id}`,
+      type: "article",
+      images: [
+        {
+          url: `https://restorystudio.co.kr${item.afterImg}`,
+          width: 1200,
+          height: 900,
+          alt: `${item.title} 시공 후`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: item.title,
+      description: item.summary,
+      images: [`https://restorystudio.co.kr${item.afterImg}`],
+    },
+  };
 }
 
 export default async function CaseDetailPage({
