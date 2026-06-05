@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // 네이버·구글 서치콘솔 등록 후 여기에 값 넣기
-    // google: "구글_서치콘솔_인증코드",
-    // other: { "naver-site-verification": "네이버_인증코드" },
+    other: {
+      "naver-site-verification": "3288ff0c6f87e7e15824dbedaaca27b257b15010",
+    },
   },
   alternates: {
     canonical: "https://restorystudio.co.kr",
