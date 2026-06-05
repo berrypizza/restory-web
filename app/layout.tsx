@@ -3,6 +3,7 @@ import "./globals.css";
 import LayoutBody from "@/app/components/LayoutBody";
 import Footer from "./components/Footer";
 import { LocalBusinessJsonLd } from "@/app/components/JsonLd";
+import { Analytics } from "@vercel/analytics/next";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -85,6 +86,7 @@ export default function RootLayout({
           fontFamily:
             "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
         }}>
+        <Analytics />
         <LocalBusinessJsonLd />
         <LayoutBody>{children}</LayoutBody>
         <Footer />
