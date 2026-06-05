@@ -74,7 +74,7 @@ export const cases: CaseItem[] = [
     parentCategory: "싱크대 수리",
     title: "인천 검단 상부장 수리 사례",
     region: "검단",
-    summary: "상부장 수리 사례",
+    summary: "인천 검단 상부장 수리 사례",
     beforeImg: "/images/cases/case-042-before.jpg",
     afterImg: "/images/cases/case-042-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224206983682",
