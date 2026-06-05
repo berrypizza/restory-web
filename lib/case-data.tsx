@@ -60,7 +60,8 @@ export const cases: CaseItem[] = [
     parentCategory: "싱크대 리폼",
     title: "인천 청라 싱크대 도어 상하부장 문짝 교체 리폼 사례",
     region: "청라",
-    summary: "상부장 수리 사례",
+    summary:
+      "오랜된 문짝 교체 리폼 사례, pet 마감으로 제로조인트로 깔끔하게 리폼. 상부장과 하부장 모두 교체로 새 주방 느낌 완성!",
     beforeImg: "/images/cases/case-043-before.jpg",
     afterImg: "/images/cases/case-043-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224306662990",
