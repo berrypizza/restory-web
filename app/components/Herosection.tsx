@@ -30,8 +30,8 @@ export default function HeroSection() {
                 href="https://blog.naver.com/sofaresq/224129090889"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-2xl bg-white px-7 py-4 text-center text-sm font-black text-[#1f66ff] shadow-lg transition hover:shadow-xl">
-                📷 사진 보내고 확인
+                className="rounded-2xl bg-white px-7 py-4 text-center text-sm font-black text-[#1f2631] shadow-lg transition hover:shadow-xl">
+                📷 사진 보내고 견적 받기
               </a>
               <a
                 href="tel:010-6855-0957"

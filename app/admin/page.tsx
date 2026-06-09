@@ -1640,7 +1640,7 @@ export default function AdminDashboard() {
           }}>
           <div className="text-center relative pt-[140px]">
             <Image
-              src="/images/logo-circle.png"
+              src="/images/logo-cc.png"
               alt="Re'Story"
               width={116}
               height={116}
@@ -1932,7 +1932,7 @@ export default function AdminDashboard() {
               className="w-full flex text-2xl font-bold mb-[16px] items-center border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff]"
               style={{ color: "#111827" }}>
               <Image
-                src="/images/logo-circle-sm.png"
+                src="/images/logo-cc.png"
                 alt="Re'Story"
                 width={70}
                 height={70}

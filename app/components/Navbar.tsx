@@ -39,19 +39,16 @@ export default function Navbar() {
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/logo.png"
+                src="/images/logo-v3.png"
                 alt="Re'Story"
-                width={76}
-                height={76}
-                className="h-19 w-auto object-contain"
+                width={120}
+                height={120}
+                className=" w-auto object-contain"
                 priority
               />
-              <h1 className="pl-[6px] text-[17px] font-black text-[#1f66ff]">
-                리스토리
-              </h1>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-7 text-sm font-extrabold text-neutral-900">
+            <nav className="hidden md:flex items-center gap-7 text-sm font-extrabold text[#1f2631]">
               {quickLinks.map((item) => (
                 <Link
                   key={item.label}
@@ -65,9 +62,9 @@ export default function Navbar() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/tips"
-              className="md:hidden transition text-[#7a5200] border border-[#f5c542] rounded-xl px-3 py-1.5 bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
-              꿀팁
+              href="/cases"
+              className="md:hidden transition text-[#1f2631] border border-[#f5c542] rounded-xl px-3 py-1.5 bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
+              작업 사례
             </Link>
 
             <div className="md:hidden">
