@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     url: "https://restorystudio.co.kr",
     images: [
       {
-        url: "/images/og-image.png",
+        url: "/images/og-image-2.png",
         width: 1200,
         height: 630,
         alt: "리스토리 - 가구 출장 수리 전문",
