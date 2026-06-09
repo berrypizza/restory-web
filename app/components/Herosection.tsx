@@ -42,7 +42,7 @@ export default function HeroSection() {
           </div>
           <div className="flex items-end justify-center self-end">
             <Image
-              src="/images/team-v2.webp"
+              src="/images/team-work-v2.png"
               alt="리스토리 팀"
               width={633}
               height={448}
@@ -86,7 +86,7 @@ export default function HeroSection() {
             {/* 팀 이미지 오른쪽 */}
             <div className="flex-shrink-0 self-end pr-1">
               <Image
-                src="/images/team.png"
+                src="/images/team-work-v2.png"
                 alt="리스토리 팀"
                 width={180}
                 height={160}
