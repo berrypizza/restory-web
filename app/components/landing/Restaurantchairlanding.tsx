@@ -298,10 +298,10 @@ export default function RestaurantChairLanding() {
             <div
               className="rounded-2xl px-5 py-4 text-center"
               style={{ background: "#1a5cff" }}>
-              <p className="text-[15px] font-black text-white">
+              <p className="text-[18px] font-black text-white">
                 같은 의자입니다
               </p>
-              <p className="text-[12px] text-white/60 mt-0.5">
+              <p className="text-[14px] text-white/60 mt-0.5">
                 가죽만 교체했습니다
               </p>
             </div>
