@@ -320,7 +320,7 @@ export default function LeatherSampleSection() {
                 draggable={false}
               />
             </div>
-            <p className="text-center text-[11px] text-neutral-600 py-3 select-none">
+            <p className="text-center text-[14px] font-bold text-neutral-200 py-3 select-none">
               ← 밀어서 다른 샘플 보기 →
             </p>
           </div>
