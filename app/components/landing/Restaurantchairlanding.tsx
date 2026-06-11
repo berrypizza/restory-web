@@ -21,7 +21,6 @@ function CaseStrip() {
   const [activeIdx, setActiveIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 스크롤 위치로 현재 카드 인덱스 계산
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
@@ -40,7 +39,6 @@ function CaseStrip() {
 
   return (
     <div className="mt-8">
-      {/* 헤더 */}
       <div className="flex items-center justify-between mb-4 px-5">
         <p className="text-[13px] font-bold text-neutral-900">실제 시공 사례</p>
         <Link
@@ -50,8 +48,6 @@ function CaseStrip() {
           전체 보기 →
         </Link>
       </div>
-
-      {/* 네이티브 스크롤 + scroll-snap */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
@@ -105,8 +101,6 @@ function CaseStrip() {
           </div>
         ))}
       </div>
-
-      {/* 도트 */}
       <div className="flex justify-center gap-1.5 mt-4">
         {CASE_ITEMS.map((_, i) => (
           <button
@@ -237,124 +231,164 @@ export default function RestaurantChairLanding() {
 
       {/* ══════════════════════════════════
           1. HERO
-          목표: 얼마야? + 지금 연락하기
+          모바일: 풀스크린 다크 / 콘텐츠 하단
+          데스크탑: 2열 — 왼쪽 텍스트 + 오른쪽 이미지
       ══════════════════════════════════ */}
       <section
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
-        <Image
-          src="/images/chair/hero-chair.webp"
-          alt="리스토리 의자 가죽 교체"
-          fill
-          className="object-cover"
-          style={{ opacity: 0.35 }}
-          priority
-          sizes="100vw"
-        />
-        {/* 하단 그라데이션 */}
+        {/* 모바일 전용 배경 이미지 */}
+        <div className="absolute inset-0 md:hidden">
+          <Image
+            src="/images/chair/hero-chair.webp"
+            alt=""
+            fill
+            className="object-cover"
+            style={{ opacity: 0.35 }}
+            priority
+            sizes="100vw"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 30%, #0a1628 100%)",
+            }}
+          />
+        </div>
+
+        {/* 레이아웃 컨테이너 */}
         <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent 30%, #0a1628 100%)",
-          }}
-        />
-
-        <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-lg flex-col justify-end px-6 pb-10 pt-20">
-          <FadeIn>
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
-              style={{
-                background: "rgba(255,255,255,0.1)",
-                border: "1px solid rgba(255,255,255,0.15)",
-              }}>
-              <Image
-                src="/images/logo.png"
-                alt="리스토리"
-                width={20}
-                height={20}
-                className="rounded-full"
-              />
-              <span className="text-[12px] font-bold text-white/70">
-                리스토리 가죽 교체
-              </span>
-            </div>
-
-            <h1
-              className="font-black text-white leading-[1.15] mb-3"
-              style={{ fontSize: "clamp(2.2rem, 8vw, 3.6rem)" }}>
-              의자 새로
-              <br />
-              사지 마세요
-            </h1>
-            <p
-              className="font-medium text-white/60 mb-2"
-              style={{ fontSize: "clamp(1rem, 3.5vw, 1.3rem)" }}>
-              가죽만 바꾸면 새것처럼
-            </p>
-
-            {/* 앵커 가격 — 고객이 제일 먼저 찾는 정보 */}
-            <div
-              className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
-              style={{
-                background: "rgba(26,92,255,0.25)",
-                border: "1px solid rgba(26,92,255,0.4)",
-              }}>
-              <span className="text-[22px] font-black text-white">
-                개당 3만원~
-              </span>
-              <span className="text-[13px] font-medium text-white/50">
-                새 의자의 1/3 수준
-              </span>
-            </div>
-
-            {/* CTA */}
-            <div className="flex flex-col gap-3">
-              <a
-                href={KAKAO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2.5 rounded-2xl py-4.5 text-[16px] font-black"
-                style={{
-                  background: "#FEE500",
-                  color: "#1a1a1a",
-                  padding: "18px 24px",
-                }}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="currentColor">
-                  <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-                </svg>
-                카카오로 사진 보내기
-              </a>
-              <a
-                href={PHONE}
-                className="flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-bold text-white"
+          className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
+          style={{ minHeight: "100svh" }}>
+          {/* ── 왼쪽 컨텐츠 (모바일: 하단 / 데스크탑: 세로 중앙) ── */}
+          <div
+            className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6
+            md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+            <FadeIn>
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
                 style={{
                   background: "rgba(255,255,255,0.1)",
                   border: "1px solid rgba(255,255,255,0.15)",
-                  padding: "14px 24px",
                 }}>
-                📞 전화 문의
-              </a>
-            </div>
+                <Image
+                  src="/images/logo.png"
+                  alt="리스토리"
+                  width={20}
+                  height={20}
+                  className="rounded-full"
+                />
+                <span className="text-[12px] font-bold text-white/70">
+                  리스토리 가죽 교체
+                </span>
+              </div>
 
-            {/* 신뢰 지표 */}
-            <div className="mt-6 flex items-center gap-5">
-              {[
-                { n: "1,000건+", l: "시공 완료" },
-                { n: "4.9★", l: "네이버 평점" },
-                { n: "당일", l: "완료 가능" },
-              ].map((s, i) => (
-                <div key={i} className="text-center">
-                  <p className="text-[15px] font-black text-white">{s.n}</p>
-                  <p className="text-[11px] text-white/40">{s.l}</p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
+              <h1
+                className="font-black text-white leading-[1.15] mb-3"
+                style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}>
+                의자 새로
+                <br />
+                사지 마세요
+              </h1>
+              <p
+                className="font-medium text-white/60 mb-4"
+                style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}>
+                가죽만 바꾸면 새것처럼
+              </p>
+
+              {/* 앵커 가격 */}
+              <div
+                className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
+                style={{
+                  background: "rgba(26,92,255,0.25)",
+                  border: "1px solid rgba(26,92,255,0.4)",
+                }}>
+                <span className="text-[22px] font-black text-white">
+                  개당 3만원~
+                </span>
+                <span className="text-[13px] font-medium text-white/50">
+                  새 의자의 1/3 수준
+                </span>
+              </div>
+
+              {/* CTA */}
+              <div className="flex flex-col gap-3 md:flex-row md:gap-3">
+                <a
+                  href={KAKAO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2.5 rounded-2xl font-black text-[16px]"
+                  style={{
+                    background: "#FEE500",
+                    color: "#1a1a1a",
+                    padding: "18px 28px",
+                  }}>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+                  </svg>
+                  카카오로 사진 보내기
+                </a>
+                <a
+                  href={PHONE}
+                  className="flex items-center justify-center gap-2 rounded-2xl font-bold text-white text-[15px]"
+                  style={{
+                    background: "rgba(255,255,255,0.1)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    padding: "14px 24px",
+                  }}>
+                  📞 전화 문의
+                </a>
+              </div>
+
+              {/* 신뢰 지표 */}
+              <div className="mt-8 flex items-center gap-6">
+                {[
+                  { n: "1,000건+", l: "시공 완료" },
+                  { n: "4.9★", l: "네이버 평점" },
+                  { n: "당일", l: "완료 가능" },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <p className="text-[15px] font-black text-white">{s.n}</p>
+                    <p className="text-[11px] text-white/40">{s.l}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+
+          {/* ── 오른쪽 이미지 (데스크탑 전용) ── */}
+          <div className="hidden md:block md:w-[46%] relative flex-shrink-0">
+            <Image
+              src="/images/chair/hero-chair.webp"
+              alt="리스토리 의자 가죽 교체"
+              fill
+              className="object-cover"
+              style={{ opacity: 0.8 }}
+              priority
+              sizes="46vw"
+            />
+            {/* 왼쪽 페이드 — 다크 배경으로 자연스럽게 */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to right, #0a1628 0%, transparent 40%)",
+              }}
+            />
+            {/* 하단 페이드 */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to top, #0a1628 0%, transparent 20%)",
+              }}
+            />
+          </div>
         </div>
       </section>
 
@@ -376,8 +410,6 @@ export default function RestaurantChairLanding() {
               말보다 사진이 빠릅니다
             </h2>
           </FadeIn>
-
-          {/* Before / After */}
           <FadeIn delay={80}>
             <div className="grid grid-cols-2 gap-2 mb-4">
               {[
@@ -463,16 +495,147 @@ export default function RestaurantChairLanding() {
               </div>
             </div>
           </FadeIn>
+
+          {/* 품질 증명 */}
+          <FadeIn delay={180}>
+            <div
+              className="mt-4 overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              <div className="p-5" style={{ background: "#fff" }}>
+                <p className="text-[11px] font-bold tracking-widest text-neutral-400 mb-3">
+                  QUALITY PROOF
+                </p>
+                <h3 className="text-[18px] font-black text-neutral-900 leading-[1.3] mb-1">
+                  저렴한데 왜 더 오래가나요?
+                </h3>
+                <p className="text-[13px] leading-[1.7] text-neutral-500 mb-5">
+                  대부분 의자의 가죽은 얇은 중국산이에요.
+                  <br />
+                  리스토리는{" "}
+                  <strong className="text-neutral-800">100% 국내산 가죽</strong>
+                  만 사용합니다.
+                </p>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[12px] font-semibold text-neutral-400">
+                        기존 의자 (중국산)
+                      </span>
+                      <span className="text-[13px] font-black text-neutral-400">
+                        0.25인치
+                      </span>
+                    </div>
+                    <div
+                      className="h-3 rounded-full overflow-hidden"
+                      style={{ background: "#f3f4f6" }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: "25%", background: "#d1d5db" }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span
+                        className="text-[12px] font-bold"
+                        style={{ color: "#1a5cff" }}>
+                        리스토리 국내산
+                      </span>
+                      <span
+                        className="text-[13px] font-black"
+                        style={{ color: "#1a5cff" }}>
+                        0.53인치
+                      </span>
+                    </div>
+                    <div
+                      className="h-3 rounded-full overflow-hidden"
+                      style={{ background: "#eef4ff" }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: "80%", background: "#1a5cff" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="mt-4 flex items-center justify-center gap-2 rounded-xl py-3"
+                  style={{ background: "#eef4ff" }}>
+                  <span
+                    className="text-[16px] font-black"
+                    style={{ color: "#1a5cff" }}>
+                    2배 두꺼움
+                  </span>
+                  <span
+                    className="text-[13px]"
+                    style={{ color: "rgba(26,92,255,0.5)" }}>
+                    → 더 오래갑니다
+                  </span>
+                </div>
+              </div>
+              <div
+                className="grid grid-cols-2 border-t"
+                style={{ borderColor: "#f3f4f6" }}>
+                <div
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: "4/3" }}>
+                  <Image
+                    src="/images/chair/leather-china.jpg"
+                    alt="중국산 가죽 두께 0.25인치 측정"
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                  <div
+                    className="absolute inset-0 flex flex-col justify-end p-3"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.65), transparent)",
+                    }}>
+                    <p className="text-[10px] font-semibold text-white/70">
+                      중국산 기존 가죽
+                    </p>
+                    <p className="text-[14px] font-black text-white">
+                      0.25인치
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: "4/3" }}>
+                  <Image
+                    src="/images/chair/leather-korea.jpg"
+                    alt="국내산 가죽 두께 0.53인치 측정"
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                  <div
+                    className="absolute inset-0 flex flex-col justify-end p-3"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
+                    }}>
+                    <p className="text-[10px] font-semibold text-white/70">
+                      리스토리 국내산
+                    </p>
+                    <p className="text-[14px] font-black text-white">
+                      0.53인치
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
       {/* ══════════════════════════════════
-          3. SAMPLES — 어떤 색 고를 수 있어?
+          3. SAMPLES
       ══════════════════════════════════ */}
       <LeatherSampleSection />
 
       {/* ══════════════════════════════════
-          4. REVIEWS — 믿어도 돼?
+          4. REVIEWS
       ══════════════════════════════════ */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
@@ -498,13 +661,11 @@ export default function RestaurantChairLanding() {
               </div>
             </div>
           </FadeIn>
-
-          {/* 모바일: 세로 / 데스크탑: 2열 나란히 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
               {
                 img: "/images/chair/review-1.jpg",
-                count: "30개",
+                count: "32개",
                 unit: "카페 의자",
                 area: "서울 강남구",
                 name: "김** 사장님",
@@ -516,7 +677,7 @@ export default function RestaurantChairLanding() {
               },
               {
                 img: "/images/chair/review-4.jpg",
-                count: "20개",
+                count: "1.5m 14개",
                 unit: "고깃집 의자",
                 area: "경기 부천시",
                 name: "박** 사장님",
@@ -531,7 +692,6 @@ export default function RestaurantChairLanding() {
                 <div
                   className="overflow-hidden rounded-2xl h-full"
                   style={{ border: "1px solid #e5e7eb" }}>
-                  {/* 이미지 */}
                   <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
                     <Image
                       src={r.img}
@@ -540,7 +700,6 @@ export default function RestaurantChairLanding() {
                       className="object-cover"
                       sizes="(min-width: 768px) 50vw, 100vw"
                     />
-                    {/* 이미지 위 숫자 오버레이 — 핵심 정보를 사진과 함께 */}
                     <div
                       className="absolute inset-0 flex flex-col justify-end p-4"
                       style={{
@@ -566,8 +725,6 @@ export default function RestaurantChairLanding() {
                       </div>
                     </div>
                   </div>
-
-                  {/* 텍스트 */}
                   <div className="p-4">
                     <p className="text-[12px] text-neutral-400 mb-2">
                       {r.name} · {r.area}
@@ -596,8 +753,6 @@ export default function RestaurantChairLanding() {
               </FadeIn>
             ))}
           </div>
-
-          {/* 시공 사례 가로 스크롤 */}
           <FadeIn delay={100}>
             <CaseStrip />
           </FadeIn>
@@ -605,8 +760,7 @@ export default function RestaurantChairLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          5. HOW — 어떻게 해?
-          3단계, 노력=0 강조
+          5. HOW
       ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -627,7 +781,6 @@ export default function RestaurantChairLanding() {
               영업 전·후·새벽도 가능합니다
             </p>
           </FadeIn>
-
           <div className="flex flex-col gap-3">
             {[
               {
@@ -691,7 +844,6 @@ export default function RestaurantChairLanding() {
               </FadeIn>
             ))}
           </div>
-
           <FadeIn delay={200}>
             <a
               href={KAKAO_URL}
@@ -717,7 +869,7 @@ export default function RestaurantChairLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          6. TRUST — 믿을 수 있어?
+          6. TRUST
       ══════════════════════════════════ */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
@@ -731,8 +883,6 @@ export default function RestaurantChairLanding() {
               걱정하시는 거<br />다 알고 있어요
             </h2>
           </FadeIn>
-
-          {/* 보증 카드 */}
           <div className="flex flex-col gap-3 mb-10">
             {[
               {
@@ -771,8 +921,6 @@ export default function RestaurantChairLanding() {
               </FadeIn>
             ))}
           </div>
-
-          {/* 인증서 */}
           <FadeIn delay={150}>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -803,7 +951,7 @@ export default function RestaurantChairLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          7. VIDEO — 직접 봐
+          7. VIDEO
       ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -910,7 +1058,6 @@ export default function RestaurantChairLanding() {
               style={{ color: "rgba(255,255,255,0.4)" }}>
               수량 + 지역만 알려주시면 바로 견적 드립니다
             </p>
-
             <div className="flex flex-col gap-3 max-w-sm mx-auto">
               <a
                 href={KAKAO_URL}
@@ -942,7 +1089,6 @@ export default function RestaurantChairLanding() {
                 📞 010-6855-0957
               </a>
             </div>
-
             <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
               {["개당 3만원~", "당일 완료", "무상 A/S", "야간 시공 가능"].map(
                 (b, i) => (
@@ -966,11 +1112,9 @@ export default function RestaurantChairLanding() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          STICKY CTA — 스크롤 500px 이후 등장
-      ══════════════════════════════════ */}
+      {/* STICKY CTA */}
       {/* <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-safe transition-all duration-300"
+        className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
         style={{
           transform: showSticky ? "translateY(0)" : "translateY(110%)",
           paddingBottom: "max(16px, env(safe-area-inset-bottom))",
@@ -1007,6 +1151,7 @@ export default function RestaurantChairLanding() {
         </div>
       </div> */}
 
+      {/* STICKY CTA 지금 쓰는거 */}
       <FloatingCTA />
     </main>
   );
