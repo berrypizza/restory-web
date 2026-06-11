@@ -1,51 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import FadeIn from "@/app/components/FadeIn";
 import Link from "next/link";
-import { cases } from "@/lib/case-data";
+import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
+import { cases } from "@/lib/case-data";
 
-/* ═══════════════════════════════════════════
-   DATA
-   ═══════════════════════════════════════════ */
-const REVIEWS = [
-  {
-    name: "정**",
-    area: "서울 마포구",
-    text: "주방 문짝이 낡아서 전체 교체할까 했는데, 문짝만 바꾸니 새 싱크대 같아요. 비용도 1/5 수준!",
-    rating: 5,
-  },
-  {
-    name: "한**",
-    area: "경기 수원시",
-    text: "색상도 원하는 걸로 골랐는데 기존 싱크대랑 완벽하게 맞아요. 대만족입니다.",
-    rating: 5,
-  },
-  {
-    name: "윤**",
-    area: "인천 남동구",
-    text: "오래된 아파트라 싱크대가 누렇게 변했는데, 문짝 교체하니 주방이 환해졌어요.",
-    rating: 5,
-  },
-  {
-    name: "송**",
-    area: "서울 강남구",
-    text: "시공 시간도 짧고, 주방 사용 못 하는 기간이 거의 없어서 좋았습니다.",
-    rating: 5,
-  },
-];
+/* ─────────────────────────────────────────
+   CONSTANTS
+───────────────────────────────────────── */
+const PHONE = "tel:010-6855-0957";
+const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
-const FAQ = [
+const FAQ_ITEMS = [
   {
     q: "문짝만 교체해도 새것처럼 되나요?",
     a: "네. 싱크대 본체(캐비닛)가 멀쩡하면 문짝만 교체해도 새 싱크대처럼 바뀝니다. 색상·재질도 원하는 대로 선택 가능합니다.",
   },
   {
     q: "전체 교체 대비 비용은 얼마나 절약되나요?",
-    a: "보통 전체 교체의 1/3~1/5 수준입니다. 현장 상태에 따라 다르며, 사진 보내주시면 정확한 비용 범위를 안내드립니다.",
+    a: "보통 전체 교체의 1/3~1/5 수준입니다. 사진 보내주시면 정확한 비용 범위를 안내드립니다.",
   },
   {
     q: "시공 시간은 얼마나 걸리나요?",
@@ -53,7 +29,7 @@ const FAQ = [
   },
   {
     q: "기존 싱크대 색상과 맞출 수 있나요?",
-    a: "다양한 색상·패턴 샘플을 보유하고 있어 기존 주방 인테리어에 맞게 선택하실 수 있습니다.",
+    a: "화이트·그레이·블랙·인디고 블루 등 다양한 색상 샘플을 보유하고 있어 기존 주방 인테리어에 맞게 선택하실 수 있습니다.",
   },
   {
     q: "A/S는 어떻게 되나요?",
@@ -61,29 +37,179 @@ const FAQ = [
   },
 ];
 
-const EXTRAS = [
-  { icon: "🔩", title: "경첩 교체", desc: "문짝 교체 시 경첩도 새것으로 교체" },
-  { icon: "💧", title: "하부장 물먹음", desc: "습기로 인한 부풀음·변형 수리" },
-  {
-    icon: "📐",
-    title: "상부장 처짐",
-    desc: "상부장 처짐·뜸 증상 함께 수리 가능",
-  },
-];
+/* ─────────────────────────────────────────
+   CaseStrip
+───────────────────────────────────────── */
+const CASE_ITEMS = cases
+  .filter((c) => c.category === "싱크대 리폼")
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 6);
 
-const PHONE = "tel:010-6855-0957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
+function CaseStrip() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-   ═══════════════════════════════════════════ */
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
+      : 0;
+    if (cardWidth > 0) setActiveIdx(Math.round(el.scrollLeft / cardWidth));
+  };
+
+  const scrollTo = (i: number) => {
+    const el = scrollRef.current;
+    if (!el || !el.firstElementChild) return;
+    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
+    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+  };
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[13px] font-bold text-neutral-900">실제 시공 사례</p>
+        <Link
+          href="/cases?cat=싱크대 리폼"
+          className="text-[12px] font-bold"
+          style={{ color: "#1a5cff", textDecoration: "none" }}>
+          전체 보기 →
+        </Link>
+      </div>
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex gap-3 overflow-x-auto"
+        style={{
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          paddingLeft: 0,
+          paddingRight: 0,
+        }}>
+        {CASE_ITEMS.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              scrollSnapAlign: "start",
+              flexShrink: 0,
+              width: "72%",
+              maxWidth: 300,
+            }}>
+            <Link
+              href={`/cases/${item.id}`}
+              draggable={false}
+              className="block overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb", textDecoration: "none" }}>
+              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+                <Image
+                  src={item.afterImg}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes="72vw"
+                  draggable={false}
+                />
+                <div
+                  className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-black text-white"
+                  style={{ background: "#1a5cff" }}>
+                  AFTER
+                </div>
+              </div>
+              <div className="p-3 bg-white">
+                <p className="text-[13px] font-extrabold text-neutral-900 truncate">
+                  {item.title}
+                </p>
+                <p className="text-[11px] text-neutral-400 mt-0.5">
+                  {item.region}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center gap-1.5 mt-4">
+        {CASE_ITEMS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className="rounded-full transition-all"
+            style={{
+              width: i === activeIdx ? 20 : 6,
+              height: 6,
+              background: i === activeIdx ? "#1a5cff" : "#d1d5db",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   YouTubeFacade
+───────────────────────────────────────── */
+function YouTubeFacade({ videoId }: { videoId: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div
+      className="relative aspect-video overflow-hidden rounded-2xl cursor-pointer"
+      style={{ background: "#000" }}
+      onClick={() => setLoaded(true)}>
+      {loaded ? (
+        <iframe
+          className="h-full w-full"
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+          title="리스토리 싱크대 문짝 리폼 시공 영상"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <>
+          <img
+            src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+            alt="시공 영상 썸네일"
+            className="h-full w-full object-cover"
+            style={{ opacity: 0.75 }}
+          />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-full"
+              style={{ background: "rgba(255,0,0,0.92)" }}>
+              <div
+                style={{
+                  width: 0,
+                  height: 0,
+                  marginLeft: 4,
+                  borderTop: "11px solid transparent",
+                  borderBottom: "11px solid transparent",
+                  borderLeft: "18px solid white",
+                }}
+              />
+            </div>
+            <p className="text-[13px] font-bold text-white/80">
+              탭해서 실제 시공 영상 보기
+            </p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   MAIN
+───────────────────────────────────────── */
 export default function SinkdoorReformLanding() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 500);
+    const onScroll = () => setShowSticky(window.scrollY > 600);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -93,1020 +219,912 @@ export default function SinkdoorReformLanding() {
       className="bg-white"
       style={{
         fontFamily:
-          "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+          "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif",
       }}>
-      {/* seo */}
       <ServiceJsonLd
-        name="싱크대 상부장 수리"
-        description="싱크대 상부장 처짐·추락 증상 합판 시공목으로 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S."
-        url="https://restorystudio.co.kr/repair/sangbujang"
+        name="싱크대 문짝 교체·리폼"
+        description="싱크대 문짝만 교체해도 새 주방처럼. 전체 교체 비용의 1/5~. 당일 시공, 3년 무상 A/S, 경첩 무료 교체."
+        url="https://restorystudio.co.kr/kitchen/sink-door"
       />
-      <FAQJsonLd faqs={FAQ} />
+      <FAQJsonLd faqs={FAQ_ITEMS} />
 
-      <FadeIn>
-        {/* HERO IMAGE */}
-        <section className="relative" style={{ background: "#1f66ff" }}>
+      {/* ══════════════════════════════════
+          1. HERO
+      ══════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: "#0a1628", minHeight: "100svh" }}>
+        <div className="absolute inset-0 md:hidden">
           <Image
-            src="/images/hero-door.webp"
-            alt="리스토리 싱크대 도어 리폼"
-            width={1080}
-            height={1350}
-            className="w-full h-auto"
+            src="/images/door/door-hero.png"
+            alt=""
+            fill
+            className="object-cover"
+            style={{ opacity: 0.55 }}
             priority
-            sizes="(max-width: 768px) 100vw, 768px"
+            sizes="100vw"
           />
-          <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent md:pb-20">
-            <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
-              <p className="text-[13px] text-[#1f66ff] font-bold md:text-[15px]">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 25%, #0a1628 100%)",
+            }}
+          />
+        </div>
+
+        <div
+          className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
+          style={{ minHeight: "100svh" }}>
+          <div
+            className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6
+            md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+            <FadeIn>
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                }}>
                 <Image
                   src="/images/logo.png"
                   alt="리스토리"
-                  width={30}
-                  height={30}
-                  className="inline-block mr-2"
+                  width={20}
+                  height={20}
+                  className="rounded-full"
                 />
-                리스토리 도어 리폼
-              </p>
-              <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
-                새 주방을 만드는
-              </p>
-              <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
-                가장 쉽고 저렴한 방법
-              </p>
-            </div>
-          </div>
-        </section>
-      </FadeIn>
-
-      {/* HERO CTA BUTTONS */}
-      <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
-        <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
-          <a
-            href={PHONE}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-[15px] font-extrabold text-[#1a5cff] shadow-lg md:py-5 md:text-[17px]">
-            📞 전화 문의
-          </a>
-          <a
-            href={PHOTO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 py-4 text-[15px] font-extrabold text-white md:py-5 md:text-[17px]">
-            📷 사진 접수
-          </a>
-        </div>
-        <p
-          className="mx-auto mt-3 max-w-3xl text-center text-[13px] font-semibold md:text-[14px]"
-          style={{ color: "rgba(255,255,255,0.6)" }}>
-          사진 한 장이면 도어 교체 가능 여부 바로 안내드립니다
-        </p>
-      </section>
-
-      {/* PHOTO REVIEWS */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f5f5f5" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
-                ★★★★★
-              </p>
-              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
-                실제 고객님들이 인정한
-                <br />
-                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
-                  솔직후기
+                <span className="text-[12px] font-bold text-white/70">
+                  싱크대 문짝 교체 전문
                 </span>
-              </h2>
-              <p className="mt-3 text-[22px] font-medium text-neutral-600">
-                평점 5점 만점에
-              </p>
+              </div>
+
+              <h1
+                className="font-black text-white leading-[1.15] mb-3"
+                style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
+                문짝만 바꿔도
+                <br />새 주방됩니다
+              </h1>
               <p
-                className="mt-1 text-[40px] font-black md:text-[52px]"
-                style={{ color: "#1a5cff" }}>
-                4.9
-                <span className="text-[20px] font-bold text-neutral-400 md:text-[24px]">
-                  점
-                </span>
+                className="font-medium text-white/60 mb-5"
+                style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
+                싱크대 전체 교체 없이, 문짝만 바꾸면 됩니다
               </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={150}>
-            <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/door/review-1.jpg"
-                    alt="도어 리폼 후기 1"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 마포구 정**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    문짝만 바꿨는데
-                    <br />새 주방 같아요!
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    20년 된 아파트인데 싱크대가 완전 새것처럼 됐어요. 색상도 딱
-                    맞게 해주셔서 감동!
-                  </p>
-                </div>
+
+              <div
+                className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
+                style={{
+                  background: "rgba(26,92,255,0.25)",
+                  border: "1px solid rgba(26,92,255,0.4)",
+                }}>
+                <span className="text-[22px] font-black text-white">
+                  교체 비용의 1/5~
+                </span>
+                <span className="text-[13px] font-medium text-white/50">
+                  당일 시공 완료
+                </span>
               </div>
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/door/review-2.jpg"
-                    alt="도어 리폼 후기 2"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    경기 수원시 한**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    비용 1/5로
-                    <br />
-                    이렇게 달라질 줄이야
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요.
-                    결과물도 완벽합니다.
-                  </p>
-                </div>
+
+              <div className="flex flex-col gap-3 md:flex-row">
+                <a
+                  href={KAKAO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2.5 rounded-2xl font-black text-[16px]"
+                  style={{
+                    background: "#FEE500",
+                    color: "#1a1a1a",
+                    padding: "18px 28px",
+                  }}>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+                  </svg>
+                  카카오로 사진 보내기
+                </a>
+                <a
+                  href={PHONE}
+                  className="flex items-center justify-center gap-2 rounded-2xl font-bold text-white text-[15px]"
+                  style={{
+                    background: "rgba(255,255,255,0.1)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    padding: "14px 24px",
+                  }}>
+                  📞 전화 문의
+                </a>
               </div>
-            </div>
-          </FadeIn>
+
+              <div className="mt-8 flex items-center gap-6">
+                {[
+                  { n: "1,000건+", l: "연간 시공" },
+                  { n: "4.9★", l: "고객 평점" },
+                  { n: "3년", l: "무상 A/S" },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <p className="text-[15px] font-black text-white">{s.n}</p>
+                    <p className="text-[11px] text-white/40">{s.l}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+
+          <div className="hidden md:block md:w-[46%] relative flex-shrink-0">
+            <Image
+              src="/images/hero-door.webp"
+              alt="리스토리 싱크대 문짝 리폼"
+              fill
+              className="object-cover"
+              style={{ opacity: 0.75 }}
+              priority
+              sizes="46vw"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to right, #0a1628 0%, transparent 40%)",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to top, #0a1628 0%, transparent 20%)",
+              }}
+            />
+          </div>
         </div>
       </section>
 
-      {/* WHY DOOR */}
+      {/* ══════════════════════════════════
+          2. PROOF
+      ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
-        style={{ background: "#fafafa" }}>
-        <div className="mx-auto max-w-3xl">
+        style={{ background: "#f8f9fb" }}>
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <div className="text-center">
-              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                싱크대 전체를 바꿔야 하나요?
-              </p>
-              <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                문짝만 바꿔도 새것처럼!
-              </h2>
-            </div>
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              BEFORE / AFTER
+            </p>
+            <h2
+              className="font-black leading-[1.2] mb-8"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              말보다 사진이 빠릅니다
+            </h2>
           </FadeIn>
-          <FadeIn delay={100}>
-            <div className="mx-auto my-8 flex flex-col items-center md:my-10">
-              <div className="h-10 w-px bg-neutral-300" />
-              <div className="mt-6 text-center">
-                <p className="text-[30px] font-black md:text-[45px]">
-                  전체 교체 비용의
-                </p>
-                <p
-                  className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[26px]"
-                  style={{ background: "#1f66ff", color: "#ffffff" }}>
-                  1/3~1/5 수준으로 해결!
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="grid grid-cols-2 gap-3 md:gap-5">
+          <FadeIn delay={80}>
+            <div className="grid grid-cols-2 gap-2 mb-4">
               {[
-                { img: "/images/door/before-after-3.jpg", label: "시공 전" },
-                { img: "/images/door/before-after-5.jpg", label: "시공 후" },
+                {
+                  img: "/images/door/before-after-3.jpg",
+                  label: "BEFORE",
+                  dark: true,
+                },
+                {
+                  img: "/images/door/before-after-6.jpg",
+                  label: "AFTER",
+                  dark: false,
+                },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                  <div className="aspect-[4/3] overflow-hidden bg-neutral-100">
-                    <Image
-                      src={item.img}
-                      alt={item.label}
-                      width={400}
-                      height={300}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 text-center">
-                    <p className="text-[16px] font-extrabold md:text-[18px]">
+                  className="relative overflow-hidden rounded-2xl"
+                  style={{ aspectRatio: "3/4" }}>
+                  <Image
+                    src={item.img}
+                    alt={item.label}
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 right-0 px-3 py-2.5"
+                    style={{
+                      background: item.dark
+                        ? "linear-gradient(to top, rgba(0,0,0,0.7), transparent)"
+                        : "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
+                    }}>
+                    <span className="text-[13px] font-black text-white tracking-widest">
                       {item.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div
+              className="rounded-2xl px-5 py-4 text-center"
+              style={{ background: "#1a5cff" }}>
+              <p className="text-[15px] font-black text-white">
+                같은 싱크대입니다
+              </p>
+              <p className="text-[12px] text-white/60 mt-0.5">
+                문짝만 교체했습니다
+              </p>
+            </div>
+          </FadeIn>
+
+          {/* 비용 비교 */}
+          <FadeIn delay={150}>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <div
+                className="rounded-2xl p-4 text-center"
+                style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
+                <p className="text-[11px] font-semibold text-neutral-400 mb-1">
+                  싱크대 전체 교체
+                </p>
+                <p
+                  className="text-[22px] font-black"
+                  style={{ color: "#ef4444" }}>
+                  200~500만원
+                </p>
+                <p className="text-[11px] text-neutral-400 mt-1">
+                  + 공사 2~3일 대기
+                </p>
+              </div>
+              <div
+                className="rounded-2xl p-4 text-center"
+                style={{ background: "#eef4ff", border: "1px solid #c7d7ff" }}>
+                <p className="text-[11px] font-semibold text-[#1a5cff] mb-1">
+                  리스토리 문짝 리폼
+                </p>
+                <p
+                  className="text-[22px] font-black"
+                  style={{ color: "#1a5cff" }}>
+                  40~100만원~
+                </p>
+                <p className="text-[11px] text-[#1a5cff]/60 mt-1">
+                  + 당일 완료
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* 품질 증명 — 제로 조인트 */}
+          <FadeIn delay={180}>
+            <div
+              className="mt-4 overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              <div className="p-5" style={{ background: "#fff" }}>
+                <p className="text-[11px] font-bold tracking-widest text-neutral-400 mb-3">
+                  QUALITY PROOF
+                </p>
+                <h3 className="text-[18px] font-black text-neutral-900 leading-[1.3] mb-1">
+                  왜 오래 써도 안 들뜰까요?
+                </h3>
+                <p className="text-[13px] leading-[1.7] text-neutral-500 mb-5">
+                  일반 문짝은 테두리에 엣지 테이프를 붙여요.
+                  <br />
+                  리스토리는{" "}
+                  <strong className="text-neutral-800">제로 조인트</strong> —
+                  이음새 없이 일체화 마감합니다.
+                </p>
+
+                {/* 비교 카드 */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div
+                    className="rounded-xl p-4"
+                    style={{
+                      background: "#f8f9fb",
+                      border: "1px solid #e5e7eb",
+                    }}>
+                    <p className="text-[11px] font-bold text-neutral-400 mb-2">
+                      일반 문짝
                     </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* TRUST */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f5f5f5" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                걱정 없이 맡기세요
-              </p>
-              <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                AS 걱정 없는 확실한 시공
-              </h2>
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="flex mt-10 justify-center gap-5 md:gap-10">
-              {[
-                { src: "/images/cert-5.png", alt: "생산물배상책임 보험증서" },
-                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
-              ].map((cert, i) => (
-                <div
-                  key={i}
-                  className="flex-1 max-w-[280px] md:max-w-[310px] overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
-                    <Image
-                      src={cert.src}
-                      alt={cert.alt}
-                      width={300}
-                      height={400}
-                      className="h-full w-full object-contain"
-                    />
-                  </div>
-                  <p className="bg-neutral-100 pb-[18px] text-center text-[16px] font-bold text-neutral-600 md:text-[18px]">
-                    {cert.alt}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* SPECIALS */}
-      <section
-        className="px-5 pt-10 text-center text-white md:pt-16"
-        style={{ background: "#1f66ff" }}>
-        <FadeIn>
-          <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
-          <p
-            className="mt-4 text-[40px] font-thin md:text-[55px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            왜 유명하냐고요?
-          </p>
-          <h2 className="mt-2 text-[40px] font-black md:text-[55px]">
-            리스토리 도어 리폼은 특별합니다!
-          </h2>
-        </FadeIn>
-      </section>
-
-      {/* Special 01 */}
-      <section
-        className="px-5 pt-14 md:py-20"
-        style={{ background: "#1f66ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-              <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
-                  Special 01
-                </span>
-                <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  시공 후 문제 생기면{" "}
-                  <span className="text-[#1a5cff]">책임</span>져 주나요?
-                </h3>
-              </div>
-              <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
-                <Image
-                  src="/images/special-1-2.png"
-                  alt="본사 안심 보상제"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto"
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Special 02 */}
-      <section
-        className="px-5 pt-7 pb-14 md:pt-7 md:pb-20"
-        style={{ background: "#1f66ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-              <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
-                  Special 02
-                </span>
-                <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  절차는 간편한가요?
-                </h3>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:gap-5">
-                <div className="overflow-hidden rounded-xl">
-                  <Image
-                    src="/images/special-02-1.png"
-                    alt="사진만 찍어도 비대면 무료 견적 가능"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                </div>
-                <div className="overflow-hidden rounded-xl">
-                  <Image
-                    src="/images/special-02-2.png"
-                    alt="365일 밤 10시까지 상담 가능"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* 비교표 */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                도어 리폼 고수들만 모인
-              </p>
-              <h2 className="mt-1 text-[30px] font-black md:text-[45px]">
-                리스토리의 자부심
-              </h2>
-              <p
-                className="mx-auto mt-3 inline-block rounded-lg px-5 py-1.5 text-[18px] font-black md:text-[22px]"
-                style={{ background: "#1a5cff", color: "#fff" }}>
-                안심인증시공
-              </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-[#e0e8f5]">
-              <div
-                className="p-5 text-center md:p-7"
-                style={{ background: "#1a1a1a" }}>
-                <span className="inline-block rounded-full bg-white px-3 py-1 text-[11px] font-bold text-neutral-600 md:text-[13px]">
-                  A사
-                </span>
-                <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
-                  일반 시공
-                </p>
-              </div>
-              <div
-                className="p-5 text-center md:p-7"
-                style={{ background: "#1a5cff" }}>
-                <span
-                  className="inline-block rounded-full px-3 py-1 text-[11px] font-bold md:text-[13px]"
-                  style={{
-                    background: "rgba(255,255,255,0.2)",
-                    color: "#fff",
-                  }}>
-                  리스토리
-                </span>
-                <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
-                  안심 인증 시공
-                </p>
-              </div>
-              {[
-                { a: "일반 엣지", b: "하이 조인트 엣지" },
-                {
-                  a: "기존 문짝 위에 덧붙이기",
-                  b: "문짝 자체를 새것으로 교체",
-                },
-                { a: "~E1 레벨 보드", b: "친환경 E0~ 레벨 보드" },
-                { a: "A/S 1년 또는 없음", b: "무상 A/S 3년 보장" },
-              ].map((row, i) => (
-                <React.Fragment key={i}>
-                  <div className="border-t border-neutral-200 bg-white px-4 py-5 text-center md:py-6">
-                    <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.5] text-neutral-600 md:text-[16px]">
-                      {row.a}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div
+                        className="flex-1 h-6 rounded"
+                        style={{
+                          background: "#e5e7eb",
+                          position: "relative",
+                          overflow: "hidden",
+                        }}>
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            width: 6,
+                            background: "#94a3b8",
+                            borderRadius: "0 4px 4px 0",
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[12px] font-black text-neutral-500">
+                      엣지 테이프 부착
+                    </p>
+                    <p className="text-[11px] text-neutral-400 mt-1 leading-[1.5]">
+                      시간 지나면 수분·열로
+                      <br />
+                      들뜨고 벗겨짐
                     </p>
                   </div>
                   <div
-                    className="border-t px-4 py-5 text-center md:py-6"
-                    style={{ borderColor: "#d6e4ff", background: "#eef4ff" }}>
-                    <p className="whitespace-pre-line text-[14px] font-bold leading-[1.5] text-[#1a5cff] md:text-[16px]">
-                      {row.b}
+                    className="rounded-xl p-4"
+                    style={{
+                      background: "#eef4ff",
+                      border: "1px solid #c7d7ff",
+                    }}>
+                    <p
+                      className="text-[11px] font-bold mb-2"
+                      style={{ color: "#1a5cff" }}>
+                      리스토리
                     </p>
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* 제로 조인트 */}
-      <section
-        className="flex justify-center"
-        style={{ background: "#1a1b4b" }}>
-        <Image
-          src="/images/door/safe.png"
-          alt="리스토리 본사 책임 AS"
-          width={1080}
-          height={1350}
-          className="w-full max-w-3xl h-auto"
-        />
-      </section>
-
-      {/* 리스토리만의 특별 서비스 — 경첩 무료 교체 */}
-      <section
-        className="px-5 py-12 text-center text-white md:py-20"
-        style={{
-          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
-        }}>
-        <FadeIn>
-          <Image
-            src="/images/finger-imoji.png"
-            alt="손가락 이모지"
-            width={100}
-            height={100}
-            className="mx-auto mb-10 w-[100px] h-auto md:w-[200px] md:h-auto"
-          />
-          <p
-            className="mb-2 text-[35px] font-medium tracking-widest md:text-[50px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            리스토리만의{" "}
-          </p>
-          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>특별 서비스 하나 더!</span>
-          </p>
-          <div className="mx-auto mt-6 max-w-sm border border-white/25 rounded-lg bg-[#ffffff]/20 px-5 py-8 md:mt-10 md:max-w-md shadow-lg">
-            <Image
-              src="/images/sink-door-gear.png"
-              alt="경첩 이미지"
-              width={300}
-              height={300}
-              className="mx-auto mt-4 mb-4 w-[300px] h-auto md:w-[300px] md:h-auto"
-            />
-            <p
-              className="mt-1 text-[40px] font-semibold md:text-[55px]"
-              style={{ color: "#ffffff" }}>
-              도어 경첩
-            </p>
-            <p
-              className="mt-1 text-[25px] font-semibold md:text-[35px]"
-              style={{ color: "#ffffff" }}>
-              무료 교체 서비스 제공!
-            </p>
-          </div>
-          <p className="mt-4 text-[16px] font-normal text-white/79">
-            *교체하시는 문짝 경첩은 리스토리에서 서비스로 교체해드립니다.
-          </p>
-        </FadeIn>
-      </section>
-
-      {/* SELF CHECK */}
-      <section className="px-5 py-14 md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              SELF CHECK
-            </p>
-            <h2 className="text-[30px] font-black leading-[1.4] md:text-[45px]">
-              이런 상태라면
-              <br />
-              <span className="text-[#e53e3e]">도어 교체 시기입니다</span>
-            </h2>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
-              {[
-                {
-                  img: "/images/door/symptom-1.jpg",
-                  title: "문짝 변색·누렇게",
-                  desc: "세월에 의한 변색으로\n주방이 어두워진 상태",
-                },
-                {
-                  img: "/images/door/symptom-2.jpg",
-                  title: "필름 벗겨짐",
-                  desc: "문짝 표면 필름이\n들뜨거나 벗겨진 상태",
-                },
-                {
-                  img: "/images/door/symptom-3.jpg",
-                  title: "문짝 파손",
-                  desc: "충격이나 습기로\n문짝이 파손된 상태",
-                },
-                {
-                  img: "/images/door/symptom-4.jpg",
-                  title: "경첩 고장",
-                  desc: "문이 안 닫히거나\n처지는 상태",
-                },
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                  <div className="aspect-square overflow-hidden bg-neutral-100">
-                    <Image
-                      src={s.img}
-                      alt={s.title}
-                      width={400}
-                      height={400}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 md:p-5">
-                    <p className="text-[16px] font-extrabold md:text-[18px]">
-                      {s.title}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div
+                        className="flex-1 h-6 rounded-lg"
+                        style={{ background: "#1a5cff" }}
+                      />
+                    </div>
+                    <p
+                      className="text-[12px] font-black"
+                      style={{ color: "#1a5cff" }}>
+                      제로 조인트 마감
                     </p>
-                    <p className="mt-1.5 whitespace-pre-line text-[14px] leading-[1.6] text-neutral-500 md:text-[16px]">
-                      {s.desc}
+                    <p
+                      className="text-[11px] mt-1 leading-[1.5]"
+                      style={{ color: "rgba(26,92,255,0.6)" }}>
+                      이음새 없이 일체화
+                      <br />
+                      들뜸·벗겨짐 없음
                     </p>
                   </div>
                 </div>
-              ))}
+
+                <div
+                  className="flex items-center justify-center gap-2 rounded-xl py-3"
+                  style={{ background: "#eef4ff" }}>
+                  <span
+                    className="text-[16px] font-black"
+                    style={{ color: "#1a5cff" }}>
+                    마감선 제로
+                  </span>
+                  <span
+                    className="text-[13px]"
+                    style={{ color: "rgba(26,92,255,0.5)" }}>
+                    → 오래 써도 새것처럼
+                  </span>
+                </div>
+              </div>
+
+              {/* 실제 비교 사진 */}
+              <div
+                className="grid grid-cols-2 border-t"
+                style={{ borderColor: "#f3f4f6" }}>
+                <div
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: "4/3" }}>
+                  <Image
+                    src="/images/door/edge-normal.jpg"
+                    alt="일반 엣지 들뜸"
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                  <div
+                    className="absolute inset-0 flex flex-col justify-end p-3"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.65), transparent)",
+                    }}>
+                    <p className="text-[10px] font-semibold text-white/70">
+                      일반 엣지
+                    </p>
+                    <p className="text-[13px] font-black text-white">
+                      들뜸 발생
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: "4/3" }}>
+                  <Image
+                    src="/images/door/edge-zerojoint.png"
+                    alt="제로 조인트 마감"
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                  <div
+                    className="absolute inset-0 flex flex-col justify-end p-3"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
+                    }}>
+                    <p className="text-[10px] font-semibold text-white/70">
+                      리스토리 제로 조인트
+                    </p>
+                    <p className="text-[13px] font-black text-white">
+                      이음새 없음
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </FadeIn>
         </div>
       </section>
 
-      {/* 실제 시공 사례 슬라이더 */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#ffffff" }}>
-        <div className="mx-auto max-w-3xl">
+      {/* ══════════════════════════════════
+          3. COLORS — 어떤 색 고를 수 있어?
+      ══════════════════════════════════ */}
+      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              REAL CASES
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              COLOR SAMPLES
             </p>
-            <h2 className="text-[24px] font-black leading-[1.4] md:text-[32px]">
-              실제 시공 사례를 확인하세요
+            <h2
+              className="font-black leading-[1.2] mb-2"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              취향에 맞는 색상으로
+              <br />
+              골라보세요
             </h2>
-            <p className="mt-1 text-[13px] text-neutral-500 md:text-[15px]">
-              좌우로 넘겨 보세요
+            <p className="text-[14px] text-neutral-500 mb-6">
+              화이트 · 아이보리 · 그레이 · 블랙 · 인디고 블루.
+              <br />
+              실측 출장 방문 시 실물 샘플을 직접 눈으로 보고
+              <br />
+              손으로 만져보고 선택하실 수 있습니다.
             </p>
+          </FadeIn>
+          <FadeIn delay={80}>
+            <div
+              className="overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              <Image
+                src="/images/door/color-samples.png"
+                alt="싱크대 문짝 색상 샘플 — 화이트, 그레이, 블랙, 인디고 블루 등 100가지 이상"
+                width={1080}
+                height={1080}
+                className="w-full h-auto"
+                sizes="(max-width: 768px) 100vw, 512px"
+              />
+            </div>
           </FadeIn>
           <FadeIn delay={120}>
-            {(() => {
-              const CASE_ITEMS = cases
-                .filter((c) => c.category === "싱크대 리폼")
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime(),
-                )
-                .slice(0, 8);
-
-              function CaseSlider() {
-                const [idx, setIdx] = React.useState(0);
-                const pausedRef = React.useRef(false);
-                const dragRef = React.useRef({
-                  startX: 0,
-                  dragging: false,
-                  moved: false,
-                });
-                const maxIdx = CASE_ITEMS.length - 1;
-                const cardPercent = 80;
-
-                const go = React.useCallback(
-                  (dir: number) => {
-                    setIdx((prev) => {
-                      const next = prev + dir;
-                      if (next < 0) return maxIdx;
-                      if (next > maxIdx) return 0;
-                      return next;
-                    });
-                  },
-                  [maxIdx],
-                );
-
-                React.useEffect(() => {
-                  const timer = setInterval(() => {
-                    if (!pausedRef.current) go(1);
-                  }, 3500);
-                  return () => clearInterval(timer);
-                }, [go]);
-
-                const onDragStart = (x: number) => {
-                  dragRef.current = { startX: x, dragging: true, moved: false };
-                  pausedRef.current = true;
-                };
-                const onDragEnd = (x: number) => {
-                  if (!dragRef.current.dragging) return;
-                  const diff = dragRef.current.startX - x;
-                  if (Math.abs(diff) > 40) {
-                    dragRef.current.moved = true;
-                    go(diff > 0 ? 1 : -1);
-                  }
-                  dragRef.current.dragging = false;
-                  setTimeout(() => {
-                    pausedRef.current = false;
-                  }, 3500);
-                };
-
-                return (
-                  <>
-                    <div
-                      className="relative select-none mt-8"
-                      onMouseEnter={() => {
-                        pausedRef.current = true;
-                      }}
-                      onMouseLeave={() => {
-                        pausedRef.current = false;
-                        dragRef.current.dragging = false;
-                      }}
-                      onMouseDown={(e) => onDragStart(e.clientX)}
-                      onMouseUp={(e) => onDragEnd(e.clientX)}
-                      onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
-                      onTouchEnd={(e) => onDragEnd(e.changedTouches[0].clientX)}
-                      style={{ cursor: "grab" }}>
-                      <div className="overflow-hidden rounded-2xl">
-                        <div
-                          className="flex gap-3 transition-transform duration-500 ease-in-out pointer-events-none"
-                          style={{
-                            transform: `translateX(-${idx * (cardPercent + 1.2)}%)`,
-                          }}>
-                          {CASE_ITEMS.map((item) => (
-                            <div
-                              key={item.id}
-                              className="flex-shrink-0"
-                              style={{ width: `${cardPercent}%` }}>
-                              <Link
-                                href={`/cases/${item.id}`}
-                                onClick={(e) => {
-                                  if (dragRef.current.moved) e.preventDefault();
-                                }}
-                                draggable={false}
-                                className="block overflow-hidden rounded-2xl border border-neutral-200 bg-white"
-                                style={{ textDecoration: "none" }}>
-                                <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-                                  <Image
-                                    src={item.afterImg}
-                                    alt={item.title}
-                                    width={400}
-                                    height={300}
-                                    className="h-full w-full object-cover"
-                                    draggable={false}
-                                  />
-                                  <div
-                                    className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-                                    style={{
-                                      backgroundColor: "#1f66ff",
-                                      color: "white",
-                                    }}>
-                                    AFTER
-                                  </div>
-                                </div>
-                                <div className="p-4">
-                                  <span
-                                    className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                                    style={{
-                                      backgroundColor: "#1f66ff15",
-                                      color: "#1f66ff",
-                                    }}>
-                                    {item.category}
-                                  </span>
-                                  <p
-                                    className="mt-2 text-[15px] font-extrabold truncate"
-                                    style={{ color: "#111827" }}>
-                                    {item.title}
-                                  </p>
-                                  <p
-                                    className="mt-1 text-[12px] line-clamp-2"
-                                    style={{ color: "#64748b" }}>
-                                    {item.summary}
-                                  </p>
-                                  <div className="mt-2">
-                                    <span
-                                      className="text-[11px]"
-                                      style={{ color: "#94a3b8" }}>
-                                      {item.region}
-                                    </span>
-                                  </div>
-                                </div>
-                              </Link>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-center gap-1.5 mt-4">
-                      {CASE_ITEMS.map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            setIdx(i);
-                            pausedRef.current = true;
-                            setTimeout(() => {
-                              pausedRef.current = false;
-                            }, 3500);
-                          }}
-                          className="rounded-full transition-all"
-                          style={{
-                            width: i === idx ? 20 : 6,
-                            height: 6,
-                            backgroundColor: i === idx ? "#1f66ff" : "#d1d5db",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </>
-                );
-              }
-
-              return <CaseSlider />;
-            })()}
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="mt-6 flex justify-center">
-              <Link
-                href="/cases?cat=싱크대 리폼"
-                className="flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-[15px] font-extrabold text-white md:px-10 md:py-4 md:text-[17px]"
-                style={{ background: "#1a5cff", textDecoration: "none" }}>
-                📋 더 많은 실제 사례 보러가기 ›
-              </Link>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* URGENT */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{
-          background: "linear-gradient(150deg, #000f36 0%, #003ad6 100%)",
-        }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
-              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[20px] font-extrabold text-white md:text-[35px]">
-                ⚡ 빠른 시공
-              </div>
-              <h3 className="mt-1 text-[30px] font-black leading-[1.45] md:text-[45px]">
-                문짝 교체는
-                <br />
-                <span className="text-[#e53e3e]">당일 시공</span> 가능합니다
-              </h3>
-              <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
-                사진 접수 → 실측 방문 → 샘플 고르신 후 3일 후에 → 당일 방문
-                시공.
-                <br />
-                <strong
-                  className="text-[18px] font-bold md:text-[22px]"
-                  style={{ color: "#1f66ff" }}>
-                  주방 사용 중단 없이 완료
-                </strong>
-                됩니다.
-              </p>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* STATS BANNER */}
-      <section
-        className="px-5 py-12 text-center text-white md:py-20"
-        style={{
-          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
-        }}>
-        <FadeIn>
-          <Image
-            src="/images/door/door-medal.png"
-            alt="리스토리 로고"
-            width={250}
-            height={250}
-            className="mx-auto mb-4 w-[250px] h-auto md:w-[300px] md:h-auto"
-          />
-          <p
-            className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            미친 자신감의 이유
-          </p>
-          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>1,000</span>건+
-          </p>
-          <p
-            className="mt-1 text-[25px] font-semibold md:text-[35px]"
-            style={{ color: "rgba(255, 255, 255, 0.79)" }}>
-            매년 도어 리폼 시공 실적
-          </p>
-          <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
-            {[
-              { n: "99%", l: "시공 만족도" },
-              { n: "3년", l: "무상 A/S" },
-              { n: "4.9", l: "고객 평점" },
-            ].map((s, i) => (
-              <div
-                key={i}
-                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg shadow-md md:px-6 md:py-4">
-                <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
-                <p
-                  className="mt-1 text-[18px] font-semibold md:text-[22px]"
-                  style={{ color: "rgba(255,255,255,0.79)" }}>
-                  {s.l}
+            <div
+              className="mt-4 rounded-2xl p-4 flex items-start gap-3"
+              style={{ background: "#f8f9fb", border: "1px solid #e5e7eb" }}>
+              <span className="text-[22px] flex-shrink-0">🎨</span>
+              <div>
+                <p className="text-[14px] font-black text-neutral-900 mb-1">
+                  실측 출장 방문 시 실물 샘플 지참
+                </p>
+                <p className="text-[13px] leading-[1.6] text-neutral-500">
+                  화면으로 보는 색상과 실물은 달라요. 출장 방문 시 실제 샘플을
+                  직접 가져가서 주방 조명 아래에서 직접 비교하고 선택하실 수
+                  있습니다. 결정은 천천히 하셔도 됩니다.
                 </p>
               </div>
-            ))}
-          </div>
-        </FadeIn>
+            </div>
+          </FadeIn>
+          <FadeIn delay={160}>
+            <a
+              href={KAKAO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex items-center justify-center gap-2 rounded-2xl text-[15px] font-black"
+              style={{
+                background: "#FEE500",
+                color: "#1a1a1a",
+                padding: "16px 24px",
+              }}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+              </svg>
+              샘플 보러 출장 방문 예약하기
+            </a>
+          </FadeIn>
+        </div>
       </section>
 
-      {/* YOUTUBE */}
-      <section
-        className="px-5 py-14 text-white md:py-20"
-        style={{ background: "#1a1a1a" }}>
-        <div className="mx-auto max-w-3xl">
+      {/* ══════════════════════════════════
+          5. REVIEWS
+      ══════════════════════════════════ */}
+      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-2xl">
           <FadeIn>
-            <p
-              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
-              style={{ color: "rgba(255,255,255,0.35)" }}>
-              YOUTUBE
-            </p>
-            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
-              실제 시공 영상을 확인하세요
-            </h2>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div className="aspect-video">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube.com/embed/sydwgU5o4DY"
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+            <div className="flex items-end gap-3 mb-8">
+              <div>
+                <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-1">
+                  REVIEWS
+                </p>
+                <h2
+                  className="font-black leading-[1.2]"
+                  style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+                  직접 겪은 고객님들
+                </h2>
+              </div>
+              <div className="ml-auto text-right pb-1 flex-shrink-0">
+                <p
+                  className="text-[28px] font-black"
+                  style={{ color: "#1a5cff" }}>
+                  4.9★
+                </p>
+                <p className="text-[11px] text-neutral-400">고객 평점</p>
               </div>
             </div>
           </FadeIn>
-        </div>
-      </section>
-
-      {/* PROCESS */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[26px] font-medium text-neutral-600 md:text-[34px]">
-                처음부터 끝까지 쉽고 빠르게
-              </p>
-              <h2 className="mt-2 text-[26px] font-black md:text-[34px]">
-                리스토리 <span className="text-[#1a5cff]">시공절차</span>
-              </h2>
-            </div>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-12 grid grid-cols-4 gap-3 text-center md:gap-6">
-              {[
-                {
-                  icon: "/images/icon_step1.png",
-                  step: "01",
-                  title: "사진 접수",
-                  desc: "현재 싱크대\n사진 보내기",
-                },
-                {
-                  icon: "/images/icon_step2.png",
-                  step: "02",
-                  title: "실측 방문",
-                  desc: "방문해서 실측\n샘플 눈으로 보고 선택",
-                },
-                {
-                  icon: "/images/icon_step3.png",
-                  step: "03",
-                  title: "방문 시공",
-                  desc: "실측 후 영업일 3일\n이내 방문 시공",
-                },
-                {
-                  icon: "/images/icon_step4.png",
-                  step: "04",
-                  title: "완료",
-                  desc: "당일 완료\n바로 사용",
-                },
-              ].map((p, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="flex h-[72px] w-[72px] items-center justify-center md:h-[100px] md:w-[100px]">
-                    <Image
-                      src={p.icon}
-                      alt={p.title}
-                      width={100}
-                      height={100}
-                      className="h-[72px] w-[72px] rounded-full border border-neutral-200 object-contain md:h-[100px] md:w-[100px]"
-                    />
-                  </div>
-                  <p className="mt-5 text-[22px] font-black text-[#1a5cff] md:text-[26px]">
-                    {p.step}
-                  </p>
-                  <p className="mt-2 text-[16px] font-extrabold md:text-[18px]">
-                    {p.title}
-                  </p>
-                  <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.6] text-neutral-600 md:text-[14px]">
-                    {p.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="mt-10 flex justify-center md:mt-12">
-              <a
-                href={PHONE}
-                className="flex items-center justify-center gap-2 rounded-full px-10 py-4 text-[17px] font-extrabold text-white md:px-12 md:py-5 md:text-[19px]"
-                style={{ background: "#1a5cff" }}>
-                📞 간편접수 010-6855-0957
-              </a>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* EXTRAS */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f0f4ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              PLUS SERVICE
-            </p>
-            <h2 className="text-[20px] font-black leading-[1.4] md:text-[26px]">
-              방문 시 함께 가능합니다
-            </h2>
-            <p className="mb-7 mt-1 text-[13px] text-neutral-600 md:text-[15px]">
-              추가 출장비 없이 한 번에 해결
-            </p>
-          </FadeIn>
-          <div className="flex flex-col gap-2.5 md:grid md:grid-cols-3 md:gap-4">
-            {EXTRAS.map((e, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              {
+                img: "/images/door/review-1.jpg",
+                keyword: "비용 1/5",
+                unit: "싱크대 문짝 리폼",
+                area: "서울 마포구",
+                name: "정** 고객님",
+                quote:
+                  "전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요. 20년 된 아파트인데 새 주방 같아요.",
+                tag: "당일 완료",
+                tagBg: "#eef4ff",
+                tagColor: "#1a5cff",
+              },
+              {
+                img: "/images/door/review-2.jpg",
+                keyword: "주방이 환해졌어요",
+                unit: "싱크대 문짝 리폼",
+                area: "경기 수원시",
+                name: "한** 고객님",
+                quote:
+                  "색상도 원하는 걸로 골랐는데 기존 싱크대랑 완벽하게 맞아요. 시공 시간도 짧고 대만족입니다.",
+                tag: "색상 맞춤",
+                tagBg: "#fff7ed",
+                tagColor: "#ea580c",
+              },
+            ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
-                <div className="flex items-center gap-4 rounded-2xl border border-[#dce5f5] bg-white p-5 md:flex-col md:items-start md:p-6">
-                  <span className="flex-shrink-0 text-[26px] md:text-[32px]">
-                    {e.icon}
-                  </span>
-                  <div>
-                    <p className="text-[15px] font-extrabold md:text-[17px]">
-                      {e.title}
+                <div
+                  className="overflow-hidden rounded-2xl h-full"
+                  style={{ border: "1px solid #e5e7eb" }}>
+                  <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
+                    <Image
+                      src={r.img}
+                      alt={r.name}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
+                    <div
+                      className="absolute inset-0 flex flex-col justify-end p-4"
+                      style={{
+                        background:
+                          "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)",
+                      }}>
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <p className="text-[11px] font-semibold text-white/60">
+                            {r.unit}
+                          </p>
+                          <p
+                            className="font-black text-white leading-none"
+                            style={{
+                              fontSize: "clamp(1.1rem, 3.5vw, 1.5rem)",
+                            }}>
+                            {r.keyword}
+                          </p>
+                        </div>
+                        <span
+                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
+                          style={{ background: r.tagBg, color: r.tagColor }}>
+                          {r.tag}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-[12px] text-neutral-400 mb-2">
+                      {r.name} · {r.area}
                     </p>
-                    <p className="mt-0.5 text-[12px] text-neutral-600 md:mt-1.5 md:text-[14px]">
-                      {e.desc}
+                    <p className="text-[14px] leading-[1.7] text-neutral-700">
+                      <span
+                        style={{
+                          color: "#1a5cff",
+                          fontWeight: 900,
+                          fontSize: 16,
+                        }}>
+                        "
+                      </span>
+                      {r.quote}
+                      <span
+                        style={{
+                          color: "#1a5cff",
+                          fontWeight: 900,
+                          fontSize: 16,
+                        }}>
+                        "
+                      </span>
                     </p>
                   </div>
                 </div>
               </FadeIn>
             ))}
           </div>
+          <FadeIn delay={100}>
+            <CaseStrip />
+          </FadeIn>
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ══════════════════════════════════
+          4. HOW
+      ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
+        style={{ background: "#f8f9fb" }}>
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              HOW IT WORKS
+            </p>
+            <h2
+              className="font-black leading-[1.2] mb-2"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              사진 한 장이면
+              <br />
+              나머지는 저희가 합니다
+            </h2>
+            <p className="text-[14px] text-neutral-400 mb-10">
+              실측 방문 후 영업일 3일 이내 시공 완료
+            </p>
+          </FadeIn>
+          <div className="flex flex-col gap-3">
+            {[
+              {
+                step: "01",
+                icon: "📸",
+                title: "사진 보내기",
+                desc: "현재 싱크대 사진만 카카오로 보내주세요. 교체 가능 여부와 예상 비용 범위를 바로 안내드립니다.",
+                time: "30초",
+              },
+              {
+                step: "02",
+                icon: "🎨",
+                title: "방문 실측 + 샘플 선택",
+                desc: "방문 시 실물 샘플을 직접 눈으로 보고 손으로 만져보며 색상을 선택하세요.",
+                time: "무료",
+              },
+              {
+                step: "03",
+                icon: "✅",
+                title: "당일 시공 완료",
+                desc: "문짝 제작 후 방문 시공. 1~2시간이면 완료되고 바로 사용 가능합니다.",
+                time: "당일 완료",
+              },
+            ].map((s, i) => (
+              <FadeIn key={i} delay={i * 80}>
+                <div
+                  className="flex gap-4 rounded-2xl p-5"
+                  style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
+                  <div className="flex-shrink-0 flex flex-col items-center">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-[18px]"
+                      style={{ background: "#eef4ff" }}>
+                      {s.icon}
+                    </div>
+                    {i < 2 && (
+                      <div
+                        className="w-px flex-1 mt-2"
+                        style={{ background: "#e5e7eb", minHeight: 24 }}
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[11px] font-black text-neutral-300">
+                        {s.step}
+                      </span>
+                      <span className="text-[15px] font-black text-neutral-900">
+                        {s.title}
+                      </span>
+                      <span
+                        className="ml-auto rounded-full px-2.5 py-1 text-[11px] font-bold flex-shrink-0"
+                        style={{ background: "#eef4ff", color: "#1a5cff" }}>
+                        {s.time}
+                      </span>
+                    </div>
+                    <p className="text-[13px] leading-[1.6] text-neutral-500">
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={200}>
+            <a
+              href={KAKAO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex items-center justify-center gap-2.5 rounded-2xl text-[15px] font-black"
+              style={{
+                background: "#FEE500",
+                color: "#1a1a1a",
+                padding: "18px 24px",
+              }}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+              </svg>
+              사진 보내고 견적 받기
+            </a>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════
+          5. TRUST
+      ══════════════════════════════════ */}
+      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-lg">
+          <FadeIn>
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              TRUST
+            </p>
+            <h2
+              className="font-black leading-[1.2] mb-8"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              걱정하시는 거<br />다 알고 있어요
+            </h2>
+          </FadeIn>
+          <div className="flex flex-col gap-3 mb-8">
+            {[
+              {
+                icon: "🛡",
+                title: "3년 무상 재시공",
+                desc: "문짝 들뜸, 경첩 문제 등 시공 후 3년간 무상으로 재시공해드립니다.",
+              },
+              {
+                icon: "🔩",
+                title: "경첩 무료 교체",
+                desc: "교체하시는 문짝의 경첩은 리스토리에서 서비스로 무료 교체해드립니다.",
+              },
+              {
+                icon: "📋",
+                title: "생산물 배상책임보험 가입",
+                desc: "시공 중 예상치 못한 문제가 생겨도 보험으로 100% 보상됩니다.",
+              },
+              {
+                icon: "💬",
+                title: "방문 전 가격 확정",
+                desc: "방문 후 갑자기 금액이 올라가는 일 없습니다. 견적 그대로 진행됩니다.",
+              },
+            ].map((t, i) => (
+              <FadeIn key={i} delay={i * 60}>
+                <div
+                  className="flex gap-4 rounded-2xl p-5"
+                  style={{
+                    background: "#f8f9fb",
+                    border: "1px solid #e5e7eb",
+                  }}>
+                  <span className="text-[24px] flex-shrink-0">{t.icon}</span>
+                  <div>
+                    <p className="text-[15px] font-black text-neutral-900 mb-1">
+                      {t.title}
+                    </p>
+                    <p className="text-[13px] leading-[1.6] text-neutral-500">
+                      {t.desc}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={200}>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { src: "/images/cert-5.png", alt: "생산물배상책임보험증서" },
+                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
+              ].map((c, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-2xl"
+                  style={{ border: "1px solid #e5e7eb" }}>
+                  <div className="aspect-[3/4] bg-neutral-50 p-3">
+                    <Image
+                      src={c.src}
+                      alt={c.alt}
+                      width={300}
+                      height={400}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <p className="text-center py-3 text-[12px] font-bold text-neutral-500 bg-neutral-50">
+                    {c.alt}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════
+          6. VIDEO
+      ══════════════════════════════════ */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#0a1628" }}>
+        <div className="mx-auto max-w-lg">
+          <FadeIn>
+            <p
+              className="text-[12px] font-bold tracking-widest mb-2"
+              style={{ color: "rgba(255,255,255,0.3)" }}>
+              REAL VIDEO
+            </p>
+            <h2
+              className="font-black text-white mb-6"
+              style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)" }}>
+              실제 시공 영상
+            </h2>
+          </FadeIn>
+          <FadeIn delay={80}>
+            <YouTubeFacade videoId="sydwgU5o4DY" />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════
+          7. FAQ
+      ══════════════════════════════════ */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f8f9fb" }}>
+        <div className="mx-auto max-w-lg">
+          <FadeIn>
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
               FAQ
             </p>
-            <h2 className="mb-7 text-[22px] font-black md:text-[28px]">
+            <h2
+              className="font-black leading-[1.2] mb-8"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
               자주 묻는 질문
             </h2>
           </FadeIn>
-          <div className="flex flex-col gap-2 md:gap-3">
-            {FAQ.map((f, i) => (
-              <FadeIn key={i} delay={i * 60}>
-                <div className="overflow-hidden rounded-2xl border border-[#e0e8f5] bg-white">
+          <div className="flex flex-col gap-2">
+            {FAQ_ITEMS.map((f, i) => (
+              <FadeIn key={i} delay={i * 50}>
+                <div
+                  className="overflow-hidden rounded-2xl bg-white"
+                  style={{ border: "1px solid #e5e7eb" }}>
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="flex w-full items-center justify-between px-5 py-4 text-left md:px-7 md:py-5"
+                    className="flex w-full items-center justify-between px-5 py-4 text-left"
                     style={{
                       background: "none",
                       border: "none",
                       cursor: "pointer",
                       fontFamily: "inherit",
                     }}>
-                    <span className="pr-3 text-[14px] font-bold text-neutral-900 md:text-[16px]">
+                    <span className="pr-4 text-[14px] font-bold text-neutral-900 md:text-[15px]">
                       {f.q}
                     </span>
                     <span
-                      className="flex-shrink-0 text-[16px] font-bold text-[#1a5cff] transition-transform duration-300 md:text-[18px]"
+                      className="flex-shrink-0 text-[14px] font-bold transition-transform duration-200"
                       style={{
-                        transform:
-                          openFaq === i ? "rotate(180deg)" : "rotate(0deg)",
+                        color: "#1a5cff",
+                        transform: openFaq === i ? "rotate(180deg)" : "none",
                       }}>
                       ▾
                     </span>
                   </button>
                   <div
                     className="overflow-hidden transition-all duration-300"
-                    style={{ maxHeight: openFaq === i ? 200 : 0 }}>
-                    <p className="border-t border-neutral-100 px-5 pb-5 pt-3 text-[13px] leading-[1.75] text-neutral-600 md:px-7 md:text-[15px]">
+                    style={{ maxHeight: openFaq === i ? 160 : 0 }}>
+                    <p className="px-5 pb-4 pt-1 text-[13px] leading-[1.75] text-neutral-500 border-t border-neutral-100">
                       {f.a}
                     </p>
                   </div>
@@ -1117,64 +1135,127 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* ══════════════════════════════════
+          8. FINAL CTA
+      ══════════════════════════════════ */}
       <section
-        className="px-5 py-16 text-center text-white md:py-24"
-        style={{
-          background: "linear-gradient(150deg, #1a5cff 0%, #003ad6 100%)",
-        }}>
-        <FadeIn>
-          <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            싱크대 문짝 리폼
-            <br />
-            <span style={{ color: "#ffe066" }}>가장 저렴하게</span> 주방을
-            바꾸는 방법
-          </h2>
-          <p
-            className="mt-3 text-[14px] leading-[1.7] md:text-[17px]"
-            style={{ color: "rgba(255,255,255,0.7)" }}>
-            사진 한 장이면 교체 가능 여부
-            <br />
-            바로 안내드립니다
-          </p>
-          <div className="mx-auto mt-8 flex max-w-xs flex-col gap-2.5 md:max-w-sm">
-            <a
-              href={PHONE}
-              className="flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-[16px] font-extrabold text-[#1a5cff] md:py-5 md:text-[18px]">
-              📞 전화 문의
-            </a>
-            <a
-              href={KAKAO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-[16px] font-extrabold md:py-5 md:text-[18px]"
-              style={{ background: "#FEE500", color: "#1a1a1a" }}>
-              💬 카카오톡 상담
-            </a>
-            <a
-              href={PHOTO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-2xl border border-white/25 px-6 py-4 text-[15px] font-bold text-white md:py-5 md:text-[17px]"
-              style={{ background: "rgba(255,255,255,0.12)" }}>
-              📷 사진 접수
-            </a>
-          </div>
-          <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
-            {["고급 필름", "100+ 색상", "당일 시공", "3년 A/S"].map((badge) => (
-              <span
-                key={badge}
-                className="rounded-full px-3 py-1 text-[11px] font-semibold md:text-[13px]"
+        className="px-5 py-16 md:py-24"
+        style={{ background: "#0a1628" }}>
+        <div className="mx-auto max-w-lg text-center">
+          <FadeIn>
+            <p
+              className="text-[13px] font-bold tracking-widest mb-4"
+              style={{ color: "rgba(255,255,255,0.3)" }}>
+              지금 바로 시작하세요
+            </p>
+            <h2
+              className="font-black text-white leading-[1.2] mb-3"
+              style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
+              싱크대 사진 한 장이면
+              <br />
+              충분합니다
+            </h2>
+            <p
+              className="text-[14px] mb-8"
+              style={{ color: "rgba(255,255,255,0.4)" }}>
+              교체 가능 여부를 먼저 확인해드립니다
+            </p>
+            <div className="flex flex-col gap-3 max-w-sm mx-auto">
+              <a
+                href={KAKAO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2.5 rounded-2xl text-[16px] font-black"
+                style={{
+                  background: "#FEE500",
+                  color: "#1a1a1a",
+                  padding: "20px 24px",
+                }}>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor">
+                  <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+                </svg>
+                카카오로 사진 보내기
+              </a>
+              <a
+                href={PHONE}
+                className="flex items-center justify-center gap-2 rounded-2xl text-[15px] font-bold text-white"
                 style={{
                   background: "rgba(255,255,255,0.08)",
-                  color: "rgba(255,255,255,0.5)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  padding: "16px 24px",
                 }}>
-                {badge}
-              </span>
-            ))}
-          </div>
-        </FadeIn>
+                📞 010-6855-0957
+              </a>
+            </div>
+            <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
+              {[
+                "교체 비용의 1/5~",
+                "경첩 무료 교체",
+                "다양한 색상",
+                "3년 무상 A/S",
+              ].map((b, i) => (
+                <span
+                  key={i}
+                  className="text-[12px] font-semibold"
+                  style={{ color: "rgba(255,255,255,0.3)" }}>
+                  {i > 0 && (
+                    <span
+                      className="mr-4"
+                      style={{ color: "rgba(255,255,255,0.1)" }}>
+                      ·
+                    </span>
+                  )}
+                  {b}
+                </span>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
       </section>
+
+      {/* STICKY CTA */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
+        style={{
+          transform: showSticky ? "translateY(0)" : "translateY(110%)",
+          paddingBottom: "max(16px, env(safe-area-inset-bottom))",
+          background:
+            "linear-gradient(to top, rgba(10,22,40,0.97) 0%, rgba(10,22,40,0.0) 100%)",
+          paddingTop: 24,
+        }}>
+        <div className="mx-auto max-w-sm flex gap-2.5">
+          <a
+            href={KAKAO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl text-[15px] font-black"
+            style={{
+              background: "#FEE500",
+              color: "#1a1a1a",
+              padding: "16px 20px",
+            }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+            </svg>
+            카카오 상담
+          </a>
+          <a
+            href={PHONE}
+            className="flex items-center justify-center rounded-2xl text-[15px] font-bold text-white"
+            style={{
+              background: "rgba(255,255,255,0.12)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              padding: "16px 20px",
+            }}>
+            📞
+          </a>
+        </div>
+      </div>
+
       <FloatingCTA />
     </main>
   );

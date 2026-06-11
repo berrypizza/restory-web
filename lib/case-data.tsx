@@ -241,7 +241,7 @@ PET 제로조인트 도어를 사용해
 전체 교체 대비 비용을 크게 절감할 수 있었습니다.
 `,
     beforeImg: "/images/cases/case-043-before.jpg",
-    afterImg: "/images/cases/case-043-after.jpg",
+    afterImg: "/images/cases/case-043-after-2.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224306662990",
     date: "2026-06-05",
     tags: [
