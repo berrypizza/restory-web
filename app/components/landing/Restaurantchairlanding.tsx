@@ -414,12 +414,12 @@ export default function RestaurantChairLanding() {
             <div className="grid grid-cols-2 gap-2 mb-4">
               {[
                 {
-                  img: "/images/chair/before-after-3.jpg",
+                  img: "/images/chair/before-after-6.png",
                   label: "BEFORE",
                   dark: true,
                 },
                 {
-                  img: "/images/chair/before-after-4.jpg",
+                  img: "/images/chair/before-after-5.png",
                   label: "AFTER",
                   dark: false,
                 },
@@ -482,7 +482,7 @@ export default function RestaurantChairLanding() {
                 className="rounded-2xl p-4 text-center"
                 style={{ background: "#eef4ff", border: "1px solid #c7d7ff" }}>
                 <p className="text-[11px] font-semibold text-[#1a5cff] mb-1">
-                  리스토리 교체 6개
+                  리스토리 천갈이 6개
                 </p>
                 <p
                   className="text-[22px] font-black"
@@ -676,7 +676,7 @@ export default function RestaurantChairLanding() {
                 tagColor: "#1a5cff",
               },
               {
-                img: "/images/chair/review-4.jpg",
+                img: "/images/chair/review-5.png",
                 count: "1.5m 14개",
                 unit: "고깃집 의자",
                 area: "경기 부천시",
@@ -684,8 +684,8 @@ export default function RestaurantChairLanding() {
                 quote:
                   "영업 끝나고 밤에 와서 해주셔서 영업 지장 하나도 없었어요. 다음에도 여기 할 겁니다.",
                 tag: "야간 시공",
-                tagBg: "#fff7ed",
-                tagColor: "#ea580c",
+                tagBg: "#eef4ff",
+                tagColor: "#1a5cff",
               },
             ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
