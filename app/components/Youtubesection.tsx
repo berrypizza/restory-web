@@ -1,13 +1,58 @@
+"use client";
+
+import { useState } from "react";
+
+function YoutubeFacade({ id, title }: { id: string; title: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div
+      className="relative w-full cursor-pointer overflow-hidden rounded-2xl bg-black"
+      style={{ paddingBottom: "56.25%" }}
+      onClick={() => setLoaded(true)}>
+      {loaded ? (
+        <iframe
+          src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute inset-0 w-full h-full"
+          style={{ border: "none" }}
+        />
+      ) : (
+        <>
+          <img
+            src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: 0.8 }}
+          />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-full"
+              style={{ background: "rgba(255,0,0,0.92)" }}>
+              <div
+                style={{
+                  width: 0,
+                  height: 0,
+                  marginLeft: 4,
+                  borderTop: "10px solid transparent",
+                  borderBottom: "10px solid transparent",
+                  borderLeft: "16px solid white",
+                }}
+              />
+            </div>
+            <p className="text-[12px] font-bold text-white/80">{title}</p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function YoutubeSection() {
   const videos = [
-    {
-      id: "mvMybNNafKk",
-      title: "식당 의자 천갈이 현장",
-    },
-    {
-      id: "fp2clUUef24",
-      title: "싱크대 수리 현장",
-    },
+    { id: "mvMybNNafKk", title: "식당 의자 천갈이 현장" },
+    { id: "fp2clUUef24", title: "싱크대 수리 현장" },
   ];
 
   return (
@@ -38,18 +83,7 @@ export default function YoutubeSection() {
                 border: "1px solid #e5e7eb",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
               }}>
-              <div
-                className="relative w-full"
-                style={{ paddingBottom: "56.25%" }}>
-                <iframe
-                  src={`https://www.youtube.com/embed/${v.id}`}
-                  title={v.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                  style={{ border: "none" }}
-                />
-              </div>
+              <YoutubeFacade id={v.id} title={v.title} />
               <div className="px-4 py-3" style={{ backgroundColor: "#fafbfc" }}>
                 <p className="text-sm font-bold" style={{ color: "#111827" }}>
                   {v.title}

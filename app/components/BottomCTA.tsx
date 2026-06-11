@@ -1,5 +1,8 @@
 import Image from "next/image";
 
+const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHONE = "tel:010-6855-0957";
+
 export default function BottomCTA() {
   return (
     <section className="px-4 py-8 md:px-6 md:py-12">
@@ -9,7 +12,6 @@ export default function BottomCTA() {
           background:
             "linear-gradient(135deg, #e8f0fe 0%, #dbe6ffc0 50%, #e32e4077 100%)",
         }}>
-        {/* 콘텐츠 래퍼 */}
         <div className="relative z-10 px-6 pt-8 pb-40 md:px-10 md:py-16 md:pb-16">
           <p
             className="text-base font-bold mb-0.5 md:text-lg"
@@ -22,7 +24,7 @@ export default function BottomCTA() {
             클릭 한 번이면 끝!
           </p>
           <a
-            href="tel:010-6855-0957"
+            href={PHONE}
             className="flex items-center gap-2 mb-5"
             style={{ textDecoration: "none" }}>
             <Image
@@ -31,7 +33,7 @@ export default function BottomCTA() {
               width={48}
               height={48}
               className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
-            />{" "}
+            />
             <span
               className="text-2xl font-black md:text-4xl"
               style={{ color: "#1f66ff" }}>
@@ -39,7 +41,7 @@ export default function BottomCTA() {
             </span>
           </a>
           <a
-            href="http://pf.kakao.com/_hQExjX/chat"
+            href={KAKAO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-sm font-black text-white md:rounded-2xl md:px-10 md:py-4 md:text-base transition hover:opacity-90"
@@ -49,8 +51,6 @@ export default function BottomCTA() {
             문의하기 🔍
           </a>
         </div>
-
-        {/* 사람 이미지 — 오른쪽 아래 겹치기 (아정당 스타일) */}
         <Image
           src="/images/bro.webp"
           alt="리스토리 상담"

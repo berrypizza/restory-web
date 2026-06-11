@@ -244,7 +244,7 @@ export default function RestaurantChairLanding() {
             alt=""
             fill
             className="object-cover"
-            style={{ opacity: 0.35 }}
+            style={{ opacity: 0.45 }}
             priority
             sizes="100vw"
           />
@@ -566,7 +566,7 @@ export default function RestaurantChairLanding() {
                     2배 두꺼움
                   </span>
                   <span
-                    className="text-[13px]"
+                    className="text-[14px] font-bold"
                     style={{ color: "rgba(26,92,255,0.5)" }}>
                     → 더 오래갑니다
                   </span>
