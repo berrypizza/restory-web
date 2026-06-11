@@ -9,138 +9,157 @@ const iconMap: Record<BusinessLineId, string> = {
   sofa: "/images/icon_sofa.png",
 };
 
-const cardData: Record<BusinessLineId, { desc: string; cta: string }> = {
+const cardData: Record<
+  BusinessLineId,
+  { desc: string; cta: string; badge: string }
+> = {
   repair: {
-    desc: "상부장 · 하부장 · 경첩 · 서랍레일\n당일 출장으로 바로 수리해드려요",
-    cta: "사진으로 확인하기 ›",
+    desc: "문짝 처짐·물먹음\n당일 출장 바로 해결",
+    cta: "견적 확인",
+    badge: "당일 완료",
   },
   kitchen: {
-    desc: "문짝만 교체해도 새 주방!\n전체 리모델링의 1/5 비용",
-    cta: "리폼 견적 확인하기 ›",
+    desc: "문짝만 바꿔도 새 주방\n전체 교체의 20% 비용",
+    cta: "견적 확인",
+    badge: "교체비 1/5~",
   },
   leather: {
-    desc: "식당 · 카페 · 사무실 의자\n대량 천갈이 하루 완료",
-    cta: "천갈이 단가 확인 ›",
+    desc: "식당·카페 의자 대량\n영업 중 작업 가능",
+    cta: "단가 확인",
+    badge: "개당 3만원~",
   },
   sofa: {
-    desc: "꺼진 소파, 버리지 마세요\n내부 보강으로 새것처럼",
-    cta: "복원 가능 여부 확인 ›",
+    desc: "꺼진 소파 버리지 말고\n내부 보강으로 복원",
+    cta: "복원 확인",
+    badge: "새 소파 1/10",
   },
 };
 
+const compareData = [
+  { label: "싱크대 전체 교체", price: "200~400만원", isExpensive: true },
+  { label: "리스토리 리폼", price: "40~80만원", isExpensive: false },
+  { label: "소파 새 구매", price: "100~300만원", isExpensive: true },
+  { label: "리스토리 복원", price: "15~30만원", isExpensive: false },
+];
+
 export default function BusinessLineCards() {
   return (
-    <section className="bg-white px-4 py-14 md:px-6 md:py-20">
+    <section className="bg-white px-4 py-10 md:px-6 md:py-16">
       <div className="mx-auto max-w-5xl">
-        <h2
-          className="mb-7 text-xl font-black tracking-tight md:text-2xl"
-          style={{ color: "#111827" }}>
-          리스토리 서비스 라인업!
-        </h2>
+        {/* 헤더 */}
+        <div className="mb-6">
+          <p className="mb-1 text-[11px] font-semibold tracking-widest text-[#1f66ff] uppercase">
+            SERVICES
+          </p>
+          <h2 className="text-[22px] font-black text-gray-900 md:text-3xl">
+            리스토리 서비스 라인업
+          </h2>
+        </div>
 
-        {/* ── 데스크탑 ── */}
-        <div className="hidden md:grid grid-cols-3 gap-4">
-          {businessLines.map((line, i) => (
-            <Link
-              key={line.id}
-              href={line.href}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl transition hover:shadow-lg"
-              style={{
-                backgroundColor: "#f8f9fc",
-                border: "1px solid #eef1f6",
-                minHeight: i < 3 ? 220 : 180,
-              }}>
-              {/* 상단: 텍스트 + 아이콘 */}
-              <div className="relative flex-1 p-6">
-                <div className="max-w-[60%]">
-                  <h3
-                    className="text-lg font-black mb-2"
-                    style={{ color: "#111827" }}>
+        {/* 카드 그리드 */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          {businessLines.map((line) => {
+            const data = cardData[line.id];
+            const icon = iconMap[line.id];
+
+            return (
+              <Link
+                key={line.id}
+                href={line.href}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(31,102,255,0.12)]"
+                style={{
+                  minHeight: 172,
+                  textDecoration: "none",
+                  border: "1.5px solid #eef0f5",
+                }}>
+                {/* 뱃지 */}
+                <span
+                  className="absolute right-3 top-3 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
+                  style={{
+                    background: "rgba(31,102,255,0.08)",
+                    color: "#1f66ff",
+                  }}>
+                  {data.badge}
+                </span>
+
+                {/* 아이콘 */}
+                <div
+                  className="mb-3 flex h-16 w-16 items-center justify-center rounded-2xl"
+                  style={{ background: "rgba(31,102,255,0.06)" }}>
+                  <Image
+                    src={icon}
+                    alt={line.title}
+                    width={48}
+                    height={48}
+                    className="object-contain"
+                  />
+                </div>
+
+                {/* 텍스트 */}
+                <div className="flex-1">
+                  <h3 className="mb-1 text-[15px] font-black text-gray-900">
                     {line.title}
                   </h3>
-                  <p
-                    className="text-sm leading-relaxed whitespace-pre-line"
-                    style={{ color: "#64748b" }}>
-                    {cardData[line.id].desc}
+                  <p className="whitespace-pre-line text-[12px] leading-[1.65] text-gray-500">
+                    {data.desc}
                   </p>
                 </div>
 
-                <Image
-                  src={iconMap[line.id]}
-                  alt={line.title}
-                  width={130}
-                  height={130}
-                  className="absolute right-4 bottom-0 object-contain group-hover:scale-105 transition-transform"
-                  style={{ width: 130, height: 130 }}
-                />
-              </div>
+                {/* CTA */}
+                <div className="mt-3 flex items-center gap-0.5">
+                  <span className="text-[12px] font-bold text-[#1f66ff]">
+                    {data.cta}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1f66ff"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
 
-              {/* 하단 CTA */}
+        {/* 비교 섹션 */}
+        <div
+          className="mt-5 rounded-2xl p-5"
+          style={{
+            background: "rgba(31,102,255,0.04)",
+            border: "1.5px solid rgba(31,102,255,0.1)",
+          }}>
+          <p className="mb-4 text-[13px] font-black text-gray-900">
+            왜 리스토리인가
+          </p>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+            {compareData.map((item) => (
               <div
-                className="px-6 py-3.5"
-                style={{ borderTop: "1px solid #eef1f6" }}>
+                key={item.label}
+                className="flex items-center justify-between gap-2">
+                <span className="shrink-0 text-[12px] text-gray-500">
+                  {item.label}
+                </span>
                 <span
-                  className="text-sm font-bold"
-                  style={{ color: "#1f66ff" }}>
-                  {cardData[line.id].cta}
+                  className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold"
+                  style={
+                    item.isExpensive
+                      ? { background: "#FEECEC", color: "#C0392B" }
+                      : { background: "rgba(31,102,255,0.1)", color: "#1f66ff" }
+                  }>
+                  {item.price}
                 </span>
               </div>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
-
-        {/* ── 모바일: 2열 ── */}
-        <div className="grid grid-cols-2 gap-3 md:hidden">
-          {businessLines.map((line) => (
-            <Link
-              key={line.id}
-              href={line.href}
-              className="relative overflow-hidden rounded-2xl"
-              style={{
-                backgroundColor: "#f8f9fc",
-                border: "1px solid #eef1f6",
-                minHeight: 150,
-              }}>
-              {/* 아이콘 — 오른쪽 위, 크게 */}
-              <div className="flex justify-end px-3 pt-3">
-                <Image
-                  src={iconMap[line.id]}
-                  alt={line.title}
-                  width={80}
-                  height={80}
-                  className="object-contain"
-                  style={{ width: 80, height: 80 }}
-                />
-              </div>
-
-              {/* 텍스트 — 왼쪽 아래 */}
-              <div className="px-4 pb-4 pt-1">
-                <h3
-                  className="text-[15px] font-black mb-1"
-                  style={{ color: "#111827" }}>
-                  {line.title}
-                </h3>
-                <p className="text-xs" style={{ color: "#94a3b8" }}>
-                  {line.subtitle}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* 서비스 전체보기 */}
-        {/* <div className="mt-8 flex justify-center">
-          <Link
-            href="/repair"
-            className="rounded-xl px-8 py-3.5 text-sm font-bold transition hover:bg-gray-50"
-            style={{
-              color: "#111827",
-              border: "1px solid #d1d5db",
-              backgroundColor: "#ffffff",
-            }}>
-            서비스 전체보기
-          </Link>
-        </div> */}
       </div>
     </section>
   );

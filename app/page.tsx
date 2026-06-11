@@ -1,11 +1,10 @@
 import HeroSection from "@/app/components/Herosection";
-import IconMenu from "@/app/components/Iconmenu";
-import PainPointCards from "@/app/components/Painpointcards";
 import BusinessLineCards from "@/app/components/Businesslinecards";
+import ReviewSection from "@/app/components/Reviewsection";
+import PainPointCards from "@/app/components/Painpointcards";
 import YoutubeSection from "./components/Youtubesection";
-import ReviewSection from "./components/Reviewsection";
-import BottomCTA from "./components/BottomCTA";
 import EventBanner from "./components/EventBanner";
+import BottomCTA from "./components/BottomCTA";
 import FloatingCTA from "./components/landing/shared/FloatingCTA";
 import type { Metadata } from "next";
 import HiddenSEO from "./components/HiddenSEO";
@@ -23,13 +22,11 @@ export default function MainPage() {
   return (
     <main className="bg-white">
       <HeroSection />
-      <IconMenu />
-      <PainPointCards />
       <BusinessLineCards />
-      <YoutubeSection />
       <ReviewSection />
+      <PainPointCards />
+      <YoutubeSection />
       <EventBanner />
-
       <BottomCTA />
       <FloatingCTA />
       <HiddenSEO />
