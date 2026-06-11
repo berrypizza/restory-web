@@ -499,7 +499,7 @@ export default function SangbujangLanding() {
                   수리했는데 왜 더 튼튼한가요?
                 </h3>
                 <p className="text-[13px] leading-[1.7] text-neutral-500 mb-5">
-                  대부분의 상부장은 습기에 약한 PB(파티클보드)예요.
+                  대부분의 상부장 시공목은 습기에 약한 PB(파티클보드)예요.
                   <br />
                   리스토리는{" "}
                   <strong className="text-neutral-800">100% 합판</strong>으로만
@@ -1102,7 +1102,7 @@ export default function SangbujangLanding() {
       </section>
 
       {/* STICKY CTA */}
-      <div
+      {/* <div
         className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
         style={{
           transform: showSticky ? "translateY(0)" : "translateY(110%)",
@@ -1138,7 +1138,7 @@ export default function SangbujangLanding() {
             📞
           </a>
         </div>
-      </div>
+      </div> */}
 
       <FloatingCTA />
     </main>
