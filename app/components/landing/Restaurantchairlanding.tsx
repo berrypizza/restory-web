@@ -1,11 +1,132 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import LeatherSampleSection from "./Leathersamplesection";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
+import { cases } from "@/lib/case-data";
+
+/* ─────────────────────────────────────────
+   CaseStrip — 가죽 리폼 사례 가로 스크롤
+───────────────────────────────────────── */
+const CASE_ITEMS = cases
+  .filter((c) => c.category === "가죽 리폼")
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 6);
+
+function CaseStrip() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // 스크롤 위치로 현재 카드 인덱스 계산
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
+      : 0;
+    if (cardWidth > 0) setActiveIdx(Math.round(el.scrollLeft / cardWidth));
+  };
+
+  const scrollTo = (i: number) => {
+    const el = scrollRef.current;
+    if (!el || !el.firstElementChild) return;
+    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
+    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+  };
+
+  return (
+    <div className="mt-8">
+      {/* 헤더 */}
+      <div className="flex items-center justify-between mb-4 px-5">
+        <p className="text-[13px] font-bold text-neutral-900">실제 시공 사례</p>
+        <Link
+          href="/cases?cat=가죽 리폼"
+          className="text-[12px] font-bold"
+          style={{ color: "#1a5cff", textDecoration: "none" }}>
+          전체 보기 →
+        </Link>
+      </div>
+
+      {/* 네이티브 스크롤 + scroll-snap */}
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex gap-3 overflow-x-auto"
+        style={{
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}>
+        {CASE_ITEMS.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              scrollSnapAlign: "start",
+              flexShrink: 0,
+              width: "72%",
+              maxWidth: 300,
+            }}>
+            <Link
+              href={`/cases/${item.id}`}
+              draggable={false}
+              className="block overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb", textDecoration: "none" }}>
+              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+                <Image
+                  src={item.afterImg}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes="72vw"
+                  draggable={false}
+                />
+                <div
+                  className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-black text-white"
+                  style={{ background: "#1a5cff" }}>
+                  AFTER
+                </div>
+              </div>
+              <div className="p-3 bg-white">
+                <p className="text-[13px] font-extrabold text-neutral-900 truncate">
+                  {item.title}
+                </p>
+                <p className="text-[11px] text-neutral-400 mt-0.5">
+                  {item.region}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      {/* 도트 */}
+      <div className="flex justify-center gap-1.5 mt-4">
+        {CASE_ITEMS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className="rounded-full transition-all"
+            style={{
+              width: i === activeIdx ? 20 : 6,
+              height: 6,
+              background: i === activeIdx ? "#1a5cff" : "#d1d5db",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────
    CONSTANTS
@@ -148,7 +269,7 @@ export default function RestaurantChairLanding() {
                 border: "1px solid rgba(255,255,255,0.15)",
               }}>
               <Image
-                src="/images/logo-cc.png"
+                src="/images/logo.png"
                 alt="리스토리"
                 width={20}
                 height={20}
@@ -298,10 +419,10 @@ export default function RestaurantChairLanding() {
             <div
               className="rounded-2xl px-5 py-4 text-center"
               style={{ background: "#1a5cff" }}>
-              <p className="text-[18px] font-black text-white">
+              <p className="text-[15px] font-black text-white">
                 같은 의자입니다
               </p>
-              <p className="text-[14px] text-white/60 mt-0.5">
+              <p className="text-[12px] text-white/60 mt-0.5">
                 가죽만 교체했습니다
               </p>
             </div>
@@ -354,7 +475,7 @@ export default function RestaurantChairLanding() {
           4. REVIEWS — 믿어도 돼?
       ══════════════════════════════════ */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-2xl">
           <FadeIn>
             <div className="flex items-end gap-3 mb-8">
               <div>
@@ -367,73 +488,96 @@ export default function RestaurantChairLanding() {
                   직접 겪은 사장님들
                 </h2>
               </div>
-              <div className="ml-auto text-right pb-1">
+              <div className="ml-auto text-right pb-1 flex-shrink-0">
                 <p
                   className="text-[28px] font-black"
                   style={{ color: "#1a5cff" }}>
-                  4.9
+                  4.9★
                 </p>
                 <p className="text-[11px] text-neutral-400">네이버 평점</p>
               </div>
             </div>
           </FadeIn>
 
-          <div className="flex flex-col gap-4">
+          {/* 모바일: 세로 / 데스크탑: 2열 나란히 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
               {
                 img: "/images/chair/review-1.jpg",
+                count: "30개",
+                unit: "카페 의자",
                 area: "서울 강남구",
                 name: "김** 사장님",
-                situation: "카페 의자 30개",
                 quote:
                   "새 의자 산 줄 알고 손님들이 물어봐요. 가격은 새 의자의 1/3도 안 됐습니다.",
                 tag: "당일 완료",
+                tagBg: "#eef4ff",
+                tagColor: "#1a5cff",
               },
               {
                 img: "/images/chair/review-4.jpg",
+                count: "20개",
+                unit: "고깃집 의자",
                 area: "경기 부천시",
                 name: "박** 사장님",
-                situation: "고깃집 의자 20개",
                 quote:
                   "영업 끝나고 밤에 와서 해주셔서 영업 지장 하나도 없었어요. 다음에도 여기 할 겁니다.",
                 tag: "야간 시공",
+                tagBg: "#fff7ed",
+                tagColor: "#ea580c",
               },
             ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
                 <div
-                  className="overflow-hidden rounded-2xl"
+                  className="overflow-hidden rounded-2xl h-full"
                   style={{ border: "1px solid #e5e7eb" }}>
-                  <div className="aspect-[16/9] overflow-hidden bg-neutral-100">
+                  {/* 이미지 */}
+                  <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
                     <Image
                       src={r.img}
                       alt={r.name}
-                      width={600}
-                      height={338}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 50vw, 100vw"
                     />
-                  </div>
-                  <div className="p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <p className="text-[13px] font-bold text-neutral-900">
-                          {r.name}
-                        </p>
-                        <p className="text-[11px] text-neutral-400">
-                          {r.area} · {r.situation}
-                        </p>
+                    {/* 이미지 위 숫자 오버레이 — 핵심 정보를 사진과 함께 */}
+                    <div
+                      className="absolute inset-0 flex flex-col justify-end p-4"
+                      style={{
+                        background:
+                          "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)",
+                      }}>
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <p className="text-[11px] font-semibold text-white/60">
+                            {r.unit}
+                          </p>
+                          <p
+                            className="font-black text-white leading-none"
+                            style={{ fontSize: "clamp(2rem, 6vw, 2.8rem)" }}>
+                            {r.count}
+                          </p>
+                        </div>
+                        <span
+                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
+                          style={{ background: r.tagBg, color: r.tagColor }}>
+                          {r.tag}
+                        </span>
                       </div>
-                      <span
-                        className="rounded-full px-3 py-1 text-[11px] font-bold"
-                        style={{ background: "#eef4ff", color: "#1a5cff" }}>
-                        {r.tag}
-                      </span>
                     </div>
+                  </div>
+
+                  {/* 텍스트 */}
+                  <div className="p-4">
+                    <p className="text-[12px] text-neutral-400 mb-2">
+                      {r.name} · {r.area}
+                    </p>
                     <p className="text-[14px] leading-[1.7] text-neutral-700">
                       <span
                         style={{
                           color: "#1a5cff",
                           fontWeight: 900,
-                          fontSize: 18,
+                          fontSize: 16,
                         }}>
                         "
                       </span>
@@ -442,7 +586,7 @@ export default function RestaurantChairLanding() {
                         style={{
                           color: "#1a5cff",
                           fontWeight: 900,
-                          fontSize: 18,
+                          fontSize: 16,
                         }}>
                         "
                       </span>
@@ -452,6 +596,11 @@ export default function RestaurantChairLanding() {
               </FadeIn>
             ))}
           </div>
+
+          {/* 시공 사례 가로 스크롤 */}
+          <FadeIn delay={100}>
+            <CaseStrip />
+          </FadeIn>
         </div>
       </section>
 
