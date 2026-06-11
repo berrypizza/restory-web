@@ -126,7 +126,7 @@ export default async function CaseDetailPage({
           }}>
           <p
             className="text-[13px] font-semibold mb-1"
-            style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+            style={{ color: "rgba(255,255,255,0.5)" }}>
             이런 증상 있으신가요?
           </p>
           <p className="text-[17px] font-black text-white mb-4">
@@ -217,7 +217,12 @@ export default async function CaseDetailPage({
                   }}>
                   <div className="relative aspect-square overflow-hidden bg-neutral-100">
                     <Image
-                      src={r.afterImg}
+                      src={
+                        r.parentCategory === "싱크대 리폼" ||
+                        r.parentCategory === "가죽 리폼"
+                          ? r.afterImg
+                          : r.beforeImg
+                      }
                       alt={r.title}
                       fill
                       className="object-cover"
