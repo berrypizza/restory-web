@@ -22,6 +22,7 @@ const BASE_KEYWORDS = [
   "싱크대 상부장 수리 가격",
   "싱크대 상부장 수리 전문 업체",
   "싱크대 상부장 떨어짐 수리",
+  "싱크대 상부장 처졌을 때",
 ];
 
 export const metadata: Metadata = {
