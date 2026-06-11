@@ -240,8 +240,8 @@ PET 제로조인트 도어를 사용해
 시공 후에는 새 주방처럼 깔끔한 분위기로 바뀌었으며,
 전체 교체 대비 비용을 크게 절감할 수 있었습니다.
 `,
-    beforeImg: "/images/cases/case-043-before.jpg",
-    afterImg: "/images/cases/case-043-after-2.jpg",
+    beforeImg: "/images/door/before-after-8.png",
+    afterImg: "/images/door/before-after-7.png",
     blogUrl: "https://blog.naver.com/sofaresq/224306662990",
     date: "2026-06-05",
     tags: [

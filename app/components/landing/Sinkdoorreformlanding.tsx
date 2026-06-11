@@ -400,12 +400,12 @@ export default function SinkdoorReformLanding() {
             <div className="grid grid-cols-2 gap-2 mb-4">
               {[
                 {
-                  img: "/images/door/before-after-3.jpg",
+                  img: "/images/door/before-after-8.png",
                   label: "BEFORE",
                   dark: true,
                 },
                 {
-                  img: "/images/door/before-after-6.jpg",
+                  img: "/images/door/before-after-7.png",
                   label: "AFTER",
                   dark: false,
                 },
@@ -759,7 +759,7 @@ export default function SinkdoorReformLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
               {
-                img: "/images/door/review-1.jpg",
+                img: "/images/door/review-1.png",
                 keyword: "비용 1/5",
                 unit: "싱크대 문짝 리폼",
                 area: "서울 마포구",
@@ -771,16 +771,16 @@ export default function SinkdoorReformLanding() {
                 tagColor: "#1a5cff",
               },
               {
-                img: "/images/door/review-2.jpg",
+                img: "/images/door/review-2.png",
                 keyword: "주방이 환해졌어요",
                 unit: "싱크대 문짝 리폼",
                 area: "경기 수원시",
                 name: "한** 고객님",
                 quote:
                   "색상도 원하는 걸로 골랐는데 기존 싱크대랑 완벽하게 맞아요. 시공 시간도 짧고 대만족입니다.",
-                tag: "색상 맞춤",
-                tagBg: "#fff7ed",
-                tagColor: "#ea580c",
+                tag: "당일 완료",
+                tagBg: "#eef4ff",
+                tagColor: "#1a5cff",
               },
             ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
