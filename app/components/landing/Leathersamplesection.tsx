@@ -253,105 +253,176 @@ export default function LeatherSampleSection() {
 
       {/* 모달 */}
       {modalIdx !== null && current && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col"
-          style={{ background: "#000" }}>
-          {/* 모달 헤더 */}
+        <>
+          {/* 백드롭 — 데스크탑에서 뒤 어둡게, 클릭하면 닫힘 */}
           <div
-            className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-            style={{ background: "#111" }}>
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] font-semibold text-white">
-                <span className="text-[#1a5cff] font-black text-[15px]">
-                  {modalIdx + 1}
-                </span>{" "}
-                / {CATALOGS.length}
-              </span>
-              <span className="text-[11px] font-bold text-white">
-                {current.label}
-              </span>
-            </div>
-            <button
-              onClick={closeModal}
-              className="w-8 h-8 flex items-center justify-center rounded-full text-neutral-400 text-[18px]"
-              style={{ background: "#222", border: "none", cursor: "pointer" }}>
-              ✕
-            </button>
-          </div>
+            className="fixed inset-0 z-50"
+            style={{ background: "rgba(0,0,0,0.75)" }}
+            onClick={closeModal}
+          />
 
-          {/* 도트 */}
+          {/* 모달 본체
+              모바일  : 풀스크린 (inset-0)
+              데스크탑: 센터 오버레이 (width 440px, max-height 88vh)
+          */}
           <div
-            className="flex justify-center gap-1.5 py-2 flex-shrink-0"
-            style={{ background: "#111" }}>
-            {CATALOGS.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className="rounded-full transition-all"
-                style={{
-                  width: i === modalIdx ? 20 : 6,
-                  height: 6,
-                  background: i === modalIdx ? "#1a5cff" : "#444",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* 이미지 스크롤 영역 + 스와이프 */}
-          <div
-            className="flex-1 overflow-y-auto"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            style={{ touchAction: "pan-y" }}>
-            <div
-              style={{
-                opacity: fading ? 0 : 1,
-                transition: "opacity 0.15s ease",
-              }}>
-              <Image
-                src={current.img}
-                alt={`가죽 샘플 ${modalIdx + 1}`}
-                width={640}
-                height={1800}
-                className="w-full h-auto pointer-events-none"
-                draggable={false}
-              />
-            </div>
-            <p className="text-center text-[14px] font-bold text-neutral-200 py-3 select-none">
-              ← 밀어서 다른 샘플 보기 →
-            </p>
-          </div>
-
-          {/* 하단 CTA — 고정 */}
-          <div
-            className="flex-shrink-0 px-4 py-4 flex flex-col gap-2"
+            className="fixed z-50 flex flex-col
+              inset-0
+              md:inset-auto md:rounded-3xl md:overflow-hidden"
             style={{
               background: "#111",
-              borderTop: "1px solid #222",
-            }}>
-            <button
-              onClick={() => handleKakaoInquiry(current)}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15px] font-black"
-              style={{
-                background: "#FEE500",
-                color: "#1a1a1a",
-                border: "none",
-                cursor: "pointer",
-                fontFamily: "inherit",
-              }}>
-              💬 이 색상으로 카카오 문의
-            </button>
-            <a
-              href={PHONE}
-              className="flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[14px] font-bold text-white"
-              style={{ background: "#222", border: "1px solid #333" }}>
-              📞 전화 문의
-            </a>
+              // 데스크탑 센터 포지셔닝
+            }}
+            ref={(el) => {
+              if (el) {
+                const isMd = window.innerWidth >= 768;
+                if (isMd) {
+                  el.style.width = "440px";
+                  el.style.maxHeight = "88vh";
+                  el.style.top = "50%";
+                  el.style.left = "50%";
+                  el.style.transform = "translate(-50%, -50%)";
+                } else {
+                  el.style.width = "";
+                  el.style.maxHeight = "";
+                  el.style.top = "";
+                  el.style.left = "";
+                  el.style.transform = "";
+                }
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}>
+            {/* 헤더 */}
+            <div
+              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ background: "#111" }}>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-[13px] font-semibold text-white flex-shrink-0">
+                  <span className="text-[#1a5cff] font-black text-[15px]">
+                    {modalIdx + 1}
+                  </span>{" "}
+                  / {CATALOGS.length}
+                </span>
+                <span className="text-[12px] font-bold text-white truncate">
+                  {current.label}
+                </span>
+              </div>
+              <button
+                onClick={closeModal}
+                className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full text-neutral-400"
+                style={{
+                  background: "#2a2a2a",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 15,
+                }}>
+                ✕
+              </button>
+            </div>
+
+            {/* 도트 */}
+            <div
+              className="flex justify-center gap-1.5 pb-2 flex-shrink-0"
+              style={{ background: "#111" }}>
+              {CATALOGS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className="rounded-full transition-all"
+                  style={{
+                    width: i === modalIdx ? 20 : 6,
+                    height: 6,
+                    background: i === modalIdx ? "#1a5cff" : "#444",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* 이미지 스크롤 + 스와이프 */}
+            <div
+              className="flex-1 overflow-y-auto"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              style={{ touchAction: "pan-y" }}>
+              <div
+                style={{
+                  opacity: fading ? 0 : 1,
+                  transition: "opacity 0.15s ease",
+                }}>
+                <Image
+                  src={current.img}
+                  alt={`가죽 샘플 ${modalIdx + 1}`}
+                  width={640}
+                  height={1800}
+                  className="w-full h-auto pointer-events-none"
+                  draggable={false}
+                />
+              </div>
+              {/* 모바일 힌트 */}
+              <p className="md:hidden text-center text-[12px] text-neutral-500 py-3 select-none">
+                ← 밀어서 다른 샘플 보기 →
+              </p>
+              {/* 데스크탑 이전/다음 */}
+              <div className="hidden md:flex gap-2 px-4 py-3">
+                <button
+                  onClick={() => goTo(modalIdx - 1)}
+                  disabled={modalIdx === 0}
+                  className="flex-1 rounded-xl py-2.5 text-[13px] font-bold transition-all"
+                  style={{
+                    background: modalIdx === 0 ? "#1e1e1e" : "#2a2a2a",
+                    color: modalIdx === 0 ? "#444" : "#fff",
+                    border: "none",
+                    cursor: modalIdx === 0 ? "default" : "pointer",
+                    fontFamily: "inherit",
+                  }}>
+                  ‹ 이전
+                </button>
+                <button
+                  onClick={() => goTo(modalIdx + 1)}
+                  disabled={modalIdx === CATALOGS.length - 1}
+                  className="flex-1 rounded-xl py-2.5 text-[13px] font-bold transition-all"
+                  style={{
+                    background:
+                      modalIdx === CATALOGS.length - 1 ? "#1e1e1e" : "#1a5cff",
+                    color: modalIdx === CATALOGS.length - 1 ? "#444" : "#fff",
+                    border: "none",
+                    cursor:
+                      modalIdx === CATALOGS.length - 1 ? "default" : "pointer",
+                    fontFamily: "inherit",
+                  }}>
+                  다음 ›
+                </button>
+              </div>
+            </div>
+
+            {/* 하단 CTA */}
+            <div
+              className="flex-shrink-0 px-4 py-4 flex flex-col gap-2"
+              style={{ background: "#111", borderTop: "1px solid #1e1e1e" }}>
+              <button
+                onClick={() => handleKakaoInquiry(current)}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15px] font-black"
+                style={{
+                  background: "#FEE500",
+                  color: "#1a1a1a",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                }}>
+                💬 이 색상으로 카카오 문의
+              </button>
+              <a
+                href={PHONE}
+                className="flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[14px] font-bold text-white"
+                style={{ background: "#1e1e1e", border: "1px solid #2a2a2a" }}>
+                📞 전화 문의
+              </a>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
