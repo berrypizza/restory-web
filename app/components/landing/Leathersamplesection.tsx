@@ -11,7 +11,7 @@ const PHONE = "tel:010-6855-0957";
 const CATALOGS = [
   {
     id: 1,
-    img: "/images/chair/1-1.png",
+    img: "/images/chair/1-2.png",
     label: "Mirano",
     brands: "MIRANO 시리즈 · 28종",
     swatches: [

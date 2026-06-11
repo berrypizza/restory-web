@@ -237,11 +237,11 @@ export default function SangbujangLanding() {
         {/* 모바일 배경 */}
         <div className="absolute inset-0 md:hidden">
           <Image
-            src="/images/upper/hero.webp"
+            src="/images/upper/hero-im.png"
             alt=""
             fill
             className="object-cover"
-            style={{ opacity: 0.3 }}
+            style={{ opacity: 0.4 }}
             priority
             sizes="100vw"
           />
