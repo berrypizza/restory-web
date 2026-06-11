@@ -241,7 +241,7 @@ export default function SangbujangLanding() {
             alt=""
             fill
             className="object-cover"
-            style={{ opacity: 0.4 }}
+            style={{ opacity: 0.35 }}
             priority
             sizes="100vw"
           />
