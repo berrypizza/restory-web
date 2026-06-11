@@ -126,7 +126,7 @@ export default async function CaseDetailPage({
           }}>
           <p
             className="text-[13px] font-semibold mb-1"
-            style={{ color: "rgba(255,255,255,0.5)" }}>
+            style={{ color: "rgba(255, 255, 255, 0.8)" }}>
             이런 증상 있으신가요?
           </p>
           <p className="text-[17px] font-black text-white mb-4">
