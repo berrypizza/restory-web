@@ -11,29 +11,6 @@ export function generateStaticParams() {
   return cases.map((item) => ({ id: item.id }));
 }
 
-const REFORM_CATEGORIES = ["싱크대 리폼", "가죽 리폼"] as const;
-
-function isReformCategory(cat: string) {
-  return REFORM_CATEGORIES.includes(cat as (typeof REFORM_CATEGORIES)[number]);
-}
-
-function getOgImage(item: (typeof cases)[number]) {
-  return isReformCategory(item.parentCategory) ? item.afterImg : item.beforeImg;
-}
-
-function buildMetaDescription(item: (typeof cases)[number]): string {
-  const action = isReformCategory(item.parentCategory)
-    ? "결과가 궁금하다면?"
-    : "가 필요하다면?";
-  const desc = `${item.region} ${item.parentCategory}${action} 리스토리가 현장 확인 후 바로 해결합니다. 사진 한 장으로 견적 확인 →`;
-  return desc.length > 120 ? desc.slice(0, 119) + "…" : desc;
-}
-
-function buildMetaTitle(item: (typeof cases)[number]): string {
-  const cleanTitle = item.title.replace(/\s*사례$/, "");
-  return `${cleanTitle} | 리스토리 스튜디오`;
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -43,38 +20,33 @@ export async function generateMetadata({
   const item = cases.find((c) => c.id === id);
   if (!item) return {};
 
-  const ogImage = getOgImage(item);
-  const metaDesc = buildMetaDescription(item);
-  const metaTitle = buildMetaTitle(item);
-  const isReform = isReformCategory(item.parentCategory);
+  const imageUrl = `https://restorystudio.co.kr${item.afterImg}`;
 
   return {
-    title: metaTitle,
-    description: metaDesc,
+    title: item.title,
+    description: item.summary,
     alternates: {
       canonical: `https://restorystudio.co.kr/cases/${item.id}`,
     },
     openGraph: {
-      title: metaTitle,
-      description: metaDesc,
+      title: item.title,
+      description: item.summary,
       url: `https://restorystudio.co.kr/cases/${item.id}`,
       type: "article",
       images: [
         {
-          url: `https://restorystudio.co.kr${ogImage}`,
+          url: imageUrl,
           width: 1200,
           height: 900,
-          alt: isReform
-            ? `${item.title} 리폼 후 결과`
-            : `${item.title} 수리 전 상태`,
+          alt: `${item.title} 시공 후`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: metaTitle,
-      description: metaDesc,
-      images: [`https://restorystudio.co.kr${ogImage}`],
+      title: item.title,
+      description: item.summary,
+      images: [imageUrl],
     },
   };
 }
@@ -91,15 +63,15 @@ export default async function CaseDetailPage({
   const item = cases.find((c) => c.id === id);
   if (!item) notFound();
 
-  // JSON-LD — image를 getOgImage로 통일 (수정 1)
+  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: item.title,
-    description: buildMetaDescription(item),
+    description: item.summary,
     datePublished: item.date,
     dateModified: item.date,
-    image: `https://restorystudio.co.kr${getOgImage(item)}`,
+    image: `https://restorystudio.co.kr${item.afterImg}`,
     keywords: item.tags.map((t) => t.trim()).join(", "),
     articleSection: item.parentCategory,
     about: {
