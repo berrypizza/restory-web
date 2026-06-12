@@ -9,41 +9,63 @@ function isReformCategory(cat: string) {
 export async function GET() {
   const base = "https://www.restorystudio.co.kr";
 
-  const urlEntries = cases
+  const items = cases
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .map((c) => {
+      const pubDate = new Date(c.date).toUTCString();
+      const url = `${base}/cases/${c.id}`;
       const isReform = isReformCategory(c.parentCategory);
-      // 썸네일 우선 이미지 (리폼: after, 수리/복원: before) — 리스트와 동일한 로직
-      const primaryImg = isReform ? c.afterImg : c.beforeImg;
-      const secondaryImg = isReform ? c.beforeImg : c.afterImg;
+      // 리폼: after 이미지, 수리/복원: before 이미지 (리스트 썸네일 로직과 동일)
+      const imgPath = isReform ? c.afterImg : c.beforeImg;
+      const imgUrl = `${base}${imgPath}`;
+
+      const content = c.content
+        ? c.content
+            .trim()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+        : c.summary
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+      // 확장자 기반으로 MIME 타입 결정
+      const ext = imgPath.split(".").pop()?.toLowerCase();
+      const mimeType =
+        ext === "png"
+          ? "image/png"
+          : ext === "webp"
+            ? "image/webp"
+            : "image/jpeg";
 
       return `
-  <url>
-    <loc>${base}/cases/${c.id}</loc>
-    <image:image>
-      <image:loc>${base}${primaryImg}</image:loc>
-      <image:title>${c.title}</image:title>
-      <image:caption>${c.summary}</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>${base}${secondaryImg}</image:loc>
-      <image:title>${c.title} - ${isReform ? "리폼 전" : "수리 후"}</image:title>
-      <image:caption>${c.summary}</image:caption>
-    </image:image>
-  </url>`;
+    <item>
+      <title>${c.title.replace(/&/g, "&amp;")}</title>
+      <link>${url}</link>
+      <description>${content}</description>
+      <pubDate>${pubDate}</pubDate>
+      <guid>${url}</guid>
+      <enclosure url="${imgUrl}" type="${mimeType}" length="0" />
+      <media:content url="${imgUrl}" medium="image" type="${mimeType}" />
+    </item>`;
     })
     .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${urlEntries}
-</urlset>`;
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>리스토리 Re'Story - 작업사례</title>
+    <link>${base}</link>
+    <description>싱크대 수리·리폼, 의자 가죽 교체, 소파 복원 실제 작업사례. 서울·경기·인천 출장.</description>
+    ${items}
+  </channel>
+</rss>`;
 
   return new NextResponse(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
     },
   });
 }
