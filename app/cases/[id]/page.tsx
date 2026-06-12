@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { cases } from "@/lib/case-data";
 import BeforeAfterToggle from "./BeforeAfterToggle";
@@ -96,8 +95,6 @@ export default async function CaseDetailPage({
   const { id } = await params;
   const item = cases.find((c) => c.id === id);
   if (!item) notFound();
-
-  const isReform = isReformCategory(item.parentCategory);
 
   // JSON-LD
   const jsonLd = {
