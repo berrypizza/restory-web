@@ -24,11 +24,11 @@ function getOgImage(item: (typeof cases)[number]) {
 
 // 네이버 스니펫용 description — 120자 이내, 지역+서비스+CTA
 function buildMetaDescription(item: (typeof cases)[number]): string {
-  // "가죽 리폼 리폼 결과가..." 중복 방지 — action에 카테고리명 제외
+  // 중복 방지 — "싱크대 수리 수리가", "가죽 리폼 리폼 결과가" 모두 방지
   const action = isReformCategory(item.parentCategory)
     ? "결과가 궁금하다면?"
-    : "수리가 필요하다면?";
-  const desc = `${item.region} ${item.parentCategory} ${action} 리스토리가 현장 확인 후 바로 해결합니다. 사진 한 장으로 견적 확인 →`;
+    : "가 필요하다면?";
+  const desc = `${item.region} ${item.parentCategory}${action} 리스토리가 현장 확인 후 바로 해결합니다. 사진 한 장으로 견적 확인 →`;
   return desc.length > 120 ? desc.slice(0, 119) + "…" : desc;
 }
 
