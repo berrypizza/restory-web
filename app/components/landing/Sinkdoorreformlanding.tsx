@@ -1218,7 +1218,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* STICKY CTA */}
-      <div
+      {/* <div
         className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
         style={{
           transform: showSticky ? "translateY(0)" : "translateY(110%)",
@@ -1254,7 +1254,7 @@ export default function SinkdoorReformLanding() {
             📞
           </a>
         </div>
-      </div>
+      </div> */}
 
       <FloatingCTA />
     </main>
