@@ -4,6 +4,11 @@ export function LocalBusinessJsonLd() {
     "@type": "HomeAndConstructionBusiness",
     name: "리스토리 Re'Story",
     url: "https://restorystudio.co.kr",
+    sameAs: [
+      "https://blog.naver.com/sofaresq",
+      "https://cafe.naver.com/f-e/cafes/22748193",
+      "https://www.youtube.com/channel/UCV7_-XNkJeP_pli0D0YMraA",
+    ],
     logo: "https://restorystudio.co.kr/images/logo.png",
     image: "https://restorystudio.co.kr/images/og-image.png",
     description:

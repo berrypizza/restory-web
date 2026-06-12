@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import CasesPageContent from "./CasesPageContent";
+import { cases } from "@/lib/case-data";
 
 // ✅ 서버 컴포넌트에서 Metadata 생성 — "use client"와 분리
 export const metadata: Metadata = {
@@ -22,9 +23,33 @@ export const metadata: Metadata = {
 };
 
 export default function CasesPage() {
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "리스토리 작업사례",
+    description:
+      "싱크대 수리, 상부장 처짐 수리, 가죽 리폼, 소파 복원, 의자 천갈이 작업사례 모음",
+    itemListElement: cases.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `https://restorystudio.co.kr/cases/${item.id}`,
+      name: item.title,
+      image: `https://restorystudio.co.kr${item.afterImg}`,
+    })),
+  };
+
   return (
-    <Suspense fallback={null}>
-      <CasesPageContent />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(itemListJsonLd),
+        }}
+      />
+
+      <Suspense fallback={null}>
+        <CasesPageContent />
+      </Suspense>
+    </>
   );
 }
