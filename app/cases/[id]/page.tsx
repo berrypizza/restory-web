@@ -4,10 +4,39 @@ import { notFound } from "next/navigation";
 import { cases } from "@/lib/case-data";
 import BeforeAfterToggle from "./BeforeAfterToggle";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
+import CollapsibleContent from "./CollapsibleContent";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
   return cases.map((item) => ({ id: item.id }));
+}
+
+const REFORM_CATEGORIES = ["싱크대 리폼", "가죽 리폼"] as const;
+
+function isReformCategory(cat: string) {
+  return REFORM_CATEGORIES.includes(cat as (typeof REFORM_CATEGORIES)[number]);
+}
+
+// OG 이미지: 리폼 → after(결과물), 수리/복원 → before(문제 상황)
+function getOgImage(item: (typeof cases)[number]) {
+  return isReformCategory(item.parentCategory) ? item.afterImg : item.beforeImg;
+}
+
+// 네이버 스니펫용 description — 120자 이내, 지역+서비스+CTA
+function buildMetaDescription(item: (typeof cases)[number]): string {
+  const action = isReformCategory(item.parentCategory)
+    ? "리폼 결과가 궁금하다면?"
+    : "수리가 필요하다면?";
+  const desc = `${item.region} ${item.parentCategory} ${action} 리스토리가 현장 확인 후 바로 해결합니다. 사진 한 장으로 견적 확인 →`;
+  // 120자 초과 시 자름
+  return desc.length > 120 ? desc.slice(0, 119) + "…" : desc;
+}
+
+// title: "지역 서비스명 | 당일출장 리스토리" — "사례" 제거, 행동 유도
+function buildMetaTitle(item: (typeof cases)[number]): string {
+  // item.title에서 " 사례" 접미어 제거
+  const cleanTitle = item.title.replace(/\s*사례$/, "");
+  return `${cleanTitle} | 리스토리 스튜디오`;
 }
 
 export async function generateMetadata({
@@ -19,31 +48,38 @@ export async function generateMetadata({
   const item = cases.find((c) => c.id === id);
   if (!item) return {};
 
+  const ogImage = getOgImage(item);
+  const metaDesc = buildMetaDescription(item);
+  const metaTitle = buildMetaTitle(item);
+  const isReform = isReformCategory(item.parentCategory);
+
   return {
-    title: item.title,
-    description: item.summary,
+    title: metaTitle,
+    description: metaDesc,
     alternates: {
       canonical: `https://restorystudio.co.kr/cases/${item.id}`,
     },
     openGraph: {
-      title: item.title,
-      description: item.summary,
+      title: metaTitle,
+      description: metaDesc,
       url: `https://restorystudio.co.kr/cases/${item.id}`,
       type: "article",
       images: [
         {
-          url: `https://restorystudio.co.kr${item.afterImg}`,
+          url: `https://restorystudio.co.kr${ogImage}`,
           width: 1200,
           height: 900,
-          alt: `${item.title} 시공 후`,
+          alt: isReform
+            ? `${item.title} 리폼 후 결과`
+            : `${item.title} 수리 전 상태`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: item.title,
-      description: item.summary,
-      images: [`https://restorystudio.co.kr${item.afterImg}`],
+      title: metaTitle,
+      description: metaDesc,
+      images: [`https://restorystudio.co.kr${ogImage}`],
     },
   };
 }
@@ -60,14 +96,64 @@ export default async function CaseDetailPage({
   const item = cases.find((c) => c.id === id);
   if (!item) notFound();
 
-  // 같은 카테고리 관련 사례 (현재 것 제외, 최신 3개)
+  const isReform = isReformCategory(item.parentCategory);
+
+  // 관련 사례: 전체에서 최신순 3개 (현재 제외)
   const related = cases
-    .filter((c) => c.category === item.category && c.id !== item.id)
+    .filter((c) => c.id !== item.id)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3);
 
+  // JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: item.title,
+    description: buildMetaDescription(item),
+    datePublished: item.date,
+    dateModified: item.date,
+    image: `https://restorystudio.co.kr${item.afterImg}`,
+    keywords: item.tags.map((t) => t.trim()).join(", "),
+    articleSection: item.parentCategory,
+    about: {
+      "@type": "Service",
+      name: item.parentCategory,
+      serviceType: item.category,
+      areaServed: {
+        "@type": "Place",
+        name: item.region,
+      },
+    },
+    author: {
+      "@type": "LocalBusiness",
+      name: "리스토리 스튜디오",
+      url: "https://restorystudio.co.kr",
+      telephone: "010-6855-0957",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: item.region,
+        addressCountry: "KR",
+      },
+    },
+    publisher: {
+      "@type": "LocalBusiness",
+      name: "리스토리 스튜디오",
+      url: "https://restorystudio.co.kr",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://restorystudio.co.kr/cases/${item.id}`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-white mx-auto max-w-2xl px-4 pt-5">
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* 헤더 */}
       <div
         className="sticky top-0 z-30 bg-white px-4 py-3 -mx-4 flex items-center gap-3"
@@ -78,11 +164,11 @@ export default async function CaseDetailPage({
           style={{ color: "#64748b", textDecoration: "none" }}>
           ←
         </Link>
-        <h1
+        <span
           className="text-base font-bold truncate"
           style={{ color: "#111827" }}>
           {item.title}
-        </h1>
+        </span>
       </div>
 
       <div className="pt-5 pb-32">
@@ -91,7 +177,7 @@ export default async function CaseDetailPage({
           <span
             className="text-xs font-bold px-3 py-1 rounded-full"
             style={{ backgroundColor: "#1f66ff15", color: "#1f66ff" }}>
-            {item.category}
+            {item.parentCategory}
           </span>
           <span className="text-xs" style={{ color: "#94a3b8" }}>
             {item.region}
@@ -106,9 +192,10 @@ export default async function CaseDetailPage({
           </span>
         </div>
 
-        <h2 className="text-2xl font-black mb-2" style={{ color: "#111827" }}>
+        {/* h1 — 페이지 전체에서 하나 */}
+        <h1 className="text-2xl font-black mb-2" style={{ color: "#111827" }}>
           {item.title}
-        </h2>
+        </h1>
         <p
           className="text-base leading-relaxed mb-6"
           style={{ color: "#64748b" }}>
@@ -118,7 +205,7 @@ export default async function CaseDetailPage({
         {/* Before / After 토글 */}
         <BeforeAfterToggle item={item} />
 
-        {/* ── 인라인 CTA — Before/After 바로 아래 ── */}
+        {/* 인라인 CTA */}
         <div
           className="rounded-2xl p-5 mb-8"
           style={{
@@ -163,91 +250,90 @@ export default async function CaseDetailPage({
         {/* 작업 내용 */}
         {item.content && (
           <section className="mb-8">
-            <h3
+            <h2
               className="text-xl font-black mb-4"
               style={{ color: "#111827" }}>
               작업 내용
-            </h3>
-            <p
-              className="leading-8 whitespace-pre-line"
-              style={{ color: "#475569" }}>
-              {item.content}
-            </p>
+            </h2>
+            <CollapsibleContent content={item.content} collapsedHeight={160} />
           </section>
         )}
 
-        {/* 태그 */}
+        {/* 태그 — 클릭 시 해당 태그 검색 결과로 이동 (내부 링크) */}
         <div className="flex flex-wrap gap-2 mb-8">
           {item.tags.map((tag) => (
-            <span
+            <Link
               key={tag}
-              className="text-xs font-bold px-3 py-1.5 rounded-full"
-              style={{ backgroundColor: "#f3f4f6", color: "#64748b" }}>
-              #{tag}
-            </span>
+              href={`/cases?tag=${encodeURIComponent(tag.trim())}`}
+              className="text-xs font-bold px-3 py-1.5 rounded-full transition-colors hover:bg-[#1f66ff] hover:text-white"
+              style={{
+                backgroundColor: "#f3f4f6",
+                color: "#64748b",
+                textDecoration: "none",
+              }}>
+              #{tag.trim()}
+            </Link>
           ))}
         </div>
 
-        {/* ── 관련 사례 ── */}
+        {/* 관련 사례 */}
         {related.length > 0 && (
           <section className="mb-8">
             <div className="h-px mb-6" style={{ backgroundColor: "#f3f4f6" }} />
             <div className="flex items-center justify-between mb-4">
-              <h3
+              <h2
                 className="text-[15px] font-black"
                 style={{ color: "#111827" }}>
-                비슷한 사례
-              </h3>
+                이런 사례도 고쳤습니다
+              </h2>
               <Link
-                href={`/cases?cat=${item.category}`}
+                href="/cases"
                 className="text-[12px] font-bold"
-                style={{ color: "#1a5cff", textDecoration: "none" }}>
+                style={{ color: "#1f66ff", textDecoration: "none" }}>
                 전체 보기 →
               </Link>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              {related.map((r) => (
-                <Link
-                  key={r.id}
-                  href={`/cases/${r.id}`}
-                  className="block overflow-hidden rounded-xl"
-                  style={{
-                    border: "1px solid #e5e7eb",
-                    textDecoration: "none",
-                  }}>
-                  <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                    <Image
-                      src={
-                        r.parentCategory === "싱크대 리폼" ||
-                        r.parentCategory === "가죽 리폼"
-                          ? r.afterImg
-                          : r.beforeImg
-                      }
-                      alt={r.title}
-                      fill
-                      className="object-cover"
-                      sizes="33vw"
-                    />
-                  </div>
-                  <div className="p-2">
-                    <p
-                      className="text-[11px] font-bold truncate"
-                      style={{ color: "#111827" }}>
-                      {r.title}
-                    </p>
-                    <p
-                      className="text-[10px] mt-0.5"
-                      style={{ color: "#94a3b8" }}>
-                      {r.region}
-                    </p>
-                  </div>
-                </Link>
-              ))}
+              {related.map((r) => {
+                const rIsReform = isReformCategory(r.parentCategory);
+                return (
+                  <Link
+                    key={r.id}
+                    href={`/cases/${r.id}`}
+                    className="block overflow-hidden rounded-xl"
+                    style={{
+                      border: "1px solid #e5e7eb",
+                      textDecoration: "none",
+                    }}>
+                    <div className="relative aspect-square overflow-hidden bg-neutral-100">
+                      <Image
+                        src={rIsReform ? r.afterImg : r.beforeImg}
+                        alt={`${r.title} ${rIsReform ? "리폼 후" : "수리 전"}`}
+                        fill
+                        className="object-cover"
+                        sizes="33vw"
+                      />
+                    </div>
+                    <div className="p-2">
+                      <p
+                        className="text-[11px] font-bold truncate"
+                        style={{ color: "#111827" }}>
+                        {r.title}
+                      </p>
+                      <p
+                        className="text-[10px] mt-0.5"
+                        style={{ color: "#94a3b8" }}>
+                        {r.region}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         )}
 
-        {/* ── 하단 CTA ── */}
+        {/* 하단 CTA */}
         <div className="h-px mb-6" style={{ backgroundColor: "#f3f4f6" }} />
         <div
           className="rounded-2xl p-5 mb-4"
@@ -255,7 +341,7 @@ export default async function CaseDetailPage({
           <p
             className="text-[15px] font-black mb-1"
             style={{ color: "#111827" }}>
-            {item.category} 문의하기
+            {item.parentCategory} 문의하기
           </p>
           <p className="text-[13px] mb-4" style={{ color: "#64748b" }}>
             사진 한 장이면 수리 가능 여부 바로 확인해드립니다
@@ -287,7 +373,7 @@ export default async function CaseDetailPage({
           </div>
         </div>
 
-        {/* 블로그 / 카페 링크 (SEO + 추가 정보) */}
+        {/* 블로그 / 카페 링크 */}
         <a
           href={item.blogUrl}
           target="_blank"
