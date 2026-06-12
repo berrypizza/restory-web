@@ -189,17 +189,7 @@ export default async function CaseDetailPage({
           {item.summary}
         </p>
 
-        {/* 네이버 썸네일 수집용 — display:none이 opacity/1px보다 안정적으로 수집됨 */}
-        <div className="hidden">
-          <img
-            src={`https://restorystudio.co.kr${getOgImage(item)}`}
-            alt={`${item.title} 대표 이미지`}
-            width={1200}
-            height={900}
-          />
-        </div>
-
-        {/* Before / After 토글 */}
+        {/* Before / After 토글 — before 이미지가 HTML에 존재, 네이버 썸네일 수집 */}
         <BeforeAfterToggle item={item} />
 
         {/* 인라인 CTA */}
