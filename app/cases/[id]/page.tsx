@@ -5,6 +5,7 @@ import { cases } from "@/lib/case-data";
 import BeforeAfterToggle from "./BeforeAfterToggle";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import CollapsibleContent from "./CollapsibleContent";
+import RelatedCases from "./Relatedcases";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
@@ -97,12 +98,6 @@ export default async function CaseDetailPage({
   if (!item) notFound();
 
   const isReform = isReformCategory(item.parentCategory);
-
-  // 관련 사례: 전체에서 최신순 3개 (현재 제외)
-  const related = cases
-    .filter((c) => c.id !== item.id)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
 
   // JSON-LD
   const jsonLd = {
@@ -277,61 +272,10 @@ export default async function CaseDetailPage({
         </div>
 
         {/* 관련 사례 */}
-        {related.length > 0 && (
-          <section className="mb-8">
-            <div className="h-px mb-6" style={{ backgroundColor: "#f3f4f6" }} />
-            <div className="flex items-center justify-between mb-4">
-              <h2
-                className="text-[15px] font-black"
-                style={{ color: "#111827" }}>
-                이런 사례도 고쳤습니다
-              </h2>
-              <Link
-                href="/cases"
-                className="text-[12px] font-bold"
-                style={{ color: "#1f66ff", textDecoration: "none" }}>
-                전체 보기 →
-              </Link>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {related.map((r) => {
-                const rIsReform = isReformCategory(r.parentCategory);
-                return (
-                  <Link
-                    key={r.id}
-                    href={`/cases/${r.id}`}
-                    className="block overflow-hidden rounded-xl"
-                    style={{
-                      border: "1px solid #e5e7eb",
-                      textDecoration: "none",
-                    }}>
-                    <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                      <Image
-                        src={rIsReform ? r.afterImg : r.beforeImg}
-                        alt={`${r.title} ${rIsReform ? "리폼 후" : "수리 전"}`}
-                        fill
-                        className="object-cover"
-                        sizes="33vw"
-                      />
-                    </div>
-                    <div className="p-2">
-                      <p
-                        className="text-[11px] font-bold truncate"
-                        style={{ color: "#111827" }}>
-                        {r.title}
-                      </p>
-                      <p
-                        className="text-[10px] mt-0.5"
-                        style={{ color: "#94a3b8" }}>
-                        {r.region}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        )}
+        <RelatedCases
+          currentId={item.id}
+          currentParentCategory={item.parentCategory}
+        />
 
         {/* 하단 CTA */}
         <div className="h-px mb-6" style={{ backgroundColor: "#f3f4f6" }} />
