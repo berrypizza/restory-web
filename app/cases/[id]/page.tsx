@@ -17,14 +17,11 @@ function isReformCategory(cat: string) {
   return REFORM_CATEGORIES.includes(cat as (typeof REFORM_CATEGORIES)[number]);
 }
 
-// OG 이미지: 리폼 → after(결과물), 수리/복원 → before(문제 상황)
 function getOgImage(item: (typeof cases)[number]) {
   return isReformCategory(item.parentCategory) ? item.afterImg : item.beforeImg;
 }
 
-// 네이버 스니펫용 description — 120자 이내, 지역+서비스+CTA
 function buildMetaDescription(item: (typeof cases)[number]): string {
-  // 중복 방지 — "싱크대 수리 수리가", "가죽 리폼 리폼 결과가" 모두 방지
   const action = isReformCategory(item.parentCategory)
     ? "결과가 궁금하다면?"
     : "가 필요하다면?";
@@ -32,9 +29,7 @@ function buildMetaDescription(item: (typeof cases)[number]): string {
   return desc.length > 120 ? desc.slice(0, 119) + "…" : desc;
 }
 
-// title: "지역 서비스명 | 당일출장 리스토리" — "사례" 제거, 행동 유도
 function buildMetaTitle(item: (typeof cases)[number]): string {
-  // item.title에서 " 사례" 접미어 제거
   const cleanTitle = item.title.replace(/\s*사례$/, "");
   return `${cleanTitle} | 리스토리 스튜디오`;
 }
@@ -96,7 +91,7 @@ export default async function CaseDetailPage({
   const item = cases.find((c) => c.id === id);
   if (!item) notFound();
 
-  // JSON-LD
+  // JSON-LD — image를 getOgImage로 통일 (수정 1)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -104,7 +99,7 @@ export default async function CaseDetailPage({
     description: buildMetaDescription(item),
     datePublished: item.date,
     dateModified: item.date,
-    image: `https://restorystudio.co.kr${item.afterImg}`,
+    image: `https://restorystudio.co.kr${getOgImage(item)}`,
     keywords: item.tags.map((t) => t.trim()).join(", "),
     articleSection: item.parentCategory,
     about: {
@@ -184,7 +179,7 @@ export default async function CaseDetailPage({
           </span>
         </div>
 
-        {/* h1 — 페이지 전체에서 하나 */}
+        {/* h1 */}
         <h1 className="text-2xl font-black mb-2" style={{ color: "#111827" }}>
           {item.title}
         </h1>
@@ -193,6 +188,16 @@ export default async function CaseDetailPage({
           style={{ color: "#64748b" }}>
           {item.summary}
         </p>
+
+        {/* 네이버 썸네일 수집용 — display:none이 opacity/1px보다 안정적으로 수집됨 */}
+        <div className="hidden">
+          <img
+            src={`https://restorystudio.co.kr${getOgImage(item)}`}
+            alt={`${item.title} 대표 이미지`}
+            width={1200}
+            height={900}
+          />
+        </div>
 
         {/* Before / After 토글 */}
         <BeforeAfterToggle item={item} />
@@ -251,7 +256,7 @@ export default async function CaseDetailPage({
           </section>
         )}
 
-        {/* 태그 — 클릭 시 해당 태그 검색 결과로 이동 (내부 링크) */}
+        {/* 태그 */}
         <div className="flex flex-wrap gap-2 mb-8">
           {item.tags.map((tag) => (
             <Link
