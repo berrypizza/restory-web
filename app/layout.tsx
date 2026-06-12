@@ -13,7 +13,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://restorystudio.co.kr"),
+  metadataBase: new URL("https://www.restorystudio.co.kr"),
   title: {
     default: "리스토리 Re'Story - 가구 출장 수리 리폼 전문",
     template: "%s | 리스토리 Re'Story",

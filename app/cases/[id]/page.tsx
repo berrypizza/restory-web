@@ -20,18 +20,18 @@ export async function generateMetadata({
   const item = cases.find((c) => c.id === id);
   if (!item) return {};
 
-  const imageUrl = `https://restorystudio.co.kr${item.afterImg}`;
+  const imageUrl = `https://www.restorystudio.co.kr${item.afterImg}`;
 
   return {
     title: item.title,
     description: item.summary,
     alternates: {
-      canonical: `https://restorystudio.co.kr/cases/${item.id}`,
+      canonical: `https://www.restorystudio.co.kr/cases/${item.id}`,
     },
     openGraph: {
       title: item.title,
       description: item.summary,
-      url: `https://restorystudio.co.kr/cases/${item.id}`,
+      url: `https://www.restorystudio.co.kr/cases/${item.id}`,
       type: "article",
       images: [
         {
@@ -72,8 +72,8 @@ export default async function CaseDetailPage({
     datePublished: item.date,
     dateModified: item.date,
     image: [
-      `https://restorystudio.co.kr${item.beforeImg}`,
-      `https://restorystudio.co.kr${item.afterImg}`,
+      `https://www.restorystudio.co.kr${item.beforeImg}`,
+      `https://www.restorystudio.co.kr${item.afterImg}`,
     ],
 
     keywords: item.tags.map((t) => t.trim()).join(", "),
@@ -90,7 +90,7 @@ export default async function CaseDetailPage({
     author: {
       "@type": "LocalBusiness",
       name: "리스토리 스튜디오",
-      url: "https://restorystudio.co.kr",
+      url: "https://www.restorystudio.co.kr",
       telephone: "010-6855-0957",
       address: {
         "@type": "PostalAddress",
@@ -101,15 +101,15 @@ export default async function CaseDetailPage({
     publisher: {
       "@type": "Organization",
       name: "리스토리 스튜디오",
-      url: "https://restorystudio.co.kr",
+      url: "https://www.restorystudio.co.kr",
       logo: {
         "@type": "ImageObject",
-        url: "https://restorystudio.co.kr/images/logo-cc.png",
+        url: "https://www.restorystudio.co.kr/images/logo-cc.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://restorystudio.co.kr/cases/${item.id}`,
+      "@id": `https://www.restorystudio.co.kr/cases/${item.id}`,
     },
   };
 

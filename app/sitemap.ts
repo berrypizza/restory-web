@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { cases } from "@/lib/case-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://restorystudio.co.kr";
+  const base = "https://www.restorystudio.co.kr";
 
   // 정적 페이지 — lastModified를 실제 배포/수정일 기준으로 고정
   const staticPages = [

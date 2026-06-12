@@ -7,7 +7,7 @@ function isReformCategory(cat: string) {
 }
 
 export async function GET() {
-  const base = "https://restorystudio.co.kr";
+  const base = "https://www.restorystudio.co.kr";
 
   const urlEntries = cases
     .map((c) => {

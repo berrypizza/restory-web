@@ -115,7 +115,7 @@ export function ServiceJsonLd({
       "@type": "HomeAndConstructionBusiness",
       name: "리스토리 Re'Story",
       telephone: "010-6855-0957",
-      url: "https://restorystudio.co.kr",
+      url: "https://www.restorystudio.co.kr",
     },
     areaServed: ["서울특별시", "경기도", "인천광역시"],
     aggregateRating: {
