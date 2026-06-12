@@ -71,7 +71,11 @@ export default async function CaseDetailPage({
     description: item.summary,
     datePublished: item.date,
     dateModified: item.date,
-    image: `https://restorystudio.co.kr${item.afterImg}`,
+    image: [
+      `https://restorystudio.co.kr${item.beforeImg}`,
+      `https://restorystudio.co.kr${item.afterImg}`,
+    ],
+
     keywords: item.tags.map((t) => t.trim()).join(", "),
     articleSection: item.parentCategory,
     about: {
@@ -95,9 +99,13 @@ export default async function CaseDetailPage({
       },
     },
     publisher: {
-      "@type": "LocalBusiness",
+      "@type": "Organization",
       name: "리스토리 스튜디오",
       url: "https://restorystudio.co.kr",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://restorystudio.co.kr/images/logo-cc.png",
+      },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
