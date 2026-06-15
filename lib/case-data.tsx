@@ -109,7 +109,7 @@ export const cases: CaseItem[] = [
 `,
     beforeImg: "/images/cases/case-057-before.jpeg",
     afterImg: "/images/cases/case-057-after.jpeg",
-    blogUrl: "",
+    blogUrl: "https://blog.naver.com/kohh1515-/223965572114",
     date: "2026-06-15",
     tags: [
       "식탁의자 가죽 교체",
@@ -122,7 +122,6 @@ export const cases: CaseItem[] = [
       "인조가죽 교체",
       "인천 주안 의자 가죽 교체",
       "인천 주안 식탁의자 가죽 교체",
-      "인천 주안 의자 가죽 교체",
       "인천 주안 식탁의자 천갈이",
       "인천 주안 의자 천갈이",
       "인천 주안 의자 리폼",
