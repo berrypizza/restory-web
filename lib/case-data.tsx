@@ -1702,9 +1702,16 @@ PET 제로조인트 도어를 사용해
     id: "case-002",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
-    title: "상부장 추락 사례",
+    title: "부천 싱크대 상부장 추락 사례, 처진 다음은 떨어집니다.",
     region: "부천 작동",
     summary: "서랍이 안 닫히는 증상. 레일 부식으로 3단 서랍레일 전체 교체.",
+    content: `
+부천 작동에서 일어난 싱크대 상부장 추락 사례입니다.
+
+상부장이 앞으로 추락했습니다. 뒤에 벽에 고정이 되어야 있어야 할 시공목, 버팀목이 pb로 되어있는데 부식되서 썩어 버렸습니다.
+
+당일 출장 방문했으며, 시공 시간은 2시간 걸렸습니다.
+`,
     beforeImg: "/images/cases/case-002-before.jpg",
     afterImg: "/images/cases/case-002-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq",
