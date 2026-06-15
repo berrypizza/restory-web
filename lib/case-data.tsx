@@ -99,7 +99,7 @@ export const cases: CaseItem[] = [
 `,
     beforeImg: "/images/cases/case-054-before.jpg",
     afterImg: "/images/cases/case-054-after.jpg",
-    blogUrl: "",
+    blogUrl: "https://blog.naver.com/sofaresq/224316205727",
     date: "2026-06-15",
     tags: [
       "상부장 수리",
