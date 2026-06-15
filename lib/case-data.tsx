@@ -117,7 +117,7 @@ export const cases: CaseItem[] = [
 업소용 벤치의자 리폼을 고민하고 계시다면
 새 제품 구매 전에 천갈이가 가능한지 먼저 확인해 보시는 것을 추천드립니다.
 `,
-    beforeImg: "/images/cases/case-060-before.jpeg",
+    beforeImg: "/images/cases/case-060-beforee.jpeg",
     afterImg: "/images/cases/case-060-after.jpeg",
     blogUrl: "https://blog.naver.com/sofaresq/223716835928",
     date: "2026-06-15",
