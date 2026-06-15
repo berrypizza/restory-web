@@ -105,7 +105,7 @@ export const cases: CaseItem[] = [
 `,
     beforeImg: "/images/cases/case-056-before.png",
     afterImg: "/images/cases/case-056-after.jpg",
-    blogUrl: "",
+    blogUrl: "https://blog.naver.com/kohh1515-/224315712980",
     date: "2026-06-15",
     tags: [
       "식탁의자 천갈이",
