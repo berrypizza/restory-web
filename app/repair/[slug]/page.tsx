@@ -269,7 +269,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
 
   const service = getService("repair", slug);
   if (service) {
@@ -312,7 +313,8 @@ export default async function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug); // ← 추가
 
   const service = getService("repair", slug);
   if (service) return <ServiceLandingPage service={service} />;
