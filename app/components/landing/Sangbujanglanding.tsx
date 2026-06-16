@@ -133,14 +133,19 @@ function parseKeyword(keyword: string): { region: string; symptom: string } {
 /* ─────────────────────────────────────────
    CaseStrip
 ───────────────────────────────────────── */
-const CASE_ITEMS = cases
-  .filter((c) => c.category === "상부장 처짐")
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  .slice(0, 6);
-
-function CaseStrip() {
+function CaseStrip({ region }: { region?: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const allCases = cases
+    .filter((c) => c.category === "상부장 처짐")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const matched = region
+    ? allCases.filter((c) => c.region.includes(region))
+    : [];
+  const rest = allCases.filter((c) => !matched.includes(c));
+  const CASE_ITEMS = [...matched, ...rest].slice(0, 6);
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -868,7 +873,7 @@ export default function SangbujangLanding({ keyword }: Props) {
             ))}
           </div>
           <FadeIn delay={100}>
-            <CaseStrip />
+            <CaseStrip region={region} />
           </FadeIn>
         </div>
       </section>
