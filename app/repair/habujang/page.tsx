@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: "싱크대 하부장 수리 | 리스토리",
     description:
       "하부장 파손·물빠짐, 합판으로 튼튼하게. 교체 비용의 1/3. 3년 A/S.",
-    url: "https://restorystudio.co.kr/repair/habujang",
+    url: "https://www.restorystudio.co.kr/repair/habujang",
     images: [
       {
         url: "/images/hero-habujang.webp",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr/repair/habujang",
+    canonical: "https://www.restorystudio.co.kr/repair/habujang",
   },
 };
 

@@ -300,11 +300,11 @@ export async function generateMetadata({
   return {
     title: `${kw} | 리스토리 스튜디오`,
     description: desc,
-    alternates: { canonical: `https://restorystudio.co.kr/repair/${slug}` },
+    alternates: { canonical: `https://www.restorystudio.co.kr/repair/${slug}` },
     openGraph: {
       title: `${kw} | 리스토리 스튜디오`,
       description: desc,
-      url: `https://restorystudio.co.kr/repair/${slug}`,
+      url: `https://www.restorystudio.co.kr/repair/${slug}`,
     },
   };
 }

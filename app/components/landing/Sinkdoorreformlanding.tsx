@@ -224,7 +224,7 @@ export default function SinkdoorReformLanding() {
       <ServiceJsonLd
         name="싱크대 문짝 교체·리폼"
         description="싱크대 문짝만 교체해도 새 주방처럼. 전체 교체 비용의 1/5~. 당일 시공, 3년 무상 A/S, 경첩 무료 교체."
-        url="https://restorystudio.co.kr/kitchen/sink-door"
+        url="https://www.restorystudio.co.kr/kitchen/sink-door"
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 

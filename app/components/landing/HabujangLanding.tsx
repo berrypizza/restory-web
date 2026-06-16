@@ -189,8 +189,8 @@ export default function HabujangLanding({ keyword }: Props) {
         description="싱크대 하부장 밑판 물먹음·부풀음·파손 증상, 지판 교체. 교체 비용의 1/3~1/5. 3년 무상 A/S."
         url={
           keyword
-            ? `https://restorystudio.co.kr/repair/${keyword}`
-            : "https://restorystudio.co.kr/repair/habujang"
+            ? `https://www.restorystudio.co.kr/repair/${keyword}`
+            : "https://www.restorystudio.co.kr/repair/habujang"
         }
       />
       <FAQJsonLd faqs={FAQ} />

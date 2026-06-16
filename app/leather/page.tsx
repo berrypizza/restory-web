@@ -117,13 +117,13 @@ export const metadata: Metadata = {
         alt: "리스토리 의자 가죽 교체 시공 사례",
       },
     ],
-    url: "https://restorystudio.co.kr/leather",
+    url: "https://www.restorystudio.co.kr/leather",
     type: "website",
     siteName: "리스토리",
     locale: "ko_KR",
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr/leather",
+    canonical: "https://www.restorystudio.co.kr/leather",
   },
 };
 

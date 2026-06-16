@@ -225,7 +225,7 @@ export default function RestaurantChairLanding() {
       <ServiceJsonLd
         name="식당·카페 의자 가죽 교체"
         description="식당·카페 의자 가죽 교체 전문. 새 의자 대비 1/3~1/5 비용. 영업 외 시간 방문 시공, 1년 무상 A/S."
-        url="https://restorystudio.co.kr/landing/restaurant-chair"
+        url="https://www.restorystudio.co.kr/landing/restaurant-chair"
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 

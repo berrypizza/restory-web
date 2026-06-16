@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description:
     "싱크대 수리·리폼, 의자 가죽 교체, 소파 복원 전문. 사진 한 장으로 견적 바로 확인. 서울·경기·인천 출장.",
   alternates: {
-    canonical: "https://restorystudio.co.kr",
+    canonical: "https://www.restorystudio.co.kr",
   },
 };
 

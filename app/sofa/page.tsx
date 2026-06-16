@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     title: "소파 쿠션 복원 | 리스토리",
     description:
       "소파를 새로 살 필요 없습니다. 쿠션 복원만 하면 새것처럼. 1/10 비용.",
-    url: "https://restorystudio.co.kr/sofa",
+    url: "https://www.restorystudio.co.kr/sofa",
     images: [
       {
         url: "/images/sofa/hero-sofa-2.webp",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr/sofa",
+    canonical: "https://www.restorystudio.co.kr/sofa",
   },
 };
 

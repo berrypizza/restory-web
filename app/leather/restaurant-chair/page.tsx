@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "식당·카페 의자 가죽 교체 | 개당 3만원~ | 리스토리",
     description:
       "의자를 새로 살 필요 없습니다. 가죽만 바꾸면 새것처럼. 1/3 비용.",
-    url: "https://restorystudio.co.kr/leather/restaurant-chair",
+    url: "https://www.restorystudio.co.kr/leather/restaurant-chair",
     images: [
       {
         url: "/images/chair/hero-chair.webp",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr/leather/restaurant-chair",
+    canonical: "https://www.restorystudio.co.kr/leather/restaurant-chair",
   },
 };
 

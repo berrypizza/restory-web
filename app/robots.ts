@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/api/"],
     },
-    sitemap: "https://restorystudio.co.kr/sitemap.xml",
+    sitemap: "https://www.restorystudio.co.kr/sitemap.xml",
   };
 }

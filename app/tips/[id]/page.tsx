@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${tip.title} | 리스토리 꿀팁`,
       description: tip.description,
-      url: `https://restorystudio.co.kr/tips/${tip.id}`,
+      url: `https://www.restorystudio.co.kr/tips/${tip.id}`,
       type: "article",
       publishedTime: tip.createdAt,
       images: tip.thumbnail
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : undefined,
     },
     alternates: {
-      canonical: `https://restorystudio.co.kr/tips/${tip.id}`,
+      canonical: `https://www.restorystudio.co.kr/tips/${tip.id}`,
     },
   };
 }

@@ -107,7 +107,7 @@ export default function SofaCushionLanding() {
       <ServiceJsonLd
         name="싱크대 상부장 수리"
         description="싱크대 상부장 처짐·추락 증상 합판 시공목으로 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S."
-        url="https://restorystudio.co.kr/repair/sangbujang"
+        url="https://www.restorystudioudio.co.kr/repair/sangbujang"
       />
       <FAQJsonLd faqs={FAQ} />
 

@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "꿀팁 게시판 | 리스토리",
     description: "가구 수리·관리 꿀팁 모음. 비용 비교, 자가진단, 관리법.",
-    url: "https://restorystudio.co.kr/tips",
+    url: "https://www.restorystudio.co.kr/tips",
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr/tips",
+    canonical: "https://www.restorystudio.co.kr/tips",
   },
 };
 

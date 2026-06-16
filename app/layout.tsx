@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "리스토리 Re'Story - 가구 출장 수리 리폼 전문",
     description:
       "싱크대 수리, 싱크대 리폼, 의자 가죽 교체, 소파 복원. 사진만 보내면 견적 바로 안내.",
-    url: "https://restorystudio.co.kr",
+    url: "https://www.restorystudio.co.kr",
     images: [
       {
         url: "/images/og-image-2.png",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr",
+    canonical: "https://www.restorystudio.co.kr",
   },
 };
 

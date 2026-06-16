@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "싱크대 문짝 교체·리폼 | 리스토리",
     description: "문짝만 바꿔도 새 주방처럼. 전체 교체의 1/5 비용. 당일 시공.",
-    url: "https://restorystudio.co.kr/kitchen/sink-door",
+    url: "https://www.restorystudio.co.kr/kitchen/sink-door",
     images: [
       {
         url: "/images/hero-door.webp",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
   },
   alternates: {
-    canonical: "https://restorystudio.co.kr/kitchen/sink-door",
+    canonical: "https://www.restorystudio.co.kr/kitchen/sink-door",
   },
 };
 
