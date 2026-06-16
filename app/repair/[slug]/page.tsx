@@ -291,8 +291,12 @@ export async function generateMetadata({
   return {
     title: `${kw} | 리스토리 스튜디오`,
     description: desc,
+    // ★ 이거 추가
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
-      // ★ www로 통일
       canonical: `${BASE}/repair/${slug}`,
     },
     openGraph: {
