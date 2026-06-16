@@ -269,6 +269,23 @@ export default function HabujangLanding({ keyword }: Props) {
         </p>
       </section>
 
+      {region && (
+        <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+          <div className="mx-auto max-w-lg">
+            <h2
+              className="text-[20px] font-black mb-3"
+              style={{ color: "#111827" }}>
+              {region} 싱크대 하부장 밑판 교체
+            </h2>
+            <p className="text-[14px] leading-[1.8] text-neutral-600">
+              {region} 지역 싱크대 하부장 밑판 물먹음·부풀음·곰팡이 증상은
+              리스토리가 당일 출장으로 해결합니다. {region} 지역 출장 가능하며
+              사진 한 장 보내주시면 교체 가능 여부와 비용을 바로 안내드립니다.
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* ══════════ PHOTO REVIEWS ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
