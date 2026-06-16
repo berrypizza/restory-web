@@ -5,6 +5,10 @@ import type { Metadata } from "next";
 import SangbujangLanding from "@/app/components/landing/Sangbujanglanding";
 import HabujangLanding from "@/app/components/landing/HabujangLanding";
 
+export const dynamic = "force-static";
+export const dynamicParams = true;
+export const revalidate = 86400;
+
 const BASE = "https://www.restorystudio.co.kr";
 
 const KEYWORD_SLUGS: string[] = [
