@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "싱크대 상부장 수리 | 리스토리",
     description:
       "상부장 처짐·추락, 합판으로 튼튼하게. 교체 비용의 1/3. 3년 A/S.",
-    url: "https://www.restorystudioudio.co.kr/repair/sangbujang",
+    url: "https://www.restorystudio.co.kr/repair/sangbujang",
     images: [
       {
         url: "/images/hero-sangbujang.webp",

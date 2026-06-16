@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
@@ -38,16 +38,104 @@ const FAQ_ITEMS = [
 ];
 
 /* ─────────────────────────────────────────
+   keyword → 지역 파싱
+   "인천-싱크대-문짝-교체" → { region: "인천", type: "교체" }
+───────────────────────────────────────── */
+const REGIONS = [
+  "인천",
+  "청라",
+  "송도",
+  "영종도",
+  "검단",
+  "계양",
+  "부평",
+  "주안동",
+  "간석동",
+  "연수",
+  "인천논현",
+  "소래",
+  "김포",
+  "김포한강신도시",
+  "장기동",
+  "구래동",
+  "파주",
+  "운정",
+  "부천",
+  "중동",
+  "상동",
+  "역곡",
+  "소사",
+  "옥길",
+  "광명",
+  "시흥",
+  "일산",
+  "탄현동",
+  "강서구",
+  "마곡",
+  "발산",
+  "화곡",
+  "등촌",
+  "방화",
+  "염창",
+  "마포",
+  "홍대",
+  "합정",
+  "상암",
+  "영등포",
+  "여의도",
+  "당산",
+  "신길",
+  "목동",
+  "양천",
+  "신정동",
+  "은평",
+  "서대문",
+  "연희동",
+  "용산",
+  "이태원",
+  "동작",
+  "노량진",
+  "사당",
+  "관악",
+  "신림",
+  "금천",
+  "가산",
+  "구로",
+  "대림",
+  "개봉",
+  "서초",
+  "반포",
+  "잠원",
+  "강남",
+  "압구정",
+  "신사",
+  "논현",
+  "과천",
+];
+
+function parseKeyword(keyword: string): { region: string; type: string } {
+  const kw = keyword.replace(/-/g, " ");
+  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
+  const type = kw.includes("리폼") ? "리폼" : "교체";
+  return { region, type };
+}
+
+/* ─────────────────────────────────────────
    CaseStrip
 ───────────────────────────────────────── */
-const CASE_ITEMS = cases
-  .filter((c) => c.category === "싱크대 리폼")
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  .slice(0, 6);
-
-function CaseStrip() {
+function CaseStrip({ region }: { region?: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const allCases = cases
+    .filter((c) => c.category === "싱크대 리폼")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const matched = region
+    ? allCases.filter((c) => c.region.includes(region))
+    : [];
+  const rest = allCases.filter((c) => !matched.includes(c));
+  const CASE_ITEMS = [...matched, ...rest].slice(0, 6);
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -85,8 +173,6 @@ function CaseStrip() {
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          paddingLeft: 0,
-          paddingRight: 0,
         }}>
         {CASE_ITEMS.map((item) => (
           <div
@@ -202,17 +288,31 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
 }
 
 /* ─────────────────────────────────────────
+   PROPS
+───────────────────────────────────────── */
+interface Props {
+  keyword?: string;
+}
+
+/* ─────────────────────────────────────────
    MAIN
 ───────────────────────────────────────── */
-export default function SinkdoorReformLanding() {
+export default function SinkdoorReformLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showSticky, setShowSticky] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { region, type } = keyword
+    ? parseKeyword(keyword)
+    : { region: "", type: "" };
+
+  const heroTitle = region
+    ? `${region} 싱크대 문짝 ${type}`
+    : "문짝만 바꿔도\n새 주방됩니다";
+  const heroSub = region
+    ? `${region} 당일 시공 가능 · 전체 교체 비용의 1/5~`
+    : "싱크대 전체 교체 없이, 문짝만 바꾸면 됩니다";
+  const heroBadge = region
+    ? `${region} 당일 시공 · 교체 비용의 1/5~`
+    : "교체 비용의 1/5~";
 
   return (
     <main
@@ -222,9 +322,15 @@ export default function SinkdoorReformLanding() {
           "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif",
       }}>
       <ServiceJsonLd
-        name="싱크대 문짝 교체·리폼"
+        name={
+          region ? `${region} 싱크대 문짝 교체·리폼` : "싱크대 문짝 교체·리폼"
+        }
         description="싱크대 문짝만 교체해도 새 주방처럼. 전체 교체 비용의 1/5~. 당일 시공, 3년 무상 A/S, 경첩 무료 교체."
-        url="https://www.restorystudio.co.kr/kitchen/sink-door"
+        url={
+          keyword
+            ? `https://www.restorystudio.co.kr/kitchen/${keyword}`
+            : "https://www.restorystudio.co.kr/kitchen/sink-door"
+        }
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
@@ -256,9 +362,7 @@ export default function SinkdoorReformLanding() {
         <div
           className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
           style={{ minHeight: "100svh" }}>
-          <div
-            className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6
-            md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+          <div className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6 md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
             <FadeIn>
               <div
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
@@ -274,20 +378,21 @@ export default function SinkdoorReformLanding() {
                   className="rounded-full"
                 />
                 <span className="text-[12px] font-bold text-white/70">
-                  싱크대 문짝 교체 전문
+                  {region
+                    ? `${region} 싱크대 문짝 교체 전문`
+                    : "싱크대 문짝 교체 전문"}
                 </span>
               </div>
 
               <h1
-                className="font-black text-white leading-[1.15] mb-3"
+                className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
-                문짝만 바꿔도
-                <br />새 주방됩니다
+                {heroTitle}
               </h1>
               <p
-                className="font-medium text-white/60 mb-5"
+                className="font-medium text-white/60 mb-4"
                 style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
-                싱크대 전체 교체 없이, 문짝만 바꾸면 됩니다
+                {heroSub}
               </p>
 
               <div
@@ -297,10 +402,10 @@ export default function SinkdoorReformLanding() {
                   border: "1px solid rgba(26,92,255,0.4)",
                 }}>
                 <span className="text-[22px] font-black text-white">
-                  교체 비용의 1/5~
+                  {heroBadge}
                 </span>
                 <span className="text-[13px] font-medium text-white/50">
-                  당일 시공 완료
+                  제로 조인트 마감
                 </span>
               </div>
 
@@ -379,6 +484,36 @@ export default function SinkdoorReformLanding() {
         </div>
       </section>
 
+      {/* ★ 지역 배너 */}
+      {region && (
+        <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
+          <div className="mx-auto max-w-lg text-center">
+            <p className="text-[14px] font-black text-white">
+              📍 {region} 지역 당일 시공 가능 · 사진 한 장으로 무료 견적
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* ★ 지역 설명 블록 */}
+      {region && (
+        <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+          <div className="mx-auto max-w-lg">
+            <h2
+              className="text-[20px] font-black mb-3"
+              style={{ color: "#111827" }}>
+              {region} 싱크대 문짝 교체·리폼
+            </h2>
+            <p className="text-[14px] leading-[1.8] text-neutral-600">
+              {region} 지역 싱크대 문짝 교체·리폼은 리스토리가 당일 시공으로
+              해결합니다. 문짝만 바꿔도 새 주방처럼 바뀌고, 전체 교체 비용의 1/5
+              수준으로 가능합니다. 사진 한 장 보내주시면 {region} 출장 가능
+              여부와 비용을 바로 안내드립니다.
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* ══════════════════════════════════
           2. PROOF
       ══════════════════════════════════ */}
@@ -447,7 +582,6 @@ export default function SinkdoorReformLanding() {
             </div>
           </FadeIn>
 
-          {/* 비용 비교 */}
           <FadeIn delay={150}>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div
@@ -483,7 +617,6 @@ export default function SinkdoorReformLanding() {
             </div>
           </FadeIn>
 
-          {/* 품질 증명 — 제로 조인트 */}
           <FadeIn delay={180}>
             <div
               className="mt-4 overflow-hidden rounded-2xl"
@@ -502,8 +635,6 @@ export default function SinkdoorReformLanding() {
                   <strong className="text-neutral-800">제로 조인트</strong> —
                   이음새 없이 일체화 마감합니다.
                 </p>
-
-                {/* 비교 카드 */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div
                     className="rounded-xl p-4"
@@ -575,7 +706,6 @@ export default function SinkdoorReformLanding() {
                     </p>
                   </div>
                 </div>
-
                 <div
                   className="flex items-center justify-center gap-2 rounded-xl py-3"
                   style={{ background: "#eef4ff" }}>
@@ -591,8 +721,6 @@ export default function SinkdoorReformLanding() {
                   </span>
                 </div>
               </div>
-
-              {/* 실제 비교 사진 */}
               <div
                 className="grid grid-cols-2 border-t"
                 style={{ borderColor: "#f3f4f6" }}>
@@ -651,7 +779,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          3. COLORS — 어떤 색 고를 수 있어?
+          3. COLORS
       ══════════════════════════════════ */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
@@ -730,7 +858,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          5. REVIEWS
+          4. REVIEWS
       ══════════════════════════════════ */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
@@ -766,9 +894,6 @@ export default function SinkdoorReformLanding() {
                 name: "정** 고객님",
                 quote:
                   "전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요. 20년 된 아파트인데 새 주방 같아요.",
-                tag: "당일 완료",
-                tagBg: "#eef4ff",
-                tagColor: "#1a5cff",
               },
               {
                 img: "/images/door/review-2.png",
@@ -778,9 +903,6 @@ export default function SinkdoorReformLanding() {
                 name: "한** 고객님",
                 quote:
                   "색상도 원하는 걸로 골랐는데 기존 싱크대랑 완벽하게 맞아요. 시공 시간도 짧고 대만족입니다.",
-                tag: "당일 완료",
-                tagBg: "#eef4ff",
-                tagColor: "#1a5cff",
               },
             ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -816,8 +938,8 @@ export default function SinkdoorReformLanding() {
                         </div>
                         <span
                           className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: r.tagBg, color: r.tagColor }}>
-                          {r.tag}
+                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
+                          당일 완료
                         </span>
                       </div>
                     </div>
@@ -851,13 +973,13 @@ export default function SinkdoorReformLanding() {
             ))}
           </div>
           <FadeIn delay={100}>
-            <CaseStrip />
+            <CaseStrip region={region} />
           </FadeIn>
         </div>
       </section>
 
       {/* ══════════════════════════════════
-          4. HOW
+          5. HOW
       ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -898,7 +1020,7 @@ export default function SinkdoorReformLanding() {
                 step: "03",
                 icon: "✅",
                 title: "당일 시공 완료",
-                desc: "문짝 제작 후 방문 시공. 1~2시간이면 완료되고 바로 사용 가능합니다.",
+                desc: `문짝 제작 후 방문 시공. 1~2시간이면 완료되고 바로 사용 가능합니다.${region ? ` ${region} 당일 작업 마무리.` : ""}`,
                 time: "당일 완료",
               },
             ].map((s, i) => (
@@ -966,7 +1088,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          5. TRUST
+          6. TRUST
       ══════════════════════════════════ */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
@@ -1053,7 +1175,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          6. VIDEO
+          7. VIDEO
       ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -1078,7 +1200,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          7. FAQ
+          8. FAQ
       ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -1136,7 +1258,7 @@ export default function SinkdoorReformLanding() {
       </section>
 
       {/* ══════════════════════════════════
-          8. FINAL CTA
+          9. FINAL CTA
       ══════════════════════════════════ */}
       <section
         className="px-5 py-16 md:py-24"
@@ -1149,11 +1271,11 @@ export default function SinkdoorReformLanding() {
               지금 바로 시작하세요
             </p>
             <h2
-              className="font-black text-white leading-[1.2] mb-3"
+              className="font-black text-white leading-[1.2] mb-3 whitespace-pre-line"
               style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
-              싱크대 사진 한 장이면
-              <br />
-              충분합니다
+              {region
+                ? `${region} 문짝 교체\n사진 한 장이면 충분합니다`
+                : "싱크대 사진 한 장이면\n충분합니다"}
             </h2>
             <p
               className="text-[14px] mb-8"
@@ -1216,45 +1338,6 @@ export default function SinkdoorReformLanding() {
           </FadeIn>
         </div>
       </section>
-
-      {/* STICKY CTA */}
-      {/* <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
-        style={{
-          transform: showSticky ? "translateY(0)" : "translateY(110%)",
-          paddingBottom: "max(16px, env(safe-area-inset-bottom))",
-          background:
-            "linear-gradient(to top, rgba(10,22,40,0.97) 0%, rgba(10,22,40,0.0) 100%)",
-          paddingTop: 24,
-        }}>
-        <div className="mx-auto max-w-sm flex gap-2.5">
-          <a
-            href={KAKAO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl text-[15px] font-black"
-            style={{
-              background: "#FEE500",
-              color: "#1a1a1a",
-              padding: "16px 20px",
-            }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-            </svg>
-            카카오 상담
-          </a>
-          <a
-            href={PHONE}
-            className="flex items-center justify-center rounded-2xl text-[15px] font-bold text-white"
-            style={{
-              background: "rgba(255,255,255,0.12)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              padding: "16px 20px",
-            }}>
-            📞
-          </a>
-        </div>
-      </div> */}
 
       <FloatingCTA />
     </main>
