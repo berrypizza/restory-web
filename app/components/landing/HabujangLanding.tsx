@@ -8,36 +8,9 @@ import { cases } from "@/lib/case-data";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    DATA
-   ═══════════════════════════════════════════ */
-const REVIEWS = [
-  {
-    name: "김**",
-    area: "인천 서구",
-    text: "싱크대 밑에 물이 새서 바닥이 다 부풀어 올랐는데, 지판만 교체하니 완전히 새것처럼 됐어요.",
-    rating: 5,
-  },
-  {
-    name: "박**",
-    area: "서울 강서구",
-    text: "하부장 바닥이 축 처져서 그릇 넣기도 무서웠는데, 당일 시공으로 바로 해결됐습니다.",
-    rating: 5,
-  },
-  {
-    name: "이**",
-    area: "경기 부천시",
-    text: "다른 곳은 싱크대 전체 교체해야 한다고 했는데, 리스토리는 밑판만 교체해서 비용이 1/5도 안 들었어요.",
-    rating: 5,
-  },
-  {
-    name: "최**",
-    area: "서울 마포구",
-    text: "물 먹은 밑판 걷어내고 시공해주셨는데, 이제 습기 걱정 없이 쓸 수 있어서 든든합니다.",
-    rating: 5,
-  },
-];
-
+═══════════════════════════════════════════════════════════ */
 const FAQ = [
   {
     q: "하부장 밑판만 교체해도 되나요?",
@@ -64,21 +37,114 @@ const EXTRAS = [
     desc: "상부장 처짐·뜸 증상 함께 수리 가능",
   },
   { icon: "🚪", title: "문짝 리폼", desc: "낡은 문짝도 함께 교체 가능" },
-  {
-    icon: "💧",
-    title: "배수관 점검",
-    desc: "누수 원인 점검 및 안내",
-  },
+  { icon: "💧", title: "배수관 점검", desc: "누수 원인 점검 및 안내" },
 ];
 
 const PHONE = "tel:010-6855-0957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
+   keyword → 지역 파싱
+═══════════════════════════════════════════════════════════ */
+const REGIONS = [
+  "인천",
+  "청라",
+  "송도",
+  "영종도",
+  "검단",
+  "계양",
+  "부평",
+  "주안동",
+  "간석동",
+  "연수",
+  "인천논현",
+  "소래",
+  "김포",
+  "김포한강신도시",
+  "장기동",
+  "구래동",
+  "파주",
+  "운정",
+  "부천",
+  "중동",
+  "상동",
+  "역곡",
+  "소사",
+  "옥길",
+  "광명",
+  "시흥",
+  "일산",
+  "탄현동",
+  "강서구",
+  "마곡",
+  "발산",
+  "화곡",
+  "등촌",
+  "방화",
+  "염창",
+  "마포",
+  "홍대",
+  "합정",
+  "상암",
+  "영등포",
+  "여의도",
+  "당산",
+  "신길",
+  "목동",
+  "양천",
+  "신정동",
+  "은평",
+  "서대문",
+  "연희동",
+  "용산",
+  "이태원",
+  "동작",
+  "노량진",
+  "사당",
+  "관악",
+  "신림",
+  "금천",
+  "가산",
+  "구로",
+  "대림",
+  "개봉",
+  "서초",
+  "반포",
+  "잠원",
+  "강남",
+  "압구정",
+  "신사",
+  "논현",
+  "과천",
+];
+
+function parseKeyword(keyword: string): { region: string; symptom: string } {
+  const kw = keyword.replace(/-/g, " ");
+  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
+  const symptom = kw.includes("물먹음")
+    ? "물먹음"
+    : kw.includes("썩음")
+      ? "썩음"
+      : kw.includes("곰팡이")
+        ? "곰팡이"
+        : kw.includes("밑판")
+          ? "밑판 교체"
+          : "수리";
+  return { region, symptom };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PROPS
+═══════════════════════════════════════════════════════════ */
+interface Props {
+  keyword?: string;
+}
+
+/* ═══════════════════════════════════════════════════════════
    COMPONENT
-   ═══════════════════════════════════════════ */
-export default function HabujangLanding() {
+═══════════════════════════════════════════════════════════ */
+export default function HabujangLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
 
@@ -88,6 +154,25 @@ export default function HabujangLanding() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // keyword 파싱
+  const { region, symptom } = keyword
+    ? parseKeyword(keyword)
+    : { region: "", symptom: "" };
+
+  // 히어로 텍스트
+  const heroTitle = region ? `${region} 하부장 ${symptom}` : "물 먹은 하부장,";
+  const heroSub = region
+    ? `${region} 당일 출장 · 지판 교체로 1/5 비용 절약`
+    : "지판 교체로 1/5비용 절약";
+  const heroBadge = region
+    ? `${region} 출장 · 교체 비용의 1/5~`
+    : "교체 비용의 1/5~";
+
+  const CASE_ITEMS = cases
+    .filter((c) => c.category === "하부장 밑판 교체")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 8);
+
   return (
     <main
       className="bg-white"
@@ -95,16 +180,23 @@ export default function HabujangLanding() {
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      {/* seo */}
       <ServiceJsonLd
-        name="싱크대 하부장 밑판 교체"
+        name={
+          region
+            ? `${region} 싱크대 하부장 밑판 교체`
+            : "싱크대 하부장 밑판 교체"
+        }
         description="싱크대 하부장 밑판 물먹음·부풀음·파손 증상, 지판 교체. 교체 비용의 1/3~1/5. 3년 무상 A/S."
-        url="https://restorystudio.co.kr/repair/habujang"
+        url={
+          keyword
+            ? `https://restorystudio.co.kr/repair/${keyword}`
+            : "https://restorystudio.co.kr/repair/habujang"
+        }
       />
       <FAQJsonLd faqs={FAQ} />
 
+      {/* ══════════ HERO ══════════ */}
       <FadeIn>
-        {/* HERO IMAGE */}
         <section className="relative" style={{ background: "#1f66ff" }}>
           <Image
             src="/images/hero-habujang.webp"
@@ -125,20 +217,34 @@ export default function HabujangLanding() {
                   height={30}
                   className="inline-block mr-2"
                 />
-                리스토리 하부장 수리
+                {region ? `${region} 하부장 수리 전문` : "리스토리 하부장 수리"}
               </p>
-              <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
-                물 먹은 하부장,
-              </p>
-              <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
-                지판 교체로 1/5비용 절약
+              {/* ★ keyword 있으면 지역 맞춤 h1 */}
+              <h1
+                className="mt-1 font-black leading-[1.3] text-[#1f66ff]"
+                style={{ fontSize: "clamp(1.8rem, 5vw, 2.8rem)" }}>
+                {heroTitle}
+              </h1>
+              <p className="text-[22px] font-medium leading-[1.3] text-neutral-900 md:text-[32px]">
+                {heroSub}
               </p>
             </div>
           </div>
         </section>
       </FadeIn>
 
-      {/* HERO CTA BUTTONS */}
+      {/* ★ keyword 있으면 지역 배너 */}
+      {region && (
+        <section className="px-5 py-3" style={{ background: "#1f66ff" }}>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-[14px] font-black text-white">
+              📍 {region} 지역 당일 출장 가능 · 사진 한 장으로 무료 견적
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════ HERO CTA ══════════ */}
       <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
         <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
           <a
@@ -157,11 +263,13 @@ export default function HabujangLanding() {
         <p
           className="mx-auto mt-3 max-w-3xl text-center text-[13px] font-semibold md:text-[14px]"
           style={{ color: "rgba(255,255,255,0.6)" }}>
-          사진 한 장이면 밑판 교체 가능 여부 바로 안내드립니다
+          {region
+            ? `${region} 출장 · 사진 한 장이면 밑판 교체 가능 여부 바로 안내드립니다`
+            : "사진 한 장이면 밑판 교체 가능 여부 바로 안내드립니다"}
         </p>
       </section>
 
-      {/* PHOTO REVIEWS */}
+      {/* ══════════ PHOTO REVIEWS ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -193,62 +301,53 @@ export default function HabujangLanding() {
           </FadeIn>
           <FadeIn delay={150}>
             <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/habujang/review-1.jpeg"
-                    alt="하부장 밑판 교체 후기 1"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
+              {[
+                {
+                  img: "/images/habujang/review-1.jpeg",
+                  alt: "하부장 밑판 교체 후기 1",
+                  area: "인천 서구 김**",
+                  title: "물 먹은 바닥이\n완전 새것처럼!",
+                  desc: "배수관에서 물이 살짝 새서 밑판이 다 부풀었는데, 지판 교체하니 튼튼해졌어요.",
+                },
+                {
+                  img: "/images/habujang/review-2.jpg",
+                  alt: "하부장 밑판 교체 후기 2",
+                  area: "서울 강서구 박**",
+                  title: "전체 교체 안 해도\n이렇게 해결되다니",
+                  desc: "다른 업체는 싱크대 전체를 바꿔야 한다고 했는데, 밑판만 교체해서 비용도 아꼈어요.",
+                },
+              ].map((r, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
+                  <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+                    <Image
+                      src={r.img}
+                      alt={r.alt}
+                      width={400}
+                      height={300}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 md:p-6">
+                    <p className="text-[11px] text-neutral-400 md:text-[13px]">
+                      {r.area}
+                    </p>
+                    <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px] whitespace-pre-line">
+                      {r.title}
+                    </p>
+                    <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
+                      {r.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    인천 서구 김**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    물 먹은 바닥이
-                    <br />
-                    완전 새것처럼!
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    배수관에서 물이 살짝 새서 밑판이 다 부풀었는데, 지판
-                    교체하니 튼튼해졌어요.
-                  </p>
-                </div>
-              </div>
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/habujang/review-2.jpg"
-                    alt="하부장 밑판 교체 후기 2"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 강서구 박**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    전체 교체 안 해도
-                    <br />
-                    이렇게 해결되다니
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    다른 업체는 싱크대 전체를 바꿔야 한다고 했는데, 밑판만
-                    교체해서 비용도 아꼈어요.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </FadeIn>
         </div>
       </section>
 
-      {/* WHY 밑판 교체 */}
+      {/* ══════════ WHY ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#fafafa" }}>
@@ -273,7 +372,7 @@ export default function HabujangLanding() {
                 <p
                   className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[26px]"
                   style={{ background: "#1f66ff", color: "#ffffff" }}>
-                  1/3~1/5 수준으로 해결!
+                  {heroBadge}
                 </p>
               </div>
             </div>
@@ -308,7 +407,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* TRUST */}
+      {/* ══════════ TRUST ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f5f5f5" }}>
@@ -351,94 +450,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* SPECIALS */}
-      <section
-        className="px-5 pt-10 text-center text-white md:pt-16"
-        style={{ background: "#1f66ff" }}>
-        <FadeIn>
-          <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
-          <p
-            className="mt-4 text-[40px] font-thin md:text-[55px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            왜 유명하냐고요?
-          </p>
-          <h2 className="mt-2 text-[40px] font-black md:text-[55px]">
-            리스토리 하부장 수리는 특별합니다!
-          </h2>
-        </FadeIn>
-      </section>
-
-      {/* Special 01 */}
-      <section
-        className="px-5 pt-14 md:py-20"
-        style={{ background: "#1f66ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-              <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
-                  Special 01
-                </span>
-                <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  시공 후 문제 생기면{" "}
-                  <span className="text-[#1a5cff]">책임</span>져 주나요?
-                </h3>
-              </div>
-              <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
-                <Image
-                  src="/images/special-1-2.png"
-                  alt="본사 안심 보상제"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto"
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Special 02 */}
-      <section
-        className="px-5 pt-7 pb-14 md:pt-7 md:pb-20"
-        style={{ background: "#1f66ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-              <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
-                  Special 02
-                </span>
-                <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  절차는 간편한가요?
-                </h3>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:gap-5">
-                <div className="overflow-hidden rounded-xl">
-                  <Image
-                    src="/images/special-02-1.png"
-                    alt="사진만 찍어도 비대면 무료 견적 가능"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                </div>
-                <div className="overflow-hidden rounded-xl">
-                  <Image
-                    src="/images/special-02-2.png"
-                    alt="365일 밤 10시까지 상담 가능"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* SELF CHECK */}
+      {/* ══════════ SELF CHECK ══════════ */}
       <section className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
@@ -502,7 +514,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* 실제 시공 사례 슬라이더 */}
+      {/* ══════════ REAL CASES ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#ffffff" }}>
@@ -520,14 +532,6 @@ export default function HabujangLanding() {
           </FadeIn>
           <FadeIn delay={120}>
             {(() => {
-              const CASE_ITEMS = cases
-                .filter((c) => c.category === "하부장 밑판 교체")
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime(),
-                )
-                .slice(0, 8);
-
               function CaseSlider() {
                 const [idx, setIdx] = React.useState(0);
                 const pausedRef = React.useRef(false);
@@ -647,13 +651,11 @@ export default function HabujangLanding() {
                                     style={{ color: "#64748b" }}>
                                     {item.summary}
                                   </p>
-                                  <div className="mt-2">
-                                    <span
-                                      className="text-[11px]"
-                                      style={{ color: "#94a3b8" }}>
-                                      {item.region}
-                                    </span>
-                                  </div>
+                                  <span
+                                    className="text-[11px]"
+                                    style={{ color: "#94a3b8" }}>
+                                    {item.region}
+                                  </span>
                                 </div>
                               </Link>
                             </div>
@@ -684,7 +686,6 @@ export default function HabujangLanding() {
                   </>
                 );
               }
-
               return <CaseSlider />;
             })()}
           </FadeIn>
@@ -701,38 +702,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* YOUTUBE */}
-      <section
-        className="px-5 py-14 text-white md:py-20"
-        style={{ background: "#1a1a1a" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p
-              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
-              style={{ color: "rgba(255,255,255,0.35)" }}>
-              YOUTUBE
-            </p>
-            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
-              실제 시공 영상을 확인하세요
-            </h2>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div className="aspect-video">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube.com/embed/유튜브ID"
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* URGENT */}
+      {/* ══════════ URGENT ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{
@@ -751,12 +721,14 @@ export default function HabujangLanding() {
               </h3>
               <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
                 물 먹은 PB 밑판을 방치하면 곰팡이가 번지고, 악취가 주방 전체로
-                퍼집니다. 위생과 건강을 위해 빠른 교체를 권장합니다.
+                퍼집니다.
                 <br />
                 <strong
                   className="text-[18px] font-bold md:text-[22px]"
                   style={{ color: "#1f66ff" }}>
-                  당일 시공, 바로 사용 가능합니다.
+                  {region
+                    ? `${region} 당일 시공, 바로 사용 가능합니다.`
+                    : "당일 시공, 바로 사용 가능합니다."}
                 </strong>
               </p>
             </div>
@@ -764,48 +736,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* STATS BANNER */}
-      <section
-        className="px-5 py-12 text-center text-white md:py-20"
-        style={{
-          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
-        }}>
-        <FadeIn>
-          <p
-            className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            지판 교체의 자신감
-          </p>
-          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>3년</span>
-          </p>
-          <p
-            className="mt-1 text-[25px] font-semibold md:text-[35px]"
-            style={{ color: "rgba(255, 255, 255, 0.79)" }}>
-            무상 A/S 보장
-          </p>
-          <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
-            {[
-              { n: "99%", l: "시공 만족도" },
-              { n: "당일", l: "시공 완료" },
-              { n: "4.9", l: "고객 평점" },
-            ].map((s, i) => (
-              <div
-                key={i}
-                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg shadow-md md:px-6 md:py-4">
-                <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
-                <p
-                  className="mt-1 text-[18px] font-semibold md:text-[22px]"
-                  style={{ color: "rgba(255,255,255,0.79)" }}>
-                  {s.l}
-                </p>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* PROCESS */}
+      {/* ══════════ PROCESS ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -839,7 +770,7 @@ export default function HabujangLanding() {
                   icon: "/images/icon_step3.png",
                   step: "03",
                   title: "방문 시공",
-                  desc: "기존 밑판 제거 후\n지판 교체",
+                  desc: `${region ? `${region} ` : ""}기존 밑판 제거 후\n지판 교체`,
                 },
                 {
                   icon: "/images/icon_step4.png",
@@ -884,7 +815,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* EXTRAS */}
+      {/* ══════════ EXTRAS ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f0f4ff" }}>
@@ -922,7 +853,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ══════════ FAQ ══════════ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f7f9fd" }}>
@@ -974,7 +905,7 @@ export default function HabujangLanding() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* ══════════ FINAL CTA ══════════ */}
       <section
         className="px-5 py-16 text-center text-white md:py-24"
         style={{
@@ -982,8 +913,7 @@ export default function HabujangLanding() {
         }}>
         <FadeIn>
           <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            물 먹은 하부장 밑판
-            <br />
+            {region ? `${region} 하부장 밑판\n` : "물 먹은 하부장 밑판\n"}
             <span style={{ color: "#ffe066" }}>지판 교체로 새것처럼!</span>
           </h2>
           <p
@@ -1033,6 +963,7 @@ export default function HabujangLanding() {
           </div>
         </FadeIn>
       </section>
+
       <FloatingCTA />
     </main>
   );

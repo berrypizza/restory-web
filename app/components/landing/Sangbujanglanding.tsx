@@ -38,6 +38,99 @@ const FAQ_ITEMS = [
 ];
 
 /* ─────────────────────────────────────────
+   keyword → 지역·증상 파싱
+   "인천-싱크대-상부장-처짐" → { region: "인천", symptom: "처짐" }
+───────────────────────────────────────── */
+const REGIONS = [
+  "인천",
+  "청라",
+  "송도",
+  "영종도",
+  "검단",
+  "계양",
+  "부평",
+  "주안동",
+  "간석동",
+  "연수",
+  "인천논현",
+  "소래",
+  "김포",
+  "김포한강신도시",
+  "장기동",
+  "구래동",
+  "파주",
+  "운정",
+  "부천",
+  "중동",
+  "상동",
+  "역곡",
+  "소사",
+  "옥길",
+  "광명",
+  "시흥",
+  "일산",
+  "탄현동",
+  "강서구",
+  "마곡",
+  "발산",
+  "화곡",
+  "등촌",
+  "방화",
+  "염창",
+  "마포",
+  "홍대",
+  "합정",
+  "상암",
+  "영등포",
+  "여의도",
+  "당산",
+  "신길",
+  "목동",
+  "양천",
+  "신정동",
+  "은평",
+  "서대문",
+  "연희동",
+  "용산",
+  "이태원",
+  "동작",
+  "노량진",
+  "사당",
+  "관악",
+  "신림",
+  "금천",
+  "가산",
+  "구로",
+  "대림",
+  "개봉",
+  "서초",
+  "반포",
+  "잠원",
+  "강남",
+  "압구정",
+  "신사",
+  "논현",
+  "과천",
+];
+
+function parseKeyword(keyword: string): { region: string; symptom: string } {
+  const kw = keyword.replace(/-/g, " ");
+  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
+  const symptom = kw.includes("처짐")
+    ? "처짐"
+    : kw.includes("떨어짐")
+      ? "떨어짐"
+      : kw.includes("들뜸")
+        ? "들뜸"
+        : kw.includes("내려앉음")
+          ? "내려앉음"
+          : kw.includes("수리")
+            ? "수리"
+            : "처짐";
+  return { region, symptom };
+}
+
+/* ─────────────────────────────────────────
    CaseStrip
 ───────────────────────────────────────── */
 const CASE_ITEMS = cases
@@ -85,8 +178,6 @@ function CaseStrip() {
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          paddingLeft: 0,
-          paddingRight: 0,
         }}>
         {CASE_ITEMS.map((item) => (
           <div
@@ -202,17 +293,36 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
 }
 
 /* ─────────────────────────────────────────
+   PROPS
+───────────────────────────────────────── */
+interface Props {
+  /** 슬러그 형식 "인천-싱크대-상부장-처짐" 또는 undefined (기본 페이지) */
+  keyword?: string;
+}
+
+/* ─────────────────────────────────────────
    MAIN
 ───────────────────────────────────────── */
-export default function SangbujangLanding() {
+export default function SangbujangLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showSticky, setShowSticky] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // keyword가 있으면 지역·증상 파싱
+  const { region, symptom } = keyword
+    ? parseKeyword(keyword)
+    : { region: "", symptom: "" };
+
+  // 히어로 텍스트 — keyword 있으면 지역 맞춤, 없으면 기본값
+  const heroTitle = region
+    ? `${region} 싱크대 상부장 ${symptom}`
+    : "상부장 처짐\n교체하지 마세요";
+
+  const heroSub = region
+    ? `${region} 당일 출장 가능 · 합판 수리로 더 튼튼하게`
+    : "합판 수리로 더 튼튼하게, 더 저렴하게";
+
+  const heroBadge = region
+    ? `${region} 출장 · 교체 비용의 1/3~`
+    : "교체 비용의 1/3~";
 
   return (
     <main
@@ -222,9 +332,13 @@ export default function SangbujangLanding() {
           "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif",
       }}>
       <ServiceJsonLd
-        name="싱크대 상부장 수리"
+        name={region ? `${region} 싱크대 상부장 수리` : "싱크대 상부장 수리"}
         description="싱크대 상부장 처짐·추락 증상 합판 시공목으로 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S."
-        url="https://restorystudio.co.kr/repair/sangbujang"
+        url={
+          keyword
+            ? `https://restorystudio.co.kr/repair/${keyword}`
+            : "https://restorystudio.co.kr/repair/sangbujang"
+        }
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
@@ -234,7 +348,6 @@ export default function SangbujangLanding() {
       <section
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
-        {/* 모바일 배경 */}
         <div className="absolute inset-0 md:hidden">
           <Image
             src="/images/upper/hero-im.png"
@@ -257,10 +370,7 @@ export default function SangbujangLanding() {
         <div
           className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
           style={{ minHeight: "100svh" }}>
-          {/* 왼쪽 콘텐츠 */}
-          <div
-            className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6
-            md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+          <div className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6 md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
             <FadeIn>
               <div
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
@@ -276,24 +386,24 @@ export default function SangbujangLanding() {
                   className="rounded-full"
                 />
                 <span className="text-[12px] font-bold text-white/70">
-                  리스토리 상부장 수리
+                  {region
+                    ? `${region} 상부장 수리 전문`
+                    : "리스토리 상부장 수리"}
                 </span>
               </div>
 
+              {/* ★ 핵심: keyword 있으면 지역 맞춤 h1 */}
               <h1
-                className="font-black text-white leading-[1.15] mb-3"
+                className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
-                상부장
-                <br />
-                교체하지 마세요
+                {heroTitle}
               </h1>
               <p
                 className="font-medium text-white/60 mb-4"
                 style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
-                합판 수리로 더 튼튼하게, 더 저렴하게
+                {heroSub}
               </p>
 
-              {/* 앵커 가격 */}
               <div
                 className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
                 style={{
@@ -301,14 +411,13 @@ export default function SangbujangLanding() {
                   border: "1px solid rgba(26,92,255,0.4)",
                 }}>
                 <span className="text-[22px] font-black text-white">
-                  교체 비용의 1/3~
+                  {heroBadge}
                 </span>
                 <span className="text-[13px] font-medium text-white/50">
                   합판 시공목 사용
                 </span>
               </div>
 
-              {/* CTA */}
               <div className="flex flex-col gap-3 md:flex-row">
                 <a
                   href={KAKAO_URL}
@@ -341,7 +450,6 @@ export default function SangbujangLanding() {
                 </a>
               </div>
 
-              {/* 신뢰 지표 */}
               <div className="mt-8 flex items-center gap-6">
                 {[
                   { n: "500건+", l: "연간 수리" },
@@ -357,7 +465,6 @@ export default function SangbujangLanding() {
             </FadeIn>
           </div>
 
-          {/* 오른쪽 이미지 (데스크탑) */}
           <div className="hidden md:block md:w-[46%] relative flex-shrink-0">
             <Image
               src="/images/upper/hero.webp"
@@ -386,8 +493,19 @@ export default function SangbujangLanding() {
         </div>
       </section>
 
+      {/* ★ keyword 있으면 지역 맞춤 배너 추가 */}
+      {region && (
+        <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
+          <div className="mx-auto max-w-lg text-center">
+            <p className="text-[14px] font-black text-white">
+              📍 {region} 지역 당일 출장 가능 · 사진 한 장으로 무료 견적
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* ══════════════════════════════════
-          2. PROOF — 진짜야?
+          2. PROOF
       ══════════════════════════════════ */}
       <section
         className="px-5 py-14 md:py-20"
@@ -450,7 +568,6 @@ export default function SangbujangLanding() {
             </div>
           </FadeIn>
 
-          {/* 비용 비교 */}
           <FadeIn delay={150}>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div
@@ -486,7 +603,6 @@ export default function SangbujangLanding() {
             </div>
           </FadeIn>
 
-          {/* 품질 증명 — 합판 vs PB */}
           <FadeIn delay={180}>
             <div
               className="mt-4 overflow-hidden rounded-2xl"
@@ -562,58 +678,52 @@ export default function SangbujangLanding() {
                   </span>
                 </div>
               </div>
-              {/* 실측 사진 */}
               <div
                 className="grid grid-cols-2 border-t"
                 style={{ borderColor: "#f3f4f6" }}>
-                <div
-                  className="relative overflow-hidden"
-                  style={{ aspectRatio: "4/3" }}>
-                  <Image
-                    src="/images/tips/pb-damaged.jpg"
-                    alt="PB 파티클보드 소재"
-                    fill
-                    className="object-cover"
-                    sizes="50vw"
-                  />
+                {[
+                  {
+                    img: "/images/tips/pb-damaged.jpg",
+                    alt: "PB 파티클보드 소재",
+                    sub: "기존 PB 소재",
+                    label: "습기에 부서짐",
+                    dark: true,
+                  },
+                  {
+                    img: "/images/tips/plywood-cross-section.png",
+                    alt: "합판 시공목",
+                    sub: "리스토리 합판",
+                    label: "내구성 3배+",
+                    dark: false,
+                  },
+                ].map((item, i) => (
                   <div
-                    className="absolute inset-0 flex flex-col justify-end p-3"
-                    style={{
-                      background:
-                        "linear-gradient(to top, rgba(0,0,0,0.65), transparent)",
-                    }}>
-                    <p className="text-[10px] font-semibold text-white/70">
-                      기존 PB 소재
-                    </p>
-                    <p className="text-[13px] font-black text-white">
-                      습기에 부서짐
-                    </p>
+                    key={i}
+                    className="relative overflow-hidden"
+                    style={{ aspectRatio: "4/3" }}>
+                    <Image
+                      src={item.img}
+                      alt={item.alt}
+                      fill
+                      className="object-cover"
+                      sizes="50vw"
+                    />
+                    <div
+                      className="absolute inset-0 flex flex-col justify-end p-3"
+                      style={{
+                        background: item.dark
+                          ? "linear-gradient(to top, rgba(0,0,0,0.65), transparent)"
+                          : "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
+                      }}>
+                      <p className="text-[10px] font-semibold text-white/70">
+                        {item.sub}
+                      </p>
+                      <p className="text-[13px] font-black text-white">
+                        {item.label}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="relative overflow-hidden"
-                  style={{ aspectRatio: "4/3" }}>
-                  <Image
-                    src="/images/tips/plywood-cross-section.png"
-                    alt="합판 시공목"
-                    fill
-                    className="object-cover"
-                    sizes="50vw"
-                  />
-                  <div
-                    className="absolute inset-0 flex flex-col justify-end p-3"
-                    style={{
-                      background:
-                        "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
-                    }}>
-                    <p className="text-[10px] font-semibold text-white/70">
-                      리스토리 합판
-                    </p>
-                    <p className="text-[13px] font-black text-white">
-                      내구성 3배+
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </FadeIn>
@@ -657,9 +767,6 @@ export default function SangbujangLanding() {
                 name: "김현* 고객님",
                 quote:
                   "상부장이 떨어졌는데, 합판 시공목으로 튼튼하게 고쳐주셨어요. 작업 후에도 먼지 하나 없이 깨끗하게 청소해주셔서 감동했습니다.",
-                tag: "당일 완료",
-                tagBg: "#eef4ff",
-                tagColor: "#1a5cff",
               },
               {
                 img: "/images/review-photo-2.jpg",
@@ -669,9 +776,6 @@ export default function SangbujangLanding() {
                 name: "이승* 고객님",
                 quote:
                   "다른 데는 교체하라고만 했는데 여기서 수리로 해결됐어요. 비용도 1/3 수준이었습니다. 보양지 쓰시는 거 보고 놀랐어요.",
-                tag: "당일 완료",
-                tagBg: "#eef4ff",
-                tagColor: "#1a5cff",
               },
             ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -705,8 +809,8 @@ export default function SangbujangLanding() {
                         </div>
                         <span
                           className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: r.tagBg, color: r.tagColor }}>
-                          {r.tag}
+                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
+                          당일 완료
                         </span>
                       </div>
                     </div>
@@ -787,7 +891,7 @@ export default function SangbujangLanding() {
                 step: "03",
                 icon: "✅",
                 title: "방문 시공 완료",
-                desc: "보양 처리 → 합판 수리 → 집진기 청소 → 완료. 당일 작업 마무리.",
+                desc: `보양 처리 → 합판 수리 → 집진기 청소 → 완료. ${region ? `${region} 당일 작업 마무리.` : "당일 작업 마무리."}`,
                 time: "당일 완료",
               },
             ].map((s, i) => (
@@ -1035,9 +1139,9 @@ export default function SangbujangLanding() {
             <h2
               className="font-black text-white leading-[1.2] mb-3"
               style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
-              상부장 사진 한 장이면
-              <br />
-              충분합니다
+              {region
+                ? `${region} 상부장 수리\n사진 한 장이면 충분합니다`
+                : "상부장 사진 한 장이면\n충분합니다"}
             </h2>
             <p
               className="text-[14px] mb-8"
@@ -1100,45 +1204,6 @@ export default function SangbujangLanding() {
           </FadeIn>
         </div>
       </section>
-
-      {/* STICKY CTA */}
-      {/* <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
-        style={{
-          transform: showSticky ? "translateY(0)" : "translateY(110%)",
-          paddingBottom: "max(16px, env(safe-area-inset-bottom))",
-          background:
-            "linear-gradient(to top, rgba(10,22,40,0.97) 0%, rgba(10,22,40,0.0) 100%)",
-          paddingTop: 24,
-        }}>
-        <div className="mx-auto max-w-sm flex gap-2.5">
-          <a
-            href={KAKAO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl text-[15px] font-black"
-            style={{
-              background: "#FEE500",
-              color: "#1a1a1a",
-              padding: "16px 20px",
-            }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-            </svg>
-            카카오 상담
-          </a>
-          <a
-            href={PHONE}
-            className="flex items-center justify-center rounded-2xl text-[15px] font-bold text-white"
-            style={{
-              background: "rgba(255,255,255,0.12)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              padding: "16px 20px",
-            }}>
-            📞
-          </a>
-        </div>
-      </div> */}
 
       <FloatingCTA />
     </main>
