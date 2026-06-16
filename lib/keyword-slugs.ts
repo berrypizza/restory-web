@@ -159,6 +159,51 @@ const DOOR_REGIONAL = REGIONS.flatMap((region) => {
 });
 
 // ─────────────────────────────────────────────
+// LEATHER — 의자 천갈이
+// ─────────────────────────────────────────────
+const CHAIR_SYMPTOMS = ["천갈이", "가죽-교체", "가죽-리폼"] as const;
+
+const CHAIR_BASE = [
+  "의자-천갈이",
+  "의자-가죽-교체",
+  "의자-가죽-리폼",
+  "식탁의자-천갈이",
+  "식탁의자-가죽-교체",
+  "업소용-의자-천갈이",
+  "식당-의자-천갈이",
+  "카페-의자-천갈이",
+  "벤치의자-천갈이",
+  "붙박이-소파-천갈이",
+  "붙박이-쇼파-천갈이",
+];
+
+const CHAIR_REGIONAL = REGIONS.flatMap((region) => {
+  const symptoms = REGIONS_MAJOR.has(region)
+    ? CHAIR_SYMPTOMS
+    : (["천갈이"] as const);
+  return symptoms.map((s) => `${region}-의자-${s}`);
+});
+
+const CHAIR_SHORT = [
+  "인천-의자-천갈이",
+  "송도-의자-천갈이",
+  "부천-의자-천갈이",
+  "광명-의자-천갈이",
+  "일산-의자-천갈이",
+  "강서구-의자-천갈이",
+  "마포-의자-천갈이",
+  "영등포-의자-천갈이",
+  "목동-의자-천갈이",
+  "구로-의자-천갈이",
+  "서초-의자-천갈이",
+  "강남-의자-천갈이",
+  "강남-의자-천갈이",
+  "사당-의자-천갈이",
+  "관악-의자-천갈이",
+  "신림-의자-천갈이",
+];
+
+// ─────────────────────────────────────────────
 // 소파 — 추후 추가
 // ─────────────────────────────────────────────
 // const SOFA_BASE = ["소파-쿠션-복원", "소파-꺼짐-수리", ...];
@@ -182,6 +227,12 @@ export const REPAIR_KEYWORD_SLUGS: string[] = [
 ];
 
 export const KITCHEN_KEYWORD_SLUGS: string[] = [...DOOR_BASE, ...DOOR_REGIONAL];
+
+export const LEATHER_KEYWORD_SLUGS: string[] = [
+  ...CHAIR_BASE,
+  ...CHAIR_REGIONAL,
+  ...CHAIR_SHORT,
+];
 
 // export const SOFA_KEYWORD_SLUGS: string[] = [...SOFA_BASE, ...SOFA_REGIONAL];
 // export const LEATHER_KEYWORD_SLUGS: string[] = [...CHAIR_BASE, ...CHAIR_REGIONAL];

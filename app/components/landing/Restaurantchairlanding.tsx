@@ -10,16 +10,21 @@ import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { cases } from "@/lib/case-data";
 
 /* ─────────────────────────────────────────
-   CaseStrip — 가죽 리폼 사례 가로 스크롤
+   CaseStrip
 ───────────────────────────────────────── */
-const CASE_ITEMS = cases
-  .filter((c) => c.category === "가죽 리폼")
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  .slice(0, 6);
-
-function CaseStrip() {
+function CaseStrip({ region }: { region?: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const allCases = cases
+    .filter((c) => c.category === "가죽 리폼")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const matched = region
+    ? allCases.filter((c) => c.region.includes(region))
+    : [];
+  const rest = allCases.filter((c) => !matched.includes(c));
+  const CASE_ITEMS = [...matched, ...rest].slice(0, 6);
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -121,7 +126,6 @@ function CaseStrip() {
     </div>
   );
 }
-
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
@@ -151,6 +155,90 @@ const FAQ_ITEMS = [
   },
 ];
 
+const REGIONS = [
+  "인천",
+  "청라",
+  "송도",
+  "영종도",
+  "검단",
+  "계양",
+  "부평",
+  "주안동",
+  "간석동",
+  "연수",
+  "인천논현",
+  "소래",
+  "김포",
+  "김포한강신도시",
+  "장기동",
+  "구래동",
+  "파주",
+  "운정",
+  "부천",
+  "중동",
+  "상동",
+  "역곡",
+  "소사",
+  "옥길",
+  "광명",
+  "시흥",
+  "일산",
+  "탄현동",
+  "강서구",
+  "마곡",
+  "발산",
+  "화곡",
+  "등촌",
+  "방화",
+  "염창",
+  "마포",
+  "홍대",
+  "합정",
+  "상암",
+  "영등포",
+  "여의도",
+  "당산",
+  "신길",
+  "목동",
+  "양천",
+  "신정동",
+  "은평",
+  "서대문",
+  "연희동",
+  "용산",
+  "이태원",
+  "동작",
+  "노량진",
+  "사당",
+  "관악",
+  "신림",
+  "금천",
+  "가산",
+  "구로",
+  "대림",
+  "개봉",
+  "서초",
+  "반포",
+  "잠원",
+  "강남",
+  "압구정",
+  "신사",
+  "논현",
+  "과천",
+];
+
+function parseKeyword(keyword: string): { region: string; symptom: string } {
+  const kw = keyword.replace(/-/g, " ");
+  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
+
+  const symptom = kw.includes("가죽 교체")
+    ? "가죽 교체"
+    : kw.includes("가죽 리폼")
+      ? "가죽 리폼"
+      : "천갈이";
+
+  return { region, symptom };
+}
 /* ─────────────────────────────────────────
    YouTubeFacade
 ───────────────────────────────────────── */
@@ -201,11 +289,13 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
     </div>
   );
 }
-
+interface Props {
+  keyword?: string;
+}
 /* ─────────────────────────────────────────
    MAIN
 ───────────────────────────────────────── */
-export default function RestaurantChairLanding() {
+export default function RestaurantChairLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
 
@@ -214,6 +304,20 @@ export default function RestaurantChairLanding() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const { region, symptom } = keyword
+    ? parseKeyword(keyword)
+    : { region: "", symptom: "" };
+
+  const heroTitle = region
+    ? `${region} 의자 ${symptom}`
+    : "의자 새로\n사지 마세요";
+
+  const heroSub = region
+    ? `${region} 출장 가능 · 가죽만 바꾸면 새것처럼`
+    : "가죽만 바꾸면 새것처럼";
+
+  const heroBadge = region ? `${region} 출장 · 개당 3만원~` : "개당 3만원~";
 
   return (
     <main
@@ -285,16 +389,14 @@ export default function RestaurantChairLanding() {
               </div>
 
               <h1
-                className="font-black text-white leading-[1.15] mb-3"
+                className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}>
-                의자 새로
-                <br />
-                사지 마세요
+                {heroTitle}
               </h1>
               <p
                 className="font-medium text-white/60 mb-4"
                 style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}>
-                가죽만 바꾸면 새것처럼
+                {heroSub}
               </p>
 
               {/* 앵커 가격 */}
@@ -305,7 +407,7 @@ export default function RestaurantChairLanding() {
                   border: "1px solid rgba(26,92,255,0.4)",
                 }}>
                 <span className="text-[22px] font-black text-white">
-                  개당 3만원~
+                  {heroBadge}
                 </span>
                 <span className="text-[13px] font-medium text-white/50">
                   새 의자의 1/3 수준
@@ -391,6 +493,35 @@ export default function RestaurantChairLanding() {
           </div>
         </div>
       </section>
+
+      {region && (
+        <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
+          <div className="mx-auto max-w-lg text-center">
+            <p className="text-[14px] font-black text-white">
+              📍 {region} 지역 출장 가능 · 사진 한 장으로 무료 견적
+            </p>
+          </div>
+        </section>
+      )}
+
+      {region && (
+        <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+          <div className="mx-auto max-w-lg">
+            <h2
+              className="text-[20px] font-black mb-3"
+              style={{ color: "#111827" }}>
+              {region} 의자 {symptom}
+            </h2>
+
+            <p className="text-[14px] leading-[1.8] text-neutral-600">
+              {region} 지역 의자 천갈이 및 가죽 교체 전문 리스토리입니다. 새
+              의자를 구매하지 않아도 가죽만 교체해 새것처럼 사용할 수 있습니다.
+              사진과 수량을 보내주시면 {region} 출장 가능 여부와 비용을 바로
+              안내드립니다.
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* ══════════════════════════════════
           2. PROOF — 진짜야?
@@ -754,7 +885,7 @@ export default function RestaurantChairLanding() {
             ))}
           </div>
           <FadeIn delay={100}>
-            <CaseStrip />
+            <CaseStrip region={region} />{" "}
           </FadeIn>
         </div>
       </section>
