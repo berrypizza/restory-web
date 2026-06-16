@@ -5,9 +5,8 @@ import type { Metadata } from "next";
 import SangbujangLanding from "@/app/components/landing/Sangbujanglanding";
 import HabujangLanding from "@/app/components/landing/HabujangLanding";
 
-/* ═══════════════════════════════════════════════════════════
-   키워드 슬러그 목록
-═══════════════════════════════════════════════════════════ */
+const BASE = "https://www.restorystudio.co.kr";
+
 const KEYWORD_SLUGS: string[] = [
   // ── 상부장 기본 ──
   "싱크대-상부장-처짐",
@@ -19,7 +18,6 @@ const KEYWORD_SLUGS: string[] = [
   "싱크대-상부장-수리",
   "싱크대-상부장-내려앉음",
   "싱크대-상부장-내려앉음-수리",
-  "싱크대-상부장-틀어짐",
   "싱크대-주방장-수리",
   "주방장-처짐-수리",
   // ── 상부장 × 지역 ──
@@ -246,9 +244,6 @@ const KEYWORD_SLUGS: string[] = [
   "과천-싱크대-하부장-수리",
 ];
 
-/* ═══════════════════════════════════════════════════════════
-   generateStaticParams
-═══════════════════════════════════════════════════════════ */
 export function generateStaticParams() {
   const existing = getAllSlugs("repair").map((slug) => ({ slug }));
   const seen = new Set(existing.map((p) => p.slug));
@@ -258,9 +253,6 @@ export function generateStaticParams() {
   return [...existing, ...keywords];
 }
 
-/* ═══════════════════════════════════════════════════════════
-   키워드 → 랜딩 타입 판별
-═══════════════════════════════════════════════════════════ */
 function getLandingType(slug: string): "sangbujang" | "habujang" | null {
   const kw = slug.replace(/-/g, " ");
   if (kw.includes("하부장") || kw.includes("밑판")) return "habujang";
@@ -268,9 +260,6 @@ function getLandingType(slug: string): "sangbujang" | "habujang" | null {
   return null;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   generateMetadata
-═══════════════════════════════════════════════════════════ */
 export async function generateMetadata({
   params,
 }: {
@@ -278,7 +267,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  // 기존 서비스 페이지
   const service = getService("repair", slug);
   if (service) {
     return {
@@ -287,7 +275,6 @@ export async function generateMetadata({
     };
   }
 
-  // 키워드 페이지
   const kw = slug.replace(/-/g, " ");
   const type = getLandingType(slug);
 
@@ -300,18 +287,18 @@ export async function generateMetadata({
   return {
     title: `${kw} | 리스토리 스튜디오`,
     description: desc,
-    alternates: { canonical: `https://www.restorystudio.co.kr/repair/${slug}` },
+    alternates: {
+      // ★ www로 통일
+      canonical: `${BASE}/repair/${slug}`,
+    },
     openGraph: {
       title: `${kw} | 리스토리 스튜디오`,
       description: desc,
-      url: `https://www.restorystudio.co.kr/repair/${slug}`,
+      url: `${BASE}/repair/${slug}`,
     },
   };
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Page — ★ keyword prop 전달
-═══════════════════════════════════════════════════════════ */
 export default async function Page({
   params,
 }: {
@@ -319,11 +306,9 @@ export default async function Page({
 }) {
   const { slug } = await params;
 
-  // 1. 기존 서비스 페이지 (sangbujang, habujang 전용 파일이 있으면 여기 안 옴)
   const service = getService("repair", slug);
   if (service) return <ServiceLandingPage service={service} />;
 
-  // 2. ★ keyword prop 넘겨서 지역 맞춤 랜딩 렌더링
   const type = getLandingType(slug);
   if (type === "sangbujang") return <SangbujangLanding keyword={slug} />;
   if (type === "habujang") return <HabujangLanding keyword={slug} />;
