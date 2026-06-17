@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { cases } from "@/lib/case-data";
+import { REGIONS } from "@/lib/seo-regions";
 
 /* ─────────────────────────────────────────
    CONSTANTS
@@ -39,80 +40,7 @@ const FAQ_ITEMS = [
 
 /* ─────────────────────────────────────────
    keyword → 지역·증상 파싱
-   "인천-싱크대-상부장-처짐" → { region: "인천", symptom: "처짐" }
 ───────────────────────────────────────── */
-const REGIONS = [
-  "인천",
-  "청라",
-  "송도",
-  "영종도",
-  "검단",
-  "계양",
-  "부평",
-  "주안동",
-  "간석동",
-  "연수",
-  "인천논현",
-  "소래",
-  "김포",
-  "김포한강신도시",
-  "장기동",
-  "구래동",
-  "파주",
-  "운정",
-  "부천",
-  "중동",
-  "상동",
-  "역곡",
-  "소사",
-  "옥길",
-  "광명",
-  "시흥",
-  "일산",
-  "탄현동",
-  "강서구",
-  "마곡",
-  "발산",
-  "화곡",
-  "등촌",
-  "방화",
-  "염창",
-  "마포",
-  "홍대",
-  "합정",
-  "상암",
-  "영등포",
-  "여의도",
-  "당산",
-  "신길",
-  "목동",
-  "양천",
-  "신정동",
-  "은평",
-  "서대문",
-  "연희동",
-  "용산",
-  "이태원",
-  "동작",
-  "노량진",
-  "사당",
-  "관악",
-  "신림",
-  "금천",
-  "가산",
-  "구로",
-  "대림",
-  "개봉",
-  "서초",
-  "반포",
-  "잠원",
-  "강남",
-  "압구정",
-  "신사",
-  "논현",
-  "과천",
-];
-
 function parseKeyword(keyword: string): { region: string; symptom: string } {
   const kw = keyword.replace(/-/g, " ");
   const region = REGIONS.find((r) => kw.includes(r)) ?? "";
@@ -301,7 +229,6 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
    PROPS
 ───────────────────────────────────────── */
 interface Props {
-  /** 슬러그 형식 "인천-싱크대-상부장-처짐" 또는 undefined (기본 페이지) */
   keyword?: string;
 }
 
@@ -311,23 +238,26 @@ interface Props {
 export default function SangbujangLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // keyword가 있으면 지역·증상 파싱
   const { region, symptom } = keyword
     ? parseKeyword(keyword)
     : { region: "", symptom: "" };
 
-  // 히어로 텍스트 — keyword 있으면 지역 맞춤, 없으면 기본값
   const heroTitle = region
     ? `${region} 싱크대 상부장 ${symptom}`
     : "상부장 처짐\n교체하지 마세요";
-
   const heroSub = region
     ? `${region} 당일 출장 가능 · 합판 수리로 더 튼튼하게`
     : "합판 수리로 더 튼튼하게, 더 저렴하게";
-
   const heroBadge = region
     ? `${region} 출장 · 교체 비용의 1/3~`
     : "교체 비용의 1/3~";
+
+  // 지역 케이스 수 (thin content 방지용 동적 데이터)
+  const regionCaseCount = region
+    ? cases.filter(
+        (c) => c.category === "상부장 처짐" && c.region.includes(region),
+      ).length
+    : 0;
 
   return (
     <main
@@ -347,9 +277,7 @@ export default function SangbujangLanding({ keyword }: Props) {
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
-      {/* ══════════════════════════════════
-          1. HERO
-      ══════════════════════════════════ */}
+      {/* 1. HERO */}
       <section
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
@@ -397,7 +325,6 @@ export default function SangbujangLanding({ keyword }: Props) {
                 </span>
               </div>
 
-              {/* ★ 핵심: keyword 있으면 지역 맞춤 h1 */}
               <h1
                 className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
@@ -498,7 +425,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ★ keyword 있으면 지역 맞춤 배너 추가 */}
+      {/* ★ 지역 배너 */}
       {region && (
         <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
           <div className="mx-auto max-w-lg text-center">
@@ -509,7 +436,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </section>
       )}
 
-      {/* ★ HERO 다음, PROOF 위에 */}
+      {/* ★ 지역 설명 블록 (케이스 수 포함 → thin content 방지) */}
       {region && (
         <section className="px-5 py-10" style={{ background: "#ffffff" }}>
           <div className="mx-auto max-w-lg">
@@ -521,21 +448,25 @@ export default function SangbujangLanding({ keyword }: Props) {
             <p className="text-[14px] leading-[1.8] text-neutral-600">
               {region} 지역 싱크대 상부장 처짐·떨어짐 증상은 리스토리가 당일
               출장으로 해결합니다. {region} 아파트 특성상 PB 소재 시공목이 많아
-              습기에 취약한 경우가 많습니다. 사진 한 장 보내주시면 {region} 출장
-              가능 여부와 비용을 바로 안내드립니다.
+              습기에 취약한 경우가 많습니다.
+              {regionCaseCount > 0 && (
+                <>
+                  {" "}
+                  리스토리의 {region} 지역 시공 완료 건수는{" "}
+                  <strong className="text-neutral-900">
+                    {regionCaseCount}건
+                  </strong>
+                  입니다.
+                </>
+              )}{" "}
+              사진 한 장 보내주시면 {region} 출장 가능 여부와 비용을 바로
+              안내드립니다.
             </p>
           </div>
         </section>
       )}
 
-      {/* 기존 PROOF 섹션 */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f8f9fb" }}></section>
-
-      {/* ══════════════════════════════════
-          2. PROOF
-      ══════════════════════════════════ */}
+      {/* 2. PROOF */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -759,9 +690,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          3. REVIEWS
-      ══════════════════════════════════ */}
+      {/* 3. REVIEWS */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
           <FadeIn>
@@ -878,9 +807,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          4. HOW
-      ══════════════════════════════════ */}
+      {/* 4. HOW */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -920,7 +847,7 @@ export default function SangbujangLanding({ keyword }: Props) {
                 step: "03",
                 icon: "✅",
                 title: "방문 시공 완료",
-                desc: `보양 처리 → 합판 수리 → 집진기 청소 → 완료. ${region ? `${region} 당일 작업 마무리.` : "당일 작업 마무리."}`,
+                desc: `보양 처리 → 합판 수리 → 집진기 청소 → 완료.${region ? ` ${region} 당일 작업 마무리.` : " 당일 작업 마무리."}`,
                 time: "당일 완료",
               },
             ].map((s, i) => (
@@ -987,9 +914,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          5. TRUST
-      ══════════════════════════════════ */}
+      {/* 5. TRUST */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
@@ -1069,9 +994,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          6. VIDEO
-      ══════════════════════════════════ */}
+      {/* 6. VIDEO */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#0a1628" }}>
@@ -1094,9 +1017,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          7. FAQ
-      ══════════════════════════════════ */}
+      {/* 7. FAQ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -1152,9 +1073,7 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          8. FINAL CTA
-      ══════════════════════════════════ */}
+      {/* 8. FINAL CTA */}
       <section
         className="px-5 py-16 md:py-24"
         style={{ background: "#0a1628" }}>
@@ -1166,7 +1085,7 @@ export default function SangbujangLanding({ keyword }: Props) {
               지금 바로 시작하세요
             </p>
             <h2
-              className="font-black text-white leading-[1.2] mb-3"
+              className="font-black text-white leading-[1.2] mb-3 whitespace-pre-line"
               style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
               {region
                 ? `${region} 상부장 수리\n사진 한 장이면 충분합니다`

@@ -7,10 +7,8 @@ import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { cases } from "@/lib/case-data";
+import { REGIONS } from "@/lib/seo-regions";
 
-/* ─────────────────────────────────────────
-   CONSTANTS
-───────────────────────────────────────── */
 const PHONE = "tel:010-6855-0957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
@@ -37,82 +35,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-/* ─────────────────────────────────────────
-   keyword → 지역 파싱
-   "인천-싱크대-문짝-교체" → { region: "인천", type: "교체" }
-───────────────────────────────────────── */
-const REGIONS = [
-  "인천",
-  "청라",
-  "송도",
-  "영종도",
-  "검단",
-  "계양",
-  "부평",
-  "주안동",
-  "간석동",
-  "연수",
-  "인천논현",
-  "소래",
-  "김포",
-  "김포한강신도시",
-  "장기동",
-  "구래동",
-  "파주",
-  "운정",
-  "부천",
-  "중동",
-  "상동",
-  "역곡",
-  "소사",
-  "옥길",
-  "광명",
-  "시흥",
-  "일산",
-  "탄현동",
-  "강서구",
-  "마곡",
-  "발산",
-  "화곡",
-  "등촌",
-  "방화",
-  "염창",
-  "마포",
-  "홍대",
-  "합정",
-  "상암",
-  "영등포",
-  "여의도",
-  "당산",
-  "신길",
-  "목동",
-  "양천",
-  "신정동",
-  "은평",
-  "서대문",
-  "연희동",
-  "용산",
-  "이태원",
-  "동작",
-  "노량진",
-  "사당",
-  "관악",
-  "신림",
-  "금천",
-  "가산",
-  "구로",
-  "대림",
-  "개봉",
-  "서초",
-  "반포",
-  "잠원",
-  "강남",
-  "압구정",
-  "신사",
-  "논현",
-  "과천",
-];
-
 function parseKeyword(keyword: string): { region: string; type: string } {
   const kw = keyword.replace(/-/g, " ");
   const region = REGIONS.find((r) => kw.includes(r)) ?? "";
@@ -120,9 +42,6 @@ function parseKeyword(keyword: string): { region: string; type: string } {
   return { region, type };
 }
 
-/* ─────────────────────────────────────────
-   CaseStrip
-───────────────────────────────────────── */
 function CaseStrip({ region }: { region?: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -149,8 +68,10 @@ function CaseStrip({ region }: { region?: string }) {
   const scrollTo = (i: number) => {
     const el = scrollRef.current;
     if (!el || !el.firstElementChild) return;
-    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
-    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+    el.scrollTo({
+      left: i * ((el.firstElementChild as HTMLElement).offsetWidth + 12),
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -236,9 +157,6 @@ function CaseStrip({ region }: { region?: string }) {
   );
 }
 
-/* ─────────────────────────────────────────
-   YouTubeFacade
-───────────────────────────────────────── */
 function YouTubeFacade({ videoId }: { videoId: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -287,16 +205,10 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
   );
 }
 
-/* ─────────────────────────────────────────
-   PROPS
-───────────────────────────────────────── */
 interface Props {
   keyword?: string;
 }
 
-/* ─────────────────────────────────────────
-   MAIN
-───────────────────────────────────────── */
 export default function SinkdoorReformLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -313,6 +225,12 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
   const heroBadge = region
     ? `${region} 당일 시공 · 교체 비용의 1/5~`
     : "교체 비용의 1/5~";
+
+  const regionCaseCount = region
+    ? cases.filter(
+        (c) => c.category === "싱크대 리폼" && c.region.includes(region),
+      ).length
+    : 0;
 
   return (
     <main
@@ -334,9 +252,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
-      {/* ══════════════════════════════════
-          1. HERO
-      ══════════════════════════════════ */}
+      {/* 1. HERO */}
       <section
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
@@ -358,7 +274,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             }}
           />
         </div>
-
         <div
           className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
           style={{ minHeight: "100svh" }}>
@@ -383,7 +298,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     : "싱크대 문짝 교체 전문"}
                 </span>
               </div>
-
               <h1
                 className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
@@ -394,7 +308,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
                 {heroSub}
               </p>
-
               <div
                 className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
                 style={{
@@ -408,7 +321,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                   제로 조인트 마감
                 </span>
               </div>
-
               <div className="flex flex-col gap-3 md:flex-row">
                 <a
                   href={KAKAO_URL}
@@ -440,7 +352,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                   📞 전화 문의
                 </a>
               </div>
-
               <div className="mt-8 flex items-center gap-6">
                 {[
                   { n: "1,000건+", l: "연간 시공" },
@@ -455,7 +366,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </div>
             </FadeIn>
           </div>
-
           <div className="hidden md:block md:w-[46%] relative flex-shrink-0">
             <Image
               src="/images/hero-door.webp"
@@ -495,7 +405,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </section>
       )}
 
-      {/* ★ 지역 설명 블록 */}
+      {/* ★ 지역 설명 블록 (케이스 수 포함) */}
       {region && (
         <section className="px-5 py-10" style={{ background: "#ffffff" }}>
           <div className="mx-auto max-w-lg">
@@ -507,16 +417,25 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             <p className="text-[14px] leading-[1.8] text-neutral-600">
               {region} 지역 싱크대 문짝 교체·리폼은 리스토리가 당일 시공으로
               해결합니다. 문짝만 바꿔도 새 주방처럼 바뀌고, 전체 교체 비용의 1/5
-              수준으로 가능합니다. 사진 한 장 보내주시면 {region} 출장 가능
-              여부와 비용을 바로 안내드립니다.
+              수준으로 가능합니다.
+              {regionCaseCount > 0 && (
+                <>
+                  {" "}
+                  {region} 지역 시공 완료{" "}
+                  <strong className="text-neutral-900">
+                    {regionCaseCount}건
+                  </strong>
+                  .
+                </>
+              )}{" "}
+              사진 한 장 보내주시면 {region} 출장 가능 여부와 비용을 바로
+              안내드립니다.
             </p>
           </div>
         </section>
       )}
 
-      {/* ══════════════════════════════════
-          2. PROOF
-      ══════════════════════════════════ */}
+      {/* 2. PROOF */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -581,7 +500,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={150}>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div
@@ -616,7 +534,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </div>
             </div>
           </FadeIn>
-
           <FadeIn delay={180}>
             <div
               className="mt-4 overflow-hidden rounded-2xl"
@@ -778,9 +695,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          3. COLORS
-      ══════════════════════════════════ */}
+      {/* 3. COLORS */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
@@ -857,9 +772,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          4. REVIEWS
-      ══════════════════════════════════ */}
+      {/* 4. REVIEWS */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
           <FadeIn>
@@ -978,9 +891,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          5. HOW
-      ══════════════════════════════════ */}
+      {/* 5. HOW */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -1087,9 +998,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          6. TRUST
-      ══════════════════════════════════ */}
+      {/* 6. TRUST */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
@@ -1174,9 +1083,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          7. VIDEO
-      ══════════════════════════════════ */}
+      {/* 7. VIDEO */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#0a1628" }}>
@@ -1199,9 +1106,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          8. FAQ
-      ══════════════════════════════════ */}
+      {/* 8. FAQ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -1257,9 +1162,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          9. FINAL CTA
-      ══════════════════════════════════ */}
+      {/* 9. FINAL CTA */}
       <section
         className="px-5 py-16 md:py-24"
         style={{ background: "#0a1628" }}>

@@ -8,10 +8,49 @@ import LeatherSampleSection from "./Leathersamplesection";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { cases } from "@/lib/case-data";
+import { REGIONS } from "@/lib/seo-regions";
 
-/* ─────────────────────────────────────────
-   CaseStrip
-───────────────────────────────────────── */
+const PHONE = "tel:010-6855-0957";
+const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+
+const FAQ_ITEMS = [
+  {
+    q: "정말 새 의자보다 저렴한가요?",
+    a: "네. 새 의자 대비 1/3~1/5 수준입니다. 수량이 많을수록 단가가 낮아집니다.",
+  },
+  {
+    q: "영업 중에도 작업 가능한가요?",
+    a: "영업 전·후, 휴무일, 새벽도 맞춤 일정 조율 가능합니다.",
+  },
+  {
+    q: "몇 개부터 가능한가요?",
+    a: "1개부터 가능합니다. 대량일수록 단가가 더 낮아집니다.",
+  },
+  {
+    q: "색상은 어떻게 고르나요?",
+    a: "실측 방문 시 실물 샘플을 가져가서 직접 비교해 선택하실 수 있습니다.",
+  },
+  {
+    q: "A/S는 어떻게 되나요?",
+    a: "시공 후 미흡한 부분은 100% 무상 재시공해드립니다.",
+  },
+];
+
+function parseKeyword(keyword: string): { region: string; bizType: string } {
+  const kw = keyword.replace(/-/g, " ");
+  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
+  const bizType = kw.includes("카페")
+    ? "카페"
+    : kw.includes("고깃집")
+      ? "고깃집"
+      : kw.includes("식당")
+        ? "식당"
+        : kw.includes("업소")
+          ? "업소"
+          : "식당·카페";
+  return { region, bizType };
+}
+
 function CaseStrip({ region }: { region?: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -38,8 +77,10 @@ function CaseStrip({ region }: { region?: string }) {
   const scrollTo = (i: number) => {
     const el = scrollRef.current;
     if (!el || !el.firstElementChild) return;
-    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
-    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+    el.scrollTo({
+      left: i * ((el.firstElementChild as HTMLElement).offsetWidth + 12),
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -126,122 +167,7 @@ function CaseStrip({ region }: { region?: string }) {
     </div>
   );
 }
-/* ─────────────────────────────────────────
-   CONSTANTS
-───────────────────────────────────────── */
-const PHONE = "tel:010-6855-0957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
-const FAQ_ITEMS = [
-  {
-    q: "정말 새 의자보다 저렴한가요?",
-    a: "네. 새 의자 대비 1/3~1/5 수준입니다. 수량이 많을수록 단가가 낮아집니다.",
-  },
-  {
-    q: "영업 중에도 작업 가능한가요?",
-    a: "영업 전·후, 휴무일, 새벽도 맞춤 일정 조율 가능합니다.",
-  },
-  {
-    q: "몇 개부터 가능한가요?",
-    a: "1개부터 가능합니다. 대량일수록 단가가 더 낮아집니다.",
-  },
-  {
-    q: "색상은 어떻게 고르나요?",
-    a: "실측 방문 시 실물 샘플을 가져가서 직접 비교해 선택하실 수 있습니다.",
-  },
-  {
-    q: "A/S는 어떻게 되나요?",
-    a: "시공 후 미흡한 부분은 100% 무상 재시공해드립니다.",
-  },
-];
-
-const REGIONS = [
-  "인천",
-  "청라",
-  "송도",
-  "영종도",
-  "검단",
-  "계양",
-  "부평",
-  "주안동",
-  "간석동",
-  "연수",
-  "인천논현",
-  "소래",
-  "김포",
-  "김포한강신도시",
-  "장기동",
-  "구래동",
-  "파주",
-  "운정",
-  "부천",
-  "중동",
-  "상동",
-  "역곡",
-  "소사",
-  "옥길",
-  "광명",
-  "시흥",
-  "일산",
-  "탄현동",
-  "강서구",
-  "마곡",
-  "발산",
-  "화곡",
-  "등촌",
-  "방화",
-  "염창",
-  "마포",
-  "홍대",
-  "합정",
-  "상암",
-  "영등포",
-  "여의도",
-  "당산",
-  "신길",
-  "목동",
-  "양천",
-  "신정동",
-  "은평",
-  "서대문",
-  "연희동",
-  "용산",
-  "이태원",
-  "동작",
-  "노량진",
-  "사당",
-  "관악",
-  "신림",
-  "금천",
-  "가산",
-  "구로",
-  "대림",
-  "개봉",
-  "서초",
-  "반포",
-  "잠원",
-  "강남",
-  "압구정",
-  "신사",
-  "논현",
-  "과천",
-];
-
-function parseKeyword(keyword: string): { region: string; symptom: string } {
-  const kw = keyword.replace(/-/g, " ");
-  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
-
-  const symptom = kw.includes("가죽 교체")
-    ? "가죽 교체"
-    : kw.includes("가죽 리폼")
-      ? "가죽 리폼"
-      : "천갈이";
-
-  return { region, symptom };
-}
-/* ─────────────────────────────────────────
-   YouTubeFacade
-───────────────────────────────────────── */
 function YouTubeFacade({ videoId }: { videoId: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -289,35 +215,40 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
     </div>
   );
 }
+
 interface Props {
   keyword?: string;
 }
-/* ─────────────────────────────────────────
-   MAIN
-───────────────────────────────────────── */
+
 export default function RestaurantChairLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
+
+  const { region, bizType } = keyword
+    ? parseKeyword(keyword)
+    : { region: "", bizType: "" };
+
+  const heroTitle = region
+    ? `${region} ${bizType} 의자\n가죽 교체`
+    : "의자 새로\n사지 마세요";
+  const heroSub = region
+    ? `${region} 당일 출장 가능 · 새 의자 대비 1/3~1/5 비용`
+    : "가죽만 바꾸면 새것처럼";
+  const heroBadge = region
+    ? `${region} 당일 출장 · 개당 3만원~`
+    : "개당 3만원~";
+
+  const regionCaseCount = region
+    ? cases.filter(
+        (c) => c.category === "가죽 리폼" && c.region.includes(region),
+      ).length
+    : 0;
 
   useEffect(() => {
     const onScroll = () => setShowSticky(window.scrollY > 600);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const { region, symptom } = keyword
-    ? parseKeyword(keyword)
-    : { region: "", symptom: "" };
-
-  const heroTitle = region
-    ? `${region} 의자 ${symptom}`
-    : "의자 새로\n사지 마세요";
-
-  const heroSub = region
-    ? `${region} 출장 가능 · 가죽만 바꾸면 새것처럼`
-    : "가죽만 바꾸면 새것처럼";
-
-  const heroBadge = region ? `${region} 출장 · 개당 3만원~` : "개당 3만원~";
 
   return (
     <main
@@ -327,21 +258,24 @@ export default function RestaurantChairLanding({ keyword }: Props) {
           "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif",
       }}>
       <ServiceJsonLd
-        name="식당·카페 의자 가죽 교체"
-        description="식당·카페 의자 가죽 교체 전문. 새 의자 대비 1/3~1/5 비용. 영업 외 시간 방문 시공, 1년 무상 A/S."
-        url="https://www.restorystudio.co.kr/landing/restaurant-chair"
+        name={
+          region
+            ? `${region} ${bizType} 의자 가죽 교체`
+            : "식당·카페 의자 가죽 교체"
+        }
+        description="식당·카페 의자 가죽 교체 전문. 새 의자 대비 1/3~1/5 비용. 영업 외 시간 방문 시공, 무상 A/S."
+        url={
+          keyword
+            ? `https://www.restorystudio.co.kr/leather/${keyword}`
+            : "https://www.restorystudio.co.kr/leather/restaurant-chair"
+        }
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
-      {/* ══════════════════════════════════
-          1. HERO
-          모바일: 풀스크린 다크 / 콘텐츠 하단
-          데스크탑: 2열 — 왼쪽 텍스트 + 오른쪽 이미지
-      ══════════════════════════════════ */}
+      {/* 1. HERO */}
       <section
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
-        {/* 모바일 전용 배경 이미지 */}
         <div className="absolute inset-0 md:hidden">
           <Image
             src="/images/chair/hero-chair.webp"
@@ -360,15 +294,10 @@ export default function RestaurantChairLanding({ keyword }: Props) {
             }}
           />
         </div>
-
-        {/* 레이아웃 컨테이너 */}
         <div
           className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
           style={{ minHeight: "100svh" }}>
-          {/* ── 왼쪽 컨텐츠 (모바일: 하단 / 데스크탑: 세로 중앙) ── */}
-          <div
-            className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6
-            md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+          <div className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6 md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
             <FadeIn>
               <div
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
@@ -384,10 +313,11 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   className="rounded-full"
                 />
                 <span className="text-[12px] font-bold text-white/70">
-                  리스토리 가죽 교체
+                  {region
+                    ? `${region} 의자 가죽 교체 전문`
+                    : "리스토리 가죽 교체"}
                 </span>
               </div>
-
               <h1
                 className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}>
@@ -398,8 +328,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                 style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}>
                 {heroSub}
               </p>
-
-              {/* 앵커 가격 */}
               <div
                 className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
                 style={{
@@ -413,8 +341,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   새 의자의 1/3 수준
                 </span>
               </div>
-
-              {/* CTA */}
               <div className="flex flex-col gap-3 md:flex-row md:gap-3">
                 <a
                   href={KAKAO_URL}
@@ -446,8 +372,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   📞 전화 문의
                 </a>
               </div>
-
-              {/* 신뢰 지표 */}
               <div className="mt-8 flex items-center gap-6">
                 {[
                   { n: "1,000건+", l: "시공 완료" },
@@ -462,8 +386,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               </div>
             </FadeIn>
           </div>
-
-          {/* ── 오른쪽 이미지 (데스크탑 전용) ── */}
           <div className="hidden md:block md:w-[46%] relative flex-shrink-0">
             <Image
               src="/images/chair/hero-chair.webp"
@@ -474,7 +396,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               priority
               sizes="46vw"
             />
-            {/* 왼쪽 페이드 — 다크 배경으로 자연스럽게 */}
             <div
               className="absolute inset-0"
               style={{
@@ -482,7 +403,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   "linear-gradient(to right, #0a1628 0%, transparent 40%)",
               }}
             />
-            {/* 하단 페이드 */}
             <div
               className="absolute inset-0"
               style={{
@@ -494,39 +414,48 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
+      {/* ★ 지역 배너 */}
       {region && (
         <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
           <div className="mx-auto max-w-lg text-center">
             <p className="text-[14px] font-black text-white">
-              📍 {region} 지역 출장 가능 · 사진 한 장으로 무료 견적
+              📍 {region} 지역 당일 출장 가능 · 영업 외 시간 방문 시공
             </p>
           </div>
         </section>
       )}
 
+      {/* ★ 지역 설명 블록 (케이스 수 포함) */}
       {region && (
         <section className="px-5 py-10" style={{ background: "#ffffff" }}>
           <div className="mx-auto max-w-lg">
             <h2
               className="text-[20px] font-black mb-3"
               style={{ color: "#111827" }}>
-              {region} 의자 {symptom}
+              {region} {bizType} 의자 가죽 교체
             </h2>
-
             <p className="text-[14px] leading-[1.8] text-neutral-600">
-              {region} 지역 의자 천갈이 및 가죽 교체 전문 리스토리입니다. 새
-              의자를 구매하지 않아도 가죽만 교체해 새것처럼 사용할 수 있습니다.
-              사진과 수량을 보내주시면 {region} 출장 가능 여부와 비용을 바로
+              {region} 지역 {bizType} 의자 가죽 교체는 리스토리가 당일 출장으로
+              해결합니다. 새 의자 구매 비용의 1/3~1/5 수준으로, 영업 끝나고
+              방문해서 당일 완료합니다.
+              {regionCaseCount > 0 && (
+                <>
+                  {" "}
+                  {region} 지역 시공 완료{" "}
+                  <strong className="text-neutral-900">
+                    {regionCaseCount}건
+                  </strong>
+                  .
+                </>
+              )}{" "}
+              사진 한 장 보내주시면 {region} 출장 가능 여부와 개당 비용을 바로
               안내드립니다.
             </p>
           </div>
         </section>
       )}
 
-      {/* ══════════════════════════════════
-          2. PROOF — 진짜야?
-          Before/After + 가격 비교
-      ══════════════════════════════════ */}
+      {/* 2. PROOF */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -590,8 +519,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               </p>
             </div>
           </FadeIn>
-
-          {/* 가격 비교 */}
           <FadeIn delay={150}>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div
@@ -626,8 +553,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               </div>
             </div>
           </FadeIn>
-
-          {/* 품질 증명 */}
           <FadeIn delay={180}>
             <div
               className="mt-4 overflow-hidden rounded-2xl"
@@ -760,14 +685,10 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          3. SAMPLES
-      ══════════════════════════════════ */}
+      {/* 3. SAMPLES */}
       <LeatherSampleSection />
 
-      {/* ══════════════════════════════════
-          4. REVIEWS
-      ══════════════════════════════════ */}
+      {/* 4. REVIEWS */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
           <FadeIn>
@@ -803,8 +724,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                 quote:
                   "새 의자 산 줄 알고 손님들이 물어봐요. 가격은 새 의자의 1/3도 안 됐습니다.",
                 tag: "당일 완료",
-                tagBg: "#eef4ff",
-                tagColor: "#1a5cff",
               },
               {
                 img: "/images/chair/review-5.png",
@@ -815,8 +734,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                 quote:
                   "영업 끝나고 밤에 와서 해주셔서 영업 지장 하나도 없었어요. 다음에도 여기 할 겁니다.",
                 tag: "야간 시공",
-                tagBg: "#eef4ff",
-                tagColor: "#1a5cff",
               },
             ].map((r, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -850,7 +767,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                         </div>
                         <span
                           className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: r.tagBg, color: r.tagColor }}>
+                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
                           {r.tag}
                         </span>
                       </div>
@@ -885,14 +802,12 @@ export default function RestaurantChairLanding({ keyword }: Props) {
             ))}
           </div>
           <FadeIn delay={100}>
-            <CaseStrip region={region} />{" "}
+            <CaseStrip region={region} />
           </FadeIn>
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          5. HOW
-      ══════════════════════════════════ */}
+      {/* 5. HOW */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -932,7 +847,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                 step: "03",
                 icon: "✅",
                 title: "당일 시공 완료",
-                desc: "영업 끝나고 와서 작업하고 갑니다. 뒷정리까지 하고 갑니다.",
+                desc: `영업 끝나고 와서 작업하고 갑니다. 뒷정리까지 하고 갑니다.${region ? ` ${region} 당일 완료.` : ""}`,
                 time: "당일 완료",
               },
             ].map((s, i) => (
@@ -999,9 +914,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          6. TRUST
-      ══════════════════════════════════ */}
+      {/* 6. TRUST */}
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
@@ -1081,9 +994,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          7. VIDEO
-      ══════════════════════════════════ */}
+      {/* 7. VIDEO */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#0a1628" }}>
@@ -1106,9 +1017,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          8. FAQ
-      ══════════════════════════════════ */}
+      {/* 8. FAQ */}
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
@@ -1164,9 +1073,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          9. FINAL CTA
-      ══════════════════════════════════ */}
+      {/* 9. FINAL CTA */}
       <section
         className="px-5 py-16 md:py-24"
         style={{ background: "#0a1628" }}>
@@ -1178,11 +1085,11 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               지금 바로 시작하세요
             </p>
             <h2
-              className="font-black text-white leading-[1.2] mb-3"
+              className="font-black text-white leading-[1.2] mb-3 whitespace-pre-line"
               style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
-              의자 사진 한 장이면
-              <br />
-              충분합니다
+              {region
+                ? `${region} 의자 사진 한 장이면\n충분합니다`
+                : "의자 사진 한 장이면\n충분합니다"}
             </h2>
             <p
               className="text-[14px] mb-8"
@@ -1243,46 +1150,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* STICKY CTA */}
-      {/* <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 transition-all duration-300"
-        style={{
-          transform: showSticky ? "translateY(0)" : "translateY(110%)",
-          paddingBottom: "max(16px, env(safe-area-inset-bottom))",
-          background:
-            "linear-gradient(to top, rgba(10,22,40,0.97) 0%, rgba(10,22,40,0.0) 100%)",
-          paddingTop: 24,
-        }}>
-        <div className="mx-auto max-w-sm flex gap-2.5">
-          <a
-            href={KAKAO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl text-[15px] font-black"
-            style={{
-              background: "#FEE500",
-              color: "#1a1a1a",
-              padding: "16px 20px",
-            }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-            </svg>
-            카카오 상담
-          </a>
-          <a
-            href={PHONE}
-            className="flex items-center justify-center rounded-2xl text-[15px] font-bold text-white"
-            style={{
-              background: "rgba(255,255,255,0.12)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              padding: "16px 20px",
-            }}>
-            📞
-          </a>
-        </div>
-      </div> */}
-
-      {/* STICKY CTA 지금 쓰는거 */}
       <FloatingCTA />
     </main>
   );
