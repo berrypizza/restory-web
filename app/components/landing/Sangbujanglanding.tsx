@@ -94,7 +94,7 @@ function CaseStrip({ region }: { region?: string }) {
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[13px] font-bold text-neutral-900">실제 수리 사례</p>
+        <p className="text-[15px] font-bold text-neutral-900">실제 수리 사례</p>
         <Link
           href="/cases?cat=상부장 처짐"
           className="text-[12px] font-bold"
@@ -684,6 +684,60 @@ export default function SangbujangLanding({ keyword }: Props) {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </FadeIn>
+          {/* ★ 자재 직거래 섹션 — PB vs 합판 카드 바로 아래 */}
+          <FadeIn delay={220}>
+            <div
+              className="mt-4 overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              <div
+                className="relative overflow-hidden"
+                style={{ aspectRatio: "16/9" }}>
+                <Image
+                  src="/images/upper/factory-1.png"
+                  alt="리스토리 자재 직매입 — 국내산 합판 직거래"
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
+                  }}
+                />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p className="text-[11px] font-bold tracking-widest text-white/50 mb-1">
+                    WHY SO STRONG & AFFORDABLE
+                  </p>
+                  <h3 className="text-[22px] font-black text-white leading-[1.2] mb-1">
+                    공장 직거래, 중간 마진 없음
+                  </h3>
+                  <p className="text-[13px] text-white/60">
+                    국내산 자재 직매입 · 유통사 마진 제로
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5" style={{ background: "#fff" }}>
+                <p className="text-[13px] leading-[1.7] text-neutral-500">
+                  시중 자재상을 거치지 않아요. 자재 공장에서{" "}
+                  <strong className="text-neutral-800">직매입</strong>하니까
+                  PB보다 3배 튼튼한 합판을 쓰면서도 비용은 줄어요.
+                </p>
+                <div
+                  className="mt-4 flex items-center justify-center gap-3 rounded-xl py-3.5"
+                  style={{ background: "#0a1628" }}>
+                  <span className="text-[17px] font-black text-white">
+                    좋은 자재, 낮은 비용
+                  </span>
+                  <span className="text-[12px] text-white/40">
+                    공장 직매입이라 가능한 이유
+                  </span>
+                </div>
               </div>
             </div>
           </FadeIn>

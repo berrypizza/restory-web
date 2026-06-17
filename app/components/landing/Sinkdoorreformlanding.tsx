@@ -77,7 +77,7 @@ function CaseStrip({ region }: { region?: string }) {
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[13px] font-bold text-neutral-900">실제 시공 사례</p>
+        <p className="text-[15px] font-bold text-neutral-900">실제 시공 사례</p>
         <Link
           href="/cases?cat=싱크대 리폼"
           className="text-[12px] font-bold"
@@ -688,6 +688,62 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                       이음새 없음
                     </p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+          {/* ★ PET 직거래 섹션 — 제로조인트 카드 바로 아래 */}
+          <FadeIn delay={220}>
+            <div
+              className="mt-4 overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              {/* 공장 사진 풀너비 */}
+              <div
+                className="relative overflow-hidden"
+                style={{ aspectRatio: "16/9" }}>
+                <Image
+                  src="/images/upper/factory-1.png"
+                  alt="리스토리 PET 문짝 직매입 — 공장 직거래"
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
+                  }}
+                />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p className="text-[11px] font-bold tracking-widest text-white/50 mb-1">
+                    WHY SO AFFORDABLE
+                  </p>
+                  <h3 className="text-[22px] font-black text-white leading-[1.2] mb-1">
+                    공장 직거래, 중간 마진 없음
+                  </h3>
+                  <p className="text-[13px] text-white/60">
+                    PET 문짝 공장 직거래 · 중간 유통 없음
+                  </p>
+                </div>
+              </div>
+
+              {/* 하단 메시지 */}
+              <div className="p-5" style={{ background: "#fff" }}>
+                <p className="text-[13px] leading-[1.7] text-neutral-500">
+                  인테리어 대리점·자재상을 거치지 않아요. PET 문짝 공장에서{" "}
+                  <strong className="text-neutral-800">직매입</strong>하니까
+                  고급 소재를 전체 교체의 1/5 수준으로 시공합니다.
+                </p>
+                <div
+                  className="mt-4 flex items-center justify-center gap-3 rounded-xl py-3.5"
+                  style={{ background: "#0a1628" }}>
+                  <span className="text-[17px] font-black text-white">
+                    공장가 = 소비자가
+                  </span>
+                  <span className="text-[12px] text-white/40">
+                    마진 없이 저렴한 이유
+                  </span>
                 </div>
               </div>
             </div>

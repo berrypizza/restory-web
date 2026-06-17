@@ -86,7 +86,7 @@ function CaseStrip({ region }: { region?: string }) {
   return (
     <div className="mt-8">
       <div className="flex items-center justify-between mb-4 px-5">
-        <p className="text-[13px] font-bold text-neutral-900">실제 시공 사례</p>
+        <p className="text-[15px] font-bold text-neutral-900">실제 시공 사례</p>
         <Link
           href="/cases?cat=가죽 리폼"
           className="text-[12px] font-bold"
@@ -735,7 +735,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   className="mt-4 flex items-center justify-center gap-3 rounded-xl py-3.5"
                   style={{ background: "#0a1628" }}>
                   <span className="text-[17px] font-black text-white">
-                    공장가 = 시공가
+                    공장가 = 소비자가
                   </span>
                   <span className="text-[12px] text-white/40">
                     품질 타협 없이 저렴한 이유
