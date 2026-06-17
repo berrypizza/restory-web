@@ -682,6 +682,68 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               </div>
             </div>
           </FadeIn>
+          {/* ★ 공장 직거래 섹션 — 국내산 두께 비교 카드 바로 아래 */}
+          <FadeIn delay={220}>
+            <div
+              className="mt-4 overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              {/* 창고 사진 풀너비 — 압도적 스케일 */}
+              <div
+                className="relative overflow-hidden"
+                style={{ aspectRatio: "16/9" }}>
+                <Image
+                  src="/images/chair/factory-1.jpg"
+                  alt="리스토리 가죽 직매입 창고 — 국내산 가죽 1,000종 보유"
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                />
+                {/* 어두운 오버레이 */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
+                  }}
+                />
+                {/* 오버레이 텍스트 */}
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p className="text-[11px] font-bold tracking-widest text-white/50 mb-1">
+                    WHY SO AFFORDABLE
+                  </p>
+                  <h3 className="text-[22px] font-black text-white leading-[1.2] mb-1">
+                    이 창고에서 직접 가져옵니다
+                  </h3>
+                  <p className="text-[13px] text-white/60">
+                    국내산 가죽 1,000종 · 중간 유통 없음
+                  </p>
+                </div>
+              </div>
+
+              {/* 하단 메시지 */}
+              <div className="p-5" style={{ background: "#fff" }}>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <p className="text-[13px] leading-[1.7] text-neutral-500">
+                      도매상·유통사를 거치지 않아요. 가죽 공장에서{" "}
+                      <strong className="text-neutral-800">직매입</strong>하니까
+                      국내산 고급 가죽을 새 의자보다 저렴하게 씁니다.
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="mt-4 flex items-center justify-center gap-3 rounded-xl py-3.5"
+                  style={{ background: "#0a1628" }}>
+                  <span className="text-[17px] font-black text-white">
+                    공장가 = 시공가
+                  </span>
+                  <span className="text-[12px] text-white/40">
+                    품질 타협 없이 저렴한 이유
+                  </span>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
