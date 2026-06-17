@@ -865,7 +865,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                   "전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요. 20년 된 아파트인데 새 주방 같아요.",
               },
               {
-                img: "/images/door/review-2.png",
+                img: "/images/door/review-3.png",
                 keyword: "주방이 환해졌어요",
                 unit: "싱크대 문짝 리폼",
                 area: "경기 수원시",
