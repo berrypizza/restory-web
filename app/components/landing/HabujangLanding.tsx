@@ -554,7 +554,7 @@ export default function HabujangLanding({ keyword }: Props) {
                 <p
                   className="text-[22px] font-black"
                   style={{ color: "#1a5cff" }}>
-                  20~50만원~
+                  15~50만원~
                 </p>
                 <p className="text-[11px] text-[#1a5cff]/60 mt-1">
                   + 당일 완료
