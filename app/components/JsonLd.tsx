@@ -8,6 +8,7 @@ export function LocalBusinessJsonLd() {
       "https://blog.naver.com/sofaresq",
       "https://cafe.naver.com/f-e/cafes/22748193",
       "https://www.youtube.com/channel/UCV7_-XNkJeP_pli0D0YMraA",
+      "https://www.instagram.com/restory_studio.kr/",
     ],
     logo: "https://www.restorystudio.co.kr/images/logo.png",
     image: "https://www.restorystudio.co.kr/images/og-image.png",
