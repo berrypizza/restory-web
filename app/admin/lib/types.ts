@@ -1,4 +1,19 @@
-import type { Status, Tech } from "./constants";
+import type {
+  Status,
+  Tech,
+  MaterialStatus,
+  MaterialSupplier,
+} from "./constants";
+
+export interface Material {
+  id: string;
+  job_id: string;
+  name: string;
+  supplier: MaterialSupplier | null;
+  status: MaterialStatus;
+  memo: string | null;
+  created_at: string;
+}
 
 export interface Job {
   id: string;

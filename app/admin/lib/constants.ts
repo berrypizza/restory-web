@@ -60,3 +60,38 @@ export const QUICK_TIMES = [
 
 export const AM_HOURS = [6, 7, 8, 9, 10, 11, 12];
 export const PM_HOURS = [1, 2, 3, 4, 5, 6, 7, 8];
+
+// ── 자재 ─────────────────────────────────────────────────────
+export type MaterialStatus = "발주필요" | "발주완료" | "준비완료";
+export type MaterialSupplier = "지엔공장" | "대명상사" | "탑소파" | "기타";
+
+export const MATERIAL_STATUSES: MaterialStatus[] = [
+  "발주필요",
+  "발주완료",
+  "준비완료",
+];
+export const MATERIAL_SUPPLIERS: MaterialSupplier[] = [
+  "지엔공장",
+  "대명상사",
+  "탑소파",
+  "기타",
+];
+
+export const MATERIAL_STATUS_STYLE: Record<
+  MaterialStatus,
+  { bg: string; color: string; border: string }
+> = {
+  발주필요: { bg: "#fef2f2", color: "#ef4444", border: "#ef444433" },
+  발주완료: { bg: "#f59e0b18", color: "#f59e0b", border: "#f59e0b33" },
+  준비완료: { bg: "#eaf1ff", color: "#1f66ff", border: "#bfd3ff" },
+};
+
+export const MATERIAL_SUPPLIER_STYLE: Record<
+  MaterialSupplier,
+  { bg: string; color: string }
+> = {
+  지엔공장: { bg: "#a855f718", color: "#a855f7" },
+  대명상사: { bg: "#f59e0b18", color: "#f59e0b" },
+  탑소파: { bg: "#10b98118", color: "#10b981" },
+  기타: { bg: "#64748b18", color: "#64748b" },
+};

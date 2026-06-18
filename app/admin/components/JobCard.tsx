@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import PhotoCapture from "./PhotoCapture";
+import MaterialSection from "./MaterialSection";
 import type { Job } from "../lib/types";
 import type { Status } from "../lib/constants";
 import { TECHS, STATUSES, TECH_COLOR, STATUS_STYLE } from "../lib/constants";
@@ -24,6 +25,22 @@ interface JobCardProps {
   isAdmin?: boolean;
 }
 
+const TECH_GRADIENT: Record<string, string> = {
+  고관호: "linear-gradient(135deg, #e32e40 0%, #ff6b6b 100%)",
+  고현호: "linear-gradient(135deg, #1f66ff 0%, #60a5fa 100%)",
+  이주형: "linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)",
+  강영훈: "linear-gradient(135deg, #ec4899 0%, #f472b6 100%)",
+  "": "linear-gradient(135deg, #64748b 0%, #94a3b8 100%)",
+};
+
+const TECH_BG: Record<string, string> = {
+  고관호: "linear-gradient(160deg, #fff5f5 0%, #ffffff 60%)",
+  고현호: "linear-gradient(160deg, #eff6ff 0%, #ffffff 60%)",
+  이주형: "linear-gradient(160deg, #fffbeb 0%, #ffffff 60%)",
+  강영훈: "linear-gradient(160deg, #fdf2f8 0%, #ffffff 60%)",
+  "": "linear-gradient(160deg, #f8fafc 0%, #ffffff 60%)",
+};
+
 export default function JobCard({
   job,
   onUpdate,
@@ -32,11 +49,13 @@ export default function JobCard({
   isAdmin = true,
 }: JobCardProps) {
   const techColor = TECH_COLOR[job.tech || ""];
+  const techGradient = TECH_GRADIENT[job.tech || ""];
+  const techBg = TECH_BG[job.tech || ""];
   const [showPhoto, setShowPhoto] = useState(false);
   const [prevStatus, setPrevStatus] = useState<Status>(job.status);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [lightboxList, setLightboxList] = useState<string[]>([]);
-  const [memoOpen, setMemoOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
   const getPhotos = (): string[] => {
@@ -47,7 +66,6 @@ export default function JobCard({
       return [job.completion_photo];
     }
   };
-
   const getIntakePhotos = (): string[] => {
     if (!job.intake_photos) return [];
     try {
@@ -71,46 +89,57 @@ export default function JobCard({
   };
 
   const handleToggleMeasurement = () => {
-    if (job.status === "완료") {
+    if (job.status === "완료")
       onUpdate(job.id, { status: "대기", install_completed: false });
-    } else {
+    else
       onUpdate(job.id, {
         status: "완료",
         as_until: addOneYear(nowKST().toISOString().slice(0, 10)),
       });
-    }
   };
 
   const handlePhotoDone = (urls: string[]) => {
-    if (urls.length === 0 && prevStatus !== "완료") {
+    if (urls.length === 0 && prevStatus !== "완료")
       onUpdate(job.id, { status: prevStatus, completion_photo: "" });
-    } else {
+    else
       onUpdate(job.id, {
         completion_photo: urls.length > 0 ? JSON.stringify(urls) : "",
       });
-    }
     setShowPhoto(false);
   };
 
   const photos = getPhotos();
+  const intakePhotos = getIntakePhotos();
+  const techIdx = job.tech ? TECHS.indexOf(job.tech) + 1 : 0;
+
+  const asInfo = (() => {
+    if (job.status !== "완료" || !job.as_until) return null;
+    const t = nowKST().toISOString().slice(0, 10);
+    const expired = job.as_until < t;
+    const daysLeft = Math.ceil(
+      (new Date(job.as_until).getTime() - new Date(t).getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+    return { expired, daysLeft };
+  })();
 
   return (
     <>
-      {/* 완료 축하 애니메이션 */}
+      {/* 완료 축하 */}
       {showCelebration && (
         <div
           className="fixed inset-0 z-[80] flex flex-col items-center justify-center pointer-events-none"
           style={{ backgroundColor: "rgba(15,23,42,0.72)" }}>
           <style>{`
-            @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
-            @keyframes pop-in { 0% { transform: scale(0.3); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-            @keyframes fade-up { 0% { transform: translateY(16px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-            .confetti-piece { position: fixed; width: 10px; height: 10px; animation: confetti-fall linear forwards; }
+            @keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+            @keyframes pop-in{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+            @keyframes fade-up{0%{transform:translateY(16px);opacity:0}100%{transform:translateY(0);opacity:1}}
+            .cp{position:fixed;animation:confetti-fall linear forwards}
           `}</style>
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="confetti-piece rounded-sm"
+              className="cp rounded-sm"
               style={{
                 left: `${5 + ((i * 4.5) % 95)}%`,
                 top: `-10px`,
@@ -151,11 +180,6 @@ export default function JobCard({
             <p className="text-sm text-center" style={{ color: "#ffffff" }}>
               당신이 있어서 리스토리입니다
             </p>
-            <p
-              className="text-base text-center mt-1 font-medium"
-              style={{ color: "#1f66ff" }}>
-              ✨ 고마워요 ✨
-            </p>
           </div>
         </div>
       )}
@@ -163,41 +187,40 @@ export default function JobCard({
       {/* 라이트박스 */}
       {lightboxUrl &&
         (() => {
-          const currentList = lightboxList;
-          const currentIdx = currentList.indexOf(lightboxUrl);
+          const idx = lightboxList.indexOf(lightboxUrl);
           return (
             <div
               className="fixed inset-0 z-[70] flex flex-col select-none"
-              style={{ backgroundColor: "rgba(15,23,42,0.82)" }}
+              style={{ backgroundColor: "rgba(15,23,42,0.92)" }}
               onClick={() => setLightboxUrl(null)}
               onTouchStart={(e) => {
-                (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
+                (e.currentTarget as any)._tx = e.touches[0].clientX;
               }}
               onTouchEnd={(e) => {
                 const diff =
-                  ((e.currentTarget as any)._touchStartX ?? 0) -
+                  ((e.currentTarget as any)._tx ?? 0) -
                   e.changedTouches[0].clientX;
                 if (Math.abs(diff) > 50) {
-                  if (diff > 0 && currentIdx < currentList.length - 1)
-                    setLightboxUrl(currentList[currentIdx + 1]);
-                  else if (diff < 0 && currentIdx > 0)
-                    setLightboxUrl(currentList[currentIdx - 1]);
+                  if (diff > 0 && idx < lightboxList.length - 1)
+                    setLightboxUrl(lightboxList[idx + 1]);
+                  else if (diff < 0 && idx > 0)
+                    setLightboxUrl(lightboxList[idx - 1]);
                 }
               }}>
               <div
-                className="flex items-center justify-between px-4 py-3 flex-shrink-0"
+                className="flex items-center justify-between px-4 py-3"
                 onClick={(e) => e.stopPropagation()}>
                 <span
                   className="text-sm font-bold px-2.5 py-1 rounded-full"
                   style={{
                     backgroundColor: "rgba(255,255,255,0.1)",
-                    color: "#475569",
+                    color: "#94a3b8",
                   }}>
-                  {currentIdx + 1} / {currentList.length}
+                  {idx + 1}/{lightboxList.length}
                 </span>
                 <button
                   onClick={() => setLightboxUrl(null)}
-                  className="w-9 h-9 flex items-center justify-center rounded-full text-base font-bold"
+                  className="w-9 h-9 flex items-center justify-center rounded-full"
                   style={{
                     backgroundColor: "rgba(255,255,255,0.12)",
                     color: "white",
@@ -208,9 +231,9 @@ export default function JobCard({
               <div
                 className="flex-1 flex items-center justify-center px-10 relative"
                 onClick={(e) => e.stopPropagation()}>
-                {currentIdx > 0 && (
+                {idx > 0 && (
                   <button
-                    onClick={() => setLightboxUrl(currentList[currentIdx - 1])}
+                    onClick={() => setLightboxUrl(lightboxList[idx - 1])}
                     className="absolute left-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
                     style={{
                       backgroundColor: "rgba(255,255,255,0.12)",
@@ -221,7 +244,7 @@ export default function JobCard({
                 )}
                 <img
                   src={lightboxUrl}
-                  alt="사진 크게 보기"
+                  alt=""
                   className="rounded-2xl"
                   style={{
                     maxWidth: "100%",
@@ -229,9 +252,9 @@ export default function JobCard({
                     objectFit: "contain",
                   }}
                 />
-                {currentIdx < currentList.length - 1 && (
+                {idx < lightboxList.length - 1 && (
                   <button
-                    onClick={() => setLightboxUrl(currentList[currentIdx + 1])}
+                    onClick={() => setLightboxUrl(lightboxList[idx + 1])}
                     className="absolute right-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
                     style={{
                       backgroundColor: "rgba(255,255,255,0.12)",
@@ -241,20 +264,19 @@ export default function JobCard({
                   </button>
                 )}
               </div>
-              {currentList.length > 1 && (
+              {lightboxList.length > 1 && (
                 <div
-                  className="flex justify-center gap-1.5 py-4 flex-shrink-0"
+                  className="flex justify-center gap-1.5 py-4"
                   onClick={(e) => e.stopPropagation()}>
-                  {currentList.map((_, i) => (
+                  {lightboxList.map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setLightboxUrl(currentList[i])}
+                      onClick={() => setLightboxUrl(lightboxList[i])}
                       className="rounded-full transition-all"
                       style={{
-                        width: i === currentIdx ? 20 : 6,
+                        width: i === idx ? 20 : 6,
                         height: 6,
-                        backgroundColor:
-                          i === currentIdx ? "#1f66ff" : "#94a3b8",
+                        backgroundColor: i === idx ? "#1f66ff" : "#94a3b8",
                       }}
                     />
                   ))}
@@ -264,7 +286,7 @@ export default function JobCard({
           );
         })()}
 
-      {/* 사진 관리 모달 */}
+      {/* 사진 모달 */}
       {showPhoto && (
         <PhotoCapture
           jobId={job.id}
@@ -279,28 +301,24 @@ export default function JobCard({
         />
       )}
 
-      {/* 카드 본체 */}
+      {/* ══ 카드 ══ */}
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          backgroundColor: "#ffffff",
-          border: job.is_measurement
-            ? "1px solid #a855f755"
-            : "1px solid #e5e7eb",
-          boxShadow: "0 2px 12px rgba(15,23,42,0.05)",
-          borderLeft: `7px solid ${techColor}`,
+          background: techBg,
+          border: `1.5px solid ${techColor}33`,
+          boxShadow: expanded
+            ? `0 8px 32px ${techColor}22`
+            : `0 2px 12px ${techColor}18`,
+          transition: "box-shadow 0.2s",
         }}>
         {/* 실측 배너 */}
         {job.is_measurement && (
           <div
-            className="flex items-center gap-2 px-4 py-2.5"
-            style={{
-              background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
-            }}>
-            <span className="text-base">📐</span>
-            <span className="text-sm font-black text-white tracking-wide">
-              실측 방문
-            </span>
+            className="flex items-center gap-2 px-4 py-2"
+            style={{ background: "linear-gradient(90deg,#7c3aed,#a855f7)" }}>
+            <span className="text-sm">📐</span>
+            <span className="text-xs font-black text-white">실측 방문</span>
             <span
               className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
               style={{
@@ -308,7 +326,7 @@ export default function JobCard({
                 color: "white",
               }}>
               {job.install_completed
-                ? "시공 완료"
+                ? "시공완료"
                 : job.install_date
                   ? `시공 ${formatDate(job.install_date)}`
                   : "시공일 미정"}
@@ -316,185 +334,358 @@ export default function JobCard({
           </div>
         )}
 
-        {/* 상태/날짜/기사 행 */}
+        {/* 컬러 헤더 바 */}
         <div
-          className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap"
-          style={{ borderBottom: "1px solid #f8fafc" }}>
-          <select
-            value={job.status}
-            onChange={(e) =>
-              onUpdate(job.id, { status: e.target.value as Status })
-            }
-            className="text-xs font-bold rounded-full px-3 py-1 border cursor-pointer"
-            style={{ ...STATUS_STYLE[job.status], outline: "none" }}>
-            {STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-          <span className="text-xs font-medium" style={{ color: "#475569" }}>
-            {formatFullDate(job.visit_date)}
-          </span>
-          {job.visit_time && (
-            <span
-              className="text-medium font-bold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: "#f8fafc", color: "#1f66ff" }}>
-              {formatTime(job.visit_time)}
-            </span>
-          )}
-          {job.is_measurement && (
-            <span
-              className="text-xs font-bold px-2 py-0.5 rounded-full"
+          className="flex items-center justify-between px-4 py-2.5"
+          style={{ background: techGradient }}>
+          <div className="flex items-center gap-2">
+            <select
+              value={job.status}
+              onChange={(e) => {
+                e.stopPropagation();
+                onUpdate(job.id, { status: e.target.value as Status });
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs font-bold rounded-full px-2.5 py-1 cursor-pointer"
               style={{
-                backgroundColor: "#a855f722",
-                color: "#a855f7",
-                border: "1px solid #a855f744",
+                backgroundColor: "rgba(255,255,255,0.25)",
+                color: "white",
+                border: "1.5px solid rgba(255,255,255,0.4)",
+                outline: "none",
               }}>
-              📐 실측
+              {STATUSES.map((s) => (
+                <option
+                  key={s}
+                  value={s}
+                  style={{ color: "#111827", backgroundColor: "white" }}>
+                  {s}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs font-medium text-white opacity-90">
+              {formatFullDate(job.visit_date)}
             </span>
-          )}
-          {job.is_measurement && job.install_completed && (
-            <span
-              className="text-xs font-bold px-2 py-0.5 rounded-full"
-              style={{
-                backgroundColor: "#eaf1ff",
-                color: "#1f66ff",
-                border: "1px solid #bfd3ff",
-              }}>
-              🔨 시공완료
-            </span>
-          )}
-          {job.is_measurement && !job.install_completed && job.install_date && (
-            <span
-              className="text-xs px-2 py-0.5 rounded-full"
-              style={{
-                backgroundColor: "#f59e0b18",
-                color: "#f59e0b",
-                border: "1px solid #f59e0b33",
-              }}>
-              🔨 시공 {formatDate(job.install_date)}
-              {job.install_time ? " " + formatTime(job.install_time) : ""}
-            </span>
-          )}
-          {job.is_measurement &&
-            !job.install_completed &&
-            !job.install_date && (
+            {job.visit_time && (
               <span
-                className="text-xs px-2 py-0.5 rounded-full"
+                className="text-xs font-bold px-2 py-0.5 rounded-full"
                 style={{
-                  backgroundColor: "#f59e0b18",
-                  color: "#f59e0b",
-                  border: "1px solid #f59e0b33",
+                  backgroundColor: "rgba(255,255,255,0.25)",
+                  color: "white",
                 }}>
-                시공일 미정
+                {formatTime(job.visit_time)}
               </span>
             )}
-          <select
-            value={job.tech}
-            onChange={(e) => onUpdate(job.id, { tech: e.target.value as any })}
-            className="text-xs rounded-full px-3 py-1 border cursor-pointer font-bold ml-auto"
-            style={{
-              backgroundColor: techColor + "18",
-              border: `1px solid ${techColor}55`,
-              color: techColor,
-              outline: "none",
-            }}>
-            <option value="">미배정</option>
-            {TECHS.map((t) => (
-              <option key={t} value={t}>
-                {t}
+          </div>
+          <div
+            className="flex items-center gap-1.5"
+            onClick={(e) => e.stopPropagation()}>
+            {job.tech && techIdx > 0 && (
+              <Image
+                src={`/images/knight/knights-${techIdx}.png`}
+                alt={job.tech}
+                width={32}
+                height={36}
+                className="rounded-lg"
+                style={{
+                  width: 32,
+                  height: 36,
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                  border: "2px solid rgba(255,255,255,0.5)",
+                }}
+              />
+            )}
+            <select
+              value={job.tech}
+              onChange={(e) => {
+                e.stopPropagation();
+                onUpdate(job.id, { tech: e.target.value as any });
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs rounded-full px-2.5 py-1 cursor-pointer font-bold"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.25)",
+                color: "white",
+                border: "1.5px solid rgba(255,255,255,0.4)",
+                outline: "none",
+              }}>
+              <option
+                value=""
+                style={{ color: "#111827", backgroundColor: "white" }}>
+                미배정
               </option>
-            ))}
-          </select>
+              {TECHS.map((t) => (
+                <option
+                  key={t}
+                  value={t}
+                  style={{ color: "#111827", backgroundColor: "white" }}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* 본문 */}
-        <div className="flex items-start gap-3 px-3 py-3">
-          <div className="flex-1 min-w-0">
-            {/* 이름 + 전화 */}
-            <div className="flex flex-wrap items-center gap-2 mb-1">
+        {/* ── 항상 보이는 핵심 정보 ── */}
+        <div className="px-4 pt-3 pb-2">
+          {/* 고객명 + 전화 */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-lg font-black" style={{ color: "#111827" }}>
+              {job.name || "?"}
               <span
-                className="text-base font-bold"
-                style={{ color: "#111827" }}>
-                {job.name || "?"}{" "}
-                <span className="text-neutral-500">고객님</span>
+                className="text-sm font-normal ml-1"
+                style={{ color: "#94a3b8" }}>
+                고객님
               </span>
-              {job.phone && (
-                <div className="flex items-center gap-1.5">
-                  <span
-                    className="text-xs font-medium px-2 py-2 rounded-xl"
-                    style={{
-                      backgroundColor: "#ef444418",
-                      color: "#e32e40",
-                      border: "1px solid #ef444430",
-                    }}>
-                    {job.phone}
-                  </span>
-                  <a
-                    href={`tel:${job.phone}`}
-                    className="flex items-center justify-center border-2 border-transparent rounded-xl bg-gradient-to-r from-[#e32e40] to-[#ff707e]"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      color: "white",
-                      fontSize: 18,
-                      textDecoration: "none",
-                      flexShrink: 0,
-                    }}>
-                    <Image
-                      src="/images/phone-icon.png"
-                      alt="전화기 아이콘"
-                      width={48}
-                      height={48}
-                      className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
-                    />
-                  </a>
-                </div>
-              )}
-            </div>
+            </span>
+            {job.phone && (
+              <a
+                href={`tel:${job.phone}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-2 px-3 rounded-xl flex-shrink-0"
+                style={{
+                  height: 38,
+                  background: "linear-gradient(135deg,#e32e40,#ff707e)",
+                  textDecoration: "none",
+                }}>
+                <Image
+                  src="/images/phone-icon.png"
+                  alt="전화"
+                  width={28}
+                  height={28}
+                  style={{ width: 22, height: 22, objectFit: "contain" }}
+                />
+                <span className="text-sm font-bold text-white">
+                  {job.phone}
+                </span>
+              </a>
+            )}
+          </div>
 
-            {/* 지역 + 증상 + 금액 */}
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              {job.region && (
+          {/* 수리 내용 */}
+          {job.symptom && (
+            <div
+              className="mb-2.5 px-3 py-2 rounded-xl"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.7)",
+                border: `1px solid ${techColor}33`,
+              }}>
+              <p
+                className="text-[11px] font-medium mb-0.5"
+                style={{ color: techColor }}>
+                수리 내용
+              </p>
+              <p className="text-base font-black" style={{ color: "#111827" }}>
+                {job.symptom}
+              </p>
+            </div>
+          )}
+
+          {/* 금액 */}
+          {job.price > 0 && (
+            <div
+              className="mb-2.5 flex items-center justify-between px-3 py-2.5 rounded-xl"
+              style={{ background: techGradient }}>
+              <span className="text-xs font-medium text-white opacity-80">
+                견적금액
+              </span>
+              <span className="text-xl font-black text-white">
+                {formatPrice(job.price)}
+              </span>
+            </div>
+          )}
+
+          {/* 자재 */}
+          <MaterialSection jobId={job.id} isAdmin={isAdmin} />
+        </div>
+
+        {/* ── 자세히 보기 버튼 ── */}
+        <div className="px-[16px] ">
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="w-full flex items-center justify-center gap-2 py-3 font-bold text-sm transition-all"
+            style={{
+              background: expanded ? `${techColor}18` : `${techColor}0d`,
+              color: techColor,
+              border: `1px solid  ${techColor}`,
+              borderRadius: "13px",
+            }}>
+            <span>{expanded ? "접기" : "자세히 보기"}</span>
+            <span
+              style={{
+                transition: "transform 0.25s",
+                display: "inline-block",
+                transform: expanded ? "rotate(180deg)" : "none",
+              }}>
+              ▾
+            </span>
+          </button>
+        </div>
+
+        {/* ── 펼쳐지는 상세 정보 ── */}
+        {expanded && (
+          <div className="px-4 pt-3 pb-1 flex flex-col gap-3">
+            {/* 지역 */}
+            {job.region && (
+              <div>
+                <p
+                  className="text-xs font-bold mb-1.5"
+                  style={{ color: "#94a3b8" }}>
+                  방문 지역
+                </p>
                 <a
                   href={naverMapUrl(job.region)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium px-2 py-0.5 rounded-xl inline-flex items-center gap-1"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl"
                   style={{
-                    backgroundColor: "#eff6ff",
-                    color: "#1f66ff",
-                    border: "1px solid #bfd3ff",
+                    backgroundColor: "rgba(255,255,255,0.8)",
+                    color: techColor,
+                    border: `1px solid ${techColor}44`,
                     textDecoration: "none",
                   }}>
-                  <span style={{ fontSize: 10 }}>📍</span>
+                  <span style={{ fontSize: 12 }}>📍</span>
                   {job.region}
                 </a>
-              )}
-              {job.symptom && (
-                <span className="text-xl font-bold text-[#1f66ff]">
-                  {job.symptom}
-                </span>
-              )}
-              <div className="flex flex-wrap border-2 border-r-[#e32e40] border-b-[#e32e40] border-t-transparent border-l-transparent rounded-xl px-2 py-0.5 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] items-center gap-3">
-                {job.price > 0 && (
-                  <span
-                    className="text-lg font-bold"
-                    style={{ color: "#ffffff" }}>
-                    {formatPrice(job.price)}
-                  </span>
-                )}
               </div>
-            </div>
+            )}
+
+            {/* AS 만료 */}
+            {asInfo && (
+              <div
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl"
+                style={{
+                  backgroundColor: asInfo.expired
+                    ? "#fef2f2"
+                    : asInfo.daysLeft <= 30
+                      ? "#fff7ed"
+                      : "rgba(255,255,255,0.8)",
+                  border: `1px solid ${asInfo.expired ? "#fecaca" : asInfo.daysLeft <= 30 ? "#fed7aa" : "#bbf7d0"}`,
+                  width: "fit-content",
+                }}>
+                <span>🛡</span>
+                <span
+                  className="text-sm font-medium"
+                  style={{
+                    color: asInfo.expired
+                      ? "#ef4444"
+                      : asInfo.daysLeft <= 30
+                        ? "#f59e0b"
+                        : "#16a34a",
+                  }}>
+                  AS {asInfo.expired ? "만료" : `${job.as_until} 까지`}
+                  {!asInfo.expired &&
+                    asInfo.daysLeft <= 30 &&
+                    ` (${asInfo.daysLeft}일 남음)`}
+                </span>
+              </div>
+            )}
+
+            {/* 메모 */}
+            {job.memo && (
+              <div
+                className="rounded-xl px-3 py-2.5"
+                style={{
+                  backgroundColor: "#fffbeb",
+                  border: "1px solid #fde68a",
+                }}>
+                <p
+                  className="text-xs font-bold mb-1"
+                  style={{ color: "#92400e" }}>
+                  메모
+                </p>
+                <p
+                  className="text-sm leading-relaxed whitespace-pre-wrap"
+                  style={{ color: "#1f2937" }}>
+                  {job.memo}
+                </p>
+              </div>
+            )}
+
+            {/* 접수사진 */}
+            {intakePhotos.length > 0 && (
+              <div>
+                <p
+                  className="text-xs font-bold mb-2"
+                  style={{ color: "#94a3b8" }}>
+                  접수사진
+                </p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {intakePhotos.map((url, idx) => (
+                    <div
+                      key={url}
+                      className="relative rounded-xl overflow-hidden"
+                      style={{ aspectRatio: "1" }}>
+                      <img
+                        src={url}
+                        alt=""
+                        onClick={() => {
+                          setLightboxList(intakePhotos);
+                          setLightboxUrl(url);
+                        }}
+                        className="w-full h-full object-cover cursor-pointer"
+                      />
+                      {idx === 2 && intakePhotos.length > 3 && (
+                        <div
+                          className="absolute inset-0 flex items-center justify-center rounded-xl"
+                          style={{ backgroundColor: "rgba(0,0,0,0.55)" }}>
+                          <span className="text-white text-sm font-black">
+                            +{intakePhotos.length - 3}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 완료사진 */}
+            {photos.length > 0 && (
+              <div>
+                <p
+                  className="text-xs font-bold mb-2"
+                  style={{ color: "#1f66ff" }}>
+                  완료사진
+                </p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {photos.map((url, idx) => (
+                    <div
+                      key={url}
+                      className="relative rounded-xl overflow-hidden"
+                      style={{ aspectRatio: "1" }}>
+                      <img
+                        src={url}
+                        alt=""
+                        onClick={() => {
+                          setLightboxList(photos);
+                          setLightboxUrl(url);
+                        }}
+                        className="w-full h-full object-cover cursor-pointer"
+                      />
+                      {idx === 2 && photos.length > 3 && (
+                        <div
+                          className="absolute inset-0 flex items-center justify-center rounded-xl"
+                          style={{ backgroundColor: "rgba(0,0,0,0.55)" }}>
+                          <span className="text-white text-sm font-black">
+                            +{photos.length - 3}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 기사 카드 */}
             {job.tech && (
               <div
-                className="mt-3 relative overflow-hidden rounded-2xl p-4"
+                className="relative overflow-hidden rounded-2xl p-4"
                 style={{
                   background:
-                    "linear-gradient(135deg, #ffffff 0%, #eef4ff 55%, #e6dcff 100%)",
+                    "linear-gradient(135deg,#ffffff 0%,#eef4ff 55%,#e6dcff 100%)",
                   border: "1px solid #bfd3ff",
                   boxShadow: "0 10px 28px rgba(31,102,255,0.12)",
                 }}>
@@ -517,18 +708,18 @@ export default function JobCard({
                         🛡 안심케어
                       </span>
                     </div>
-                    <div className="text-xs mb-2" style={{ color: "#475569" }}>
+                    <div className="text-xs mb-1" style={{ color: "#475569" }}>
                       서울 인천 경기
                     </div>
                     <div
-                      className="text-medium font-black mb-2"
+                      className="text-medium font-black mb-1"
                       style={{ color: "#111827" }}>
                       {job.tech} 기사님
                     </div>
-                    <div className="text-xs mb-3" style={{ color: "#64748b" }}>
+                    <div className="text-xs mb-2" style={{ color: "#64748b" }}>
                       가구수리
                     </div>
-                    <div className="flex items-center gap-1 text-xs mb-4">
+                    <div className="flex items-center gap-1 text-xs mb-3">
                       <span style={{ color: "#f59e0b" }}>⭐</span>
                       <span className="font-bold" style={{ color: "#111827" }}>
                         4.9
@@ -536,25 +727,13 @@ export default function JobCard({
                       <span style={{ color: "#94a3b8" }}>(296)</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 text-[10px] font-bold">
-                      <span
-                        className="flex items-center gap-1"
-                        style={{ color: "#64748b" }}>
-                        🟣 우수인증
-                      </span>
-                      <span
-                        className="flex items-center gap-1"
-                        style={{ color: "#64748b" }}>
-                        💗 친절상담
-                      </span>
-                      <span
-                        className="flex items-center gap-1"
-                        style={{ color: "#64748b" }}>
-                        🔵 안심기사
-                      </span>
+                      <span style={{ color: "#64748b" }}>🟣 우수인증</span>
+                      <span style={{ color: "#64748b" }}>💗 친절상담</span>
+                      <span style={{ color: "#64748b" }}>🔵 안심기사</span>
                     </div>
                   </div>
                   <Image
-                    src={`/images/knight/knights-${TECHS.indexOf(job.tech) + 1}.png`}
+                    src={`/images/knight/knights-${techIdx}.png`}
                     alt={`${job.tech} 기사님`}
                     width={96}
                     height={112}
@@ -571,241 +750,40 @@ export default function JobCard({
               </div>
             )}
 
-            {/* 메모 */}
-            {job.memo && (
-              <div className="mt-2">
+            {/* 수정/삭제 */}
+            {isAdmin && (
+              <div className="flex gap-2">
                 <button
-                  type="button"
-                  onClick={() => setMemoOpen((v) => !v)}
-                  className="w-full flex items-center justify-between rounded-xl px-3 py-3 text-left"
+                  onClick={() => onEdit(job)}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-bold"
                   style={{
-                    backgroundColor: memoOpen ? "#c8e0ff" : "#f8fbff",
-                    border: `1px solid ${memoOpen ? "#bfd3ff" : "#bfd3ff"}`,
-                    boxShadow: memoOpen ? "none" : "0 0 0 1px #eaf1ff",
+                    backgroundColor: "rgba(255,255,255,0.8)",
+                    color: "#334155",
+                    border: "1px solid #e5e7eb",
                   }}>
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span style={{ fontSize: 15, flexShrink: 0 }}>💬</span>
-                    <div className="min-w-0">
-                      <p
-                        className="text-medium font-black mb-0.5"
-                        style={{ color: "#1f66ff" }}>
-                        메모 보기
-                      </p>
-                      <p
-                        className="text-xs truncate"
-                        style={{ color: "#6b7280" }}>
-                        {job.memo}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
-                    {!memoOpen && (
-                      <span
-                        className="text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
-                        style={{
-                          backgroundColor: "#eaf1ff",
-                          color: "#1f66ff",
-                          border: "1px solid #bfd3ff",
-                        }}>
-                        탭
-                      </span>
-                    )}
-                    <span
-                      style={{
-                        color: "#1f66ff",
-                        fontSize: 16,
-                        display: "inline-block",
-                        transition: "transform 0.2s",
-                        transform: memoOpen ? "rotate(180deg)" : "none",
-                      }}>
-                      ▾
-                    </span>
-                  </div>
+                  수정
                 </button>
-                {memoOpen && (
-                  <div
-                    className="rounded-xl px-4 py-3 -mt-0.5 shadow-2xl"
-                    style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #bfd3ff",
-                      borderTop: "none",
-                    }}>
-                    <p
-                      className="text-sm leading-relaxed whitespace-pre-wrap"
-                      style={{ color: "#1f2937" }}>
-                      {job.memo}
-                    </p>
-                  </div>
-                )}
+                <button
+                  onClick={() => onDelete(job.id)}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-bold"
+                  style={{
+                    backgroundColor: "#fef2f2",
+                    color: "#ef4444",
+                    border: "1px solid #fecaca",
+                  }}>
+                  삭제
+                </button>
               </div>
             )}
 
-            {/* AS 만료 */}
-            {job.status === "완료" &&
-              job.as_until &&
-              (() => {
-                const t = nowKST().toISOString().slice(0, 10);
-                const expired = job.as_until < t;
-                const daysLeft = Math.ceil(
-                  (new Date(job.as_until).getTime() - new Date(t).getTime()) /
-                    (1000 * 60 * 60 * 24),
-                );
-                return (
-                  <div
-                    className="flex items-center gap-1.5 mt-1 px-2 py-1 rounded-lg"
-                    style={{
-                      backgroundColor: expired
-                        ? "#fef2f2"
-                        : daysLeft <= 30
-                          ? "#f59e0b18"
-                          : "#f4f8ff",
-                      border: `1px solid ${expired ? "#ef444433" : daysLeft <= 30 ? "#f59e0b33" : "#d6e4ff"}`,
-                      display: "inline-flex",
-                      width: "fit-content",
-                    }}>
-                    <span style={{ fontSize: 11 }}>🛡</span>
-                    <span
-                      className="text-xs font-medium"
-                      style={{
-                        color: expired
-                          ? "#ef4444"
-                          : daysLeft <= 30
-                            ? "#f59e0b"
-                            : "#1f66ff",
-                      }}>
-                      AS {expired ? "만료" : `${job.as_until} 까지`}
-                      {!expired && daysLeft <= 30 && ` (${daysLeft}일 남음)`}
-                    </span>
-                  </div>
-                );
-              })()}
-
-            {/* 사진 목록 */}
-            {(getIntakePhotos().length > 0 || photos.length > 0) && (
-              <div className="mt-2.5 flex flex-col gap-2.5">
-                {getIntakePhotos().length > 0 && (
-                  <div>
-                    <span
-                      className="text-medium font-bold mb-1.5 inline-block"
-                      style={{ color: "#1f66ff" }}>
-                      📷 접수사진
-                    </span>
-                    <div className="flex gap-1.5 flex-wrap">
-                      {getIntakePhotos()
-                        .slice(0, 4)
-                        .map((url, idx) => {
-                          const list = getIntakePhotos();
-                          return (
-                            <div key={url} className="relative">
-                              <img
-                                src={url}
-                                alt={`접수 ${idx + 1}`}
-                                onClick={() => {
-                                  setLightboxList(list);
-                                  setLightboxUrl(url);
-                                }}
-                                className="rounded-xl cursor-pointer"
-                                style={{
-                                  width: "max(100%, 500px)",
-                                  objectFit: "cover",
-                                  border: "1px solid #1f66ff",
-                                }}
-                              />
-                              {idx === 3 && list.length > 4 && (
-                                <div
-                                  className="absolute inset-0 rounded-xl flex items-center justify-center"
-                                  style={{
-                                    backgroundColor: "rgba(0,0,0,0.6)",
-                                  }}>
-                                  <span
-                                    className="text-xs font-bold"
-                                    style={{ color: "white" }}>
-                                    +{list.length - 4}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                    </div>
-                  </div>
-                )}
-                {photos.length > 0 && (
-                  <div>
-                    <span
-                      className="text-xs font-bold mb-1.5 inline-block"
-                      style={{ color: "#1f66ff" }}>
-                      ✓ 완료사진
-                    </span>
-                    <div className="flex gap-1.5 flex-wrap">
-                      {photos.slice(0, 4).map((url, idx) => (
-                        <div key={url} className="relative">
-                          <img
-                            src={url}
-                            alt={`완료 ${idx + 1}`}
-                            onClick={() => {
-                              setLightboxList(photos);
-                              setLightboxUrl(url);
-                            }}
-                            className="rounded-xl cursor-pointer"
-                            style={{
-                              height: 64,
-                              width: 64,
-                              objectFit: "cover",
-                              border: "1px solid #bfd3ff",
-                            }}
-                          />
-                          {idx === 3 && photos.length > 4 && (
-                            <div
-                              className="absolute inset-0 rounded-xl flex items-center justify-center"
-                              style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
-                              <span
-                                className="text-xs font-bold"
-                                style={{ color: "white" }}>
-                                +{photos.length - 4}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="h-1" />
           </div>
+        )}
 
-          {/* 수정/삭제 버튼 */}
-          {isAdmin && (
-            <div className="flex flex-col gap-1.5 flex-shrink-0">
-              <button
-                onClick={() => onEdit(job)}
-                className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  color: "#334155",
-                  border: "1px solid #e5e7eb",
-                }}>
-                수정
-              </button>
-              <button
-                onClick={() => onDelete(job.id)}
-                className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
-                style={{
-                  backgroundColor: "#ef444418",
-                  color: "#ef4444",
-                  border: "1px solid #ef444430",
-                }}>
-                삭제
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* 하단 액션 버튼 */}
+        {/* ── 하단 액션 버튼 ── */}
         <div
-          className="flex gap-2 px-3 pb-3"
-          style={{ borderTop: "1px solid #f8fafc", paddingTop: 10 }}>
+          className="flex gap-2 px-3 py-3"
+          style={{ borderTop: `1px solid ${techColor}22` }}>
           {job.is_measurement ? (
             <div className="flex gap-2 flex-1">
               <button
@@ -813,10 +791,9 @@ export default function JobCard({
                 className="flex-1 rounded-xl py-2.5 text-sm font-bold"
                 style={{
                   backgroundColor:
-                    job.status === "완료" ? "#a855f722" : "#a855f7",
+                    job.status === "완료" ? "#f3e8ff" : "#a855f7",
                   color: job.status === "완료" ? "#a855f7" : "white",
-                  border:
-                    job.status === "완료" ? "1px solid #a855f744" : "none",
+                  border: job.status === "완료" ? "1px solid #d8b4fe" : "none",
                 }}>
                 {job.status === "완료" ? "📐 실측완료 ✓" : "📐 실측 완료"}
               </button>
@@ -839,11 +816,11 @@ export default function JobCard({
               )}
               {job.install_completed && (
                 <span
-                  className="rounded-xl px-3 py-2.5 text-xs font-bold flex items-center flex-shrink-0"
+                  className="rounded-xl px-3 py-2.5 text-xs font-bold flex items-center"
                   style={{
                     backgroundColor: "#eff6ff",
                     color: "#1f66ff",
-                    border: "1px solid #d6e4ff",
+                    border: "1px solid #bfdbfe",
                   }}>
                   ✓ 시공완료
                 </span>
@@ -852,7 +829,8 @@ export default function JobCard({
           ) : job.status !== "완료" ? (
             <button
               onClick={handleComplete}
-              className="flex-1 border-2 border-transparent rounded-xl px-3 py-2 bg-gradient-to-r from-[#1f66ff] to-[#4f8fff] text-sm font-bold text-white">
+              className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
+              style={{ background: techGradient }}>
               ✓ 완료 처리
             </button>
           ) : (
@@ -863,9 +841,10 @@ export default function JobCard({
               }}
               className="flex-1 rounded-xl py-2.5 text-sm font-bold"
               style={{
-                backgroundColor: photos.length > 0 ? "#eaf1ff" : "#f8fafc",
+                backgroundColor:
+                  photos.length > 0 ? "#eaf1ff" : "rgba(255,255,255,0.8)",
                 color: photos.length > 0 ? "#1f66ff" : "#64748b",
-                border: `1px solid ${photos.length > 0 ? "#bfd3ff" : "#dbe3f0"}`,
+                border: `1px solid ${photos.length > 0 ? "#bfd3ff" : "#e5e7eb"}`,
               }}>
               {photos.length > 0
                 ? `📷 사진 관리 (${photos.length}장)`

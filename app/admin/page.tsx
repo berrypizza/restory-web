@@ -16,6 +16,7 @@ import CalendarTab from "./tabs/CalendarTab";
 import StatsTab from "./tabs/StatsTab";
 import ListTab from "./tabs/ListTab";
 import RouteTab from "./tabs/RouteTab";
+import MaterialTab from "./tabs/MaterialTab";
 
 // ── 공통 서브컴포넌트 ─────────────────────────────────────────
 function TechFilterSelect({
@@ -49,8 +50,15 @@ function TechFilterSelect({
 
 // ── 메인 ─────────────────────────────────────────────────────
 export default function AdminDashboard() {
-  // 로그인
+  // 로그인 - useEffect로 localStorage 읽기 (SSR 안전)
   const [loggedUser, setLoggedUser] = useState<string | null>(null);
+  const [idInput, setIdInput] = useState("");
+  const [pwInput, setPwInput] = useState("");
+  const [pwError, setPwError] = useState(false);
+  const [showPw, setShowPw] = useState(false);
+
+  const [techFilter, setTechFilter] = useState<Tech | "전체">("전체");
+  const [calTechFilter, setCalTechFilter] = useState<Tech | "전체">("전체");
 
   useEffect(() => {
     try {
@@ -66,10 +74,6 @@ export default function AdminDashboard() {
       }
     } catch {}
   }, []);
-  const [idInput, setIdInput] = useState("");
-  const [pwInput, setPwInput] = useState("");
-  const [pwError, setPwError] = useState(false);
-  const [showPw, setShowPw] = useState(false);
 
   const currentUser = USERS.find((u) => u.name === loggedUser);
   const isAdmin = currentUser?.role === "admin";
@@ -79,10 +83,10 @@ export default function AdminDashboard() {
     useJobs(loggedUser);
 
   // 탭/필터
-  const [tab, setTab] = useState<"동선" | "전체" | "달력" | "통계">("달력");
+  const [tab, setTab] = useState<"동선" | "전체" | "달력" | "통계" | "자재">(
+    "달력",
+  );
   const [statusFilter, setStatusFilter] = useState<Status | "전체">("전체");
-  const [techFilter, setTechFilter] = useState<Tech | "전체">("전체");
-  const [calTechFilter, setCalTechFilter] = useState<Tech | "전체">("전체");
   const [dateFilter, setDateFilter] = useState(today());
   const [monthFilter, setMonthFilter] = useState(thisYearMonth());
   const [calYear, setCalYear] = useState(nowKST().getFullYear());
@@ -402,7 +406,7 @@ export default function AdminDashboard() {
             border: "1px solid #e5e7eb",
             boxShadow: "0 2px 10px rgba(15,23,42,0.04)",
           }}>
-          {(["달력", "동선", "전체", "통계"] as const).map((t) => (
+          {(["달력", "동선", "전체", "자재", "통계"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -532,6 +536,10 @@ export default function AdminDashboard() {
             onEdit={startEdit}
             onDelete={remove}
           />
+        )}
+
+        {!loading && tab === "자재" && (
+          <MaterialTab jobs={jobs} isAdmin={isAdmin} />
         )}
       </div>
 
