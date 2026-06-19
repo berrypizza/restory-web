@@ -36,19 +36,42 @@ const FAQ_ITEMS = [
   },
 ];
 
-function parseKeyword(keyword: string): { region: string; bizType: string } {
+/* ─────────────────────────────────────────
+   parseKeyword — 지역 슬러그에서 region / bizType 파싱
+   "붙박이 소파" / "붙박이 쇼파" 둘 다 감지하되,
+   화면에는 검색어에 실제로 들어온 단어 그대로 노출
+───────────────────────────────────────── */
+function parseKeyword(keyword: string): {
+  region: string;
+  bizType: string;
+  isSofa: boolean;
+  sofaWord: string;
+} {
   const kw = keyword.replace(/-/g, " ");
   const region = REGIONS.find((r) => kw.includes(r)) ?? "";
-  const bizType = kw.includes("카페")
-    ? "카페"
-    : kw.includes("고깃집")
-      ? "고깃집"
-      : kw.includes("식당")
-        ? "식당"
-        : kw.includes("업소")
-          ? "업소"
-          : "식당·카페";
-  return { region, bizType };
+
+  const isSofa =
+    kw.includes("붙박이 쇼파") ||
+    kw.includes("붙박이 소파") ||
+    kw.includes("붙박이소파") ||
+    kw.includes("붙박이쇼파");
+
+  // 입력에 실제로 들어온 단어를 그대로 사용 ("쇼파" 입력 → "쇼파" 출력)
+  const sofaWord = kw.includes("쇼파") ? "쇼파" : "소파";
+
+  const bizType = isSofa
+    ? `붙박이 ${sofaWord}`
+    : kw.includes("카페")
+      ? "카페"
+      : kw.includes("고깃집")
+        ? "고깃집"
+        : kw.includes("식당")
+          ? "식당"
+          : kw.includes("업소")
+            ? "업소"
+            : "식당·카페";
+
+  return { region, bizType, isSofa, sofaWord };
 }
 
 function CaseStrip({ region }: { region?: string }) {
@@ -224,16 +247,22 @@ export default function RestaurantChairLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
 
-  const { region, bizType } = keyword
+  const { region, bizType, isSofa, sofaWord } = keyword
     ? parseKeyword(keyword)
-    : { region: "", bizType: "" };
+    : { region: "", bizType: "", isSofa: false, sofaWord: "소파" };
 
   const heroTitle = region
-    ? `${region} ${bizType} 의자\n가죽 교체`
+    ? isSofa
+      ? `${region} 붙박이 ${sofaWord}\n천갈이`
+      : `${region} ${bizType} 의자\n가죽 교체`
     : "의자 새로\n사지 마세요";
+
   const heroSub = region
-    ? `${region} 당일 출장 가능 · 새 의자 대비 1/3~1/5 비용`
+    ? isSofa
+      ? `${region} 당일 출장 가능 · 부스석·붙박이 ${sofaWord} 천갈이 전문`
+      : `${region} 당일 출장 가능 · 새 의자 대비 1/3~1/5 비용`
     : "가죽만 바꾸면 새것처럼";
+
   const heroBadge = region
     ? `${region} 당일 출장 · 개당 3만원~`
     : "개당 3만원~";
@@ -260,7 +289,9 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       <ServiceJsonLd
         name={
           region
-            ? `${region} ${bizType} 의자 가죽 교체`
+            ? isSofa
+              ? `${region} 붙박이 ${sofaWord} 천갈이`
+              : `${region} ${bizType} 의자 가죽 교체`
             : "식당·카페 의자 가죽 교체"
         }
         description="식당·카페 의자 가죽 교체 전문. 새 의자 대비 1/3~1/5 비용. 영업 외 시간 방문 시공, 무상 A/S."
@@ -314,7 +345,9 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                 />
                 <span className="text-[12px] font-bold text-white/70">
                   {region
-                    ? `${region} 의자 가죽 교체 전문`
+                    ? isSofa
+                      ? `${region} 붙박이 ${sofaWord} 천갈이 전문`
+                      : `${region} 의자 가죽 교체 전문`
                     : "리스토리 가죽 교체"}
                 </span>
               </div>
@@ -338,7 +371,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   {heroBadge}
                 </span>
                 <span className="text-[13px] font-medium text-white/50">
-                  새 의자의 1/3 수준
+                  새 {isSofa ? sofaWord : "의자"}의 1/3 수준
                 </span>
               </div>
               <div className="flex flex-col gap-3 md:flex-row md:gap-3">
@@ -432,12 +465,18 @@ export default function RestaurantChairLanding({ keyword }: Props) {
             <h2
               className="text-[20px] font-black mb-3"
               style={{ color: "#111827" }}>
-              {region} {bizType} 의자 가죽 교체
+              {isSofa
+                ? `${region} 붙박이 ${sofaWord} 천갈이`
+                : `${region} ${bizType} 의자 가죽 교체`}
             </h2>
             <p className="text-[14px] leading-[1.8] text-neutral-600">
-              {region} 지역 {bizType} 의자 가죽 교체는 리스토리가 당일 출장으로
-              해결합니다. 새 의자 구매 비용의 1/3~1/5 수준으로, 영업 끝나고
-              방문해서 당일 완료합니다.
+              {region} 지역{" "}
+              {isSofa
+                ? `붙박이 ${sofaWord} 천갈이는`
+                : `${bizType} 의자 가죽 교체는`}{" "}
+              리스토리가 당일 출장으로 해결합니다. 새{" "}
+              {isSofa ? sofaWord : "의자"} 구매 비용의 1/3~1/5 수준으로, 영업
+              끝나고 방문해서 당일 완료합니다.
               {regionCaseCount > 0 && (
                 <>
                   {" "}
@@ -687,7 +726,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
             <div
               className="mt-4 overflow-hidden rounded-2xl"
               style={{ border: "1px solid #e5e7eb" }}>
-              {/* 창고 사진 풀너비 — 압도적 스케일 */}
               <div
                 className="relative overflow-hidden"
                 style={{ aspectRatio: "16/9" }}>
@@ -698,7 +736,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   className="object-cover"
                   sizes="100vw"
                 />
-                {/* 어두운 오버레이 */}
                 <div
                   className="absolute inset-0"
                   style={{
@@ -706,7 +743,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                       "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
                   }}
                 />
-                {/* 오버레이 텍스트 */}
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <p className="text-[11px] font-bold tracking-widest text-white/50 mb-1">
                     WHY SO AFFORDABLE
@@ -719,8 +755,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                   </p>
                 </div>
               </div>
-
-              {/* 하단 메시지 */}
               <div className="p-5" style={{ background: "#fff" }}>
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
@@ -1150,7 +1184,9 @@ export default function RestaurantChairLanding({ keyword }: Props) {
               className="font-black text-white leading-[1.2] mb-3 whitespace-pre-line"
               style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
               {region
-                ? `${region} 의자 사진 한 장이면\n충분합니다`
+                ? isSofa
+                  ? `${region} ${sofaWord} 사진 한 장이면\n충분합니다`
+                  : `${region} 의자 사진 한 장이면\n충분합니다`
                 : "의자 사진 한 장이면\n충분합니다"}
             </h2>
             <p
