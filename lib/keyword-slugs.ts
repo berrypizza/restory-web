@@ -14,7 +14,14 @@ import { REGIONS } from "@/lib/seo-regions";
 // ─────────────────────────────────────────────
 // REPAIR — 상부장
 // ─────────────────────────────────────────────
-const SANGBUJANG_SYMPTOMS = ["처짐", "떨어짐", "들뜸", "내려앉음"] as const;
+const SANGBUJANG_SYMPTOMS = [
+  "처짐",
+  "떨어짐",
+  "들뜸",
+  "내려앉음",
+  "추락",
+  "수리",
+] as const;
 
 const SANGBUJANG_BASE = [
   // 기본
@@ -394,14 +401,25 @@ const DOOR_BASE = [
 const DOOR_REGIONAL = REGIONS.flatMap((region) => [
   `${region}-싱크대-문짝-교체`,
   `${region}-씽크대-문짝-교체`,
+  `${region}-싱크대-도어-교체`,
+  `${region}-씽크대-도어-교체`,
   `${region}-싱크대-문짝-리폼`,
   `${region}-씽크대-문짝-리폼`,
+  `${region}-싱크대-도어-리폼`,
+  `${region}-씽크대-도어-리폼`,
 ]);
 
 // ─────────────────────────────────────────────
 // LEATHER — 의자 천갈이
 // ─────────────────────────────────────────────
-const CHAIR_SYMPTOMS = ["천갈이", "가죽-교체", "가죽-리폼"] as const;
+const CHAIR_SYMPTOMS = [
+  "천갈이",
+  "가죽-교체",
+  "가죽-리폼",
+  "인조-가죽-교체",
+  "레쟈-교체",
+  "가죽-천갈이",
+] as const;
 
 const CHAIR_BASE = [
   // 기본
@@ -488,6 +506,14 @@ const CHAIR_REGIONAL = REGIONS.flatMap((region) =>
   CHAIR_SYMPTOMS.map((s) => `${region}-의자-${s}`),
 );
 
+// 붙박이 소파/쇼파 × 지역 × 3가지 증상
+const BUILTIN_SOFA_SYMPTOMS = ["천갈이", "가죽-교체", "가죽-리폼"] as const;
+
+const BUILTIN_SOFA_REGIONAL = REGIONS.flatMap((region) => [
+  ...BUILTIN_SOFA_SYMPTOMS.map((s) => `${region}-붙박이-소파-${s}`),
+  ...BUILTIN_SOFA_SYMPTOMS.map((s) => `${region}-붙박이-쇼파-${s}`),
+]);
+
 // ─────────────────────────────────────────────
 // 소파 — 추후 추가
 // ─────────────────────────────────────────────
@@ -510,6 +536,7 @@ export const KITCHEN_KEYWORD_SLUGS: string[] = [...DOOR_BASE, ...DOOR_REGIONAL];
 export const LEATHER_KEYWORD_SLUGS: string[] = [
   ...CHAIR_BASE,
   ...CHAIR_REGIONAL,
+  ...BUILTIN_SOFA_REGIONAL,
 ];
 
 // export const SOFA_KEYWORD_SLUGS: string[] = [...SOFA_BASE, ...SOFA_REGIONAL];
