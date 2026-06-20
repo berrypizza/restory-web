@@ -4,6 +4,7 @@ import {
   REPAIR_KEYWORD_SLUGS,
   KITCHEN_KEYWORD_SLUGS,
   LEATHER_KEYWORD_SLUGS,
+  SOFA_KEYWORD_SLUGS,
 } from "@/lib/keyword-slugs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -175,6 +176,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  const sofaKeywordEntries = SOFA_KEYWORD_SLUGS.map((slug) => ({
+    url: `${base}/sofa/${encodeURIComponent(slug)}`,
+    lastModified: new Date("2026-06-01").toISOString(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
   // ── 케이스 페이지 ────────────────────────────────────────
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -195,6 +203,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...repairKeywordEntries,
     ...kitchenKeywordEntries,
     ...leatherKeywordEntries,
+    ...sofaKeywordEntries,
     ...caseEntries,
   ];
 }
