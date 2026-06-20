@@ -467,7 +467,7 @@ export default function JobCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl"
+              className="flex items-start justify-between gap-2 px-3 py-2 rounded-xl"
               style={{
                 backgroundColor: "rgba(255,255,255,0.7)",
                 border: `1px solid ${techColor}33`,
@@ -480,7 +480,7 @@ export default function JobCard({
                   📍 방문 지역
                 </p>
                 <p
-                  className="text-sm font-black truncate"
+                  className="text-sm font-black leading-snug"
                   style={{ color: "#111827" }}>
                   {job.region}
                 </p>
@@ -578,12 +578,8 @@ export default function JobCard({
           )}
 
           {/* 자재 — 필요할 때만 펼치는 정보라 토글 유지 */}
-          <MaterialSection
-            jobId={job.id}
-            isAdmin={isAdmin}
-            customerName={job.name}
-            visitDate={job.visit_date}
-          />
+          <MaterialSection jobId={job.id} isAdmin={isAdmin} />
+
           {/* 접수사진 — 토글 유지, 자재 토글과 동일한 패턴 */}
           {intakePhotos.length > 0 && (
             <PhotoDisclosure

@@ -323,8 +323,9 @@ function MaterialRow({
         {/* 라벨 — 도착한 자재 확인할 때 바로 누를 수 있게 항상 노출 */}
         <button
           onClick={onLabel}
-          className="flex-shrink-0 text-xs font-bold px-2 py-1.5 rounded-lg"
+          className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg"
           style={{
+            fontSize: 16,
             backgroundColor: "#f8fafc",
             color: "#64748b",
             border: "1px solid #e5e7eb",
@@ -336,7 +337,7 @@ function MaterialRow({
         {isAdmin && (
           <button
             onClick={onDelete}
-            className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg text-xs"
+            className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-sm"
             style={{ backgroundColor: "#fef2f2", color: "#ef4444" }}>
             ✕
           </button>

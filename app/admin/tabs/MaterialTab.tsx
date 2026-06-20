@@ -268,8 +268,9 @@ export default function MaterialTab({ jobs, isAdmin }: MaterialTabProps) {
                 <button
                   type="button"
                   onClick={() => openLabel(m)}
-                  className="flex-shrink-0 text-xs font-bold px-2 py-1.5 rounded-lg"
+                  className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg"
                   style={{
+                    fontSize: 16,
                     backgroundColor: "#f8fafc",
                     color: "#64748b",
                     border: "1px solid #e5e7eb",
@@ -347,8 +348,9 @@ export default function MaterialTab({ jobs, isAdmin }: MaterialTabProps) {
                   <button
                     type="button"
                     onClick={() => openLabel(m)}
-                    className="flex-shrink-0 text-xs font-bold px-2 py-1.5 rounded-lg"
+                    className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg"
                     style={{
+                      fontSize: 16,
                       backgroundColor: "#f8fafc",
                       color: "#64748b",
                       border: "1px solid #e5e7eb",
@@ -709,8 +711,9 @@ export default function MaterialTab({ jobs, isAdmin }: MaterialTabProps) {
                                 {/* 라벨 */}
                                 <button
                                   onClick={() => openLabel(m)}
-                                  className="flex-shrink-0 text-xs font-bold px-2 py-1.5 rounded-lg"
+                                  className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg"
                                   style={{
+                                    fontSize: 16,
                                     backgroundColor: "#f8fafc",
                                     color: "#64748b",
                                     border: "1px solid #e5e7eb",
