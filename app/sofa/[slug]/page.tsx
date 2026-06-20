@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import Sofacushionlanding from "@/app/components/landing/Sofacushionlanding";
+import { SOFA_KEYWORD_SLUGS } from "@/lib/keyword-slugs";
+
+export const dynamic = "force-static";
+export const dynamicParams = true;
+export const revalidate = 86400;
 
 const BASE = "https://www.restorystudio.co.kr";
+
+export function generateStaticParams() {
+  return SOFA_KEYWORD_SLUGS.map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,
