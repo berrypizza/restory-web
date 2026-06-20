@@ -55,8 +55,9 @@ export default function JobCard({
   const [prevStatus, setPrevStatus] = useState<Status>(job.status);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [lightboxList, setLightboxList] = useState<string[]>([]);
-  const [expanded, setExpanded] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [intakeOpen, setIntakeOpen] = useState(false);
+  const [completionOpen, setCompletionOpen] = useState(false);
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
@@ -307,10 +308,7 @@ export default function JobCard({
         style={{
           background: techBg,
           border: `1.5px solid ${techColor}33`,
-          boxShadow: expanded
-            ? `0 8px 32px ${techColor}22`
-            : `0 2px 12px ${techColor}18`,
-          transition: "box-shadow 0.2s",
+          boxShadow: `0 2px 14px ${techColor}1c`,
         }}>
         {/* 실측 배너 */}
         {job.is_measurement && (
@@ -426,10 +424,10 @@ export default function JobCard({
           </div>
         </div>
 
-        {/* ── 항상 보이는 핵심 정보 ── */}
-        <div className="px-4 pt-3 pb-2">
+        {/* ── 본문: 더 이상 접히지 않음. 현장 동선 순서(누구→어디→무엇→얼마)로 배치 ── */}
+        <div className="px-4 pt-3 pb-3 flex flex-col gap-2.5">
           {/* 고객명 + 전화 */}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-2">
             <span className="text-lg font-black" style={{ color: "#111827" }}>
               {job.name || "?"}
               <span
@@ -462,10 +460,43 @@ export default function JobCard({
             )}
           </div>
 
+          {/* 방문 지역 — 늘 보이고, 바로 길찾기 가능 (출발 전 필수 정보) */}
+          {job.region && (
+            <a
+              href={naverMapUrl(job.region)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.7)",
+                border: `1px solid ${techColor}33`,
+                textDecoration: "none",
+              }}>
+              <div className="min-w-0">
+                <p
+                  className="text-[11px] font-medium mb-0.5"
+                  style={{ color: techColor }}>
+                  📍 방문 지역
+                </p>
+                <p
+                  className="text-sm font-black truncate"
+                  style={{ color: "#111827" }}>
+                  {job.region}
+                </p>
+              </div>
+              <span
+                className="text-xs font-bold flex-shrink-0 px-2.5 py-1.5 rounded-lg text-white"
+                style={{ backgroundColor: techColor }}>
+                길찾기
+              </span>
+            </a>
+          )}
+
           {/* 수리 내용 */}
           {job.symptom && (
             <div
-              className="mb-2.5 px-3 py-2 rounded-xl"
+              className="px-3 py-2 rounded-xl"
               style={{
                 backgroundColor: "rgba(255,255,255,0.7)",
                 border: `1px solid ${techColor}33`,
@@ -484,7 +515,7 @@ export default function JobCard({
           {/* 금액 */}
           {job.price > 0 && (
             <div
-              className="mb-2.5 flex items-center justify-between px-3 py-2.5 rounded-xl"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl"
               style={{ background: techGradient }}>
               <span className="text-xs font-medium text-white opacity-80">
                 견적금액
@@ -495,290 +526,120 @@ export default function JobCard({
             </div>
           )}
 
-          {/* 자재 */}
-          <MaterialSection jobId={job.id} isAdmin={isAdmin} />
-        </div>
-
-        {/* ── 자세히 보기 버튼 ── */}
-        <div className="px-[16px] ">
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            className="w-full flex items-center justify-center gap-2 py-3 font-bold text-sm transition-all"
-            style={{
-              background: expanded ? `${techColor}18` : `${techColor}0d`,
-              color: techColor,
-              border: `1px solid  ${techColor}`,
-              borderRadius: "13px",
-            }}>
-            <span>{expanded ? "접기" : "자세히 보기"}</span>
-            <span
+          {/* AS 만료 — 완료 건만, 작은 배지로 항상 노출 */}
+          {asInfo && (
+            <div
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl self-start"
               style={{
-                transition: "transform 0.25s",
-                display: "inline-block",
-                transform: expanded ? "rotate(180deg)" : "none",
+                backgroundColor: asInfo.expired
+                  ? "#fef2f2"
+                  : asInfo.daysLeft <= 30
+                    ? "#fff7ed"
+                    : "rgba(255,255,255,0.8)",
+                border: `1px solid ${asInfo.expired ? "#fecaca" : asInfo.daysLeft <= 30 ? "#fed7aa" : "#bbf7d0"}`,
               }}>
-              ▾
-            </span>
-          </button>
-        </div>
-
-        {/* ── 펼쳐지는 상세 정보 ── */}
-        {expanded && (
-          <div className="px-4 pt-3 pb-1 flex flex-col gap-3">
-            {/* 지역 */}
-            {job.region && (
-              <div>
-                <p
-                  className="text-xs font-bold mb-1.5"
-                  style={{ color: "#94a3b8" }}>
-                  방문 지역
-                </p>
-                <a
-                  href={naverMapUrl(job.region)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.8)",
-                    color: techColor,
-                    border: `1px solid ${techColor}44`,
-                    textDecoration: "none",
-                  }}>
-                  <span style={{ fontSize: 12 }}>📍</span>
-                  {job.region}
-                </a>
-              </div>
-            )}
-
-            {/* AS 만료 */}
-            {asInfo && (
-              <div
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl"
+              <span>🛡</span>
+              <span
+                className="text-xs font-bold"
                 style={{
-                  backgroundColor: asInfo.expired
-                    ? "#fef2f2"
+                  color: asInfo.expired
+                    ? "#ef4444"
                     : asInfo.daysLeft <= 30
-                      ? "#fff7ed"
-                      : "rgba(255,255,255,0.8)",
-                  border: `1px solid ${asInfo.expired ? "#fecaca" : asInfo.daysLeft <= 30 ? "#fed7aa" : "#bbf7d0"}`,
-                  width: "fit-content",
+                      ? "#f59e0b"
+                      : "#16a34a",
                 }}>
-                <span>🛡</span>
-                <span
-                  className="text-sm font-medium"
-                  style={{
-                    color: asInfo.expired
-                      ? "#ef4444"
-                      : asInfo.daysLeft <= 30
-                        ? "#f59e0b"
-                        : "#16a34a",
-                  }}>
-                  AS {asInfo.expired ? "만료" : `${job.as_until} 까지`}
-                  {!asInfo.expired &&
-                    asInfo.daysLeft <= 30 &&
-                    ` (${asInfo.daysLeft}일 남음)`}
-                </span>
-              </div>
-            )}
+                AS {asInfo.expired ? "만료" : `${job.as_until} 까지`}
+                {!asInfo.expired &&
+                  asInfo.daysLeft <= 30 &&
+                  ` (${asInfo.daysLeft}일 남음)`}
+              </span>
+            </div>
+          )}
 
-            {/* 메모 */}
-            {job.memo && (
-              <div
-                className="rounded-xl px-3 py-2.5"
+          {/* 메모 — 현장 특이사항이라 항상 노출 */}
+          {job.memo && (
+            <div
+              className="rounded-xl px-3 py-2.5"
+              style={{
+                backgroundColor: "#fffbeb",
+                border: "1px solid #fde68a",
+              }}>
+              <p
+                className="text-xs font-bold mb-1"
+                style={{ color: "#92400e" }}>
+                ⚠️ 메모
+              </p>
+              <p
+                className="text-sm leading-relaxed whitespace-pre-wrap"
+                style={{ color: "#1f2937" }}>
+                {job.memo}
+              </p>
+            </div>
+          )}
+
+          {/* 자재 — 필요할 때만 펼치는 정보라 토글 유지 */}
+          <MaterialSection
+            jobId={job.id}
+            isAdmin={isAdmin}
+            customerName={job.name}
+            visitDate={job.visit_date}
+          />
+          {/* 접수사진 — 토글 유지, 자재 토글과 동일한 패턴 */}
+          {intakePhotos.length > 0 && (
+            <PhotoDisclosure
+              label="접수사진"
+              photos={intakePhotos}
+              open={intakeOpen}
+              accentColor="#f59e0b"
+              onToggle={() => setIntakeOpen((v) => !v)}
+              onPhotoClick={(url) => {
+                setLightboxList(intakePhotos);
+                setLightboxUrl(url);
+              }}
+            />
+          )}
+
+          {/* 완료사진 */}
+          {photos.length > 0 && (
+            <PhotoDisclosure
+              label="완료사진"
+              photos={photos}
+              open={completionOpen}
+              accentColor="#1f66ff"
+              onToggle={() => setCompletionOpen((v) => !v)}
+              onPhotoClick={(url) => {
+                setLightboxList(photos);
+                setLightboxUrl(url);
+              }}
+            />
+          )}
+
+          {/* 수정/삭제 — 토글 없이 항상 노출 */}
+          {isAdmin && (
+            <div className="flex gap-2 pt-0.5">
+              <button
+                onClick={() => onEdit(job)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold"
                 style={{
-                  backgroundColor: "#fffbeb",
-                  border: "1px solid #fde68a",
+                  backgroundColor: "rgba(255,255,255,0.8)",
+                  color: "#334155",
+                  border: "1px solid #e5e7eb",
                 }}>
-                <p
-                  className="text-xs font-bold mb-1"
-                  style={{ color: "#92400e" }}>
-                  메모
-                </p>
-                <p
-                  className="text-sm leading-relaxed whitespace-pre-wrap"
-                  style={{ color: "#1f2937" }}>
-                  {job.memo}
-                </p>
-              </div>
-            )}
-
-            {/* 접수사진 */}
-            {intakePhotos.length > 0 && (
-              <div>
-                <p
-                  className="text-xs font-bold mb-2"
-                  style={{ color: "#94a3b8" }}>
-                  접수사진
-                </p>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {intakePhotos.map((url, idx) => (
-                    <div
-                      key={url}
-                      className="relative rounded-xl overflow-hidden"
-                      style={{ aspectRatio: "1" }}>
-                      <img
-                        src={url}
-                        alt=""
-                        onClick={() => {
-                          setLightboxList(intakePhotos);
-                          setLightboxUrl(url);
-                        }}
-                        className="w-full h-full object-cover cursor-pointer"
-                      />
-                      {idx === 2 && intakePhotos.length > 3 && (
-                        <div
-                          className="absolute inset-0 flex items-center justify-center rounded-xl"
-                          style={{ backgroundColor: "rgba(0,0,0,0.55)" }}>
-                          <span className="text-white text-sm font-black">
-                            +{intakePhotos.length - 3}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 완료사진 */}
-            {photos.length > 0 && (
-              <div>
-                <p
-                  className="text-xs font-bold mb-2"
-                  style={{ color: "#1f66ff" }}>
-                  완료사진
-                </p>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {photos.map((url, idx) => (
-                    <div
-                      key={url}
-                      className="relative rounded-xl overflow-hidden"
-                      style={{ aspectRatio: "1" }}>
-                      <img
-                        src={url}
-                        alt=""
-                        onClick={() => {
-                          setLightboxList(photos);
-                          setLightboxUrl(url);
-                        }}
-                        className="w-full h-full object-cover cursor-pointer"
-                      />
-                      {idx === 2 && photos.length > 3 && (
-                        <div
-                          className="absolute inset-0 flex items-center justify-center rounded-xl"
-                          style={{ backgroundColor: "rgba(0,0,0,0.55)" }}>
-                          <span className="text-white text-sm font-black">
-                            +{photos.length - 3}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 기사 카드 */}
-            {job.tech && (
-              <div
-                className="relative overflow-hidden rounded-2xl p-4"
+                수정
+              </button>
+              <button
+                onClick={() => onDelete(job.id)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold"
                 style={{
-                  background:
-                    "linear-gradient(135deg,#ffffff 0%,#eef4ff 55%,#e6dcff 100%)",
-                  border: "1px solid #bfd3ff",
-                  boxShadow: "0 10px 28px rgba(31,102,255,0.12)",
+                  backgroundColor: "#fef2f2",
+                  color: "#ef4444",
+                  border: "1px solid #fecaca",
                 }}>
-                <div
-                  className="absolute right-3 top-0 w-8 h-10 flex items-start justify-center pt-1"
-                  style={{
-                    background: "linear-gradient(180deg,#4169ff,#6b7cff)",
-                    clipPath: "polygon(0 0,100% 0,100% 100%,50% 75%,0 100%)",
-                    color: "white",
-                  }}>
-                  ♛
-                </div>
-                <div className="flex items-start justify-between gap-0.5">
-                  <div className="min-w-0 flex-1 pr-1">
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      <span className="text-[11px] font-black px-2 py-1 rounded-md bg-[#6d4cff] text-white">
-                        👑 베스트
-                      </span>
-                      <span className="text-[11px] font-black px-2 py-1 rounded-md bg-[#eaf1ff] text-[#1f66ff]">
-                        🛡 안심케어
-                      </span>
-                    </div>
-                    <div className="text-xs mb-1" style={{ color: "#475569" }}>
-                      서울 인천 경기
-                    </div>
-                    <div
-                      className="text-medium font-black mb-1"
-                      style={{ color: "#111827" }}>
-                      {job.tech} 기사님
-                    </div>
-                    <div className="text-xs mb-2" style={{ color: "#64748b" }}>
-                      가구수리
-                    </div>
-                    <div className="flex items-center gap-1 text-xs mb-3">
-                      <span style={{ color: "#f59e0b" }}>⭐</span>
-                      <span className="font-bold" style={{ color: "#111827" }}>
-                        4.9
-                      </span>
-                      <span style={{ color: "#94a3b8" }}>(296)</span>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 text-[10px] font-bold">
-                      <span style={{ color: "#64748b" }}>🟣 우수인증</span>
-                      <span style={{ color: "#64748b" }}>💗 친절상담</span>
-                      <span style={{ color: "#64748b" }}>🔵 안심기사</span>
-                    </div>
-                  </div>
-                  <Image
-                    src={`/images/knight/knights-${techIdx}.png`}
-                    alt={`${job.tech} 기사님`}
-                    width={96}
-                    height={112}
-                    className="object-cover flex-shrink-0 rounded-2xl"
-                    style={{
-                      width: 96,
-                      height: 112,
-                      objectFit: "cover",
-                      objectPosition: "top center",
-                      boxShadow: "0 12px 26px rgba(31,102,255,0.22)",
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* 수정/삭제 */}
-            {isAdmin && (
-              <div className="flex gap-2">
-                <button
-                  onClick={() => onEdit(job)}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.8)",
-                    color: "#334155",
-                    border: "1px solid #e5e7eb",
-                  }}>
-                  수정
-                </button>
-                <button
-                  onClick={() => onDelete(job.id)}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold"
-                  style={{
-                    backgroundColor: "#fef2f2",
-                    color: "#ef4444",
-                    border: "1px solid #fecaca",
-                  }}>
-                  삭제
-                </button>
-              </div>
-            )}
-
-            <div className="h-1" />
-          </div>
-        )}
+                삭제
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* ── 하단 액션 버튼 ── */}
         <div
@@ -854,5 +715,97 @@ export default function JobCard({
         </div>
       </div>
     </>
+  );
+}
+
+// ── 사진 토글 (접수사진 / 완료사진 공용) ───────────────────────
+// 자재 섹션과 동일한 "닫혀있다가 필요할 때만 펼치는" 패턴으로 통일.
+// 닫힌 상태에서도 첫 사진 썸네일 + 장수를 보여줘서 안을 안 열어도 감이 오게 함.
+function PhotoDisclosure({
+  label,
+  photos,
+  open,
+  accentColor,
+  onToggle,
+  onPhotoClick,
+}: {
+  label: string;
+  photos: string[];
+  open: boolean;
+  accentColor: string;
+  onToggle: () => void;
+  onPhotoClick: (url: string) => void;
+}) {
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center justify-between rounded-xl px-3 py-2 text-left"
+        style={{
+          backgroundColor: open ? `${accentColor}14` : "#f8fafc",
+          border: `1px solid ${open ? `${accentColor}55` : "#e5e7eb"}`,
+        }}>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="rounded-lg overflow-hidden flex-shrink-0"
+            style={{ width: 30, height: 30 }}>
+            <img
+              src={photos[0]}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <span className="text-sm font-bold" style={{ color: accentColor }}>
+            {label}
+          </span>
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-bold"
+            style={{
+              backgroundColor: `${accentColor}18`,
+              color: accentColor,
+            }}>
+            {photos.length}장
+          </span>
+        </div>
+        <span
+          style={{
+            color: "#94a3b8",
+            fontSize: 14,
+            transition: "transform 0.2s",
+            display: "inline-block",
+            transform: open ? "rotate(180deg)" : "none",
+          }}>
+          ▾
+        </span>
+      </button>
+
+      {open && (
+        <div className="grid grid-cols-3 gap-1.5 mt-1.5">
+          {photos.map((url, idx) => (
+            <div
+              key={url}
+              className="relative rounded-xl overflow-hidden"
+              style={{ aspectRatio: "1" }}>
+              <img
+                src={url}
+                alt=""
+                onClick={() => onPhotoClick(url)}
+                className="w-full h-full object-cover cursor-pointer"
+              />
+              {idx === 2 && photos.length > 3 && (
+                <div
+                  className="absolute inset-0 flex items-center justify-center rounded-xl"
+                  style={{ backgroundColor: "rgba(0,0,0,0.55)" }}>
+                  <span className="text-white text-sm font-black">
+                    +{photos.length - 3}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
