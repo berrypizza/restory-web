@@ -1,47 +1,24 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
-import FadeIn from "@/app/components/FadeIn";
 import Link from "next/link";
-import { cases } from "@/lib/case-data";
+import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
+import { cases } from "@/lib/case-data";
+import { REGIONS } from "@/lib/seo-regions";
 
-/* ═══════════════════════════════════════════
-   DATA
-   ═══════════════════════════════════════════ */
-const REVIEWS = [
-  {
-    name: "신**",
-    area: "서울 강서구",
-    text: "이태리 소파라 버리기 아까웠는데, 쿠션 복원하니 처음 샀을 때처럼 됐어요. 새로 사는 것보다 훨씬 저렴했습니다.",
-    rating: 5,
-  },
-  {
-    name: "고**",
-    area: "인천시",
-    text: "직장인이라 반차 내고 받았는데 당일에 바로 끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셨습니다.",
-    rating: 5,
-  },
-  {
-    name: "장**",
-    area: "경기 분당",
-    text: "한쪽만 꺼져서 앉기 불편했는데, 양쪽 다 보강해주셨어요. 탄성이 돌아와서 소파가 살아났습니다.",
-    rating: 5,
-  },
-  {
-    name: "오**",
-    area: "서울 송파구",
-    text: "500만원짜리 소파인데 50만원으로 새것처럼 됐어요. 진작 할걸 그랬습니다.",
-    rating: 5,
-  },
-];
+/* ─────────────────────────────────────────
+   CONSTANTS
+───────────────────────────────────────── */
+const PHONE = "tel:010-6855-0957";
+const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
-const FAQ = [
+const FAQ_ITEMS = [
   {
     q: "소파 새로 사는 것보다 정말 저렴한가요?",
-    a: "네. 새 소파 구매 대비 1/5~1/10 수준입니다. 고급 소파일수록 복원 대비 절약 효과가 큽니다.",
+    a: "대부분의 경우 새 소파 구매 비용의 1/5~1/10 수준으로 복원 가능합니다. 사진 보내주시면 정확한 비용 범위를 먼저 안내드립니다.",
   },
   {
     q: "어떤 소파든 복원 가능한가요?",
@@ -49,1017 +26,1057 @@ const FAQ = [
   },
   {
     q: "복원 시간은 얼마나 걸리나요?",
-    a: "소파 1개 기준 약 2~4시간 소요됩니다. 당일 시공 완료되며, 바로 사용 가능합니다.",
+    a: "소파 1개 기준 약 2~4시간 소요됩니다. 현장 상태에 따라 달라질 수 있으며, 사전에 안내드립니다.",
   },
   {
-    q: "복원하면 얼마나 오래 가나요?",
-    a: "HR계열 고탄성 스펀지와 이태리 엘라스틱 밴드를 사용하기 때문에 일반 소파보다 오래 유지됩니다.",
+    q: "가죽 교체나 의자 천갈이도 같이 가능한가요?",
+    a: "네. 소파 가죽이 찢어졌거나 프레임이 삐걱거리는 경우, 식탁·사무용 의자 천갈이까지 방문 시 함께 작업 가능합니다. 추가 출장비 없이 진행됩니다.",
   },
   {
     q: "A/S는 어떻게 되나요?",
-    a: "시공 완료 후 미흡한 부분은 100% 무상으로 재시공해드립니다.",
+    a: "수리 부위의 처짐 재발 등에 대해 무상으로 재시공해드립니다.",
   },
 ];
 
-const EXTRAS = [
-  {
-    icon: "🛋️",
-    title: "가죽 교체",
-    desc: "소파 가죽이 찢어졌다면 함께 교체 가능",
-  },
-  {
-    icon: "🔩",
-    title: "프레임 보강",
-    desc: "삐걱거리는 목대·스프링 보강",
-  },
-  {
-    icon: "🪑",
-    title: "의자 천갈이",
-    desc: "식탁 의자·사무용 의자 가죽 교체도 가능",
-  },
-];
+/* ─────────────────────────────────────────
+   keyword → 지역·증상·표기(소파/쇼파) 파싱
+───────────────────────────────────────── */
+function parseKeyword(keyword: string): {
+  region: string;
+  symptom: string;
+  sofaWord: string;
+} {
+  const kw = keyword.replace(/-/g, " ");
+  const region = REGIONS.find((r) => kw.includes(r)) ?? "";
+  const sofaWord = kw.includes("쇼파") ? "쇼파" : "소파";
+  const symptom = kw.includes("꺼짐")
+    ? "꺼짐"
+    : kw.includes("주저앉음")
+      ? "주저앉음"
+      : kw.includes("처짐")
+        ? "처짐"
+        : kw.includes("탄성")
+          ? "탄성저하"
+          : "꺼짐";
+  return { region, symptom, sofaWord };
+}
 
-const PHONE = "tel:010-6855-0957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
+/* ─────────────────────────────────────────
+   CaseStrip
+───────────────────────────────────────── */
+function CaseStrip({ region }: { region?: string }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-   ═══════════════════════════════════════════ */
-export default function SofaCushionLanding() {
+  const allCases = cases
+    .filter((c) => c.category === "소파 복원")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const matched = region
+    ? allCases.filter((c) => c.region.includes(region))
+    : [];
+  const rest = allCases.filter((c) => !matched.includes(c));
+  const CASE_ITEMS = [...matched, ...rest].slice(0, 6);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
+      : 0;
+    if (cardWidth > 0) setActiveIdx(Math.round(el.scrollLeft / cardWidth));
+  };
+
+  const scrollTo = (i: number) => {
+    const el = scrollRef.current;
+    if (!el || !el.firstElementChild) return;
+    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
+    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+  };
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[15px] font-bold text-neutral-900">실제 복원 사례</p>
+        <Link
+          href="/cases?cat=소파 복원"
+          className="text-[12px] font-bold"
+          style={{ color: "#1a5cff", textDecoration: "none" }}>
+          전체 보기 →
+        </Link>
+      </div>
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex gap-3 overflow-x-auto"
+        style={{
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}>
+        {CASE_ITEMS.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              scrollSnapAlign: "start",
+              flexShrink: 0,
+              width: "72%",
+              maxWidth: 300,
+            }}>
+            <Link
+              href={`/cases/${item.id}`}
+              draggable={false}
+              className="block overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb", textDecoration: "none" }}>
+              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+                <Image
+                  src={item.beforeImg}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes="72vw"
+                  draggable={false}
+                />
+                <div
+                  className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-black text-white"
+                  style={{ background: "#e32e40" }}>
+                  BEFORE
+                </div>
+              </div>
+              <div className="p-3 bg-white">
+                <p className="text-[13px] font-extrabold text-neutral-900 truncate">
+                  {item.title}
+                </p>
+                <p className="text-[11px] text-neutral-400 mt-0.5">
+                  {item.region}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center gap-1.5 mt-4">
+        {CASE_ITEMS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className="rounded-full transition-all"
+            style={{
+              width: i === activeIdx ? 20 : 6,
+              height: 6,
+              background: i === activeIdx ? "#1a5cff" : "#d1d5db",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   YouTubeFacade
+───────────────────────────────────────── */
+function YouTubeFacade({ videoId }: { videoId: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div
+      className="relative aspect-video overflow-hidden rounded-2xl cursor-pointer"
+      style={{ background: "#000" }}
+      onClick={() => setLoaded(true)}>
+      {loaded ? (
+        <iframe
+          className="h-full w-full"
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+          title="리스토리 소파 쿠션 복원 시공 영상"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <>
+          <img
+            src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+            alt="시공 영상 썸네일"
+            className="h-full w-full object-cover"
+            style={{ opacity: 0.75 }}
+          />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-full"
+              style={{ background: "rgba(255,0,0,0.92)" }}>
+              <div
+                style={{
+                  width: 0,
+                  height: 0,
+                  marginLeft: 4,
+                  borderTop: "11px solid transparent",
+                  borderBottom: "11px solid transparent",
+                  borderLeft: "18px solid white",
+                }}
+              />
+            </div>
+            <p className="text-[13px] font-bold text-white/80">
+              탭해서 실제 시공 영상 보기
+            </p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   PROPS
+───────────────────────────────────────── */
+interface Props {
+  keyword?: string;
+}
+
+/* ─────────────────────────────────────────
+   MAIN
+───────────────────────────────────────── */
+export default function SofaCushionLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showSticky, setShowSticky] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 500);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { region, symptom, sofaWord } = keyword
+    ? parseKeyword(keyword)
+    : { region: "", symptom: "", sofaWord: "소파" };
+
+  const heroTitle = region
+    ? `${region} ${sofaWord} ${symptom} 복원 수리`
+    : "소파 쿠션 복원\n새로 살 필요 없습니다";
+  const heroSub = region
+    ? `${region} 당일 출장 가능 · 고탄성 스펀지로 더 오래가게`
+    : "내부 구조만 복원하면 새것처럼, 더 저렴하게";
+  const heroBadge = region
+    ? `${region} 출장 · 새 ${sofaWord} 비용의 1/10~`
+    : "새 소파 구매 비용의 1/10~";
+
+  // 지역 케이스 수 (thin content 방지용 동적 데이터)
+  const regionCaseCount = region
+    ? cases.filter(
+        (c) => c.category === "소파 복원" && c.region.includes(region),
+      ).length
+    : 0;
 
   return (
     <main
       className="bg-white"
       style={{
         fontFamily:
-          "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+          "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif",
       }}>
-      {/* seo */}
       <ServiceJsonLd
-        name="싱크대 상부장 수리"
-        description="싱크대 상부장 처짐·추락 증상 합판 시공목으로 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S."
-        url="https://www.restorystudioudio.co.kr/repair/sangbujang"
+        name={
+          region
+            ? `${region} ${sofaWord} ${symptom} 복원 수리`
+            : "소파 쿠션 복원"
+        }
+        description="소파 쿠션 꺼짐·주저앉음 증상을 HR계열 고탄성 스펀지와 이태리 엘라스틱 밴드로 복원. 새 소파 구매 비용의 1/10 수준. 무상 A/S."
+        url={
+          keyword
+            ? `https://www.restorystudio.co.kr/sofa/${keyword}`
+            : "https://www.restorystudio.co.kr/sofa"
+        }
       />
-      <FAQJsonLd faqs={FAQ} />
+      <FAQJsonLd faqs={FAQ_ITEMS} />
 
-      <FadeIn>
-        {/* HERO IMAGE */}
-        <section className="relative" style={{ background: "#1f66ff" }}>
+      {/* 1. HERO */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: "#0a1628", minHeight: "100svh" }}>
+        <div className="absolute inset-0 md:hidden">
           <Image
             src="/images/sofa/hero-sofa-2.webp"
-            alt="리스토리 소파 쿠션 복원 서비스"
-            width={1080}
-            height={1350}
-            className="w-full h-auto"
+            alt=""
+            fill
+            className="object-cover"
+            style={{ opacity: 0.35 }}
             priority
-            sizes="(max-width: 768px) 100vw, 768px"
+            sizes="100vw"
           />
-          <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-white via-white/30 to-transparent">
-            <div className="w-full max-w-5xl px-6 pb-8 pt-24 md:px-10 md:pb-12 md:pt-32">
-              <p className="text-[13px] text-[#1f66ff] font-bold md:text-[15px]">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 25%, #0a1628 100%)",
+            }}
+          />
+        </div>
+
+        <div
+          className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
+          style={{ minHeight: "100svh" }}>
+          <div className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6 md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+            <FadeIn>
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                }}>
                 <Image
                   src="/images/logo.png"
                   alt="리스토리"
-                  width={30}
-                  height={30}
-                  className="inline-block mr-2"
+                  width={20}
+                  height={20}
+                  className="rounded-full"
                 />
-                리스토리 소파 쿠션 복원 서비스
+                <span className="text-[12px] font-bold text-white/70">
+                  {region
+                    ? `${region} ${sofaWord} 복원 수리 전문`
+                    : "리스토리 소파 쿠션 복원"}
+                </span>
+              </div>
+
+              <h1
+                className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
+                style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
+                {heroTitle}
+              </h1>
+              <p
+                className="font-medium text-white/60 mb-4"
+                style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
+                {heroSub}
               </p>
-              <p className="mt-1 text-[28px] font-black leading-[1.3] text-[#1f66ff] md:text-[42px]">
-                소파를 새로 살 필요 없습니다
-              </p>
-              <p className="text-[28px] font-medium leading-[1.3] text-neutral-900 md:text-[42px]">
-                내부 구조만 복원하면 새것처럼
-              </p>
-            </div>
+
+              <div
+                className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
+                style={{
+                  background: "rgba(26,92,255,0.25)",
+                  border: "1px solid rgba(26,92,255,0.4)",
+                }}>
+                <span className="text-[22px] font-black text-white">
+                  {heroBadge}
+                </span>
+                <span className="text-[13px] font-medium text-white/50">
+                  고탄성 스펀지 + 이태리 밴드
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-3 md:flex-row">
+                <a
+                  href={KAKAO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2.5 rounded-2xl font-black text-[16px]"
+                  style={{
+                    background: "#FEE500",
+                    color: "#1a1a1a",
+                    padding: "18px 28px",
+                  }}>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+                  </svg>
+                  카카오로 사진 보내기
+                </a>
+                <a
+                  href={PHONE}
+                  className="flex items-center justify-center gap-2 rounded-2xl font-bold text-white text-[15px]"
+                  style={{
+                    background: "rgba(255,255,255,0.1)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    padding: "14px 24px",
+                  }}>
+                  📞 전화 문의
+                </a>
+              </div>
+
+              <div className="mt-8 flex items-center gap-6">
+                {[
+                  { n: "500건+", l: "연간 복원" },
+                  { n: "4.9★", l: "고객 평점" },
+                  { n: "100%", l: "무상 A/S" },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <p className="text-[15px] font-black text-white">{s.n}</p>
+                    <p className="text-[11px] text-white/40">{s.l}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+
+          <div className="hidden md:block md:w-[46%] relative flex-shrink-0">
+            <Image
+              src="/images/sofa/hero-sofa-2.webp"
+              alt="리스토리 소파 쿠션 복원"
+              fill
+              className="object-cover"
+              style={{ opacity: 0.75 }}
+              priority
+              sizes="46vw"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to right, #0a1628 0%, transparent 40%)",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to top, #0a1628 0%, transparent 20%)",
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ★ 지역 배너 */}
+      {region && (
+        <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
+          <div className="mx-auto max-w-lg text-center">
+            <p className="text-[14px] font-black text-white">
+              📍 {region} 지역 당일 출장 가능 · 사진 한 장으로 무료 견적
+            </p>
           </div>
         </section>
-      </FadeIn>
+      )}
 
-      {/* HERO CTA BUTTONS */}
-      <section className="px-5 py-5 md:py-7" style={{ background: "#3672ff" }}>
-        <div className="mx-auto flex max-w-3xl flex-col gap-2.5 sm:flex-row">
-          <a
-            href={PHONE}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-[15px] font-extrabold text-[#1a5cff] shadow-lg md:py-5 md:text-[17px]">
-            📞 전화 문의
-          </a>
-          <a
-            href={PHOTO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 py-4 text-[15px] font-extrabold text-white md:py-5 md:text-[17px]">
-            📷 사진 접수
-          </a>
-        </div>
-        <p
-          className="mx-auto mt-3 max-w-3xl text-center text-[13px] font-semibold md:text-[14px]"
-          style={{ color: "rgba(255,255,255,0.6)" }}>
-          소파 사진만 보내주시면 복원 가능 여부 바로 안내드립니다
-        </p>
-      </section>
+      {/* ★ 지역 설명 블록 (케이스 수 포함 → thin content 방지) */}
+      {region && (
+        <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+          <div className="mx-auto max-w-lg">
+            <h2
+              className="text-[20px] font-black mb-3"
+              style={{ color: "#111827" }}>
+              {region} {sofaWord} {symptom} 복원 수리
+            </h2>
+            <p className="text-[14px] leading-[1.8] text-neutral-600">
+              {region} 지역 {sofaWord} {symptom} 증상은 리스토리가 당일 출장으로
+              해결합니다. 오래 사용한 소파일수록 내부 스펀지 탄성이 떨어져{" "}
+              {symptom} 증상이 흔하게 나타납니다.
+              {regionCaseCount > 0 && (
+                <>
+                  {" "}
+                  리스토리의 {region} 지역 복원 완료 건수는{" "}
+                  <strong className="text-neutral-900">
+                    {regionCaseCount}건
+                  </strong>
+                  입니다.
+                </>
+              )}{" "}
+              사진 한 장 보내주시면 {region} 출장 가능 여부와 비용을 바로
+              안내드립니다.
+            </p>
+          </div>
+        </section>
+      )}
 
-      {/* PHOTO REVIEWS */}
+      {/* 2. PROOF */}
       <section
         className="px-5 py-14 md:py-20"
-        style={{ background: "#f5f5f5" }}>
-        <div className="mx-auto max-w-3xl">
+        style={{ background: "#f8f9fb" }}>
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <div className="text-center">
-              <p className="text-[28px] leading-none text-amber-400 md:text-[32px]">
-                ★★★★★
-              </p>
-              <h2 className="mt-4 text-[30px] font-medium text-neutral-600 leading-[1.4] md:text-[45px]">
-                실제 고객님들이 인정한
-                <br />
-                <span className="text-[40px] font-black text-neutral-900 md:text-[55px]">
-                  솔직후기
-                </span>
-              </h2>
-              <p className="mt-3 text-[22px] font-medium text-neutral-600">
-                평점 5점 만점에
-              </p>
-              <p
-                className="mt-1 text-[40px] font-black md:text-[52px]"
-                style={{ color: "#1a5cff" }}>
-                4.9
-                <span className="text-[20px] font-bold text-neutral-400 md:text-[24px]">
-                  점
-                </span>
-              </p>
-            </div>
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              BEFORE / AFTER
+            </p>
+            <h2
+              className="font-black leading-[1.2] mb-8"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              말보다 사진이 빠릅니다
+            </h2>
           </FadeIn>
-          <FadeIn delay={150}>
-            <div className="mt-10 grid grid-cols-2 gap-3 md:gap-5">
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/sofa/review-1.jpg"
-                    alt="소파 복원 후기 1"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    서울 강서구 신**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    이태리 소파라 버리기 아까웠는데
-                    <br />
-                    처음 샀을 때처럼 됐어요
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    이태리에서 수입한 고급 소파였는데, 쿠션이 너무 꺼져서
-                    고민이었어요. 새로 사는 것보다 훨씬 저렴하게 복원돼서 너무
-                    만족합니다.
-                  </p>
-                </div>
-              </div>
-              <div className="overflow-hidden rounded-xl bg-white shadow-sm md:rounded-2xl">
-                <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
-                  <Image
-                    src="/images/sofa/review-3.jpg"
-                    alt="소파 복원 후기 2"
-                    width={400}
-                    height={300}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="p-4 md:p-6">
-                  <p className="text-[11px] text-neutral-400 md:text-[13px]">
-                    인천시 고**
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-extrabold leading-[1.4] text-[#1a5cff] md:text-[16px]">
-                    당일에 바로
-                    <br />
-                    작업 끝나서 너무 편했어요
-                  </p>
-                  <p className="mt-2 text-[11px] leading-[1.6] text-neutral-600 md:text-[13px]">
-                    직장인이라 평일에 잠깐 반차 내고 작업 받았는데, 당일에 바로
-                    끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셨습니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* WHY */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#fafafa" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                소파를 새로 사야 하나 고민이시죠?
-              </p>
-              <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                쿠션 복원만 하면 새것처럼!
-              </h2>
-            </div>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="mx-auto my-8 flex flex-col items-center md:my-10">
-              <div className="h-10 w-px bg-neutral-300" />
-              <div className="mt-6 text-center">
-                <p className="text-[30px] font-black md:text-[45px]">
-                  새 소파 구매 비용의
-                </p>
-                <p
-                  className="mt-1 inline-block rounded-lg px-4 py-1.5 text-[20px] font-black md:text-[26px]"
-                  style={{ background: "#1f66ff", color: "#ffffff" }}>
-                  1/10 수준으로 해결!
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="grid grid-cols-2 gap-3 md:gap-5">
+          <FadeIn delay={80}>
+            <div className="grid grid-cols-2 gap-2 mb-4">
               {[
-                { img: "/images/sofa/before-after-1.jpg", label: "복원 전" },
-                { img: "/images/sofa/before-after-2.jpg", label: "복원 후" },
+                {
+                  img: "/images/sofa/before-after-1.jpg",
+                  label: "BEFORE",
+                  dark: true,
+                },
+                {
+                  img: "/images/sofa/before-after-2.jpg",
+                  label: "AFTER",
+                  dark: false,
+                },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                  <div className="aspect-[4/3] overflow-hidden bg-neutral-100">
+                  className="relative overflow-hidden rounded-2xl"
+                  style={{ aspectRatio: "3/4" }}>
+                  <Image
+                    src={item.img}
+                    alt={item.label}
+                    fill
+                    className="object-cover"
+                    sizes="50vw"
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 right-0 px-3 py-2.5"
+                    style={{
+                      background: item.dark
+                        ? "linear-gradient(to top, rgba(0,0,0,0.7), transparent)"
+                        : "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
+                    }}>
+                    <span className="text-[13px] font-black text-white tracking-widest">
+                      {item.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div
+              className="rounded-2xl px-5 py-4 text-center"
+              style={{ background: "#1a5cff" }}>
+              <p className="text-[15px] font-black text-white">
+                같은 소파입니다
+              </p>
+              <p className="text-[12px] text-white/60 mt-0.5">
+                교체 없이 복원만 했습니다
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={150}>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <div
+                className="rounded-2xl p-4 text-center"
+                style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
+                <p className="text-[11px] font-semibold text-neutral-400 mb-1">
+                  소파 새로 구매
+                </p>
+                <p
+                  className="text-[22px] font-black"
+                  style={{ color: "#ef4444" }}>
+                  300~1000만원
+                </p>
+                <p className="text-[11px] text-neutral-400 mt-1">
+                  + 배송, 조립 대기
+                </p>
+              </div>
+              <div
+                className="rounded-2xl p-4 text-center"
+                style={{ background: "#eef4ff", border: "1px solid #c7d7ff" }}>
+                <p className="text-[11px] font-semibold text-[#1a5cff] mb-1">
+                  리스토리 쿠션 복원
+                </p>
+                <p
+                  className="text-[22px] font-black"
+                  style={{ color: "#1a5cff" }}>
+                  30~100만원~
+                </p>
+                <p className="text-[11px] text-[#1a5cff]/60 mt-1">
+                  + 당일 완료
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={180}>
+            <div
+              className="mt-4 overflow-hidden rounded-2xl"
+              style={{ border: "1px solid #e5e7eb" }}>
+              <div className="p-5" style={{ background: "#fff" }}>
+                <p className="text-[11px] font-bold tracking-widest text-neutral-400 mb-3">
+                  QUALITY PROOF
+                </p>
+                <h3 className="text-[18px] font-black text-neutral-900 leading-[1.3] mb-1">
+                  복원했는데 왜 더 오래가나요?
+                </h3>
+                <p className="text-[13px] leading-[1.7] text-neutral-500 mb-5">
+                  대부분의 소파 복원은 일반 화학 스펀지를 써요.
+                  <br />
+                  리스토리는{" "}
+                  <strong className="text-neutral-800">
+                    HR계열 고탄성 스펀지 + 이태리 엘라스틱 밴드
+                  </strong>
+                  만 사용합니다.
+                </p>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[12px] font-semibold text-neutral-400">
+                        일반 화학 스펀지
+                      </span>
+                      <span className="text-[13px] font-black text-neutral-400">
+                        탄성 쉽게 꺼짐
+                      </span>
+                    </div>
+                    <div
+                      className="h-3 rounded-full overflow-hidden"
+                      style={{ background: "#f3f4f6" }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: "30%", background: "#d1d5db" }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span
+                        className="text-[12px] font-bold"
+                        style={{ color: "#1a5cff" }}>
+                        리스토리 HR 고탄성 스펀지
+                      </span>
+                      <span
+                        className="text-[13px] font-black"
+                        style={{ color: "#1a5cff" }}>
+                        내구성 2배+
+                      </span>
+                    </div>
+                    <div
+                      className="h-3 rounded-full overflow-hidden"
+                      style={{ background: "#eef4ff" }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: "90%", background: "#1a5cff" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="mt-4 flex items-center justify-center gap-2 rounded-xl py-3"
+                  style={{ background: "#eef4ff" }}>
+                  <span
+                    className="text-[16px] font-black"
+                    style={{ color: "#1a5cff" }}>
+                    꺼짐 재발 없음
+                  </span>
+                  <span
+                    className="text-[13px]"
+                    style={{ color: "rgba(26,92,255,0.5)" }}>
+                    → 무상 A/S 보증
+                  </span>
+                </div>
+              </div>
+              <div
+                className="grid grid-cols-2 border-t"
+                style={{ borderColor: "#f3f4f6" }}>
+                {[
+                  {
+                    img: "/images/sofa/symptom-3.jpg",
+                    alt: "기존 화학 스펀지 삭은 상태",
+                    sub: "기존 화학 스펀지",
+                    label: "탄성 삭아 꺼짐",
+                    dark: true,
+                  },
+                  {
+                    img: "/images/sofa/before-after-2.jpg",
+                    alt: "리스토리 고탄성 복원",
+                    sub: "리스토리 복원 후",
+                    label: "탄성 그대로 복원",
+                    dark: false,
+                  },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="relative overflow-hidden"
+                    style={{ aspectRatio: "4/3" }}>
                     <Image
                       src={item.img}
-                      alt={item.label}
-                      width={400}
-                      height={300}
-                      className="h-full w-full object-cover"
+                      alt={item.alt}
+                      fill
+                      className="object-cover"
+                      sizes="50vw"
                     />
-                  </div>
-                  <div className="p-4 text-center">
-                    <p className="text-[16px] font-extrabold md:text-[18px]">
-                      {item.label}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* TRUST */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f5f5f5" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                걱정 없이 맡기세요
-              </p>
-              <h2 className="mt-2 text-[30px] font-black leading-[1.35] md:text-[45px]">
-                AS 걱정 없는 확실한 시공
-              </h2>
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="flex mt-10 justify-center gap-5 md:gap-10">
-              {[
-                { src: "/images/cert-5.png", alt: "생산물배상책임보험증서" },
-                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
-              ].map((cert, i) => (
-                <div
-                  key={i}
-                  className="flex-1 max-w-[280px] md:max-w-[310px] overflow-hidden rounded-xl border border-neutral-200 bg-white md:rounded-2xl">
-                  <div className="flex aspect-[3/4] items-center justify-center bg-neutral-100 p-3 md:p-5">
-                    <Image
-                      src={cert.src}
-                      alt={cert.alt}
-                      width={300}
-                      height={400}
-                      className="h-full w-full object-contain"
-                    />
-                  </div>
-                  <p className="bg-neutral-100 pb-[18px] text-center text-[16px] font-bold text-neutral-600 md:text-[18px]">
-                    {cert.alt}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* SPECIALS */}
-      <section
-        className="px-5 pt-10 text-center text-white md:pt-16"
-        style={{ background: "#1f66ff" }}>
-        <FadeIn>
-          <p className="text-[40px] leading-none md:text-[48px]">🧐</p>
-          <p
-            className="mt-4 text-[40px] font-thin md:text-[55px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            왜 유명하냐고요?
-          </p>
-          <h2 className="mt-2 text-[40px] font-black md:text-[55px]">
-            리스토리 소파 복원은 특별합니다!
-          </h2>
-        </FadeIn>
-      </section>
-
-      {/* Special 01 */}
-      <section
-        className="px-5 pt-14 md:py-20"
-        style={{ background: "#1f66ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-              <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
-                  Special 01
-                </span>
-                <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  시공 후 문제 생기면{" "}
-                  <span className="text-[#1a5cff]">책임</span>져 주나요?
-                </h3>
-              </div>
-              <div className="mt-6 overflow-hidden rounded-xl md:mt-8">
-                <Image
-                  src="/images/special-1-2.png"
-                  alt="본사 안심 보상제"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto"
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* Special 02 */}
-      <section
-        className="px-5 pt-7 pb-14 md:pt-7 md:pb-20"
-        style={{ background: "#1f66ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-              <div className="text-center">
-                <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-[13px] font-bold text-neutral-600 md:text-[14px]">
-                  Special 02
-                </span>
-                <h3 className="mt-4 text-[20px] font-black md:text-[26px]">
-                  절차는 간편한가요?
-                </h3>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:gap-5">
-                <div className="overflow-hidden rounded-xl">
-                  <Image
-                    src="/images/special-02-1.png"
-                    alt="사진만 찍어도 비대면 무료 견적 가능"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                </div>
-                <div className="overflow-hidden rounded-xl">
-                  <Image
-                    src="/images/special-02-2.png"
-                    alt="365일 밤 10시까지 상담 가능"
-                    width={400}
-                    height={300}
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* 비교표 */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[25px] font-medium text-neutral-600 md:text-[30px]">
-                소파에 진심인 사람들만 모인
-              </p>
-              <h2 className="mt-1 text-[30px] font-black md:text-[45px]">
-                리스토리의 자부심
-              </h2>
-              <p
-                className="mx-auto mt-3 inline-block rounded-lg px-5 py-1.5 text-[18px] font-black md:text-[22px]"
-                style={{ background: "#1a5cff", color: "#fff" }}>
-                안심인증시공
-              </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-[#e0e8f5]">
-              <div
-                className="p-5 text-center md:p-7"
-                style={{ background: "#1a1a1a" }}>
-                <span className="inline-block rounded-full bg-white px-3 py-1 text-[11px] font-bold text-neutral-600 md:text-[13px]">
-                  A사
-                </span>
-                <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
-                  일반 소파 복원
-                </p>
-              </div>
-              <div
-                className="p-5 text-center md:p-7"
-                style={{ background: "#1a5cff" }}>
-                <span
-                  className="inline-block rounded-full px-3 py-1 text-[11px] font-bold md:text-[13px]"
-                  style={{
-                    background: "rgba(255,255,255,0.2)",
-                    color: "#fff",
-                  }}>
-                  리스토리
-                </span>
-                <p className="mt-2 text-[18px] font-black text-white md:text-[22px]">
-                  안심 소파 복원
-                </p>
-              </div>
-              {[
-                { a: "화학 스폰지 사용", b: "HR계열 고탄성 스펀지 사용" },
-                { a: "일반 밴드 사용", b: "이태리 엘라스틱 밴드 사용" },
-                { a: "맘대로 시공", b: "중간 중간 고객님과 조율" },
-                { a: "A/S 없음, 연락 두절", b: "100% 안심 A/S" },
-              ].map((row, i) => (
-                <React.Fragment key={i}>
-                  <div className="border-t border-neutral-200 bg-white px-4 py-5 text-center md:py-6">
-                    <p className="whitespace-pre-line text-[14px] font-semibold leading-[1.5] text-neutral-600 md:text-[16px]">
-                      {row.a}
-                    </p>
-                  </div>
-                  <div
-                    className="border-t px-4 py-5 text-center md:py-6"
-                    style={{ borderColor: "#d6e4ff", background: "#eef4ff" }}>
-                    <p className="whitespace-pre-line text-[14px] font-bold leading-[1.5] text-[#1a5cff] md:text-[16px]">
-                      {row.b}
-                    </p>
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* 본사 책임 AS */}
-      <section
-        className="flex justify-center"
-        style={{ background: "#1a1b4b" }}>
-        <Image
-          src="/images/sofa/safe-sofa-1.png"
-          alt="리스토리 본사 책임 AS"
-          width={1080}
-          height={1350}
-          className="w-full max-w-3xl h-auto"
-        />
-      </section>
-
-      {/* SELF CHECK */}
-      <section className="px-5 py-14 md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              SELF CHECK
-            </p>
-            <h2 className="text-[30px] font-black leading-[1.4] md:text-[45px]">
-              이런 상태라면
-              <br />
-              <span className="text-[#e53e3e]">쿠션 복원 시기입니다</span>
-            </h2>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-8 grid grid-cols-2 gap-3 md:gap-5">
-              {[
-                {
-                  img: "/images/sofa/symptom-1.jpg",
-                  title: "한쪽만 꺼짐",
-                  desc: "자주 앉는 쪽만\n깊이 꺼진 상태",
-                },
-                {
-                  img: "/images/sofa/symptom-2.jpg",
-                  title: "전체적으로 주저앉음",
-                  desc: "소파 전체가\n탄성을 잃은 상태",
-                },
-                {
-                  img: "/images/sofa/symptom-3.jpg",
-                  title: "앉으면 바닥 느낌",
-                  desc: "스펀지가 삭아서\n프레임이 느껴지는 상태",
-                },
-                {
-                  img: "/images/sofa/symptom-4.jpg",
-                  title: "삐걱삐걱 소리",
-                  desc: "앉을 때마다\n내부에서 소리나는 상태",
-                },
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                  <div className="aspect-square overflow-hidden bg-neutral-100">
-                    <Image
-                      src={s.img}
-                      alt={s.title}
-                      width={400}
-                      height={400}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 md:p-5">
-                    <p className="text-[16px] font-extrabold md:text-[18px]">
-                      {s.title}
-                    </p>
-                    <p className="mt-1.5 whitespace-pre-line text-[14px] leading-[1.6] text-neutral-500 md:text-[16px]">
-                      {s.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* 실제 복원 사례 슬라이더 */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#ffffff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              REAL CASES
-            </p>
-            <h2 className="text-[24px] font-black leading-[1.4] md:text-[32px]">
-              실제 복원 사례를 확인하세요
-            </h2>
-            <p className="mt-1 text-[13px] text-neutral-500 md:text-[15px]">
-              좌우로 넘겨 보세요
-            </p>
-          </FadeIn>
-          <FadeIn delay={120}>
-            {(() => {
-              const CASE_ITEMS = cases
-                .filter((c) => c.category === "소파 복원")
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime(),
-                )
-                .slice(0, 8);
-
-              function CaseSlider() {
-                const [idx, setIdx] = React.useState(0);
-                const pausedRef = React.useRef(false);
-                const dragRef = React.useRef({
-                  startX: 0,
-                  dragging: false,
-                  moved: false,
-                });
-                const maxIdx = CASE_ITEMS.length - 1;
-                const cardPercent = 80;
-
-                const go = React.useCallback(
-                  (dir: number) => {
-                    setIdx((prev) => {
-                      const next = prev + dir;
-                      if (next < 0) return maxIdx;
-                      if (next > maxIdx) return 0;
-                      return next;
-                    });
-                  },
-                  [maxIdx],
-                );
-
-                React.useEffect(() => {
-                  const timer = setInterval(() => {
-                    if (!pausedRef.current) go(1);
-                  }, 3500);
-                  return () => clearInterval(timer);
-                }, [go]);
-
-                const onDragStart = (x: number) => {
-                  dragRef.current = { startX: x, dragging: true, moved: false };
-                  pausedRef.current = true;
-                };
-                const onDragEnd = (x: number) => {
-                  if (!dragRef.current.dragging) return;
-                  const diff = dragRef.current.startX - x;
-                  if (Math.abs(diff) > 40) {
-                    dragRef.current.moved = true;
-                    go(diff > 0 ? 1 : -1);
-                  }
-                  dragRef.current.dragging = false;
-                  setTimeout(() => {
-                    pausedRef.current = false;
-                  }, 3500);
-                };
-
-                return (
-                  <>
                     <div
-                      className="relative select-none mt-8"
-                      onMouseEnter={() => {
-                        pausedRef.current = true;
-                      }}
-                      onMouseLeave={() => {
-                        pausedRef.current = false;
-                        dragRef.current.dragging = false;
-                      }}
-                      onMouseDown={(e) => onDragStart(e.clientX)}
-                      onMouseUp={(e) => onDragEnd(e.clientX)}
-                      onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
-                      onTouchEnd={(e) => onDragEnd(e.changedTouches[0].clientX)}
-                      style={{ cursor: "grab" }}>
-                      <div className="overflow-hidden rounded-2xl">
-                        <div
-                          className="flex gap-3 transition-transform duration-500 ease-in-out pointer-events-none"
-                          style={{
-                            transform: `translateX(-${idx * (cardPercent + 1.2)}%)`,
-                          }}>
-                          {CASE_ITEMS.map((item) => (
-                            <div
-                              key={item.id}
-                              className="flex-shrink-0"
-                              style={{ width: `${cardPercent}%` }}>
-                              <Link
-                                href={`/cases/${item.id}`}
-                                onClick={(e) => {
-                                  if (dragRef.current.moved) e.preventDefault();
-                                }}
-                                draggable={false}
-                                className="block overflow-hidden rounded-2xl border border-neutral-200 bg-white"
-                                style={{ textDecoration: "none" }}>
-                                <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-                                  <Image
-                                    src={item.afterImg}
-                                    alt={item.title}
-                                    width={400}
-                                    height={300}
-                                    className="h-full w-full object-cover"
-                                    draggable={false}
-                                  />
-                                  <div
-                                    className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-                                    style={{
-                                      backgroundColor: "#1f66ff",
-                                      color: "white",
-                                    }}>
-                                    AFTER
-                                  </div>
-                                </div>
-                                <div className="p-4">
-                                  <span
-                                    className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                                    style={{
-                                      backgroundColor: "#1f66ff15",
-                                      color: "#1f66ff",
-                                    }}>
-                                    {item.category}
-                                  </span>
-                                  <p
-                                    className="mt-2 text-[15px] font-extrabold truncate"
-                                    style={{ color: "#111827" }}>
-                                    {item.title}
-                                  </p>
-                                  <p
-                                    className="mt-1 text-[12px] line-clamp-2"
-                                    style={{ color: "#64748b" }}>
-                                    {item.summary}
-                                  </p>
-                                  <div className="mt-2">
-                                    <span
-                                      className="text-[11px]"
-                                      style={{ color: "#94a3b8" }}>
-                                      {item.region}
-                                    </span>
-                                  </div>
-                                </div>
-                              </Link>
-                            </div>
-                          ))}
+                      className="absolute inset-0 flex flex-col justify-end p-3"
+                      style={{
+                        background: item.dark
+                          ? "linear-gradient(to top, rgba(0,0,0,0.65), transparent)"
+                          : "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
+                      }}>
+                      <p className="text-[10px] font-semibold text-white/70">
+                        {item.sub}
+                      </p>
+                      <p className="text-[13px] font-black text-white">
+                        {item.label}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* 3. REVIEWS */}
+      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-2xl">
+          <FadeIn>
+            <div className="flex items-end gap-3 mb-8">
+              <div>
+                <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-1">
+                  REVIEWS
+                </p>
+                <h2
+                  className="font-black leading-[1.2]"
+                  style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+                  직접 겪은 고객님들
+                </h2>
+              </div>
+              <div className="ml-auto text-right pb-1 flex-shrink-0">
+                <p
+                  className="text-[28px] font-black"
+                  style={{ color: "#1a5cff" }}>
+                  4.9★
+                </p>
+                <p className="text-[11px] text-neutral-400">고객 평점</p>
+              </div>
+            </div>
+          </FadeIn>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              {
+                img: "/images/sofa/review-1.jpg",
+                keyword: "처음 샀을 때처럼",
+                unit: "소파 쿠션 복원",
+                area: "서울 강서구",
+                name: "신** 고객님",
+                quote:
+                  "이태리 소파라 버리기 아까웠는데, 쿠션 복원하니 처음 샀을 때처럼 됐어요. 새로 사는 것보다 훨씬 저렴했습니다.",
+              },
+              {
+                img: "/images/sofa/review-3.jpg",
+                keyword: "당일 작업 완료",
+                unit: "소파 쿠션 복원",
+                area: "인천시",
+                name: "고** 고객님",
+                quote:
+                  "직장인이라 반차 내고 받았는데 당일에 바로 끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셨습니다.",
+              },
+            ].map((r, i) => (
+              <FadeIn key={i} delay={i * 80}>
+                <div
+                  className="overflow-hidden rounded-2xl h-full"
+                  style={{ border: "1px solid #e5e7eb" }}>
+                  <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
+                    <Image
+                      src={r.img}
+                      alt={r.name}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
+                    <div
+                      className="absolute inset-0 flex flex-col justify-end p-4"
+                      style={{
+                        background:
+                          "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)",
+                      }}>
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <p className="text-[11px] font-semibold text-white/60">
+                            {r.unit}
+                          </p>
+                          <p
+                            className="font-black text-white leading-none"
+                            style={{ fontSize: "clamp(1.2rem, 4vw, 1.6rem)" }}>
+                            {r.keyword}
+                          </p>
                         </div>
+                        <span
+                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
+                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
+                          당일 완료
+                        </span>
                       </div>
                     </div>
-                    <div className="flex justify-center gap-1.5 mt-4">
-                      {CASE_ITEMS.map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            setIdx(i);
-                            pausedRef.current = true;
-                            setTimeout(() => {
-                              pausedRef.current = false;
-                            }, 3500);
-                          }}
-                          className="rounded-full transition-all"
-                          style={{
-                            width: i === idx ? 20 : 6,
-                            height: 6,
-                            backgroundColor: i === idx ? "#1f66ff" : "#d1d5db",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </>
-                );
-              }
-
-              return <CaseSlider />;
-            })()}
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="mt-6 flex justify-center">
-              <Link
-                href="/cases?cat=소파 복원"
-                className="flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-[15px] font-extrabold text-white md:px-10 md:py-4 md:text-[17px]"
-                style={{ background: "#1a5cff", textDecoration: "none" }}>
-                📋 더 많은 실제 사례 보러가기 ›
-              </Link>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* URGENT */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{
-          background: "linear-gradient(150deg, #000f36 0%, #003ad6 100%)",
-        }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="relative rounded-2xl border-2 border-orange-200 bg-white p-7 md:p-10">
-              <div className="absolute -top-3.5 left-5 rounded-full bg-[#e53e3e] px-4 py-1 text-[20px] font-extrabold text-white md:text-[35px]">
-                ⚡ 당일 시공
-              </div>
-              <h3 className="mt-1 text-[30px] font-black leading-[1.45] md:text-[45px]">
-                소파 복원은
-                <br />
-                <span className="text-[#e53e3e]">당일 완료</span> 가능합니다
-              </h3>
-              <p className="mt-3 text-[14px] leading-[1.7] text-neutral-600 md:text-[16px]">
-                사진 접수 → 방문 시공 → 당일 완료.
-                <br />
-                <strong
-                  className="text-[18px] font-bold md:text-[22px]"
-                  style={{ color: "#1f66ff" }}>
-                  소파 사용 중단 없이 바로 완료
-                </strong>
-                됩니다.
-              </p>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* STATS BANNER */}
-      <section
-        className="px-5 py-12 text-center text-white md:py-20"
-        style={{
-          background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
-        }}>
-        <FadeIn>
-          <Image
-            src="/images/chair/chair-medal.png"
-            alt="리스토리 메달"
-            width={250}
-            height={250}
-            className="mx-auto mb-4 w-[250px] h-auto md:w-[300px] md:h-auto"
-          />
-          <p
-            className="mb-2 text-[30px] font-black tracking-widest md:text-[45px]"
-            style={{ color: "rgb(255, 255, 255)" }}>
-            미친 자신감의 이유
-          </p>
-          <p className="text-[50px] font-black tracking-tight md:text-[80px]">
-            <span style={{ color: "#ffffff" }}>500</span>건+
-          </p>
-          <p
-            className="mt-1 text-[25px] font-semibold md:text-[35px]"
-            style={{ color: "rgba(255, 255, 255, 0.79)" }}>
-            매년 소파 쿠션 복원 실적
-          </p>
-          <div className="mx-auto mt-8 flex max-w-sm justify-between md:mt-10 md:max-w-md">
-            {[
-              { n: "99%", l: "시공 만족도" },
-              { n: "100%", l: "무상 A/S" },
-              { n: "4.9", l: "고객 평점" },
-            ].map((s, i) => (
-              <div
-                key={i}
-                className="border border-white/25 text-center bg-white/20 px-4 py-3 rounded-lg">
-                <p className="text-[22px] font-black md:text-[28px]">{s.n}</p>
-                <p
-                  className="mt-1 text-[18px] font-semibold md:text-[22px]"
-                  style={{ color: "rgba(255,255,255,0.79)" }}>
-                  {s.l}
-                </p>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* PROCESS */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <div className="text-center">
-              <p className="text-[26px] font-medium text-neutral-600 md:text-[34px]">
-                처음부터 끝까지 쉽고 빠르게
-              </p>
-              <h2 className="mt-2 text-[26px] font-black md:text-[34px]">
-                리스토리 <span className="text-[#1a5cff]">시공절차</span>
-              </h2>
-            </div>
-          </FadeIn>
-          <FadeIn delay={120}>
-            <div className="mt-12 grid grid-cols-3 gap-3 text-center md:gap-6">
-              {[
-                {
-                  icon: "/images/icon_step1.png",
-                  step: "01",
-                  title: "사진 접수",
-                  desc: "소파 사진\n보내기",
-                },
-                {
-                  icon: "/images/icon_step3.png",
-                  step: "02",
-                  title: "방문 시공",
-                  desc: "당일 시공\n맞춤 방문",
-                },
-                {
-                  icon: "/images/icon_step4.png",
-                  step: "03",
-                  title: "완료",
-                  desc: "당일 완료\n바로 사용",
-                },
-              ].map((p, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="flex h-[72px] w-[72px] items-center justify-center md:h-[100px] md:w-[100px]">
-                    <Image
-                      src={p.icon}
-                      alt={p.title}
-                      width={100}
-                      height={100}
-                      className="h-[72px] w-[72px] rounded-full border border-neutral-200 object-contain md:h-[100px] md:w-[100px]"
-                    />
                   </div>
-                  <p className="mt-5 text-[22px] font-black text-[#1a5cff] md:text-[26px]">
-                    {p.step}
-                  </p>
-                  <p className="mt-2 text-[16px] font-extrabold md:text-[18px]">
-                    {p.title}
-                  </p>
-                  <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.6] text-neutral-600 md:text-[14px]">
-                    {p.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <div className="mt-10 flex justify-center md:mt-12">
-              <a
-                href={PHONE}
-                className="flex items-center justify-center gap-2 rounded-full px-10 py-4 text-[17px] font-extrabold text-white md:px-12 md:py-5 md:text-[19px]"
-                style={{ background: "#1a5cff" }}>
-                📞 간편접수 010-6855-0957
-              </a>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* EXTRAS */}
-      <section
-        className="px-5 py-14 md:py-20"
-        style={{ background: "#f0f4ff" }}>
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
-              PLUS SERVICE
-            </p>
-            <h2 className="text-[20px] font-black leading-[1.4] md:text-[26px]">
-              방문 시 함께 가능합니다
-            </h2>
-            <p className="mb-7 mt-1 text-[13px] text-neutral-600 md:text-[15px]">
-              추가 출장비 없이 한 번에 해결
-            </p>
-          </FadeIn>
-          <div className="flex flex-col gap-2.5 md:grid md:grid-cols-3 md:gap-4">
-            {EXTRAS.map((e, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div className="flex items-center gap-4 rounded-2xl border border-[#dce5f5] bg-white p-5 md:flex-col md:items-start md:p-6">
-                  <span className="flex-shrink-0 text-[26px] md:text-[32px]">
-                    {e.icon}
-                  </span>
-                  <div>
-                    <p className="text-[15px] font-extrabold md:text-[17px]">
-                      {e.title}
+                  <div className="p-4">
+                    <p className="text-[12px] text-neutral-400 mb-2">
+                      {r.name} · {r.area}
                     </p>
-                    <p className="mt-0.5 text-[12px] text-neutral-600 md:mt-1.5 md:text-[14px]">
-                      {e.desc}
+                    <p className="text-[14px] leading-[1.7] text-neutral-700">
+                      <span
+                        style={{
+                          color: "#1a5cff",
+                          fontWeight: 900,
+                          fontSize: 16,
+                        }}>
+                        "
+                      </span>
+                      {r.quote}
+                      <span
+                        style={{
+                          color: "#1a5cff",
+                          fontWeight: 900,
+                          fontSize: 16,
+                        }}>
+                        "
+                      </span>
                     </p>
                   </div>
                 </div>
               </FadeIn>
             ))}
           </div>
+          <FadeIn delay={100}>
+            <CaseStrip region={region} />
+          </FadeIn>
         </div>
       </section>
 
-      {/* YOUTUBE */}
+      {/* 4. HOW */}
       <section
-        className="px-5 py-14 text-white md:py-20"
-        style={{ background: "#1a1a1a" }}>
-        <div className="mx-auto max-w-3xl">
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f8f9fb" }}>
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <p
-              className="mb-2 text-[13px] font-bold tracking-widest md:text-[14px]"
-              style={{ color: "rgba(255,255,255,0.35)" }}>
-              YOUTUBE
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              HOW IT WORKS
             </p>
-            <h2 className="mb-6 text-[20px] font-black md:text-[26px]">
-              실제 시공 영상을 확인하세요
+            <h2
+              className="font-black leading-[1.2] mb-2"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              사진 한 장이면
+              <br />
+              나머지는 저희가 합니다
+            </h2>
+            <p className="text-[14px] text-neutral-400 mb-10">
+              소파 복원은 빠를수록 좋습니다
+            </p>
+          </FadeIn>
+          <div className="flex flex-col gap-3">
+            {[
+              {
+                step: "01",
+                icon: "📸",
+                title: "사진 보내기",
+                desc: "소파 사진만 카카오로 보내주세요. 30초 안에 복원 가능 여부 확인해드립니다.",
+                time: "30초",
+              },
+              {
+                step: "02",
+                icon: "🔍",
+                title: "상태 확인 + 견적",
+                desc: "사진으로 1차 확인 후 정확한 금액 범위를 먼저 안내드립니다. 방문 전 금액 확정.",
+                time: "무료",
+              },
+              {
+                step: "03",
+                icon: "✅",
+                title: "방문 시공 완료",
+                desc: `스프링·밴드·스펀지 복원 후 바로 사용 가능.${region ? ` ${region} 당일 작업 마무리.` : " 당일 작업 마무리."}`,
+                time: "당일 완료",
+              },
+            ].map((s, i) => (
+              <FadeIn key={i} delay={i * 80}>
+                <div
+                  className="flex gap-4 rounded-2xl p-5"
+                  style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
+                  <div className="flex-shrink-0 flex flex-col items-center">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-[18px]"
+                      style={{ background: "#eef4ff" }}>
+                      {s.icon}
+                    </div>
+                    {i < 2 && (
+                      <div
+                        className="w-px flex-1 mt-2"
+                        style={{ background: "#e5e7eb", minHeight: 24 }}
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[11px] font-black text-neutral-300">
+                        {s.step}
+                      </span>
+                      <span className="text-[15px] font-black text-neutral-900">
+                        {s.title}
+                      </span>
+                      <span
+                        className="ml-auto rounded-full px-2.5 py-1 text-[11px] font-bold flex-shrink-0"
+                        style={{ background: "#eef4ff", color: "#1a5cff" }}>
+                        {s.time}
+                      </span>
+                    </div>
+                    <p className="text-[13px] leading-[1.6] text-neutral-500">
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={200}>
+            <a
+              href={KAKAO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex items-center justify-center gap-2.5 rounded-2xl text-[15px] font-black"
+              style={{
+                background: "#FEE500",
+                color: "#1a1a1a",
+                padding: "18px 24px",
+              }}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor">
+                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+              </svg>
+              사진 보내고 견적 받기
+            </a>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* 5. TRUST */}
+      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-lg">
+          <FadeIn>
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
+              TRUST
+            </p>
+            <h2
+              className="font-black leading-[1.2] mb-8"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              걱정하시는 거<br />다 알고 있어요
             </h2>
           </FadeIn>
-          <FadeIn delay={100}>
-            <div className="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800">
-              <div className="aspect-video">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube.com/embed/유튜브ID"
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+          <div className="flex flex-col gap-3 mb-10">
+            {[
+              {
+                icon: "🛡",
+                title: "AS 걱정 없는 책임 시공",
+                desc: "시공 후 미흡한 부분이나 꺼짐 재발 시 무조건 다시 와서 고쳐드립니다.",
+              },
+              {
+                icon: "📋",
+                title: "생산물 배상책임보험 가입",
+                desc: "시공 중 예상치 못한 문제가 생겨도 보험으로 100% 보상됩니다.",
+              },
+              {
+                icon: "🪡",
+                title: "고탄성 스펀지 · 이태리 밴드",
+                desc: "HR계열 고탄성 스펀지와 이태리 엘라스틱 밴드만 사용해 일반 복원보다 오래갑니다.",
+              },
+            ].map((t, i) => (
+              <FadeIn key={i} delay={i * 60}>
+                <div
+                  className="flex gap-4 rounded-2xl p-5"
+                  style={{
+                    background: "#f8f9fb",
+                    border: "1px solid #e5e7eb",
+                  }}>
+                  <span className="text-[24px] flex-shrink-0">{t.icon}</span>
+                  <div>
+                    <p className="text-[15px] font-black text-neutral-900 mb-1">
+                      {t.title}
+                    </p>
+                    <p className="text-[13px] leading-[1.6] text-neutral-500">
+                      {t.desc}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+          <FadeIn delay={150}>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { src: "/images/cert-5.png", alt: "생산물배상책임보험증서" },
+                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
+              ].map((c, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-2xl"
+                  style={{ border: "1px solid #e5e7eb" }}>
+                  <div className="aspect-[3/4] bg-neutral-50 p-3">
+                    <Image
+                      src={c.src}
+                      alt={c.alt}
+                      width={300}
+                      height={400}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <p className="text-center py-3 text-[12px] font-bold text-neutral-500 bg-neutral-50">
+                    {c.alt}
+                  </p>
+                </div>
+              ))}
             </div>
           </FadeIn>
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* 6. VIDEO */}
       <section
         className="px-5 py-14 md:py-20"
-        style={{ background: "#f7f9fd" }}>
-        <div className="mx-auto max-w-3xl">
+        style={{ background: "#0a1628" }}>
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <p className="mb-2 text-[13px] font-bold tracking-widest text-[#1a5cff] md:text-[14px]">
+            <p
+              className="text-[12px] font-bold tracking-widest mb-2"
+              style={{ color: "rgba(255,255,255,0.3)" }}>
+              REAL VIDEO
+            </p>
+            <h2
+              className="font-black text-white mb-6"
+              style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)" }}>
+              실제 시공 영상
+            </h2>
+          </FadeIn>
+          <FadeIn delay={80}>
+            {/* TODO: 실제 유튜브 영상 ID로 교체해주세요 */}
+            <YouTubeFacade videoId="YOUR_VIDEO_ID" />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* 7. FAQ */}
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#f8f9fb" }}>
+        <div className="mx-auto max-w-lg">
+          <FadeIn>
+            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
               FAQ
             </p>
-            <h2 className="mb-7 text-[22px] font-black md:text-[28px]">
+            <h2
+              className="font-black leading-[1.2] mb-8"
+              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
               자주 묻는 질문
             </h2>
           </FadeIn>
-          <div className="flex flex-col gap-2 md:gap-3">
-            {FAQ.map((f, i) => (
-              <FadeIn key={i} delay={i * 60}>
-                <div className="overflow-hidden rounded-2xl border border-[#e0e8f5] bg-white">
+          <div className="flex flex-col gap-2">
+            {FAQ_ITEMS.map((f, i) => (
+              <FadeIn key={i} delay={i * 50}>
+                <div
+                  className="overflow-hidden rounded-2xl bg-white"
+                  style={{ border: "1px solid #e5e7eb" }}>
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="flex w-full items-center justify-between px-5 py-4 text-left md:px-7 md:py-5"
+                    className="flex w-full items-center justify-between px-5 py-4 text-left"
                     style={{
                       background: "none",
                       border: "none",
                       cursor: "pointer",
                       fontFamily: "inherit",
                     }}>
-                    <span className="pr-3 text-[14px] font-bold text-neutral-900 md:text-[16px]">
+                    <span className="pr-4 text-[14px] font-bold text-neutral-900 md:text-[15px]">
                       {f.q}
                     </span>
                     <span
-                      className="flex-shrink-0 text-[16px] font-bold text-[#1a5cff] transition-transform duration-300 md:text-[18px]"
+                      className="flex-shrink-0 text-[14px] font-bold transition-transform duration-200"
                       style={{
-                        transform:
-                          openFaq === i ? "rotate(180deg)" : "rotate(0deg)",
+                        color: "#1a5cff",
+                        transform: openFaq === i ? "rotate(180deg)" : "none",
                       }}>
                       ▾
                     </span>
                   </button>
                   <div
                     className="overflow-hidden transition-all duration-300"
-                    style={{ maxHeight: openFaq === i ? 200 : 0 }}>
-                    <p className="border-t border-neutral-100 px-5 pb-5 pt-3 text-[13px] leading-[1.75] text-neutral-600 md:px-7 md:text-[15px]">
+                    style={{ maxHeight: openFaq === i ? 160 : 0 }}>
+                    <p className="px-5 pb-4 pt-1 text-[13px] leading-[1.75] text-neutral-500 border-t border-neutral-100">
                       {f.a}
                     </p>
                   </div>
@@ -1070,65 +1087,86 @@ export default function SofaCushionLanding() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* 8. FINAL CTA */}
       <section
-        className="px-5 py-16 text-center text-white md:py-24"
-        style={{
-          background: "linear-gradient(150deg, #1a5cff 0%, #003ad6 100%)",
-        }}>
-        <FadeIn>
-          <h2 className="text-[24px] font-black leading-[1.4] md:text-[36px]">
-            소파, 새로 사지 마세요
-            <br />
-            <span style={{ color: "#ffe066" }}>쿠션 복원만 하면</span> 새것처럼
-          </h2>
-          <p
-            className="mt-3 text-[14px] leading-[1.7] md:text-[17px]"
-            style={{ color: "rgba(255,255,255,0.7)" }}>
-            소파 사진만 보내주시면
-            <br />
-            복원 가능 여부 바로 안내드립니다
-          </p>
-          <div className="mx-auto mt-8 flex max-w-xs flex-col gap-2.5 md:max-w-sm">
-            <a
-              href={PHONE}
-              className="flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-[16px] font-extrabold text-[#1a5cff] md:py-5 md:text-[18px]">
-              📞 전화 문의
-            </a>
-            <a
-              href={KAKAO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-[16px] font-extrabold md:py-5 md:text-[18px]"
-              style={{ background: "#FEE500", color: "#1a1a1a" }}>
-              💬 카카오톡 상담
-            </a>
-            <a
-              href={PHOTO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-2xl border border-white/25 px-6 py-4 text-[15px] font-bold text-white md:py-5 md:text-[17px]"
-              style={{ background: "rgba(255,255,255,0.12)" }}>
-              📷 사진 접수
-            </a>
-          </div>
-          <div className="mx-auto mt-7 flex flex-wrap justify-center gap-2">
-            {["고탄성 스펀지", "이태리 밴드", "당일 시공", "무상 A/S"].map(
-              (badge) => (
+        className="px-5 py-16 md:py-24"
+        style={{ background: "#0a1628" }}>
+        <div className="mx-auto max-w-lg text-center">
+          <FadeIn>
+            <p
+              className="text-[13px] font-bold tracking-widest mb-4"
+              style={{ color: "rgba(255,255,255,0.3)" }}>
+              지금 바로 시작하세요
+            </p>
+            <h2
+              className="font-black text-white leading-[1.2] mb-3 whitespace-pre-line"
+              style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
+              {region
+                ? `${region} ${sofaWord} ${symptom} 복원 수리\n사진 한 장이면 충분합니다`
+                : "소파 쿠션도\n사진 한 장이면 충분합니다"}
+            </h2>
+            <p
+              className="text-[14px] mb-8"
+              style={{ color: "rgba(255,255,255,0.4)" }}>
+              복원 가능 여부를 먼저 확인해드립니다
+            </p>
+            <div className="flex flex-col gap-3 max-w-sm mx-auto">
+              <a
+                href={KAKAO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2.5 rounded-2xl text-[16px] font-black"
+                style={{
+                  background: "#FEE500",
+                  color: "#1a1a1a",
+                  padding: "20px 24px",
+                }}>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor">
+                  <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+                </svg>
+                카카오로 사진 보내기
+              </a>
+              <a
+                href={PHONE}
+                className="flex items-center justify-center gap-2 rounded-2xl text-[15px] font-bold text-white"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  padding: "16px 24px",
+                }}>
+                📞 010-6855-0957
+              </a>
+            </div>
+            <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
+              {[
+                "새 소파 비용의 1/10~",
+                "고탄성 스펀지",
+                "이태리 밴드",
+                "무상 A/S",
+              ].map((b, i) => (
                 <span
-                  key={badge}
-                  className="rounded-full px-3 py-1 text-[11px] font-semibold md:text-[13px]"
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.5)",
-                  }}>
-                  {badge}
+                  key={i}
+                  className="text-[12px] font-semibold"
+                  style={{ color: "rgba(255,255,255,0.3)" }}>
+                  {i > 0 && (
+                    <span
+                      className="mr-4"
+                      style={{ color: "rgba(255,255,255,0.1)" }}>
+                      ·
+                    </span>
+                  )}
+                  {b}
                 </span>
-              ),
-            )}
-          </div>
-        </FadeIn>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
       </section>
+
       <FloatingCTA />
     </main>
   );
