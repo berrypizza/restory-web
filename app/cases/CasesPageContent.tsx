@@ -14,6 +14,7 @@ import {
 } from "@/lib/case-data";
 
 const PER_PAGE = 6;
+const PAGE_WINDOW = 10;
 
 const REFORM_CATEGORIES = ["싱크대 리폼", "가죽 리폼"] as const;
 function isReformCategory(cat: string) {
@@ -27,7 +28,6 @@ export default function CasesPageContent() {
   const initialCat = (searchParams.get("cat") as CaseCategory) || "전체";
   const initialTag = searchParams.get("tag") || "";
 
-  // 초기 부모 카테고리 추론
   const getInitialParent = (): ParentCategory => {
     for (const [parent, subs] of Object.entries(SUB_CATEGORIES)) {
       if (subs?.includes(initialCat as CaseCategory)) {
@@ -57,7 +57,6 @@ export default function CasesPageContent() {
   const subCategories =
     parentCat !== "전체" ? SUB_CATEGORIES[parentCat] : undefined;
 
-  // 태그 필터 활성화 시 카테고리 초기화
   useEffect(() => {
     if (activeTag) {
       setParentCat("전체");
@@ -68,7 +67,6 @@ export default function CasesPageContent() {
 
   const filtered = cases
     .filter((c) => {
-      // 태그 필터 우선
       if (activeTag) {
         return c.tags.map((t) => t.trim()).includes(activeTag);
       }
@@ -116,7 +114,6 @@ export default function CasesPageContent() {
             </span>
           </div>
 
-          {/* 태그 필터 활성 상태 표시 */}
           {activeTag && (
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-bold" style={{ color: "#64748b" }}>
@@ -136,7 +133,6 @@ export default function CasesPageContent() {
             </div>
           )}
 
-          {/* 부모 카테고리 탭 */}
           <div
             className="cat-tabs flex gap-2 overflow-x-auto pb-1"
             style={{ scrollbarWidth: "none" }}>
@@ -156,7 +152,6 @@ export default function CasesPageContent() {
             ))}
           </div>
 
-          {/* 서브카테고리 탭 */}
           {subCategories && subCategories.length > 0 && !activeTag && (
             <div
               className="cat-tabs flex gap-2 overflow-x-auto pt-2 pb-1"
@@ -209,7 +204,6 @@ export default function CasesPageContent() {
                     border: "1px solid #f3f4f6",
                     textDecoration: "none",
                   }}>
-                  {/* 썸네일 — 리폼: after, 수리/복원: before */}
                   <div
                     className="flex-shrink-0 rounded-xl overflow-hidden"
                     style={{
@@ -226,7 +220,6 @@ export default function CasesPageContent() {
                     />
                   </div>
 
-                  {/* 텍스트 */}
                   <div className="flex-1 min-w-0 py-0.5">
                     <h2
                       className="text-[15px] font-bold truncate mb-1"
@@ -280,48 +273,68 @@ export default function CasesPageContent() {
           </div>
         )}
 
-        {/* 페이지네이션 */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-8 mb-4">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
-              style={{
-                color: page === 1 ? "#d1d5db" : "#64748b",
-                border: "1px solid #e5e7eb",
-                backgroundColor: "#fff",
-                cursor: page === 1 ? "default" : "pointer",
-              }}>
-              ‹
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                onClick={() => setPage(p)}
-                className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
-                style={{
-                  backgroundColor: page === p ? "#1f66ff" : "#fff",
-                  color: page === p ? "white" : "#64748b",
-                  border: page === p ? "none" : "1px solid #e5e7eb",
-                }}>
-                {p}
-              </button>
-            ))}
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
-              style={{
-                color: page === totalPages ? "#d1d5db" : "#64748b",
-                border: "1px solid #e5e7eb",
-                backgroundColor: "#fff",
-                cursor: page === totalPages ? "default" : "pointer",
-              }}>
-              ›
-            </button>
-          </div>
-        )}
+        {/* 페이지네이션 — 10개 단위 윈도우, 화살표로 다음 묶음 이동 */}
+        {totalPages > 1 &&
+          (() => {
+            const windowStart =
+              Math.floor((page - 1) / PAGE_WINDOW) * PAGE_WINDOW + 1;
+            const windowEnd = Math.min(
+              windowStart + PAGE_WINDOW - 1,
+              totalPages,
+            );
+            const windowPages = Array.from(
+              { length: windowEnd - windowStart + 1 },
+              (_, i) => windowStart + i,
+            );
+
+            return (
+              <div className="flex items-center justify-center gap-2 mt-8 mb-4">
+                {/* 이전 묶음 */}
+                <button
+                  onClick={() =>
+                    setPage(Math.max(1, windowStart - PAGE_WINDOW))
+                  }
+                  disabled={windowStart === 1}
+                  className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
+                  style={{
+                    color: windowStart === 1 ? "#d1d5db" : "#64748b",
+                    border: "1px solid #e5e7eb",
+                    backgroundColor: "#fff",
+                    cursor: windowStart === 1 ? "default" : "pointer",
+                  }}>
+                  ‹
+                </button>
+
+                {windowPages.map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
+                    style={{
+                      backgroundColor: page === p ? "#1f66ff" : "#fff",
+                      color: page === p ? "white" : "#64748b",
+                      border: page === p ? "none" : "1px solid #e5e7eb",
+                    }}>
+                    {p}
+                  </button>
+                ))}
+
+                {/* 다음 묶음 */}
+                <button
+                  onClick={() => setPage(Math.min(totalPages, windowEnd + 1))}
+                  disabled={windowEnd === totalPages}
+                  className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
+                  style={{
+                    color: windowEnd === totalPages ? "#d1d5db" : "#64748b",
+                    border: "1px solid #e5e7eb",
+                    backgroundColor: "#fff",
+                    cursor: windowEnd === totalPages ? "default" : "pointer",
+                  }}>
+                  ›
+                </button>
+              </div>
+            );
+          })()}
       </div>
     </main>
   );
