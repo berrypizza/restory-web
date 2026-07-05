@@ -190,8 +190,8 @@ export const cases: CaseItem[] = [
 
 차근차근 안내드리겠습니다.
 `,
-    beforeImg: "/images/cases/case-076-before.jpg",
-    afterImg: "/images/cases/case-076-after.jpg",
+    beforeImg: "/images/cases/case-076-beforee.jpg",
+    afterImg: "/images/cases/case-076-afterr.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224337374726",
     date: "2026-07-05",
     tags: [
