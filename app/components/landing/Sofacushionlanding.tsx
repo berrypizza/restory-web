@@ -1026,7 +1026,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
           </FadeIn>
           <FadeIn delay={80}>
             {/* TODO: 실제 유튜브 영상 ID로 교체해주세요 */}
-            <YouTubeFacade videoId="YOUR_VIDEO_ID" />
+            <YouTubeFacade videoId="WkxTbZnYz6c" />
           </FadeIn>
         </div>
       </section>
