@@ -71,6 +71,11 @@ const serviceIcons: Record<
       label: "식당 의자",
       href: "/leather/restaurant-chair",
     },
+    {
+      icon: "/images/icon/icon-table.png",
+      label: "회의실 테이블",
+      href: "/leather/meeting-table",
+    },
     // {
     //   icon: "/images/icon/icon-chair-reform.png",
     //   label: "기타 가죽",

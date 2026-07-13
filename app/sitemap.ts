@@ -37,6 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: "2026-06-01",
     },
     {
+      path: "/leather/meeting-table",
+      priority: 0.8,
+      changeFrequency: "weekly" as const,
+      lastModified: "2026-07-13",
+    },
+    {
       path: "/sofa",
       priority: 0.9,
       changeFrequency: "weekly" as const,

@@ -219,6 +219,23 @@ export const businessLines: BusinessLineConfig[] = [
           "일정 잡고 현장 작업",
         ],
       },
+      {
+        slug: "meeting-table",
+        title: "회의실 테이블 인조가죽 교체",
+        shortTitle: "회의실 테이블 가죽 교체",
+        description: "회의실·중역 테이블 상판 인조가죽 교체.",
+        hero: "회의실 테이블,\n상판 가죽만 바꿔도 달라집니다.",
+        painPoints: [
+          "상판 가죽이 벗겨졌다",
+          "회의실 분위기가 낡아 보인다",
+          "새 테이블 구매는 부담된다",
+        ],
+        process: [
+          "사진으로 상판 상태 확인",
+          "방문 실측·가죽 샘플 선택",
+          "기존 가죽 제거 후 새 가죽 마감",
+        ],
+      },
       // {
       //   slug: "custom",
       //   title: "기타 가죽 천갈이 리폼",

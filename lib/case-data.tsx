@@ -11,6 +11,10 @@ export type CaseCategory =
   | "상부장 처짐"
   | "하부장 밑판 교체"
   | "싱크대 리폼"
+  | "의자 천갈이"
+  | "붙박이 소파 천갈이"
+  | "회의실 테이블 가죽 교체"
+  | "특수 가죽 교체"
   | "가죽 리폼"
   | "소파 복원";
 
@@ -40,6 +44,12 @@ export const PARENT_CATEGORIES: ParentCategory[] = [
 // 부모 카테고리별 서브카테고리 정의
 export const SUB_CATEGORIES: Partial<Record<ParentCategory, CaseCategory[]>> = {
   "싱크대 수리": ["상부장 처짐", "하부장 밑판 교체"],
+  "가죽 리폼": [
+    "의자 천갈이",
+    "붙박이 소파 천갈이",
+    "회의실 테이블 가죽 교체",
+    "특수 가죽 교체",
+  ],
 };
 
 // 하위 호환용
@@ -49,6 +59,10 @@ export const CASE_CATEGORIES: CaseCategory[] = [
   "상부장 처짐",
   "하부장 밑판 교체",
   "싱크대 리폼",
+  "의자 천갈이",
+  "붙박이 소파 천갈이",
+  "회의실 테이블 가죽 교체",
+  "특수 가죽 교체",
   "가죽 리폼",
   "소파 복원",
 ];
@@ -632,7 +646,7 @@ PB는 여러 목재를 압축해 만든 자재로,
   },
   {
     id: "case-078",
-    category: "가죽 리폼",
+    category: "특수 가죽 교체",
     parentCategory: "가죽 리폼",
     title:
       "부천 한의원 추나베드 인조가죽 천갈이, 레쟈 코팅이 벗겨진 진료베드는 가죽 교체로 개선할 수 있습니다",
@@ -1924,7 +1938,7 @@ PB 시공목이 약해지거나,
 
   {
     id: "case-070",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title:
       "강서구 화곡동 식당 의자 가죽 천갈이, 중국산 저가 가죽? 결국 다시 찢어집니다",
@@ -2070,7 +2084,7 @@ PB 시공목이 약해지거나,
 
   {
     id: "case-069",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "잠실 산후조리원 의자 천갈이 가죽교체 리폼 후기",
     region: "서울 잠실",
@@ -2205,7 +2219,7 @@ PB 시공목이 약해지거나,
   },
   {
     id: "case-068",
-    category: "가죽 리폼",
+    category: "붙박이 소파 천갈이",
     parentCategory: "가죽 리폼",
     title: "인천 청라 붙박이 소파 의자 천갈이, 고객이 인상 썼던 이유",
     region: "인천 청라",
@@ -2574,7 +2588,7 @@ PB 시공목이 약해지거나,
   },
   {
     id: "case-064",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "인천 아라동 식탁의자 가죽교체 천갈이, 의자 바꾸기 전에 보세요",
     region: "인천 아라동",
@@ -2654,7 +2668,7 @@ PB 시공목이 약해지거나,
   },
   {
     id: "case-063",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "계산동 식탁의자 가죽교체 천갈이, 싼 가죽이 좋을까?",
     region: "인천 계산동",
@@ -2742,7 +2756,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-062",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "영종도 의자 천갈이 가죽교체, 업자가 말하는 손해보는 방법",
     region: "인천 영종도",
@@ -2834,7 +2848,7 @@ A/S는 가능한지까지 함께 확인해야
   },
   {
     id: "case-061",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "주안 벤치의자 천갈이, 중국산 가죽이 싼 이유",
     region: "인천 주안",
@@ -2912,7 +2926,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-060",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "강남 역삼동 사우나 벤치의자 천갈이, 고객님들이 인상 쓰던 이유",
     region: "강남 역삼동",
@@ -2997,7 +3011,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-059",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "잠실 의자 천갈이 가죽교체 업체, 아직도 중국산 가죽 쓰세요?",
     region: "서울 잠실",
@@ -3155,7 +3169,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-057",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "인천 주안 식탁의자 가죽 교체, 의자 버리지 마세요",
     region: "인천 주안",
@@ -3229,7 +3243,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-056",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "일산 식탁의자 천갈이 가죽 교체, 새로 사면 손해보는 이유",
     region: "일산",
@@ -3431,7 +3445,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-053",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "인천 송도 회사 휴게실 의자 인조가죽 천갈이 사례",
     region: "인천 송도",
@@ -3575,7 +3589,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-051",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "부평 식탁 의자 가죽 교체 천갈이 사례",
     region: "인천 부평",
@@ -3686,7 +3700,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-049",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "강남 신사동 병원 소파 의자 가죽 천갈이",
     region: "서울 강남구 신사동",
@@ -3729,7 +3743,7 @@ A/S는 가능한지까지 함께 확인해야
 
   {
     id: "case-048",
-    category: "가죽 리폼",
+    category: "붙박이 소파 천갈이",
     parentCategory: "가죽 리폼",
     title: "광명 붙박이 소파 의자 천갈이 사례",
     region: "광명",
@@ -3974,7 +3988,7 @@ A/S는 가능한지까지 함께 확인해야
   },
   {
     id: "case-044",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "시흥 카페 의자 가죽 천갈이 교체 리폼 사례",
     region: "시흥",
@@ -4155,7 +4169,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-039",
-    category: "가죽 리폼",
+    category: "특수 가죽 교체",
     parentCategory: "가죽 리폼",
     title: "인천 당구장 팔걸이 가죽 리폼 사례",
     region: "인천",
@@ -4600,7 +4614,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-024",
-    category: "가죽 리폼",
+    category: "회의실 테이블 가죽 교체",
     parentCategory: "가죽 리폼",
     title: "회사 중역 테이블 가죽 리폼 천갈이 사례",
     region: "서울",
@@ -4630,7 +4644,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-023",
-    category: "가죽 리폼",
+    category: "특수 가죽 교체",
     parentCategory: "가죽 리폼",
     title: "인천 회사 의자 팔걸이 가죽 교체 사례",
     region: "인천",
@@ -4862,7 +4876,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-015",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "사우나 의자 가죽 리폼",
     region: "그랜드 cc",
@@ -4893,7 +4907,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-014",
-    category: "가죽 리폼",
+    category: "회의실 테이블 가죽 교체",
     parentCategory: "가죽 리폼",
     title: "회의 테이블 가죽 교체",
     region: "서울",
@@ -4922,7 +4936,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-013",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "양천구 목동 의자 가죽 리폼",
     region: "서울 양천구",
@@ -4945,7 +4959,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-012",
-    category: "가죽 리폼",
+    category: "회의실 테이블 가죽 교체",
     parentCategory: "가죽 리폼",
     title: "강서구 회사 중역 테이블 가죽 리폼",
     region: "서울 강서구",
@@ -4968,7 +4982,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-011",
-    category: "가죽 리폼",
+    category: "특수 가죽 교체",
     parentCategory: "가죽 리폼",
     title: "관악구 가죽 리폼",
     region: "서울 관악구",
@@ -5121,7 +5135,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-005",
-    category: "가죽 리폼",
+    category: "의자 천갈이",
     parentCategory: "가죽 리폼",
     title: "강남 레스토랑 의자 30개 천갈이",
     region: "서울 강남구",
@@ -5143,7 +5157,7 @@ PET 제로조인트 도어를 사용해
   },
   {
     id: "case-006",
-    category: "가죽 리폼",
+    category: "붙박이 소파 천갈이",
     parentCategory: "가죽 리폼",
     title: "카페 소파 부스석 가죽 교체",
     region: "경기 일산",

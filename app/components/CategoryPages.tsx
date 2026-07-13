@@ -19,6 +19,7 @@ const serviceIconMap: Record<string, string> = {
   "fridge-cabinet": "/images/icon/icon-refre.png",
   rocheong: "/images/icon/icon-robo.png",
   "restaurant-chair": "/images/icon/icon-chair-reform.png",
+  "meeting-table": "/images/icon/icon-table.png",
   custom: "/images/icon/icon-chair-reform.png",
   sofa: "/images/icon/icon-sofa-sag.png",
   "sofa-frame": "/images/icon/icon-sofa-sag.png",

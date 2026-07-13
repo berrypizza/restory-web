@@ -504,6 +504,21 @@ const CHAIR_BASE = [
   "회의테이블-가죽-교체",
   "회의테이블-인조가죽-교체",
   "회의테이블-천갈이",
+  "회의실-테이블-상판-가죽-교체",
+  "회의실-테이블-상판-인조가죽-교체",
+  "회의테이블-상판-가죽-교체",
+  "회의테이블-상판-인조가죽-교체",
+  "중역-테이블-가죽-교체",
+  "중역-테이블-인조가죽-교체",
+  "중역-테이블-천갈이",
+  "중역-회의테이블-가죽-교체",
+  "중역-회의테이블-인조가죽-교체",
+  "사장실-테이블-가죽-교체",
+  "사장실-테이블-인조가죽-교체",
+  "대표실-테이블-가죽-교체",
+  "대표실-테이블-인조가죽-교체",
+  "사무실-테이블-가죽-리폼",
+  "사무실-테이블-인조가죽-교체",
 
   // 책상
   "회의실-책상-가죽-교체",
@@ -539,6 +554,25 @@ const BUILTIN_SOFA_REGIONAL = REGIONS.flatMap((region) => [
   ...BUILTIN_SOFA_SYMPTOMS.map((s) => `${region}-붙박이-소파-${s}`),
   ...BUILTIN_SOFA_SYMPTOMS.map((s) => `${region}-붙박이-쇼파-${s}`),
 ]);
+
+const MEETING_TABLE_SYMPTOMS = [
+  "회의실-테이블-가죽-교체",
+  "회의실-테이블-인조가죽-교체",
+  "회의실-테이블-천갈이",
+  "회의실-테이블-상판-가죽-교체",
+  "회의실-테이블-상판-인조가죽-교체",
+  "회의테이블-가죽-교체",
+  "회의테이블-인조가죽-교체",
+  "회의테이블-천갈이",
+  "회의테이블-상판-가죽-교체",
+  "회의테이블-상판-인조가죽-교체",
+  "중역-테이블-가죽-교체",
+  "중역-테이블-인조가죽-교체",
+] as const;
+
+const MEETING_TABLE_REGIONAL = REGIONS.flatMap((region) =>
+  MEETING_TABLE_SYMPTOMS.map((s) => `${region}-${s}`),
+);
 
 // ─────────────────────────────────────────────
 // SOFA — 소파 쿠션 복원
@@ -690,6 +724,7 @@ export const LEATHER_KEYWORD_SLUGS: string[] = [
   ...CHAIR_BASE,
   ...CHAIR_REGIONAL,
   ...BUILTIN_SOFA_REGIONAL,
+  ...MEETING_TABLE_REGIONAL,
 ];
 
 export const SOFA_KEYWORD_SLUGS: string[] = [...SOFA_BASE, ...SOFA_REGIONAL];
