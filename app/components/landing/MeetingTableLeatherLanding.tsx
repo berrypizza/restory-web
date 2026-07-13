@@ -1048,7 +1048,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
             </h2>
           </FadeIn>
           <FadeIn delay={80}>
-            <YouTubeFacade videoId="mvMybNNafKk" />
+            <YouTubeFacade videoId="LEax7aI5kWc" />
           </FadeIn>
         </div>
       </section>
