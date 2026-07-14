@@ -31,6 +31,12 @@ const CATEGORY_BANNER: Record<
     href: "/leather/restaurant-chair",
     emoji: "🪑",
   },
+  "가죽 리폼": {
+    text: "가죽만 바꿔도 새 가구처럼 가능할까?",
+    sub: "테이블·팔걸이·특수 가죽까지 맞춤 교체!",
+    href: "/leather/meeting-table",
+    emoji: "🧵",
+  },
   "소파 리폼": {
     text: "복원 하고 또 소파 꺼지면 어쩌지..?",
     sub: "본사 책임 AS 3년 보장으로 안심!",
