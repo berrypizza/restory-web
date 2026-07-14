@@ -23,6 +23,7 @@ import sangbujangpbvsplywood from "./contents/sangbujang-pb-vs-plywood";
 import koreanvschineseleatherquality from "./contents/korean-vs-chinese-leather-quality";
 import sinkDoorReplacementCostPetHighgloss from "./contents/sink-door-replacement-cost-pet-highgloss";
 import sinkDoorReplacementCostDifference from "./contents/sink-door-replacement-cost-difference";
+import natuzziSofaSaggingRestorationCost from "./contents/natuzzi-sofa-sagging-restoration-cost";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -40,6 +41,7 @@ const tipModules = [
   koreanvschineseleatherquality,
   sinkDoorReplacementCostPetHighgloss,
   sinkDoorReplacementCostDifference,
+  natuzziSofaSaggingRestorationCost,
 
   // sofaSelfCheck,
   // chairReplaceTiming,
