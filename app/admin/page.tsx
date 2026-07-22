@@ -9,6 +9,7 @@ import type { Job } from "./lib/types";
 import type { Status, Tech } from "./lib/constants";
 import { TECHS, TECH_COLOR, TECH_PHOTO, USERS } from "./lib/constants";
 import { nowKST, today, thisYearMonth, addOneYear } from "./lib/utils";
+import { jobHasTech } from "./lib/jobTechs";
 
 import { useJobs, emptyForm, formFromJob } from "./hooks/useJobs";
 import JobForm from "./components/JobForm";
@@ -175,7 +176,7 @@ export default function AdminDashboard() {
     if (tab === "동선" && j.visit_date !== dateFilter) return false;
     if (tab === "전체" && !j.visit_date?.startsWith(monthFilter)) return false;
     if (statusFilter !== "전체" && j.status !== statusFilter) return false;
-    if (techFilter !== "전체" && j.tech !== techFilter) return false;
+    if (techFilter !== "전체" && !jobHasTech(j, techFilter)) return false;
     if (!matchSearch(j)) return false;
     return true;
   });

@@ -11,6 +11,11 @@ import {
   today,
   compressImage,
 } from "../lib/utils";
+import {
+  getExtraTechsFromMemo,
+  getVisibleMemo,
+  setExtraTechsInMemo,
+} from "../lib/jobTechs";
 
 interface JobFormProps {
   form: JobFormState;
@@ -49,6 +54,15 @@ export default function JobForm({
         }
       })()
     : [];
+
+  const extraTechs = getExtraTechsFromMemo(form.memo);
+  const visibleMemo = getVisibleMemo(form.memo);
+  const setExtraTechs = (techs: Tech[]) => {
+    setForm((p) => ({
+      ...p,
+      memo: setExtraTechsInMemo(p.memo, techs.filter((t) => t && t !== p.tech)),
+    }));
+  };
 
   const handleIntakeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -223,7 +237,16 @@ export default function JobForm({
             <select
               value={form.tech}
               onChange={(e) =>
-                setForm((p) => ({ ...p, tech: e.target.value as Tech }))
+                setForm((p) => ({
+                  ...p,
+                  tech: e.target.value as Tech,
+                  memo: setExtraTechsInMemo(
+                    p.memo,
+                    getExtraTechsFromMemo(p.memo).filter(
+                      (t) => t !== (e.target.value as Tech),
+                    ),
+                  ),
+                }))
               }
               style={inputStyle}>
               <option value="">미배정</option>
@@ -233,6 +256,61 @@ export default function JobForm({
                 </option>
               ))}
             </select>
+            <div className="mt-2 flex flex-col gap-1.5">
+              {extraTechs.map((tech, idx) => (
+                <div key={`${tech}-${idx}`} className="flex items-center gap-1.5">
+                  <select
+                    value={tech}
+                    onChange={(e) => {
+                      const next = [...extraTechs];
+                      next[idx] = e.target.value as Tech;
+                      setExtraTechs(next);
+                    }}
+                    style={{ ...inputStyle, padding: "7px 9px", fontSize: 12 }}>
+                    <option value="">동행 기사 선택</option>
+                    {TECHS.filter(
+                      (t) =>
+                        t !== form.tech && (!extraTechs.includes(t) || t === tech),
+                    ).map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setExtraTechs(extraTechs.filter((_, i) => i !== idx))}
+                    className="rounded-xl px-2 py-1.5 text-xs font-bold"
+                    style={{
+                      backgroundColor: "#fef2f2",
+                      color: "#ef4444",
+                      border: "1px solid #fecaca",
+                    }}>
+                    제거
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  const nextTech = TECHS.find(
+                    (t) => t !== form.tech && !extraTechs.includes(t),
+                  );
+                  if (nextTech) setExtraTechs([...extraTechs, nextTech]);
+                }}
+                disabled={!TECHS.some((t) => t !== form.tech && !extraTechs.includes(t))}
+                className="rounded-xl px-3 py-2 text-xs font-bold"
+                style={{
+                  backgroundColor: "#eff6ff",
+                  color: "#1f66ff",
+                  border: "1px solid #bfd3ff",
+                  opacity: TECHS.some((t) => t !== form.tech && !extraTechs.includes(t))
+                    ? 1
+                    : 0.45,
+                }}>
+                + 기사 추가
+              </button>
+            </div>
           </label>
           <label className="flex flex-col gap-1.5">
             <span
@@ -520,8 +598,13 @@ export default function JobForm({
             메모
           </span>
           <textarea
-            value={form.memo}
-            onChange={(e) => setForm((p) => ({ ...p, memo: e.target.value }))}
+            value={visibleMemo}
+            onChange={(e) =>
+              setForm((p) => ({
+                ...p,
+                memo: setExtraTechsInMemo(e.target.value, getExtraTechsFromMemo(p.memo)),
+              }))
+            }
             placeholder="특이사항, 요청사항..."
             rows={2}
             style={{ ...inputStyle, resize: "none" }}

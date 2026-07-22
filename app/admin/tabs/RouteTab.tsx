@@ -15,6 +15,7 @@ import {
   displayTime,
   diffMinutes,
 } from "../lib/utils";
+import { getJobTechs, jobHasTech } from "../lib/jobTechs";
 
 interface RouteTabProps {
   jobs: Job[];
@@ -204,16 +205,18 @@ export default function RouteTab({
 
   const dayJobs = jobs
     .filter((j) => j.visit_date === dateFilter && j.status !== "취소")
-    .filter((j) => techFilter === "전체" || j.tech === techFilter)
+    .filter((j) => jobHasTech(j, techFilter))
     .sort((a, b) =>
       (a.visit_time || "99:99").localeCompare(b.visit_time || "99:99"),
     );
 
   const techGroups: Record<string, Job[]> = {};
   dayJobs.forEach((j) => {
-    const key = j.tech || "미배정";
-    if (!techGroups[key]) techGroups[key] = [];
-    techGroups[key].push(j);
+    const keys = getJobTechs(j);
+    (keys.length ? keys : ["미배정"]).forEach((key) => {
+      if (!techGroups[key]) techGroups[key] = [];
+      techGroups[key].push(j);
+    });
   });
 
   return (
@@ -286,7 +289,7 @@ export default function RouteTab({
             const dayJ =
               techFilter === "전체"
                 ? allDJ
-                : allDJ.filter((j) => j.tech === techFilter);
+                : allDJ.filter((j) => jobHasTech(j, techFilter));
             const isSel = ds === dateFilter;
             const isT = ds === todayStr;
             const dow = i % 7;
@@ -318,8 +321,10 @@ export default function RouteTab({
                     {(() => {
                       const c: Record<string, number> = {};
                       dayJ.forEach((j) => {
-                        const k = j.tech || "";
-                        c[k] = (c[k] || 0) + 1;
+                        const keys = getJobTechs(j);
+                        (keys.length ? keys : [""]).forEach((k) => {
+                          c[k] = (c[k] || 0) + 1;
+                        });
                       });
                       return Object.entries(c).map(([t, n]) => (
                         <span

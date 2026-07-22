@@ -9,6 +9,7 @@ import {
   formatYearMonth,
   reviewSms,
 } from "../lib/utils";
+import { jobHasTech } from "../lib/jobTechs";
 
 interface StatsTabProps {
   monthFilter: string;
@@ -33,11 +34,11 @@ export default function StatsTab({
 }: StatsTabProps) {
   const statDone = isAdmin
     ? doneMonth
-    : doneMonth.filter((j) => j.tech === loggedUser);
+    : doneMonth.filter((j) => jobHasTech(j, loggedUser as Tech));
   const statRevenue = statDone.reduce((s, j) => s + (j.price || 0), 0);
   const statReviewPending = isAdmin
     ? reviewPending
-    : reviewPending.filter((j) => j.tech === loggedUser);
+    : reviewPending.filter((j) => jobHasTech(j, loggedUser as Tech));
   const myColor = TECH_COLOR[loggedUser!] || "#1f66ff";
 
   return (
@@ -104,7 +105,7 @@ export default function StatsTab({
 
       {/* 기사별 */}
       {(isAdmin ? TECHS : [loggedUser as Tech]).map((tech) => {
-        const techJobs = doneMonth.filter((j) => j.tech === tech);
+        const techJobs = doneMonth.filter((j) => jobHasTech(j, tech));
         const techRevenue = techJobs.reduce((s, j) => s + (j.price || 0), 0);
         const color = TECH_COLOR[tech];
         return (

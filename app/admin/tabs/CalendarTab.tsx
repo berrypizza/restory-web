@@ -12,6 +12,7 @@ import {
   pad,
   today as getToday,
 } from "../lib/utils";
+import { getJobTechs, jobHasTech } from "../lib/jobTechs";
 import JobCard from "../components/JobCard";
 
 interface CalendarTabProps {
@@ -88,7 +89,7 @@ export default function CalendarTab({
   const selectedJobs = selectedDay
     ? (jobsByDate[selectedDay] ?? []).filter(
         (j) =>
-          (calTechFilter === "전체" || j.tech === calTechFilter) &&
+          jobHasTech(j, calTechFilter) &&
           matchSearch(j),
       )
     : [];
@@ -196,7 +197,7 @@ export default function CalendarTab({
           const dayJobs =
             calTechFilter === "전체"
               ? allDayJobs
-              : allDayJobs.filter((j) => j.tech === calTechFilter);
+              : allDayJobs.filter((j) => jobHasTech(j, calTechFilter));
           const isToday = dateStr === todayStr;
           const isSelected = dateStr === selectedDay;
           const dow = i % 7;
@@ -231,8 +232,10 @@ export default function CalendarTab({
                 {(() => {
                   const counts: Record<string, number> = {};
                   dayJobs.forEach((j) => {
-                    const key = j.tech || "미배정";
-                    counts[key] = (counts[key] || 0) + 1;
+                    const keys = getJobTechs(j);
+                    (keys.length ? keys : ["미배정"]).forEach((key) => {
+                      counts[key] = (counts[key] || 0) + 1;
+                    });
                   });
                   return Object.entries(counts).map(([tech, count]) => (
                     <div

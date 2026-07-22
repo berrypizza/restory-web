@@ -5,7 +5,7 @@ import Image from "next/image";
 import PhotoCapture from "./PhotoCapture";
 import MaterialSection from "./MaterialSection";
 import type { Job } from "../lib/types";
-import type { Status } from "../lib/constants";
+import type { Status, Tech } from "../lib/constants";
 import { TECHS, STATUSES, TECH_COLOR, STATUS_STYLE } from "../lib/constants";
 import {
   nowKST,
@@ -16,6 +16,12 @@ import {
   naverMapUrl,
   addOneYear,
 } from "../lib/utils";
+import {
+  getExtraTechsFromMemo,
+  getJobTechs,
+  getVisibleMemo,
+  setExtraTechsInMemo,
+} from "../lib/jobTechs";
 
 interface JobCardProps {
   job: Job;
@@ -111,7 +117,22 @@ export default function JobCard({
 
   const photos = getPhotos();
   const intakePhotos = getIntakePhotos();
-  const techIdx = job.tech ? TECHS.indexOf(job.tech) + 1 : 0;
+  const jobTechs = getJobTechs(job);
+  const extraTechs = getExtraTechsFromMemo(job.memo);
+  const visibleMemo = getVisibleMemo(job.memo);
+  const teamColors = jobTechs
+    .map((tech) => TECH_COLOR[tech])
+    .filter(Boolean);
+  const teamGradient =
+    teamColors.length > 1
+      ? `linear-gradient(135deg, ${teamColors
+          .map((color, idx) => {
+            const start = Math.round((idx / teamColors.length) * 100);
+            const end = Math.round(((idx + 1) / teamColors.length) * 100);
+            return `${color} ${start}%, ${color} ${end}%`;
+          })
+          .join(", ")})`
+      : techGradient;
 
   const asInfo = (() => {
     if (job.status !== "완료" || !job.as_until) return null;
@@ -334,9 +355,9 @@ export default function JobCard({
 
         {/* 컬러 헤더 바 */}
         <div
-          className="flex items-center justify-between px-4 py-2.5"
-          style={{ background: techGradient }}>
-          <div className="flex items-center gap-2">
+          className="flex flex-col gap-2 px-4 py-2.5"
+          style={{ background: teamGradient }}>
+          <div className="flex items-center gap-2 flex-wrap">
             <select
               value={job.status}
               onChange={(e) => {
@@ -375,29 +396,142 @@ export default function JobCard({
             )}
           </div>
           <div
-            className="flex items-center gap-1.5"
+            className="flex items-center justify-between gap-2 rounded-xl px-2 py-2"
+            style={{
+              backgroundColor: "rgba(255,255,255,0.18)",
+              border: "1px solid rgba(255,255,255,0.28)",
+            }}
             onClick={(e) => e.stopPropagation()}>
-            {job.tech && techIdx > 0 && (
-              <Image
-                src={`/images/knight/knights-${techIdx}.png`}
-                alt={job.tech}
-                width={32}
-                height={36}
-                className="rounded-lg"
-                style={{
-                  width: 32,
-                  height: 36,
-                  objectFit: "cover",
-                  objectPosition: "top center",
-                  border: "2px solid rgba(255,255,255,0.5)",
-                }}
-              />
+            <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+              {jobTechs.length > 0 ? (
+                jobTechs.map((tech, idx) => {
+                  const idxInTechs = TECHS.indexOf(tech) + 1;
+                  if (idxInTechs <= 0) return null;
+                  const role = idx === 0 ? "\uC8FC\uB2F4\uB2F9" : "\uB3D9\uD589";
+                  return (
+                    <span
+                      key={tech}
+                      className="inline-flex items-center gap-1 rounded-full pl-1 pr-2 py-1"
+                      style={{
+                        backgroundColor: "rgba(255,255,255,0.92)",
+                        border: `1.5px solid ${TECH_COLOR[tech]}`,
+                        boxShadow: "0 4px 10px rgba(15,23,42,0.14)",
+                      }}>
+                      <Image
+                        src={`/images/knight/knights-${idxInTechs}.png`}
+                        alt={tech}
+                        title={`${role} ${tech}`}
+                        width={24}
+                        height={24}
+                        className="rounded-full"
+                        style={{
+                          width: 24,
+                          height: 24,
+                          objectFit: "cover",
+                          objectPosition: "top center",
+                          border: `1px solid ${TECH_COLOR[tech]}55`,
+                        }}
+                      />
+                      <span
+                        className="text-[10px] font-black leading-none"
+                        style={{ color: TECH_COLOR[tech] }}>
+                        {role}
+                      </span>
+                      <span
+                        className="text-[11px] font-black leading-none"
+                        style={{ color: "#111827" }}>
+                        {tech}
+                      </span>
+                    </span>
+                  );
+                })
+              ) : (
+                <span
+                  className="text-[11px] font-black rounded-full px-2.5 py-1"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.9)",
+                    color: "#64748b",
+                  }}>
+                  {"\uBBF8\uBC30\uC815"}
+                </span>
+              )}
+            </div>
+            <select
+              value={job.tech}
+              onChange={(e) => {
+                e.stopPropagation();
+                onUpdate(job.id, {
+                  tech: e.target.value as Tech,
+                  memo: setExtraTechsInMemo(
+                    job.memo,
+                    extraTechs.filter((t) => t !== (e.target.value as Tech)),
+                  ),
+                });
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs rounded-full px-2.5 py-1 cursor-pointer font-bold flex-shrink-0"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.25)",
+                color: "white",
+                border: "1.5px solid rgba(255,255,255,0.4)",
+                outline: "none",
+              }}>
+              <option
+                value=""
+                style={{ color: "#111827", backgroundColor: "white" }}>
+                {"\uBBF8\uBC30\uC815"}
+              </option>
+              {TECHS.map((t) => (
+                <option
+                  key={t}
+                  value={t}
+                  style={{ color: "#111827", backgroundColor: "white" }}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div
+            className="hidden"
+            onClick={(e) => e.stopPropagation()}>
+            {jobTechs.length > 0 && (
+              <div className="flex items-center gap-1">
+                {jobTechs.map((tech, idx) => {
+                  const idxInTechs = TECHS.indexOf(tech) + 1;
+                  if (idxInTechs <= 0) return null;
+                  return (
+                    <Image
+                      key={tech}
+                      src={`/images/knight/knights-${idxInTechs}.png`}
+                      alt={tech}
+                      title={idx === 0 ? `주담당 ${tech}` : `동행 ${tech}`}
+                      width={32}
+                      height={36}
+                      className="rounded-lg"
+                      style={{
+                        width: 28,
+                        height: 32,
+                        objectFit: "cover",
+                        objectPosition: "top center",
+                        border: "1.5px solid rgba(255,255,255,0.75)",
+                        boxShadow: "0 4px 10px rgba(15,23,42,0.18)",
+                      }}
+                    />
+                  );
+                })}
+              </div>
             )}
             <select
               value={job.tech}
               onChange={(e) => {
                 e.stopPropagation();
-                onUpdate(job.id, { tech: e.target.value as any });
+                onUpdate(job.id, {
+                  tech: e.target.value as Tech,
+                  memo: setExtraTechsInMemo(
+                    job.memo,
+                    extraTechs.filter((t) => t !== (e.target.value as Tech)),
+                  ),
+                });
               }}
               onClick={(e) => e.stopPropagation()}
               className="text-xs rounded-full px-2.5 py-1 cursor-pointer font-bold"
@@ -421,11 +555,106 @@ export default function JobCard({
                 </option>
               ))}
             </select>
+            {jobTechs.length > 1 && (
+              <span
+                className="text-[11px] font-black px-2 py-1 rounded-full"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.25)",
+                  color: "white",
+                  border: "1.5px solid rgba(255,255,255,0.4)",
+                }}>
+                {"\uC678 "}{jobTechs.length - 1}{"\uBA85"}
+              </span>
+            )}
           </div>
         </div>
 
         {/* ── 본문: 더 이상 접히지 않음. 현장 동선 순서(누구→어디→무엇→얼마)로 배치 ── */}
         <div className="px-4 pt-3 pb-3 flex flex-col gap-2.5">
+          {isAdmin && (
+            <div
+              className="rounded-xl px-3 py-2 flex flex-col gap-2"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: "rgba(255,255,255,0.72)",
+                border: `1px solid ${techColor}33`,
+              }}>
+              <div className="flex items-center justify-between gap-2">
+                <span
+                  className="text-[11px] font-bold"
+                  style={{ color: techColor }}>
+                  {"\uB2F4\uB2F9 \uAE30\uC0AC"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextTech = TECHS.find(
+                      (t) => t !== job.tech && !extraTechs.includes(t),
+                    );
+                    if (!nextTech) return;
+                    onUpdate(job.id, {
+                      memo: setExtraTechsInMemo(job.memo, [...extraTechs, nextTech]),
+                    });
+                  }}
+                  disabled={!TECHS.some((t) => t !== job.tech && !extraTechs.includes(t))}
+                  className="rounded-lg px-2.5 py-1.5 text-[11px] font-black"
+                  style={{
+                    backgroundColor: "#eff6ff",
+                    color: "#1f66ff",
+                    border: "1px solid #bfd3ff",
+                    opacity: TECHS.some((t) => t !== job.tech && !extraTechs.includes(t))
+                      ? 1
+                      : 0.45,
+                  }}>
+                  + {"\uAE30\uC0AC \uCD94\uAC00"}
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {job.tech && (
+                  <span
+                    className="rounded-full px-2.5 py-1 text-[11px] font-black"
+                    style={{
+                      backgroundColor: `${TECH_COLOR[job.tech]}22`,
+                      color: TECH_COLOR[job.tech],
+                    }}>
+                    {"\uC8FC\uB2F4\uB2F9 "}{job.tech}
+                  </span>
+                )}
+                {extraTechs.map((tech) => (
+                  <span
+                    key={tech}
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-black"
+                    style={{
+                      backgroundColor: `${TECH_COLOR[tech]}22`,
+                      color: TECH_COLOR[tech],
+                    }}>
+                    {"\uB3D9\uD589 "}{tech}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onUpdate(job.id, {
+                          memo: setExtraTechsInMemo(
+                            job.memo,
+                            extraTechs.filter((t) => t !== tech),
+                          ),
+                        })
+                      }
+                      className="font-black"
+                      style={{ color: TECH_COLOR[tech] }}>
+                      x
+                    </button>
+                  </span>
+                ))}
+                {!job.tech && extraTechs.length === 0 && (
+                  <span
+                    className="text-[11px] font-bold"
+                    style={{ color: "#94a3b8" }}>
+                    {"\uBBF8\uBC30\uC815"}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
           {/* 고객명 + 전화 */}
           <div className="flex items-center justify-between gap-2">
             <span className="text-lg font-black" style={{ color: "#111827" }}>
@@ -557,7 +786,7 @@ export default function JobCard({
           )}
 
           {/* 메모 — 현장 특이사항이라 항상 노출 */}
-          {job.memo && (
+          {visibleMemo && (
             <div
               className="rounded-xl px-3 py-2.5"
               style={{
@@ -572,7 +801,7 @@ export default function JobCard({
               <p
                 className="text-sm leading-relaxed whitespace-pre-wrap"
                 style={{ color: "#1f2937" }}>
-                {job.memo}
+                {visibleMemo}
               </p>
             </div>
           )}
