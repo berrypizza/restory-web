@@ -33,6 +33,8 @@ interface CalendarTabProps {
   onDelete: (id: string) => void;
   onAddJob: (date: string) => void;
   matchSearch: (j: Job) => boolean;
+  searchQuery: string;
+  hasSearchQuery: boolean;
 }
 
 function TechFilterSelect({
@@ -82,17 +84,39 @@ export default function CalendarTab({
   onDelete,
   onAddJob,
   matchSearch,
+  searchQuery,
+  hasSearchQuery,
 }: CalendarTabProps) {
   const calDays = getCalendarDays(calYear, calMonth);
   const todayStr = getToday();
+  const getVisibleJobs = (date: string) =>
+    (jobsByDate[date] ?? []).filter(
+      (j) =>
+        jobHasTech(j, calTechFilter) &&
+        matchSearch(j),
+    );
 
-  const selectedJobs = selectedDay
-    ? (jobsByDate[selectedDay] ?? []).filter(
-        (j) =>
-          jobHasTech(j, calTechFilter) &&
-          matchSearch(j),
-      )
+  const selectedJobs = selectedDay ? getVisibleJobs(selectedDay) : [];
+  const allMonthSearchResults = hasSearchQuery
+    ? jobs
+        .filter((j) => jobHasTech(j, calTechFilter) && matchSearch(j))
+        .sort((a, b) => {
+          const dateCompare = (a.visit_date || "").localeCompare(
+            b.visit_date || "",
+          );
+          if (dateCompare !== 0) return dateCompare;
+          return (a.visit_time || "99:99").localeCompare(
+            b.visit_time || "99:99",
+          );
+        })
     : [];
+  const jumpToJobDate = (date: string) => {
+    const [year, month] = date.split("-").map(Number);
+    if (!year || !month) return;
+    setCalYear(year);
+    setCalMonth(month - 1);
+    setSelectedDay(date);
+  };
 
   return (
     <div>
@@ -193,11 +217,7 @@ export default function CalendarTab({
         {calDays.map((day, i) => {
           if (!day) return <div key={`e-${i}`} />;
           const dateStr = `${calYear}-${pad(calMonth + 1)}-${pad(day)}`;
-          const allDayJobs = jobsByDate[dateStr] ?? [];
-          const dayJobs =
-            calTechFilter === "전체"
-              ? allDayJobs
-              : allDayJobs.filter((j) => jobHasTech(j, calTechFilter));
+          const dayJobs = getVisibleJobs(dateStr);
           const isToday = dateStr === todayStr;
           const isSelected = dateStr === selectedDay;
           const dow = i % 7;
@@ -272,6 +292,82 @@ export default function CalendarTab({
           );
         })}
       </div>
+
+      {hasSearchQuery && (
+        <div
+          className="mt-4 rounded-2xl overflow-hidden"
+          style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid #d8e4ff",
+            boxShadow: "0 8px 22px rgba(31,102,255,0.08)",
+          }}>
+          <div
+            className="flex items-center justify-between gap-3 px-4 py-3"
+            style={{ borderBottom: "1px solid #e5e7eb" }}>
+            <div>
+              <p className="text-sm font-bold" style={{ color: "#111827" }}>
+                전체 달 검색 결과
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "#64748b" }}>
+                {searchQuery.trim()} · {allMonthSearchResults.length}건
+              </p>
+            </div>
+            <span
+              className="text-xs font-bold px-2 py-1 rounded-full"
+              style={{ backgroundColor: "#eaf1ff", color: "#1f66ff" }}>
+              날짜 누르면 이동
+            </span>
+          </div>
+
+          {allMonthSearchResults.length === 0 ? (
+            <div className="text-center py-8" style={{ color: "#94a3b8" }}>
+              <p className="text-sm">전체 일정에서 검색 결과가 없습니다</p>
+            </div>
+          ) : (
+            <div className="flex flex-col">
+              {allMonthSearchResults.slice(0, 80).map((job) => (
+                <button
+                  key={job.id}
+                  type="button"
+                  onClick={() => jumpToJobDate(job.visit_date)}
+                  className="w-full text-left px-4 py-3"
+                  style={{ borderBottom: "1px solid #f1f5f9" }}>
+                  <div className="flex items-center justify-between gap-3">
+                    <span
+                      className="text-xs font-bold"
+                      style={{ color: "#1f66ff" }}>
+                      {formatDate(job.visit_date)}
+                      {job.visit_time ? ` ${formatTime(job.visit_time)}` : ""}
+                    </span>
+                    <span
+                      className="text-xs font-semibold flex-shrink-0"
+                      style={{ color: TECH_COLOR[job.tech] || "#64748b" }}>
+                      {job.tech || "미배정"}
+                    </span>
+                  </div>
+                  <p
+                    className="text-sm font-bold mt-1 truncate"
+                    style={{ color: "#111827" }}>
+                    {job.name || "이름 없음"} · {job.region || "지역 미입력"}
+                  </p>
+                  <p
+                    className="text-xs mt-0.5 truncate"
+                    style={{ color: "#64748b" }}>
+                    {job.symptom || "증상 미입력"}
+                  </p>
+                </button>
+              ))}
+              {allMonthSearchResults.length > 80 && (
+                <div
+                  className="px-4 py-3 text-xs text-center"
+                  style={{ color: "#64748b" }}>
+                  검색 결과가 많아 80건까지만 표시됩니다
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 선택된 날 일정 */}
       {selectedDay && (

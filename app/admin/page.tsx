@@ -163,18 +163,37 @@ export default function AdminDashboard() {
   };
 
   // 검색/필터
+  const normalizeSearchText = (value: unknown) =>
+    String(value ?? "")
+      .replace(/[\s-]/g, "")
+      .toLowerCase();
+  const normalizedSearchQuery = normalizeSearchText(searchQuery.trim());
+  const hasSearchQuery = normalizedSearchQuery.length > 0;
+
   const matchSearch = (j: Job) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.replace(/-/g, "").toLowerCase();
-    return (
-      (j.name ?? "").toLowerCase().includes(q) ||
-      (j.phone ?? "").replace(/-/g, "").includes(q)
+    if (!hasSearchQuery) return true;
+    return [
+      j.name,
+      j.phone,
+      j.region,
+      j.symptom,
+      j.memo,
+      j.tech,
+      j.visit_date,
+      j.install_date,
+    ].some((value) =>
+      normalizeSearchText(value).includes(normalizedSearchQuery),
     );
   };
 
   const filtered = jobs.filter((j) => {
     if (tab === "동선" && j.visit_date !== dateFilter) return false;
-    if (tab === "전체" && !j.visit_date?.startsWith(monthFilter)) return false;
+    if (
+      tab === "전체" &&
+      !hasSearchQuery &&
+      !j.visit_date?.startsWith(monthFilter)
+    )
+      return false;
     if (statusFilter !== "전체" && j.status !== statusFilter) return false;
     if (techFilter !== "전체" && !jobHasTech(j, techFilter)) return false;
     if (!matchSearch(j)) return false;
@@ -442,7 +461,7 @@ export default function AdminDashboard() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="이름 또는 전화번호로 검색"
+            placeholder="이름, 전화번호, 지역, 증상으로 검색"
             style={{
               width: "100%",
               backgroundColor: "#ffffff",
@@ -492,6 +511,8 @@ export default function AdminDashboard() {
             onDelete={remove}
             onAddJob={openNew}
             matchSearch={matchSearch}
+            searchQuery={searchQuery}
+            hasSearchQuery={hasSearchQuery}
           />
         )}
 
