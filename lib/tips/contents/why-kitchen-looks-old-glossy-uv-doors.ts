@@ -14,7 +14,7 @@ const tip: Tip = {
     "PET문짝",
     "문짝리폼",
   ],
-  thumbnail: "/images/tips/sink-door-uv-vs-pet.png",
+  thumbnail: "/images/tips/why-kitchen-looks-old-thumbnail.png",
   createdAt: "2026-07-26",
   views: 10240,
   readingTime: 5,
