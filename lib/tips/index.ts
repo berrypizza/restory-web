@@ -26,6 +26,7 @@ import sinkDoorReplacementCostDifference from "./contents/sink-door-replacement-
 import natuzziSofaSaggingRestorationCost from "./contents/natuzzi-sofa-sagging-restoration-cost";
 import meetingTableArtificialLeatherReplacement from "./contents/meeting-table-artificial-leather-replacement";
 import sinkDoorOnlyNewKitchenLook from "./contents/sink-door-only-new-kitchen-look";
+import whyKitchenLooksOldGlossyUvDoors from "./contents/why-kitchen-looks-old-glossy-uv-doors";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -46,6 +47,7 @@ const tipModules = [
   natuzziSofaSaggingRestorationCost,
   meetingTableArtificialLeatherReplacement,
   sinkDoorOnlyNewKitchenLook,
+  whyKitchenLooksOldGlossyUvDoors,
 
   // sofaSelfCheck,
   // chairReplaceTiming,
