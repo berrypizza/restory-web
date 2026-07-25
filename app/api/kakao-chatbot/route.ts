@@ -5,6 +5,10 @@ const FALLBACK_TEXT = `안녕하세요. 리스토리입니다.
 문제 부위 사진과 전체 사진, 지역을 함께 보내주시면
 확인 가능한 범위부터 안내드리겠습니다.`;
 
+const HOME_TEXT = `리스토리 상담 챗봇입니다.
+수리할 가구 종류와 문제 부위를 짧게 남겨주세요.
+사진과 지역을 함께 보내주시면 확인 가능한 범위부터 안내드리겠습니다.`;
+
 const SYSTEM_PROMPT = `너는 리스토리 카카오톡 상담 챗봇이다.
 
 상담 규칙:
@@ -88,6 +92,14 @@ function getDirectReply(utterance: string): string | null {
     return "사진을 보내주신 경우 확인 가능한 범위부터 살펴보겠습니다. 지역을 이미 보내주셨다면 함께 확인하겠습니다. 사진만으로 확정 진단은 어렵고, 필요하면 상담원이 추가 확인드리겠습니다.";
   }
 
+  if (/^(홈|시작|시작하기|봇사용\s*안내|사용\s*안내|도움말|help)[.!?~ ]*$/.test(lower)) {
+    return HOME_TEXT;
+  }
+
+  if (/^(자주\s*묻는\s*질문|faq|관리자\s*변경)[.!?~ ]*$/.test(lower)) {
+    return "챗봇 관리자센터 안내는 카카오 관리자센터에서 확인 가능합니다. 수리 상담은 문제 부위 사진과 지역을 남겨주시면 리스토리 상담원이 확인하겠습니다.";
+  }
+
   if (/시공\s*가능\s*지역|지역이\s*어떻게|어디까지|출장\s*지역/.test(normalized)) {
     return "리스토리는 서울, 인천, 경기 지역을 중심으로 출장 상담을 진행합니다. 정확한 가능 여부는 지역명과 사진을 함께 보내주시면 확인해드리겠습니다.";
   }
@@ -136,7 +148,11 @@ export async function POST(request: Request) {
       return kakaoResponse(directReply);
     }
 
-    const openai = new OpenAI({ apiKey });
+    const openai = new OpenAI({
+      apiKey,
+      maxRetries: 0,
+      timeout: 2500,
+    });
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",
       instructions: SYSTEM_PROMPT,
