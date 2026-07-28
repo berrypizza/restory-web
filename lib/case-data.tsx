@@ -96,7 +96,7 @@ export const cases: CaseItem[] = [
 `,
     beforeImg: "/images/cases/case-097-before.jpg",
     afterImg: "/images/cases/case-097-after.jpg",
-    blogUrl: "https://blog.naver.com/sofaresq",
+    blogUrl: "https://blog.naver.com/sofaresq/224361026304",
     date: "2026-07-24",
     tags: [
       "신림동 싱크대 상부장 추락",
