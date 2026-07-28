@@ -72,8 +72,7 @@ export const cases: CaseItem[] = [
     id: "case-097",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
-    title:
-      "신림동 싱크대 상부장 추락 수리, 부서진 시공목을 다시 잡은 현장",
+    title: "신림동 싱크대 상부장 추락 수리, 부서진 시공목을 다시 잡은 현장",
     region: "서울 관악구 신림동",
     summary:
       "서울 관악구 신림동 싱크대 상부장 추락 수리 사례입니다. 상부장 뒤쪽에서 장을 잡아주던 시공목이 부서져 장이 내려온 상태였고, 장을 내린 뒤 합판으로 고정 구조를 다시 잡고 상부장을 재결합했습니다.",
@@ -97,7 +96,7 @@ export const cases: CaseItem[] = [
 `,
     beforeImg: "/images/cases/case-097-before.jpg",
     afterImg: "/images/cases/case-097-after.jpg",
-    blogUrl: "",
+    blogUrl: "https://blog.naver.com/sofaresq",
     date: "2026-07-24",
     tags: [
       "신림동 싱크대 상부장 추락",
@@ -164,7 +163,8 @@ export const cases: CaseItem[] = [
     id: "case-095",
     category: "하부장 밑판 교체",
     parentCategory: "싱크대 수리",
-    title: "강서구 화곡동 싱크대 하부장 밑판 교체, 전체 교체 대신 밑판만 정리한 사례",
+    title:
+      "강서구 화곡동 싱크대 하부장 밑판 교체, 전체 교체 대신 밑판만 정리한 사례",
     region: "서울 강서구 화곡동",
     summary:
       "서울 강서구 화곡동 싱크대 하부장 밑판 교체 사례입니다. 습기로 밑판이 불어 터진 상태였고, 장 전체 교체가 아니라 손상된 밑판만 제거한 뒤 새 밑판으로 정리했습니다.",
@@ -419,7 +419,8 @@ export const cases: CaseItem[] = [
     id: "case-091",
     category: "하부장 밑판 교체",
     parentCategory: "싱크대 수리",
-    title: "송파구 싱크대 하부장 밑판 교체, 물에 불어 냄새가 나던 밑판 교체 사례",
+    title:
+      "송파구 싱크대 하부장 밑판 교체, 물에 불어 냄새가 나던 밑판 교체 사례",
     region: "서울 송파구",
     summary:
       "서울 송파구 싱크대 하부장 밑판 교체 사례입니다. 물에 불어 오염과 냄새가 올라오던 하부장 내부를 확인한 뒤, 전체 교체가 아니라 손상된 밑판만 제거하고 새 밑판을 다시 부착했습니다.",

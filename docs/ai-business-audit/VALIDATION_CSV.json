@@ -1,0 +1,23 @@
+[
+  {
+    "file": "04_CASES_SUMMARY.csv",
+    "rows": 96,
+    "columns": 32,
+    "inconsistent_rows": [],
+    "ok": true
+  },
+  {
+    "file": "06_CONTENT_AND_SEO_INVENTORY.csv",
+    "rows": 4727,
+    "columns": 30,
+    "inconsistent_rows": [],
+    "ok": true
+  },
+  {
+    "file": "11_BUSINESS_METRICS_TEMPLATE.csv",
+    "rows": 0,
+    "columns": 29,
+    "inconsistent_rows": [],
+    "ok": true
+  }
+]

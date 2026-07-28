@@ -1,0 +1,33 @@
+{
+  "gitHash": "2ca5275701b228d80e42a31ccf5852a615d93095",
+  "dateIso": "2026-07-26T02:30:29+09:00",
+  "cases": 96,
+  "services": 8,
+  "pages": 4727,
+  "categoryCounts": {
+    "싱크대 수리": 38,
+    "가죽 리폼": 32,
+    "싱크대 리폼": 16,
+    "소파 복원": 10
+  },
+  "duplicateIds": [],
+  "missingIds": [
+    "case-032"
+  ],
+  "files": [
+    "00_README.md",
+    "01_BUSINESS_SUMMARY.md",
+    "02_SITE_STRUCTURE_AND_FUNNEL.md",
+    "03_SERVICES.json",
+    "04_CASES_SUMMARY.csv",
+    "05_CASES_FULL.jsonl",
+    "06_CONTENT_AND_SEO_INVENTORY.csv",
+    "07_TECHNICAL_SEO.md",
+    "08_CONVERSION_AUDIT.md",
+    "09_BRAND_AND_MESSAGE_INVENTORY.md",
+    "10_GAPS_AND_QUESTIONS.md",
+    "11_BUSINESS_METRICS_TEMPLATE.csv",
+    "12_SOURCE_MAP.md"
+  ],
+  "privacyScanNote": "전화번호/API 키/env 값은 문서에 기록하지 않도록 생성 스크립트에서 제한함. 원본 .env.local은 읽지 않음."
+}
