@@ -1,7 +1,9 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const maxDuration = 5;
+
+const AI_RESPONSE_TIMEOUT_MS = 1800;
 
 const FALLBACK_TEXT =
   "안녕하세요, 리스토리입니다. 문제 부위가 보이는 사진과 전체 사진, 지역을 보내주시면 수리 또는 교체 가능 여부부터 확인해드리겠습니다.";
@@ -143,6 +145,24 @@ function getDirectReply(utterance: string): string | null {
   return null;
 }
 
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new Error("KAKAO_CHATBOT_AI_TIMEOUT")),
+          timeoutMs,
+        );
+      }),
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as KakaoSkillRequest;
@@ -162,17 +182,31 @@ export async function POST(request: Request) {
       return kakaoResponse(FALLBACK_TEXT);
     }
 
-    const openai = new OpenAI({ apiKey, maxRetries: 0, timeout: 2500 });
-    const response = await openai.responses.create({
-      model: "gpt-4.1-mini",
-      instructions: SYSTEM_PROMPT,
-      input: utterance,
-      max_output_tokens: 500,
+    // Fast, fixed replies skip the OpenAI bundle entirely. This keeps Kakao's
+    // webhook response inside its time limit even when the function is cold.
+    const { default: OpenAI } = await withTimeout(
+      import("openai"),
+      AI_RESPONSE_TIMEOUT_MS,
+    );
+    const openai = new OpenAI({
+      apiKey,
+      maxRetries: 0,
+      timeout: AI_RESPONSE_TIMEOUT_MS,
     });
+    const response = await withTimeout(
+      openai.responses.create({
+        model: "gpt-4.1-mini",
+        instructions: SYSTEM_PROMPT,
+        input: utterance,
+        max_output_tokens: 500,
+      }),
+      AI_RESPONSE_TIMEOUT_MS,
+    );
 
     return kakaoResponse(response.output_text.trim() || FALLBACK_TEXT);
   } catch (error) {
-    console.error("KAKAO_CHATBOT_ERROR", error);
+    const reason = error instanceof Error ? error.message : "UNKNOWN_ERROR";
+    console.error("KAKAO_CHATBOT_ERROR", { reason });
     return kakaoResponse(FALLBACK_TEXT);
   }
 }
