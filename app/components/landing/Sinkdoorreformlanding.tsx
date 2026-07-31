@@ -123,6 +123,23 @@ function CaseStrip({ region }: { region?: string }) {
                   style={{ background: "#1a5cff" }}>
                   AFTER
                 </div>
+                {item.price && (
+                  <div
+                    className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-lg px-2.5 py-1.5"
+                    style={{
+                      background: "rgba(255,255,255,0.94)",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.16)",
+                      backdropFilter: "blur(8px)",
+                    }}>
+                    <span className="text-[10px] font-bold" style={{ color: "#6b7684" }}>
+                      작업 비용
+                    </span>
+                    <span className="h-3 w-px" style={{ background: "#e5e8eb" }} />
+                    <span className="text-[20px] font-black leading-none" style={{ color: "#3182f6" }}>
+                      {item.price}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="p-3 bg-white">
                 <p className="text-[13px] font-extrabold text-neutral-900 truncate">

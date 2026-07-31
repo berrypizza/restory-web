@@ -84,6 +84,25 @@ export default function BeforeAfterToggle({ item }: { item: CaseItem }) {
           }}>
           {view === "before" ? "BEFORE" : "AFTER"}
         </div>
+        {item.price && (
+          <div
+            className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg px-3 py-2"
+            style={{
+              background: "rgba(255,255,255,0.94)",
+              boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+              backdropFilter: "blur(8px)",
+            }}>
+            <span className="text-[12px] font-bold" style={{ color: "#6b7684" }}>
+              작업 비용
+            </span>
+            <span className="h-4 w-px" style={{ background: "#e5e8eb" }} />
+            <span
+              className="font-black leading-none"
+              style={{ color: "#3182f6", fontSize: "clamp(2rem, 6vw, 2.5rem)" }}>
+              {item.price}
+            </span>
+          </div>
+        )}
       </div>
     </>
   );

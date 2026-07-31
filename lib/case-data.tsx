@@ -30,6 +30,7 @@ export interface CaseItem {
   afterImg: string;
   blogUrl: string;
   date: string;
+  price?: string;
   tags: string[];
 }
 
@@ -69,6 +70,43 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 
 export const cases: CaseItem[] = [
   {
+    id: "case-099",
+    category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
+    title: "마포구 싱크대 문짝 교체, PET 포그그레이로 정리한 상하부장",
+    region: "서울 마포구",
+    summary:
+      "마포구에서 노후화된 싱크대 상하부장 문짝 전체를 교체한 사례입니다. 기존 주방 형태는 유지하고, PET 제로조인트 포그그레이 문짝을 맞춤 제작해 앞면을 정리했습니다.",
+    content: `
+마포구 싱크대 문짝 교체 사례입니다.
+
+기존 문짝은 오래 사용하면서 주방 전체를 낡아 보이게 하고 있었습니다.
+사진으로 문짝 형태와 상하부장 교체 범위를 먼저 확인한 뒤, 현장을 방문해 문짝별 치수를 실측했습니다.
+
+이번 현장은 싱크대 몸통과 상판까지 모두 철거하는 대신, 기존 문짝만 분리하고 새 문짝을 설치하는 방향으로 진행했습니다.
+PET 제로조인트 포그그레이 문짝을 규격에 맞춰 제작한 뒤, 기존 문짝 철거와 새 문짝 설치를 진행했습니다.
+
+설치 후에는 문 사이 간격과 높이가 한쪽으로 몰리지 않도록 경첩을 조절하고 상하부장 선이 자연스럽게 이어지도록 수평을 맞췄습니다.
+기존 주방의 형태는 유지하면서도, 앞면의 색상과 마감이 바뀌어 주방 첫인상이 차분하게 정리됐습니다.
+
+싱크대가 오래돼 보인다고 해서 항상 전체를 바꿔야 하는 것은 아닙니다.
+사진 보내주시면 먼저 상태를 확인해드리겠습니다.
+`,
+    beforeImg: "/images/cases/case-099-before.jpg",
+    afterImg: "/images/cases/case-099-after.png",
+    blogUrl: "https://blog.naver.com/sofaresq/224364236641",
+    date: "2026-07-31",
+    tags: [
+      "마포구 싱크대 문짝 교체",
+      "마포구 싱크대 리폼",
+      "서울 싱크대 문짝 교체",
+      "싱크대 상하부장 문짝 교체",
+      "PET 제로조인트 포그그레이",
+      "싱크대 리폼",
+      "리스토리 스튜디오",
+    ],
+  },
+  {
     id: "case-098",
     category: "싱크대 리폼",
     parentCategory: "싱크대 리폼",
@@ -105,6 +143,7 @@ PET 포그 그레이 문짝으로 제작했습니다.
     afterImg: "/images/cases/case-098-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224361996383",
     date: "2026-07-29",
+    price: "52만원",
     tags: [
       "성동구 싱크대 하부장 문짝 교체",
       "성동구 싱크대 문짝 교체",
@@ -450,6 +489,7 @@ PET 포그 그레이 문짝으로 제작했습니다.
     afterImg: "/images/cases/case-090-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224351162104",
     date: "2026-07-17",
+    price: "91만원",
     tags: [
       "잠실 싱크대 문짝 교체",
       "잠실 싱크대 리폼",
@@ -1229,6 +1269,8 @@ UV 하이그로시 문짝을 분리했습니다.
     afterImg: "/images/cases/case-082-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224344799597",
     date: "2026-07-13",
+    price: "23만원",
+
     tags: [
       "송파구 싱크대 문짝 교체",
       "송파구 싱크대 리폼",
@@ -2647,6 +2689,7 @@ PB 시공목이 약해지거나,
     afterImg: "/images/cases/case-073-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224331610985",
     date: "2026-06-30",
+    price: "110만원",
     tags: [
       "싱크대 문짝 교체",
       "싱크대 도어 교체",
@@ -2796,6 +2839,7 @@ PB 시공목이 약해지거나,
     afterImg: "/images/cases/case-072-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224330344732",
     date: "2026-06-29",
+    price: "78만원",
     tags: [
       "싱크대 문짝 교체",
       "주방 문짝 교체",
@@ -4386,6 +4430,7 @@ A/S는 가능한지까지 함께 확인해야
     afterImg: "/images/cases/case-055-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224174874666",
     date: "2026-06-15",
+    price: "13만원",
     tags: [
       "주방 문짝 교체",
       "주방 문짝 제작",
@@ -5087,6 +5132,7 @@ PET 제로조인트 도어를 사용해
     afterImg: "/images/door/before-after-7.png",
     blogUrl: "https://blog.naver.com/sofaresq/224306662990",
     date: "2026-06-05",
+    price: "73만원",
     tags: [
       "싱크대 리폼", // 서비스
       "문짝 노후", // 증상
@@ -5796,6 +5842,7 @@ PET 제로조인트 도어를 사용해
     afterImg: "/images/cases/case-019-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223853692269",
     date: "2026-05-19",
+    price: "32만원",
     tags: [
       "싱크대 리폼",
       "주방 리폼",
@@ -6074,6 +6121,7 @@ PET 제로조인트 도어를 사용해
     afterImg: "/images/cases/case-009-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115/224259313207",
     date: "2026-04-20",
+    price: "39만원",
     tags: ["문짝 교체", "싱크대 리폼"],
   },
   {
@@ -6144,6 +6192,7 @@ PET 제로조인트 도어를 사용해
     afterImg: "/images/cases/case-003-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115",
     date: "2026-05-05",
+    price: "39만원",
     tags: ["문짝교체", "변색", "리폼"],
   },
   {
@@ -6158,6 +6207,7 @@ PET 제로조인트 도어를 사용해
     afterImg: "/images/cases/case-004-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115",
     date: "2026-04-28",
+    price: "12만원",
     tags: ["상판", "스크래치", "리폼"],
   },
   {
