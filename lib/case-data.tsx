@@ -96,6 +96,7 @@ PET 제로조인트 포그그레이 문짝을 규격에 맞춰 제작한 뒤, �
     afterImg: "/images/cases/case-099-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224364236641",
     date: "2026-07-31",
+    price: "78만원",
     tags: [
       "마포구 싱크대 문짝 교체",
       "마포구 싱크대 리폼",
