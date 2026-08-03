@@ -38,8 +38,21 @@ const SYSTEM_PROMPT = `너는 리스토리 카카오톡 상담 챗봇이다.
 type KakaoSkillRequest = {
   userRequest?: {
     utterance?: unknown;
+    user?: {
+      id?: unknown;
+    };
   };
 };
+
+type ConversationContext = {
+  hasPhoto: boolean;
+  hasArea: boolean;
+  issue: "upper-cabinet" | "kitchen-door" | "other" | null;
+  updatedAt: number;
+};
+
+const CONTEXT_TTL_MS = 30 * 60 * 1000;
+const conversationContexts = new Map<string, ConversationContext>();
 
 function kakaoResponse(text: string) {
   const answer = text.slice(0, 700);
@@ -58,15 +71,96 @@ function getUtterance(body: KakaoSkillRequest): string {
   return typeof utterance === "string" ? utterance.trim() : "";
 }
 
+function getUserKey(body: KakaoSkillRequest): string | null {
+  const userId = body.userRequest?.user?.id;
+  return typeof userId === "string" && userId.trim() ? userId : null;
+}
+
+function getConversationContext(userKey: string | null): ConversationContext {
+  if (!userKey) {
+    return { hasPhoto: false, hasArea: false, issue: null, updatedAt: Date.now() };
+  }
+
+  const existing = conversationContexts.get(userKey);
+  if (existing && Date.now() - existing.updatedAt < CONTEXT_TTL_MS) {
+    return existing;
+  }
+
+  if (conversationContexts.size >= 500) {
+    const now = Date.now();
+    for (const [key, value] of conversationContexts) {
+      if (now - value.updatedAt >= CONTEXT_TTL_MS) conversationContexts.delete(key);
+    }
+  }
+
+  const context = { hasPhoto: false, hasArea: false, issue: null, updatedAt: Date.now() };
+  conversationContexts.set(userKey, context);
+  return context;
+}
+
+function rememberConversation(
+  userKey: string | null,
+  context: ConversationContext,
+  utterance: string,
+) {
+  const normalized = utterance.replace(/\s+/g, " ").trim();
+  context.hasPhoto ||= includesAny(normalized, ["사진", "보냈", "첨부"]);
+  context.hasArea ||= includesAny(normalized, [
+    "서울",
+    "경기",
+    "인천",
+    "부천",
+    "고양",
+    "일산",
+    "파주",
+    "하남",
+    "성남",
+    "분당",
+    "용인",
+    "수원",
+    "안양",
+    "과천",
+    "광명",
+    "시흥",
+    "안산",
+    "화성",
+    "평택",
+    "남양주",
+    "구리",
+    "의정부",
+    "제주",
+  ]);
+  if (includesAny(normalized, ["상부장", "처짐", "떨어질", "흔들", "내려왔"])) {
+    context.issue = "upper-cabinet";
+  } else if (includesAny(normalized, ["싱크대", "문짝", "하부장", "상부장"])) {
+    context.issue = "kitchen-door";
+  } else if (normalized && context.issue === null) {
+    context.issue = "other";
+  }
+  context.updatedAt = Date.now();
+  if (userKey) conversationContexts.set(userKey, context);
+}
+
 function includesAny(text: string, words: string[]) {
   return words.some((word) => text.includes(word));
 }
 
-function getDirectReply(utterance: string): string | null {
+function getDirectReply(
+  utterance: string,
+  context: ConversationContext,
+): string | null {
   const normalized = utterance.replace(/\s+/g, " ").trim();
   const lower = normalized.toLowerCase();
-  const hasPhoto = includesAny(normalized, ["사진", "보냈", "첨부"]);
-  const hasArea = includesAny(normalized, [
+  const hasPhoto = context.hasPhoto;
+  const hasArea = context.hasArea;
+  const hasRepeatedReplyComplaint = includesAny(normalized, [
+    "같은말",
+    "반복",
+    "말이 자꾸",
+    "사진과설명했",
+    "사진과 설명했",
+  ]);
+  const hasAreaInMessage = includesAny(normalized, [
     "서울",
     "경기",
     "인천",
@@ -92,6 +186,10 @@ function getDirectReply(utterance: string): string | null {
     "제주",
   ]);
 
+  if (hasRepeatedReplyComplaint) {
+    return "맞습니다. 이미 보내주신 내용을 다시 요청해 불편을 드렸습니다. 사진·지역·증상은 이 채팅에 남아 있으니 추가로 보내실 필요 없습니다. 상담원 확인 전에는 확정 견적을 안내하지 않는 점 양해 부탁드립니다.";
+  }
+
   if (/^(시작|시작하기|안내|사용 안내|help|홈)$/i.test(lower)) {
     return HOME_TEXT;
   }
@@ -109,8 +207,12 @@ function getDirectReply(utterance: string): string | null {
   }
 
   if (includesAny(normalized, ["가격", "비용", "견적", "얼마", "금액"])) {
+    if (hasPhoto && hasArea) {
+      return "사진과 지역은 확인된 것으로 보고, 추가 자료를 다시 요청하지 않겠습니다. 자재·수량·고정 상태를 상담원이 확인한 뒤 수리 가능 범위와 예상 비용을 안내드립니다.";
+    }
+
     if (hasPhoto) {
-      return "사진 기준으로 먼저 수리·교체 범위와 예상 비용을 확인해드리겠습니다. 자재, 수량, 현장 상태에 따라 달라질 수 있어 확인 전에는 금액을 확정하지 않는 점 양해 부탁드립니다.";
+      return "사진은 확인된 것으로 보고, 지역만 알려주시면 상담원이 수리·교체 가능 범위와 예상 비용을 확인해드리겠습니다.";
     }
 
     return "비용은 수리 범위와 자재에 따라 달라집니다. 전체 사진과 문제 부위 사진, 지역을 보내주시면 먼저 가능한 방법과 예상 비용 범위를 확인해드리겠습니다.";
@@ -125,16 +227,27 @@ function getDirectReply(utterance: string): string | null {
   }
 
   if (includesAny(normalized, ["상부장", "처짐", "떨어질", "흔들"])) {
+    if (hasPhoto && hasArea) {
+      return "상부장 처짐으로 접수했습니다. 안전을 위해 무리하게 사용하지 말아주세요. 사진과 지역 정보는 다시 보내지 않으셔도 되며, 상담원이 보강 또는 수리 가능 범위와 견적을 확인합니다.";
+    }
     return "상부장 처짐은 안전을 위해 무리하게 사용하지 않는 편이 좋습니다. 상부장 전체와 처진 부위 사진, 지역을 보내주시면 보강 또는 수리 가능 여부부터 확인해드리겠습니다.";
   }
 
-  if (includesAny(normalized, ["지역", "출장", "어디", "가능 지역"]) || (hasArea && normalized.length < 25)) {
-    return hasArea
-      ? "보내주신 지역은 상담원이 작업 가능 범위를 확인해드리겠습니다. 문제 부위가 보이는 사진과 전체 사진을 보내주시면 함께 검토하겠습니다."
+  if (includesAny(normalized, ["지역", "출장", "어디", "가능 지역"]) || (hasAreaInMessage && normalized.length < 25)) {
+    return hasAreaInMessage
+      ? hasPhoto
+        ? "지역은 접수했습니다. 사진도 이미 보내셨다면 더 보내지 않으셔도 됩니다. 문제 부위만 한 줄로 남겨주시면 상담원이 확인 가능한 범위를 안내드립니다."
+        : "보내주신 지역은 상담원이 작업 가능 범위를 확인해드리겠습니다. 문제 부위가 보이는 사진 한 장을 보내주시면 함께 검토하겠습니다."
       : "서울·인천·경기 지역을 중심으로 상담하고 있습니다. 정확한 가능 여부는 지역과 사진을 함께 보내주시면 확인해드리겠습니다.";
   }
 
   if (hasPhoto) {
+    if (hasArea && context.issue === "upper-cabinet") {
+      return "사진과 지역, 상부장 처짐 내용은 접수했습니다. 같은 자료를 다시 보내실 필요 없습니다. 안전을 위해 상부장은 무리하게 사용하지 말아주시고, 상담원이 보강 또는 수리 가능 범위를 확인합니다.";
+    }
+    if (hasArea) {
+      return "사진과 지역은 접수했습니다. 이미 보낸 사진을 다시 보내실 필요 없습니다. 문제 부위나 원하시는 작업만 한 줄로 남겨주시면 상담원이 확인 가능한 범위를 안내드립니다.";
+    }
     return "사진 확인했습니다. 사진만으로 확정 진단은 어렵지만, 먼저 수리·교체 가능 범위를 살펴보겠습니다. 아직 지역을 안 보내주셨다면 시·구 정도만 함께 남겨주세요.";
   }
 
@@ -167,12 +280,15 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as KakaoSkillRequest;
     const utterance = getUtterance(body);
+    const userKey = getUserKey(body);
+    const context = getConversationContext(userKey);
 
     if (!utterance) {
       return kakaoResponse(FALLBACK_TEXT);
     }
 
-    const directReply = getDirectReply(utterance);
+    rememberConversation(userKey, context, utterance);
+    const directReply = getDirectReply(utterance, context);
     if (directReply) {
       return kakaoResponse(directReply);
     }
