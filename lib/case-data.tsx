@@ -70,6 +70,31 @@ export const CASE_CATEGORIES: CaseCategory[] = [
 
 export const cases: CaseItem[] = [
   {
+    id: "case-102",
+    category: "싱크대 리폼",
+    parentCategory: "싱크대 리폼",
+    title: "강서구 화곡동 싱크대 하부장 문짝 교체, 물에 불어 터진 도어 부분 교체 사례",
+    region: "서울 강서구 화곡동",
+    summary:
+      "물에 불어 벌어진 싱크대 하부장 MDF 문짝과 경첩부 상태를 확인한 뒤, 손상된 도어만 보강 후 교체한 사례입니다.",
+    content: `
+강서구 화곡동 싱크대 하부장 문짝 교체 사례입니다.
+
+하부장 문짝이 물을 먹어 부풀고 가장자리가 벌어진 상태였습니다. 사진과 현장 상태를 확인한 결과, 손상된 문짝뿐 아니라 측판의 경첩 고정부도 함께 점검이 필요한 상황이었습니다.
+
+이번 작업은 싱크대 전체를 교체하지 않고 손상된 하부장 도어만 새로 맞추는 방향으로 진행했습니다. 불어난 측판의 경첩 구멍은 목다보로 보강한 뒤, 기존 주방과 어울리도록 UV 하이그로시 문짝을 적용했습니다.
+
+수분으로 부푼 MDF 문짝은 겉면만 정리해서 원래 상태로 되돌리기 어려울 수 있습니다. 다만 손상 범위와 몸통, 경첩부 상태에 따라 필요한 부분만 교체할 수 있는지 먼저 살펴볼 수 있습니다.
+
+사진 보내주시면 먼저 상태를 확인해드리겠습니다.
+`,
+    beforeImg: "/images/cases/case-102-before.jpg",
+    afterImg: "/images/cases/case-102-after.png",
+    blogUrl: "https://blog.naver.com/sofaresq/224168837668",
+    date: "2026-02-02",
+    tags: ["싱크대 문짝 교체", "하부장 문짝", "MDF 수분 팽창", "부분 교체"],
+  },
+  {
     id: "case-101",
     category: "소파 복원",
     parentCategory: "소파 복원",
