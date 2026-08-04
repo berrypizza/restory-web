@@ -92,6 +92,7 @@ export const cases: CaseItem[] = [
     afterImg: "/images/cases/case-102-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224168837668",
     date: "2026-02-02",
+    price: "27만원",
     tags: ["싱크대 문짝 교체", "하부장 문짝", "MDF 수분 팽창", "부분 교체"],
   },
   {
