@@ -92,6 +92,7 @@ export const cases: CaseItem[] = [
     afterImg: "/images/cases/case-104-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224373743978",
     date: "2026-08-10",
+    price: "97만원",
     tags: [
       "성동구 싱크대 문짝 교체",
       "성동구 싱크대 리폼",
