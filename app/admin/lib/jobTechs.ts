@@ -15,7 +15,7 @@ export function getExtraTechsFromMemo(memo?: string | null): Tech[] {
 }
 
 export function getVisibleMemo(memo?: string | null) {
-  return (memo || "").replace(EXTRA_TECHS_RE, "").trim();
+  return (memo || "").replace(EXTRA_TECHS_RE, "");
 }
 
 export function setExtraTechsInMemo(memo: string | null | undefined, techs: Tech[]) {
@@ -23,7 +23,7 @@ export function setExtraTechsInMemo(memo: string | null | undefined, techs: Tech
   const uniqueTechs = Array.from(new Set(techs.filter(Boolean)));
   if (uniqueTechs.length === 0) return visibleMemo;
   const marker = `<!--RESTORY_EXTRA_TECHS:${encodeURIComponent(JSON.stringify(uniqueTechs))}-->`;
-  return visibleMemo ? `${visibleMemo}\n\n${marker}` : marker;
+  return visibleMemo.trim() ? `${visibleMemo}\n\n${marker}` : marker;
 }
 
 export function getJobTechs(job: Pick<Job, "tech" | "memo">) {

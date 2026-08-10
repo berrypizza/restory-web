@@ -786,7 +786,7 @@ export default function JobCard({
           )}
 
           {/* 메모 — 현장 특이사항이라 항상 노출 */}
-          {visibleMemo && (
+          {visibleMemo.trim() && (
             <div
               className="rounded-xl px-3 py-2.5"
               style={{
