@@ -234,7 +234,7 @@ export default function EventDetailPage() {
               💬 이벤트 참여 · 카카오톡 상담
             </a>
             <a
-              href="tel:010-9127-3024"
+              href="tel:16882957"
               className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-black text-white"
               style={{
                 background: "linear-gradient(to right, #1f66ff, #4f8fff)",

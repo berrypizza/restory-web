@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHONE = "tel:010-6855-0957";
+const PHONE = "tel:16882957";
 
 export default function HeroSection() {
   return (

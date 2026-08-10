@@ -74,7 +74,7 @@ export default function Footer() {
                 gap: 8,
               }}>
               <a
-                href="tel:010-6855-0957"
+                href="tel:16882957"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -89,7 +89,7 @@ export default function Footer() {
                   className="h-[24px] w-[24px] object-contain md:h-[56px] md:w-[56px]"
                 />{" "}
                 <span style={{ fontSize: 13, color: "#888" }}>
-                  010-6855-0957{" "}
+                  16882957{" "}
                 </span>
               </a>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

@@ -51,7 +51,7 @@ export async function generateMetadata({
   };
 }
 
-const PHONE = "tel:010-6855-0957";
+const PHONE = "tel:16882957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
 export default async function CaseDetailPage({
@@ -91,7 +91,7 @@ export default async function CaseDetailPage({
       "@type": "LocalBusiness",
       name: "리스토리 스튜디오",
       url: "https://www.restorystudio.co.kr",
-      telephone: "010-6855-0957",
+      telephone: "16882957",
       address: {
         "@type": "PostalAddress",
         addressLocality: item.region,

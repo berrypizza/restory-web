@@ -135,7 +135,7 @@ function parseMarkdown(md: string): string {
   return result.join("\n");
 }
 
-const PHONE = "tel:010-6855-0957";
+const PHONE = "tel:16882957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 const PHOTO_URL = "http://pf.kakao.com/_hQExjX/chat";
 

@@ -95,7 +95,7 @@ export default function ContactCTA() {
                 📷 사진 접수
               </a>
               <a
-                href="tel:010-6855-0957"
+                href="tel:16882957"
                 className="rounded-xl px-5 py-3.5 font-semibold text-center transition-opacity hover:opacity-80"
                 style={{
                   border: "1px solid #e5e5e5",
