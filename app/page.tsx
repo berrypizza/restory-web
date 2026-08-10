@@ -7,7 +7,6 @@ import EventBanner from "./components/EventBanner";
 import BottomCTA from "./components/BottomCTA";
 import FloatingCTA from "./components/landing/shared/FloatingCTA";
 import type { Metadata } from "next";
-import HiddenSEO from "./components/HiddenSEO";
 
 export const metadata: Metadata = {
   title: "리스토리 Re'Story - 가구 출장 수리 리폼 전문",
@@ -29,7 +28,6 @@ export default function MainPage() {
       <EventBanner />
       <BottomCTA />
       <FloatingCTA />
-      <HiddenSEO />
     </main>
   );
 }
