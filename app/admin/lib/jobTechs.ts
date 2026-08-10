@@ -1,7 +1,8 @@
 import type { Job } from "./types";
 import type { Tech } from "./constants";
 
-const EXTRA_TECHS_RE = /\n?<!--RESTORY_EXTRA_TECHS:(.*?)-->\n?/;
+const EXTRA_TECHS_RE = /<!--RESTORY_EXTRA_TECHS:(.*?)-->/;
+const EXTRA_TECHS_LINE_RE = /(?:\n<!--RESTORY_EXTRA_TECHS:.*?-->\n?|^<!--RESTORY_EXTRA_TECHS:.*?-->\n?)/;
 
 export function getExtraTechsFromMemo(memo?: string | null): Tech[] {
   const match = (memo || "").match(EXTRA_TECHS_RE);
@@ -15,7 +16,7 @@ export function getExtraTechsFromMemo(memo?: string | null): Tech[] {
 }
 
 export function getVisibleMemo(memo?: string | null) {
-  return (memo || "").replace(EXTRA_TECHS_RE, "");
+  return (memo || "").replace(EXTRA_TECHS_LINE_RE, "");
 }
 
 export function setExtraTechsInMemo(memo: string | null | undefined, techs: Tech[]) {
@@ -23,7 +24,7 @@ export function setExtraTechsInMemo(memo: string | null | undefined, techs: Tech
   const uniqueTechs = Array.from(new Set(techs.filter(Boolean)));
   if (uniqueTechs.length === 0) return visibleMemo;
   const marker = `<!--RESTORY_EXTRA_TECHS:${encodeURIComponent(JSON.stringify(uniqueTechs))}-->`;
-  return visibleMemo.trim() ? `${visibleMemo}\n\n${marker}` : marker;
+  return visibleMemo.length > 0 ? `${visibleMemo}\n${marker}` : marker;
 }
 
 export function getJobTechs(job: Pick<Job, "tech" | "memo">) {
