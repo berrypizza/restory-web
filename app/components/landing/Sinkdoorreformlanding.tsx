@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
-import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
+import { ServiceJsonLd } from "@/app/components/JsonLd";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
 
@@ -14,24 +14,36 @@ const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
 const FAQ_ITEMS = [
   {
-    q: "문짝만 교체해도 새것처럼 되나요?",
-    a: "네. 싱크대 본체(캐비닛)가 멀쩡하면 문짝만 교체해도 새 싱크대처럼 바뀝니다. 색상·재질도 원하는 대로 선택 가능합니다.",
+    q: "싱크대 문짝 교체 비용은 어떻게 계산되나요?",
+    a: "문짝 개수와 자재 종류, 서랍·양념통 앞판 수량을 기준으로 계산합니다.\n\n현재 기준으로 UV 하이그로시 백색 유광 문짝은 1개 5만 원, 서랍·양념통 앞판은 1개 3만 원입니다. PET 제로조인트 무광 문짝은 1개 6만 5천 원, 서랍·양념통 앞판은 1개 4만 원이며 출장비 3만 원이 별도로 있습니다.\n\n상·하부장 전체 교체 비용은 문짝과 앞판 수량을 합산해 계산하며, 정확한 수량과 최종 금액은 방문 실측 후 확정합니다.",
   },
   {
-    q: "전체 교체 대비 비용은 얼마나 절약되나요?",
-    a: "보통 전체 교체의 1/3~1/5 수준입니다. 사진 보내주시면 정확한 비용 범위를 안내드립니다.",
+    q: "싱크대 전체를 철거하지 않고 문짝만 교체할 수 있나요?",
+    a: "싱크대 몸통이 물에 불지 않았고, 경첩을 고정하는 부분과 내부 판재를 계속 사용할 수 있다면 기존 몸통은 두고 문짝만 교체할 수 있습니다.\n\n몸통에 심한 물먹음이나 파손, 뒤틀림이 있다면 문짝만 교체하기 어려울 수 있어 방문 실측 때 상태를 함께 확인합니다.",
   },
   {
-    q: "시공 시간은 얼마나 걸리나요?",
-    a: "문짝 교체 기준 약 1~2시간 소요됩니다. 당일 시공 완료되며, 바로 사용 가능합니다.",
+    q: "문짝만 바꿔도 주방 분위기가 달라지나요?",
+    a: "주방에서 가장 넓게 보이는 부분이 문짝이기 때문에 색상과 광택을 바꾸면 전체 분위기도 크게 달라질 수 있습니다.\n\n다만 상판과 타일, 싱크대 몸통과 주방 배치는 그대로 유지됩니다. 전체 철거가 아니라 사용할 수 있는 구조는 살리고, 눈에 보이는 전면부를 바꾸는 방식입니다.",
   },
   {
-    q: "기존 싱크대 색상과 맞출 수 있나요?",
-    a: "화이트·그레이·블랙·인디고 블루 등 다양한 색상 샘플을 보유하고 있어 기존 주방 인테리어에 맞게 선택하실 수 있습니다.",
+    q: "기존 싱크대 색상과 비슷하게 제작할 수 있나요?",
+    a: "색상 샘플을 확인한 뒤 기존 싱크대와 비슷한 계열로 선택하거나, 상부장과 하부장을 서로 다른 색으로 구성할 수 있습니다.\n\n오래 사용한 문짝은 변색되어 있을 수 있고 조명에 따라서도 색이 다르게 보이기 때문에, 기존 문짝과 정확히 동일한 색상으로 맞추기 어려운 경우도 있습니다.",
   },
   {
-    q: "A/S는 어떻게 되나요?",
-    a: "시공 후 3년간 무상 A/S를 제공합니다. 문짝 들뜸, 경첩 문제 등 무상으로 재시공해드립니다.",
+    q: "문짝 교체 시 경첩도 같이 교체하나요?",
+    a: "기존 경첩을 전부 제거한 후 댐핑 원터치 경첩으로 무상 교체해드립니다.",
+  },
+  {
+    q: "실측 후 제작과 설치까지 얼마나 걸리나요?",
+    a: "사진을 먼저 확인한 뒤 현장을 방문해 문짝 규격을 실측합니다.\n\n실측일 기준으로 문짝 제작에는 영업일 3~5일 정도가 걸리며, 설치 당일 현장 작업은 일반적으로 약 2~3시간 정도 진행됩니다. 문짝 수량과 현장 구조에 따라 설치 시간은 달라질 수 있습니다.",
+  },
+  {
+    q: "사진만 보내도 견적 확인이 가능한가요?",
+    a: "문짝의 색상과 상태가 가까이 보이는 사진 1장, 주방 전체가 보이는 사진 1장과 함께 작업 지역과 교체를 원하는 범위를 보내주시면 예상 가능한 범위를 먼저 안내합니다.\n\n사진으로 문짝 수량과 대략적인 작업 범위를 확인할 수 있지만, 정확한 규격과 몸통 상태, 최종 금액은 방문 실측 후 확정합니다.",
+  },
+  {
+    q: "A/S는 어떻게 진행되나요?",
+    a: "시공 부위는 작업일 기준 3년 무상 A/S를 적용합니다.\n\n다만 외부 충격이나 물먹음, 기존 싱크대 몸통의 파손처럼 시공과 직접적인 관련이 없는 원인은 사진과 현장 상태를 확인한 뒤 A/S 적용 범위를 구분합니다.",
   },
 ];
 
@@ -267,7 +279,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             : "https://www.restorystudio.co.kr/kitchen/sink-door"
         }
       />
-      <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
       <section
@@ -1223,8 +1234,8 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                   </button>
                   <div
                     className="overflow-hidden transition-all duration-300"
-                    style={{ maxHeight: openFaq === i ? 160 : 0 }}>
-                    <p className="px-5 pb-4 pt-1 text-[13px] leading-[1.75] text-neutral-500 border-t border-neutral-100">
+                    style={{ maxHeight: openFaq === i ? 620 : 0 }}>
+                    <p className="whitespace-pre-line px-5 pb-4 pt-1 text-[13px] leading-[1.75] text-neutral-500 border-t border-neutral-100">
                       {f.a}
                     </p>
                   </div>
