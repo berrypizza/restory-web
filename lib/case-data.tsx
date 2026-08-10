@@ -88,7 +88,7 @@ export const cases: CaseItem[] = [
 
 싱크대가 오래돼 보인다고 해서 항상 전체를 바꿔야 하는 것은 아닙니다. 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
-    beforeImg: "/images/cases/case-104-before.jpg",
+    beforeImg: "/images/cases/case-104-before-v2.jpg",
     afterImg: "/images/cases/case-104-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224373743978",
     date: "2026-08-10",
