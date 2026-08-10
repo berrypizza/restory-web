@@ -10,7 +10,7 @@ import { FAQJsonLd, ServiceJsonLd } from "@/app/components/JsonLd";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
 
-const PHONE = "tel:16882957";
+const PHONE = "tel:1688-2957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
 const FAQ_ITEMS = [
@@ -1147,7 +1147,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
                   border: "1px solid rgba(255,255,255,0.12)",
                   padding: "16px 24px",
                 }}>
-                16882957
+                1688-2957
               </a>
             </div>
           </FadeIn>

@@ -69,7 +69,7 @@ export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
               {nl(line.description)}
             </p>
             <a
-              href="tel:16882957"
+              href="tel:1688-2957"
               className="flex items-center gap-2 mb-5"
               style={{ textDecoration: "none" }}></a>
             <a
@@ -182,7 +182,7 @@ export function ServiceLandingPage({
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="tel:16882957"
+              href="tel:1688-2957"
               className="rounded-2xl px-6 py-4 text-center text-sm font-black text-white"
               style={{
                 background: "linear-gradient(to right, #1f66ff, #4f8fff)",

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHONE = "tel:16882957";
+const PHONE = "tel:1688-2957";
 
 export default function BottomCTA() {
   return (
@@ -37,7 +37,7 @@ export default function BottomCTA() {
             <span
               className="text-2xl font-black md:text-4xl"
               style={{ color: "#1f66ff" }}>
-              16882957
+              1688-2957
             </span>
           </a>
           <a

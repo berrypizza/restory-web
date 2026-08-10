@@ -142,7 +142,7 @@ export default function PainPointCards() {
             사진 보내고 바로 확인
           </a>
           <a
-            href="tel:16882957"
+            href="tel:1688-2957"
             className="flex items-center justify-center gap-2 rounded-2xl px-8 py-4 text-[15px] font-bold w-full sm:w-auto"
             style={{ border: "1px solid #e5e7eb", color: "#374151" }}>
             📞 전화로 물어보기

@@ -72,7 +72,7 @@ export default function Navbar() {
             </div>
 
             <a
-              href="tel:16882957"
+              href="tel:1688-2957"
               className="hidden md:inline-flex rounded-xl bg-neutral-100 px-4 py-2 text-xs font-black text-neutral-800">
               전화문의
             </a>

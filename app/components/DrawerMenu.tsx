@@ -91,7 +91,7 @@ const serviceIcons: Record<
   ],
 };
 
-const PHONE = "tel:16882957";
+const PHONE = "tel:1688-2957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
 
@@ -376,7 +376,7 @@ export default function DrawerMenu() {
                       전화 상담
                     </span>
                     <span className="ml-auto text-[13px] font-semibold text-[#1f66ff]">
-                      16882957{" "}
+                      1688-2957{" "}
                     </span>
                   </a>
                 </div>

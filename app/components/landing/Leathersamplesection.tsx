@@ -5,7 +5,7 @@ import Image from "next/image";
 import FadeIn from "@/app/components/FadeIn";
 
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHONE = "tel:16882957";
+const PHONE = "tel:1688-2957";
 
 // 카탈로그별 대표 색상 — 실제 이미지 기반
 const CATALOGS = [

@@ -12,7 +12,7 @@ import { REGIONS } from "@/lib/seo-regions";
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
-const PHONE = "tel:16882957";
+const PHONE = "tel:1688-2957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 
 const FAQ_ITEMS = [
@@ -1176,7 +1176,7 @@ export default function HabujangLanding({ keyword }: Props) {
                   border: "1px solid rgba(255,255,255,0.12)",
                   padding: "16px 24px",
                 }}>
-                📞 16882957
+                📞 1688-2957
               </a>
             </div>
             <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
