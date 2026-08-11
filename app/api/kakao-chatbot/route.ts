@@ -6,10 +6,34 @@ export const maxDuration = 5;
 const AI_RESPONSE_TIMEOUT_MS = 1800;
 
 const FALLBACK_TEXT =
-  "안녕하세요, 리스토리입니다. 문제 부위가 보이는 사진과 전체 사진, 지역을 보내주시면 수리 또는 교체 가능 여부부터 확인해드리겠습니다.";
+  "정확한 확인이 필요한 내용이에요.\n아래 [✅ 담당자에게 문의하기] 버튼을 눌러주시면 담당자가 직접 확인해드릴게요.";
 
 const HOME_TEXT =
-  "안녕하세요, 리스토리입니다.\n\n사진 한 장으로 수리·리폼 가능 여부를 먼저 확인해드립니다.\n문제 부위 사진, 전체 사진, 지역을 보내주세요.";
+  "안녕하세요, 리스토리입니다.\n\n사진 한 장으로 수리·리폼 가능 여부를 먼저 확인해드립니다.\n문제 부위 사진, 전체 사진, 지역을 보내주세요.\n\n사진을 보내주셨다면 마지막으로 아래 [✅ 사진 상담 접수하기] 버튼을 눌러주세요.\n버튼을 눌러야 담당자가 사진을 확인할 수 있습니다.";
+
+const CONSULTATION_TRIGGER_TEXT = "상담직원 연결";
+const PHOTO_RECEIVED_TEXT =
+  "사진이 전송되었습니다.\n\n아래 [✅ 사진 상담 접수하기] 버튼까지 눌러야 상담 접수가 완료됩니다.\n버튼을 눌러야 담당자가 사진을 확인할 수 있습니다.";
+const PHOTO_CONSULT_INSTRUCTION =
+  "\n\n사진을 보내주셨다면 아래 [✅ 사진 상담 접수하기] 버튼을 눌러주세요.\n버튼을 눌러야 담당자가 사진을 확인할 수 있습니다.";
+
+type QuickReply = {
+  label: string;
+  action: "message";
+  messageText: string;
+};
+
+const PHOTO_CONSULT_QUICK_REPLY: QuickReply = {
+  label: "✅ 사진 상담 접수하기",
+  action: "message",
+  messageText: CONSULTATION_TRIGGER_TEXT,
+};
+
+const STAFF_CONSULT_QUICK_REPLY: QuickReply = {
+  label: "✅ 담당자에게 문의하기",
+  action: "message",
+  messageText: CONSULTATION_TRIGGER_TEXT,
+};
 
 const SYSTEM_PROMPT = `너는 리스토리 카카오톡 상담 챗봇이다.
 
@@ -54,21 +78,66 @@ type ConversationContext = {
 const CONTEXT_TTL_MS = 30 * 60 * 1000;
 const conversationContexts = new Map<string, ConversationContext>();
 
-function kakaoResponse(text: string) {
+function kakaoResponse(text: string, quickReply: QuickReply = STAFF_CONSULT_QUICK_REPLY) {
   const answer = text.slice(0, 700);
 
   return NextResponse.json({
     version: "2.0",
     template: {
       outputs: [{ simpleText: { text: answer } }],
+      quickReplies: [quickReply],
     },
     data: { answer },
   });
 }
 
+function photoConsultResponse(text: string) {
+  const answer = text.includes("사진 상담 접수하기")
+    ? text
+    : `${text.slice(0, 520)}${PHOTO_CONSULT_INSTRUCTION}`;
+  return kakaoResponse(answer, PHOTO_CONSULT_QUICK_REPLY);
+}
+
 function getUtterance(body: KakaoSkillRequest): string {
   const utterance = body.userRequest?.utterance;
   return typeof utterance === "string" ? utterance.trim() : "";
+}
+
+function requestHasMedia(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+
+  if (Array.isArray(value)) {
+    return value.some((item) => requestHasMedia(item));
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    const normalizedKey = key.toLowerCase();
+    if (
+      normalizedKey.includes("image") ||
+      normalizedKey.includes("photo") ||
+      normalizedKey.includes("media") ||
+      normalizedKey.includes("file")
+    ) {
+      return true;
+    }
+    if (typeof child === "string") {
+      const normalizedValue = child.toLowerCase();
+      if (
+        normalizedValue.includes("image/") ||
+        normalizedValue.includes("photo") ||
+        normalizedValue.includes("media") ||
+        normalizedValue.includes(".jpg") ||
+        normalizedValue.includes(".jpeg") ||
+        normalizedValue.includes(".png") ||
+        normalizedValue.includes(".webp")
+      ) {
+        return true;
+      }
+    }
+    if (requestHasMedia(child)) return true;
+  }
+
+  return false;
 }
 
 function getUserKey(body: KakaoSkillRequest): string | null {
@@ -104,7 +173,20 @@ function rememberConversation(
   utterance: string,
 ) {
   const normalized = utterance.replace(/\s+/g, " ").trim();
-  context.hasPhoto ||= includesAny(normalized, ["사진", "보냈", "첨부"]);
+  context.hasPhoto ||= includesAny(normalized, [
+    "사진 보냈",
+    "사진보냈",
+    "사진 보냄",
+    "사진 첨부",
+    "사진첨부",
+    "사진 전송",
+    "사진전송",
+    "사진 올렸",
+    "사진올렸",
+    "첨부했",
+    "전송했",
+    "보내드렸",
+  ]);
   context.hasArea ||= includesAny(normalized, [
     "서울",
     "경기",
@@ -282,15 +364,34 @@ export async function POST(request: Request) {
     const utterance = getUtterance(body);
     const userKey = getUserKey(body);
     const context = getConversationContext(userKey);
+    const hasMedia = requestHasMedia(body);
 
     if (!utterance) {
+      if (hasMedia) {
+        context.hasPhoto = true;
+        context.updatedAt = Date.now();
+        if (userKey) conversationContexts.set(userKey, context);
+        return photoConsultResponse(PHOTO_RECEIVED_TEXT);
+      }
       return kakaoResponse(FALLBACK_TEXT);
     }
 
     rememberConversation(userKey, context, utterance);
+    if (hasMedia) {
+      context.hasPhoto = true;
+      context.updatedAt = Date.now();
+      if (userKey) conversationContexts.set(userKey, context);
+    }
+
+    if (context.hasPhoto && (context.hasArea || includesAny(utterance, ["상담", "접수", "담당자", "연결"]))) {
+      return photoConsultResponse(PHOTO_RECEIVED_TEXT);
+    }
+
     const directReply = getDirectReply(utterance, context);
     if (directReply) {
-      return kakaoResponse(directReply);
+      return context.hasPhoto
+        ? photoConsultResponse(directReply)
+        : kakaoResponse(directReply);
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
@@ -319,7 +420,10 @@ export async function POST(request: Request) {
       AI_RESPONSE_TIMEOUT_MS,
     );
 
-    return kakaoResponse(response.output_text.trim() || FALLBACK_TEXT);
+    const aiText = response.output_text.trim() || FALLBACK_TEXT;
+    return context.hasPhoto
+      ? photoConsultResponse(aiText)
+      : kakaoResponse(aiText);
   } catch (error) {
     const reason = error instanceof Error ? error.message : "UNKNOWN_ERROR";
     console.error("KAKAO_CHATBOT_ERROR", { reason });
