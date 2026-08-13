@@ -455,22 +455,32 @@ export default function ExpenseTab({
         className="rounded-2xl"
         style={{
           backgroundColor: "#ffffff",
-          border: `1px solid ${activeMeta.color}22`,
+          border: "1px solid #cbd5e1",
+          boxShadow: "0 10px 28px rgba(15,23,42,0.06)",
           overflow: "hidden",
         }}>
-        <div className="px-5 py-4" style={{ backgroundColor: activeMeta.softBg }}>
+        <div
+          className="px-5 py-4"
+          style={{
+            backgroundColor: activeMeta.softBg,
+            borderBottom: "1px solid #dbe4f0",
+          }}>
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-lg font-black" style={{ color: "#111827" }}>
                 {activeMeta.title}
               </h2>
-              <p className="text-xs mt-1" style={{ color: "#64748b" }}>
+              <p className="text-sm mt-1 font-bold" style={{ color: "#64748b" }}>
                 {activeMeta.subtitle}
               </p>
             </div>
             <span
-              className="text-sm font-black px-3 py-1 rounded-full"
-              style={{ color: activeMeta.color, backgroundColor: "#ffffff" }}>
+              className="text-base font-black px-3 py-1 rounded-full"
+              style={{
+                color: activeMeta.color,
+                backgroundColor: "#ffffff",
+                border: "1px solid #dbe4f0",
+              }}>
               {formatWon(groupTotal(activeGroup))}
             </span>
           </div>
@@ -490,28 +500,28 @@ export default function ExpenseTab({
             return (
               <div
                 key={key}
-                className="px-5 py-5"
+                className="px-5 py-6"
                 style={{
-                  borderTop: index > 0 ? "1px solid #f1f5f9" : "none",
+                  borderTop: index > 0 ? "1px solid #dbe4f0" : "none",
                 }}>
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div>
-                    <p className="text-base font-black" style={{ color: "#111827" }}>
+                    <p className="text-lg font-black" style={{ color: "#111827" }}>
                       {item.label}
                     </p>
-                    <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
+                    <p className="text-sm mt-1 font-bold" style={{ color: "#64748b" }}>
                       {item.helper} · {itemEntries.length}건
                     </p>
                   </div>
                   <span
-                    className="text-base font-black text-right"
-                    style={{ color: itemTotal > 0 ? "#111827" : "#cbd5e1" }}>
+                    className="text-lg font-black text-right"
+                    style={{ color: itemTotal > 0 ? activeMeta.color : "#64748b" }}>
                     {formatWon(itemTotal)}
                   </span>
                 </div>
 
-                <div className="flex flex-col gap-2 mb-4">
-                  <label className="text-xs font-bold" style={{ color: "#64748b" }}>
+                <div className="flex flex-col gap-2.5 mb-4">
+                  <label className="text-sm font-black" style={{ color: "#334155" }}>
                     추가할 금액
                   </label>
                   <input
@@ -524,31 +534,32 @@ export default function ExpenseTab({
                         amount: toAmount(e.target.value),
                       })
                     }
-                    placeholder="0"
-                    className="w-full rounded-xl px-4 py-3 text-right text-lg font-black"
+                    placeholder="금액"
+                    className="w-full rounded-xl px-4 py-3.5 text-right text-xl font-black placeholder:text-slate-500"
                     style={{
-                      backgroundColor: "#f8fafc",
-                      border: "1px solid #e5e7eb",
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #cbd5e1",
                       color: "#111827",
                       outline: "none",
+                      boxShadow: "inset 0 1px 2px rgba(15,23,42,0.04)",
                     }}
                   />
                   <input
                     value={draftRow.memo}
                     onChange={(e) => updateDraft(key, { memo: e.target.value })}
                     placeholder="메모 선택 입력"
-                    className="w-full rounded-xl px-4 py-3 text-sm"
+                    className="w-full rounded-xl px-4 py-3.5 text-base font-bold placeholder:text-slate-500"
                     style={{
                       backgroundColor: "#ffffff",
-                      border: "1px solid #eef2f7",
-                      color: "#475569",
+                      border: "1px solid #dbe4f0",
+                      color: "#334155",
                       outline: "none",
                     }}
                   />
                   <button
                     onClick={() => addExpense(item)}
                     disabled={draftRow.amount <= 0 || Boolean(savingKey)}
-                    className="w-full rounded-xl py-3 text-sm font-black"
+                    className="w-full rounded-xl py-3.5 text-base font-black"
                     style={{
                       backgroundColor:
                         draftRow.amount > 0 && !savingKey
@@ -562,8 +573,12 @@ export default function ExpenseTab({
 
                 {itemEntries.length === 0 ? (
                   <div
-                    className="rounded-xl px-4 py-3 text-sm"
-                    style={{ backgroundColor: "#f8fafc", color: "#94a3b8" }}>
+                    className="rounded-xl px-4 py-3.5 text-base font-bold"
+                    style={{
+                      backgroundColor: "#f8fafc",
+                      border: "1px solid #dbe4f0",
+                      color: "#64748b",
+                    }}>
                     아직 추가된 내역이 없어요.
                   </div>
                 ) : (
@@ -576,28 +591,29 @@ export default function ExpenseTab({
                     {itemEntries.map((row) => (
                       <div
                         key={row.id}
-                        className="flex items-center justify-between gap-3 rounded-xl px-4 py-3"
+                        className="flex items-center justify-between gap-3 rounded-xl px-4 py-3.5"
                         style={{
-                          backgroundColor: "#f8fafc",
-                          border: "1px solid #eef2f7",
+                          backgroundColor: "#ffffff",
+                          border: "1px solid #dbe4f0",
+                          boxShadow: "0 3px 10px rgba(15,23,42,0.04)",
                         }}>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <span
-                              className="text-sm font-black"
+                              className="text-lg font-black"
                               style={{ color: "#111827" }}>
                               {formatWon(row.amount || 0)}
                             </span>
                             <span
-                              className="text-[11px] font-bold"
-                              style={{ color: "#94a3b8" }}>
+                              className="text-sm font-black"
+                              style={{ color: "#64748b" }}>
                               {shortDate(row.created_at)}
                             </span>
                           </div>
                           {row.memo && (
                             <p
-                              className="text-xs truncate mt-1"
-                              style={{ color: "#64748b" }}>
+                              className="text-sm font-bold truncate mt-1"
+                              style={{ color: "#475569" }}>
                               {row.memo}
                             </p>
                           )}
@@ -605,10 +621,11 @@ export default function ExpenseTab({
                         <button
                           onClick={() => removeExpense(row)}
                           disabled={Boolean(savingKey)}
-                          className="text-xs font-bold px-2.5 py-1.5 rounded-lg"
+                          className="text-sm font-black px-3 py-2 rounded-lg"
                           style={{
                             color: "#ef4444",
                             backgroundColor: "#fef2f2",
+                            border: "1px solid #fee2e2",
                             flexShrink: 0,
                           }}>
                           삭제
