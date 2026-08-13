@@ -7,8 +7,8 @@ import Image from "next/image";
 
 import type { Job } from "./lib/types";
 import type { Status, Tech } from "./lib/constants";
-import { TECHS, TECH_COLOR, TECH_PHOTO, USERS } from "./lib/constants";
-import { nowKST, today, thisYearMonth, addOneYear } from "./lib/utils";
+import { TECH_COLOR, TECH_PHOTO, USERS } from "./lib/constants";
+import { nowKST, thisYearMonth } from "./lib/utils";
 import { jobHasTech } from "./lib/jobTechs";
 
 import { useJobs, emptyForm, formFromJob } from "./hooks/useJobs";
@@ -16,38 +16,8 @@ import JobForm from "./components/JobForm";
 import CalendarTab from "./tabs/CalendarTab";
 import StatsTab from "./tabs/StatsTab";
 import ListTab from "./tabs/ListTab";
-import RouteTab from "./tabs/RouteTab";
 import MaterialTab from "./tabs/MaterialTab";
-
-// ── 공통 서브컴포넌트 ─────────────────────────────────────────
-function TechFilterSelect({
-  value,
-  onChange,
-}: {
-  value: Tech | "전체";
-  onChange: (v: Tech | "전체") => void;
-}) {
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value as Tech | "전체")}
-      className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
-      style={{
-        backgroundColor:
-          value !== "전체" ? TECH_COLOR[value] + "22" : "#ffffff",
-        color: value !== "전체" ? TECH_COLOR[value] : "#475569",
-        border: `1px solid ${value !== "전체" ? TECH_COLOR[value] + "44" : "#e5e7eb"}`,
-        outline: "none",
-      }}>
-      <option value="전체">전체 기사</option>
-      {TECHS.map((t) => (
-        <option key={t} value={t}>
-          {t}
-        </option>
-      ))}
-    </select>
-  );
-}
+import ExpenseTab from "./tabs/ExpenseTab";
 
 // ── 메인 ─────────────────────────────────────────────────────
 export default function AdminDashboard() {
@@ -62,18 +32,21 @@ export default function AdminDashboard() {
   const [calTechFilter, setCalTechFilter] = useState<Tech | "전체">("전체");
 
   useEffect(() => {
-    try {
-      const expiry = localStorage.getItem("restory_admin_expiry");
-      const name = localStorage.getItem("restory_logged_name");
-      if (expiry && Date.now() < parseInt(expiry) && name) {
-        setLoggedUser(name);
-        const savedUser = USERS.find((u) => u.name === name);
-        if (savedUser?.role !== "admin") {
-          setTechFilter(name as Tech);
-          setCalTechFilter(name as Tech);
+    const timer = window.setTimeout(() => {
+      try {
+        const expiry = localStorage.getItem("restory_admin_expiry");
+        const name = localStorage.getItem("restory_logged_name");
+        if (expiry && Date.now() < parseInt(expiry) && name) {
+          setLoggedUser(name);
+          const savedUser = USERS.find((u) => u.name === name);
+          if (savedUser?.role !== "admin") {
+            setTechFilter(name as Tech);
+            setCalTechFilter(name as Tech);
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const currentUser = USERS.find((u) => u.name === loggedUser);
@@ -84,11 +57,10 @@ export default function AdminDashboard() {
     useJobs(loggedUser);
 
   // 탭/필터
-  const [tab, setTab] = useState<"동선" | "전체" | "달력" | "통계" | "자재">(
+  const [tab, setTab] = useState<"비용" | "전체" | "달력" | "통계" | "자재">(
     "달력",
   );
   const [statusFilter, setStatusFilter] = useState<Status | "전체">("전체");
-  const [dateFilter, setDateFilter] = useState(today());
   const [monthFilter, setMonthFilter] = useState(thisYearMonth());
   const [calYear, setCalYear] = useState(nowKST().getFullYear());
   const [calMonth, setCalMonth] = useState(nowKST().getMonth());
@@ -187,7 +159,6 @@ export default function AdminDashboard() {
   };
 
   const filtered = jobs.filter((j) => {
-    if (tab === "동선" && j.visit_date !== dateFilter) return false;
     if (
       tab === "전체" &&
       !hasSearchQuery &&
@@ -426,7 +397,7 @@ export default function AdminDashboard() {
             border: "1px solid #e5e7eb",
             boxShadow: "0 2px 10px rgba(15,23,42,0.04)",
           }}>
-          {(["달력", "동선", "전체", "자재", "통계"] as const).map((t) => (
+          {(["달력", "비용", "전체", "자재", "통계"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -529,17 +500,13 @@ export default function AdminDashboard() {
           />
         )}
 
-        {!loading && tab === "동선" && (
-          <RouteTab
-            jobs={jobs}
-            dateFilter={dateFilter}
-            setDateFilter={setDateFilter}
-            techFilter={techFilter}
-            setTechFilter={setTechFilter}
+        {!loading && tab === "비용" && (
+          <ExpenseTab
+            monthFilter={monthFilter}
+            setMonthFilter={setMonthFilter}
+            doneMonth={doneMonth}
+            revenue={revenue}
             isAdmin={isAdmin}
-            loggedUser={loggedUser}
-            jobsByDate={jobsByDate}
-            TechFilterSelect={TechFilterSelect}
           />
         )}
 
