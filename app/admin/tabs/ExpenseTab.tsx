@@ -14,6 +14,7 @@ type ExpenseItem = {
 };
 
 type ExpenseDraft = Record<string, { amount: number; memo: string }>;
+type ExpenseEntries = Record<string, BusinessExpenseRow[]>;
 
 type BusinessExpenseRow = {
   id: string;
@@ -22,6 +23,8 @@ type BusinessExpenseRow = {
   category: string;
   amount: number | null;
   memo: string | null;
+  created_at: string;
+  updated_at: string | null;
 };
 
 interface ExpenseTabProps {
@@ -78,6 +81,13 @@ function emptyDraft(): ExpenseDraft {
   }, {});
 }
 
+function emptyEntries(): ExpenseEntries {
+  return EXPENSE_ITEMS.reduce<ExpenseEntries>((acc, item) => {
+    acc[expenseKey(item)] = [];
+    return acc;
+  }, {});
+}
+
 function toAmount(value: string) {
   return Number(value.replace(/[^\d]/g, "")) || 0;
 }
@@ -85,6 +95,15 @@ function toAmount(value: string) {
 function rate(value: number, base: number) {
   if (base <= 0) return 0;
   return Math.round((value / base) * 1000) / 10;
+}
+
+function shortDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("ko-KR", {
+    month: "numeric",
+    day: "numeric",
+  });
 }
 
 export default function ExpenseTab({
@@ -95,8 +114,9 @@ export default function ExpenseTab({
   isAdmin,
 }: ExpenseTabProps) {
   const [draft, setDraft] = useState<ExpenseDraft>(() => emptyDraft());
+  const [rows, setRows] = useState<BusinessExpenseRow[]>([]);
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [savingKey, setSavingKey] = useState<string | null>(null);
   const [tableError, setTableError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
 
@@ -108,29 +128,17 @@ export default function ExpenseTab({
     const { data, error } = await getSupabase()
       .from("business_expenses")
       .select("*")
-      .eq("expense_month", monthFilter);
+      .eq("expense_month", monthFilter)
+      .order("created_at", { ascending: false });
 
     if (error) {
       setTableError(error.message);
-      setDraft(emptyDraft());
+      setRows([]);
       setLoading(false);
       return;
     }
 
-    const next = emptyDraft();
-    (data as BusinessExpenseRow[] | null)?.forEach((row) => {
-      const key = expenseKey({
-        group: row.group_key,
-        category: row.category,
-      });
-      if (!next[key]) return;
-      next[key] = {
-        amount: row.amount ?? 0,
-        memo: row.memo ?? "",
-      };
-    });
-
-    setDraft(next);
+    setRows((data as BusinessExpenseRow[] | null) ?? []);
     setLoading(false);
   };
 
@@ -142,17 +150,26 @@ export default function ExpenseTab({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthFilter, isAdmin]);
 
+  const entries = useMemo(() => {
+    const next = emptyEntries();
+    rows.forEach((row) => {
+      const key = expenseKey({
+        group: row.group_key,
+        category: row.category,
+      });
+      if (!next[key]) return;
+      next[key].push(row);
+    });
+    return next;
+  }, [rows]);
+
   const totals = useMemo(() => {
-    const material = EXPENSE_ITEMS.filter((item) => item.group === "material")
-      .map((item) => draft[expenseKey(item)]?.amount || 0)
-      .reduce((sum, amount) => sum + amount, 0);
-
-    const marketing = EXPENSE_ITEMS.filter(
-      (item) => item.group === "marketing",
-    )
-      .map((item) => draft[expenseKey(item)]?.amount || 0)
-      .reduce((sum, amount) => sum + amount, 0);
-
+    const material = rows
+      .filter((row) => row.group_key === "material")
+      .reduce((sum, row) => sum + (row.amount || 0), 0);
+    const marketing = rows
+      .filter((row) => row.group_key === "marketing")
+      .reduce((sum, row) => sum + (row.amount || 0), 0);
     const totalExpense = material + marketing;
     const profit = revenue - totalExpense;
 
@@ -164,7 +181,7 @@ export default function ExpenseTab({
       expenseRate: rate(totalExpense, revenue),
       profitRate: rate(profit, revenue),
     };
-  }, [draft, revenue]);
+  }, [rows, revenue]);
 
   const changeMonth = (delta: number) => {
     const d = new Date(monthFilter + "-01");
@@ -185,38 +202,54 @@ export default function ExpenseTab({
     }));
   };
 
-  const saveExpenses = async () => {
-    setSaving(true);
+  const addExpense = async (item: ExpenseItem) => {
+    const key = expenseKey(item);
+    const row = draft[key] ?? { amount: 0, memo: "" };
+    if (row.amount <= 0) return;
+
+    setSavingKey(key);
     setTableError(null);
 
-    const payload = EXPENSE_ITEMS.map((item) => {
-      const key = expenseKey(item);
-      const row = draft[key] ?? { amount: 0, memo: "" };
-      return {
-        expense_month: monthFilter,
-        group_key: item.group,
-        category: item.category,
-        amount: row.amount || 0,
-        memo: row.memo.trim() || null,
-        updated_at: new Date().toISOString(),
-      };
+    const { error } = await getSupabase().from("business_expenses").insert({
+      expense_month: monthFilter,
+      group_key: item.group,
+      category: item.category,
+      amount: row.amount,
+      memo: row.memo.trim() || null,
     });
-
-    const { error } = await getSupabase()
-      .from("business_expenses")
-      .upsert(payload, {
-        onConflict: "expense_month,group_key,category",
-      });
 
     if (error) {
       setTableError(error.message);
-      setSaving(false);
+      setSavingKey(null);
       return;
     }
 
+    updateDraft(key, { amount: 0, memo: "" });
     setSavedAt(new Date().toLocaleTimeString("ko-KR", { hour12: false }));
-    setSaving(false);
+    setSavingKey(null);
     loadExpenses();
+  };
+
+  const removeExpense = async (row: BusinessExpenseRow) => {
+    if (!window.confirm(`${formatPrice(row.amount || 0)} 내역을 삭제할까요?`))
+      return;
+
+    setSavingKey(row.id);
+    setTableError(null);
+
+    const { error } = await getSupabase()
+      .from("business_expenses")
+      .delete()
+      .eq("id", row.id);
+
+    if (error) {
+      setTableError(error.message);
+      setSavingKey(null);
+      return;
+    }
+
+    setRows((prev) => prev.filter((item) => item.id !== row.id));
+    setSavingKey(null);
   };
 
   const summaryCards = [
@@ -290,7 +323,7 @@ export default function ExpenseTab({
           }}>
           <p className="font-bold mb-1">Supabase 비용 테이블 확인 필요</p>
           <p>
-            `docs/admin-business-expenses.sql`을 Supabase SQL Editor에서 한 번
+            `docs/admin-business-expenses.sql`을 Supabase SQL Editor에서 다시
             실행하면 저장이 가능해요.
           </p>
         </div>
@@ -353,9 +386,9 @@ export default function ExpenseTab({
       {(["material", "marketing"] as const).map((group) => {
         const meta = GROUP_META[group];
         const items = EXPENSE_ITEMS.filter((item) => item.group === group);
-        const groupTotal = items
-          .map((item) => draft[expenseKey(item)]?.amount || 0)
-          .reduce((sum, amount) => sum + amount, 0);
+        const groupTotal = rows
+          .filter((row) => row.group_key === group)
+          .reduce((sum, row) => sum + (row.amount || 0), 0);
 
         return (
           <section
@@ -386,60 +419,149 @@ export default function ExpenseTab({
               </span>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-5">
               {items.map((item) => {
                 const key = expenseKey(item);
-                const row = draft[key] ?? { amount: 0, memo: "" };
+                const draftRow = draft[key] ?? { amount: 0, memo: "" };
+                const itemEntries = entries[key] ?? [];
+                const itemTotal = itemEntries.reduce(
+                  (sum, row) => sum + (row.amount || 0),
+                  0,
+                );
+                const isSaving = savingKey === key;
+
                 return (
                   <div
                     key={key}
-                    className="grid gap-2"
                     style={{
-                      gridTemplateColumns: "minmax(88px, 0.8fr) minmax(0, 1fr)",
+                      borderTop: "1px solid #f1f5f9",
+                      paddingTop: 16,
                     }}>
-                    <div>
-                      <p
-                        className="text-sm font-bold"
-                        style={{ color: "#111827" }}>
-                        {item.label}
-                      </p>
-                      <p className="text-xs" style={{ color: "#94a3b8" }}>
-                        {item.helper}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <input
-                        inputMode="numeric"
-                        value={row.amount ? row.amount.toLocaleString() : ""}
-                        onChange={(e) =>
-                          updateDraft(key, {
-                            amount: toAmount(e.target.value),
-                          })
-                        }
-                        placeholder="0"
-                        className="w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold"
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <p
+                          className="text-sm font-bold"
+                          style={{ color: "#111827" }}>
+                          {item.label}
+                        </p>
+                        <p className="text-xs" style={{ color: "#94a3b8" }}>
+                          {item.helper}
+                        </p>
+                      </div>
+                      <span
+                        className="text-xs font-black px-2.5 py-1 rounded-full"
                         style={{
-                          backgroundColor: "#f8fafc",
-                          border: "1px solid #e5e7eb",
-                          color: "#111827",
-                          outline: "none",
-                        }}
-                      />
-                      <input
-                        value={row.memo}
-                        onChange={(e) =>
-                          updateDraft(key, { memo: e.target.value })
-                        }
-                        placeholder="메모"
-                        className="w-full rounded-xl px-3 py-2 text-xs"
-                        style={{
-                          backgroundColor: "#ffffff",
-                          border: "1px solid #eef2f7",
-                          color: "#64748b",
-                          outline: "none",
-                        }}
-                      />
+                          color: meta.color,
+                          backgroundColor: meta.color + "12",
+                        }}>
+                        {formatPrice(itemTotal)}
+                      </span>
                     </div>
+
+                    <div
+                      className="grid gap-2 mb-3"
+                      style={{ gridTemplateColumns: "minmax(0, 1fr) 76px" }}>
+                      <div className="flex flex-col gap-2">
+                        <input
+                          inputMode="numeric"
+                          value={
+                            draftRow.amount
+                              ? draftRow.amount.toLocaleString()
+                              : ""
+                          }
+                          onChange={(e) =>
+                            updateDraft(key, {
+                              amount: toAmount(e.target.value),
+                            })
+                          }
+                          placeholder="금액"
+                          className="w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold"
+                          style={{
+                            backgroundColor: "#f8fafc",
+                            border: "1px solid #e5e7eb",
+                            color: "#111827",
+                            outline: "none",
+                          }}
+                        />
+                        <input
+                          value={draftRow.memo}
+                          onChange={(e) =>
+                            updateDraft(key, { memo: e.target.value })
+                          }
+                          placeholder="메모"
+                          className="w-full rounded-xl px-3 py-2 text-xs"
+                          style={{
+                            backgroundColor: "#ffffff",
+                            border: "1px solid #eef2f7",
+                            color: "#64748b",
+                            outline: "none",
+                          }}
+                        />
+                      </div>
+                      <button
+                        onClick={() => addExpense(item)}
+                        disabled={draftRow.amount <= 0 || Boolean(savingKey)}
+                        className="rounded-xl text-sm font-black"
+                        style={{
+                          backgroundColor:
+                            draftRow.amount > 0 && !savingKey
+                              ? meta.color
+                              : "#cbd5e1",
+                          color: "white",
+                        }}>
+                        {isSaving ? "저장" : "추가"}
+                      </button>
+                    </div>
+
+                    {itemEntries.length === 0 ? (
+                      <p className="text-xs" style={{ color: "#cbd5e1" }}>
+                        추가 내역 없음
+                      </p>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        {itemEntries.map((row) => (
+                          <div
+                            key={row.id}
+                            className="flex items-center justify-between gap-2 rounded-xl px-3 py-2"
+                            style={{
+                              backgroundColor: "#f8fafc",
+                              border: "1px solid #eef2f7",
+                            }}>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="text-sm font-black"
+                                  style={{ color: "#111827" }}>
+                                  {formatPrice(row.amount || 0)}
+                                </span>
+                                <span
+                                  className="text-[11px]"
+                                  style={{ color: "#94a3b8" }}>
+                                  {shortDate(row.created_at)}
+                                </span>
+                              </div>
+                              {row.memo && (
+                                <p
+                                  className="text-xs truncate"
+                                  style={{ color: "#64748b" }}>
+                                  {row.memo}
+                                </p>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => removeExpense(row)}
+                              disabled={Boolean(savingKey)}
+                              className="text-xs font-bold px-2 py-1 rounded-lg"
+                              style={{
+                                color: "#ef4444",
+                                backgroundColor: "#fef2f2",
+                              }}>
+                              삭제
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -448,22 +570,15 @@ export default function ExpenseTab({
         );
       })}
 
-      <button
-        onClick={saveExpenses}
-        disabled={saving || loading || Boolean(tableError)}
-        className="rounded-2xl py-3 text-sm font-black text-white"
-        style={{
-          background:
-            saving || loading || tableError
-              ? "#cbd5e1"
-              : "linear-gradient(to right, #1f66ff, #4f8fff)",
-        }}>
-        {saving ? "저장 중..." : "비용 저장"}
-      </button>
+      {loading && (
+        <p className="text-center text-xs" style={{ color: "#94a3b8" }}>
+          불러오는 중...
+        </p>
+      )}
 
       {savedAt && (
         <p className="text-center text-xs" style={{ color: "#94a3b8" }}>
-          {savedAt} 저장됨
+          {savedAt} 추가됨
         </p>
       )}
     </div>

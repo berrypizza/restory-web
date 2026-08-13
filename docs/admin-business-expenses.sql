@@ -6,9 +6,14 @@ create table if not exists public.business_expenses (
   amount integer not null default 0 check (amount >= 0),
   memo text,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  unique (expense_month, group_key, category)
+  updated_at timestamptz not null default now()
 );
+
+alter table public.business_expenses
+drop constraint if exists business_expenses_expense_month_group_key_category_key;
+
+create index if not exists business_expenses_month_group_category_idx
+on public.business_expenses (expense_month, group_key, category, created_at desc);
 
 alter table public.business_expenses enable row level security;
 
