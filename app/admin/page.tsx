@@ -422,39 +422,41 @@ export default function AdminDashboard() {
         </div>
 
         {/* 검색 */}
-        <div className="relative mb-4">
-          <span
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base pointer-events-none"
-            style={{ color: "#94a3b8" }}>
-            🔍
-          </span>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="이름, 전화번호, 지역, 증상으로 검색"
-            style={{
-              width: "100%",
-              backgroundColor: "#ffffff",
-              border: `1px solid ${searchQuery ? "#a9c4ff" : "#f3f4f6"}`,
-              borderRadius: 12,
-              padding: "10px 36px 10px 38px",
-              color: "#1f66ff",
-              fontSize: 14,
-              outline: "none",
-              fontFamily: "inherit",
-              boxSizing: "border-box",
-            }}
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold"
-              style={{ backgroundColor: "#dbe3f0", color: "#6b7280" }}>
-              ✕
-            </button>
-          )}
-        </div>
+        {tab !== "비용" && (
+          <div className="relative mb-4">
+            <span
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base pointer-events-none"
+              style={{ color: "#94a3b8" }}>
+              🔍
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="이름, 전화번호, 지역, 증상으로 검색"
+              style={{
+                width: "100%",
+                backgroundColor: "#ffffff",
+                border: `1px solid ${searchQuery ? "#a9c4ff" : "#f3f4f6"}`,
+                borderRadius: 12,
+                padding: "10px 36px 10px 38px",
+                color: "#1f66ff",
+                fontSize: 14,
+                outline: "none",
+                fontFamily: "inherit",
+                boxSizing: "border-box",
+              }}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold"
+                style={{ backgroundColor: "#dbe3f0", color: "#6b7280" }}>
+                ✕
+              </button>
+            )}
+          </div>
+        )}
 
         {loading && (
           <div className="text-center py-20" style={{ color: "#94a3b8" }}>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Job } from "../lib/types";
-import { formatPrice, formatYearMonth, getSupabase } from "../lib/utils";
+import { formatYearMonth, getSupabase } from "../lib/utils";
 
 type ExpenseGroup = "material" | "marketing";
 
@@ -56,17 +56,19 @@ const EXPENSE_ITEMS: ExpenseItem[] = [
 
 const GROUP_META: Record<
   ExpenseGroup,
-  { title: string; subtitle: string; color: string }
+  { title: string; subtitle: string; color: string; softBg: string }
 > = {
   material: {
     title: "자재비",
     subtitle: "지엔, 스폰지, 가죽, 기타",
     color: "#1f66ff",
+    softBg: "#eff6ff",
   },
   marketing: {
     title: "마케팅비",
     subtitle: "네이버, 메타",
     color: "#8b5cf6",
+    softBg: "#f5f3ff",
   },
 };
 
@@ -92,6 +94,10 @@ function toAmount(value: string) {
   return Number(value.replace(/[^\d]/g, "")) || 0;
 }
 
+function formatWon(value: number) {
+  return `${value.toLocaleString("ko-KR")}원`;
+}
+
 function rate(value: number, base: number) {
   if (base <= 0) return 0;
   return Math.round((value / base) * 1000) / 10;
@@ -113,6 +119,7 @@ export default function ExpenseTab({
   revenue,
   isAdmin,
 }: ExpenseTabProps) {
+  const [activeGroup, setActiveGroup] = useState<ExpenseGroup>("material");
   const [draft, setDraft] = useState<ExpenseDraft>(() => emptyDraft());
   const [rows, setRows] = useState<BusinessExpenseRow[]>([]);
   const [loading, setLoading] = useState(false);
@@ -138,7 +145,11 @@ export default function ExpenseTab({
       return;
     }
 
-    setRows((data as BusinessExpenseRow[] | null) ?? []);
+    setRows(
+      ((data as BusinessExpenseRow[] | null) ?? []).filter(
+        (row) => (row.amount || 0) > 0,
+      ),
+    );
     setLoading(false);
   };
 
@@ -182,6 +193,11 @@ export default function ExpenseTab({
       profitRate: rate(profit, revenue),
     };
   }, [rows, revenue]);
+
+  const groupTotal = (group: ExpenseGroup) =>
+    rows
+      .filter((row) => row.group_key === group)
+      .reduce((sum, row) => sum + (row.amount || 0), 0);
 
   const changeMonth = (delta: number) => {
     const d = new Date(monthFilter + "-01");
@@ -231,7 +247,7 @@ export default function ExpenseTab({
   };
 
   const removeExpense = async (row: BusinessExpenseRow) => {
-    if (!window.confirm(`${formatPrice(row.amount || 0)} 내역을 삭제할까요?`))
+    if (!window.confirm(`${formatWon(row.amount || 0)} 내역을 삭제할까요?`))
       return;
 
     setSavingKey(row.id);
@@ -260,24 +276,23 @@ export default function ExpenseTab({
       color: "#1f66ff",
     },
     {
-      label: "자재비",
-      value: totals.material,
-      sub: `${rate(totals.material, revenue)}%`,
-      color: "#0f766e",
+      label: "총 비용",
+      value: totals.totalExpense,
+      sub: `비용률 ${totals.expenseRate}%`,
+      color: "#ef4444",
     },
     {
-      label: "마케팅비",
-      value: totals.marketing,
-      sub: `${rate(totals.marketing, revenue)}%`,
-      color: "#8b5cf6",
-    },
-    {
-      label: "순이익",
+      label: totals.profit >= 0 ? "남은 금액" : "초과 지출",
       value: totals.profit,
-      sub: `${totals.profitRate}%`,
+      sub: `순이익률 ${totals.profitRate}%`,
       color: totals.profit >= 0 ? "#16a34a" : "#ef4444",
     },
   ];
+
+  const activeItems = EXPENSE_ITEMS.filter(
+    (item) => item.group === activeGroup,
+  );
+  const activeMeta = GROUP_META[activeGroup];
 
   if (!isAdmin) {
     return (
@@ -292,22 +307,27 @@ export default function ExpenseTab({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <div
-        className="flex items-center justify-between rounded-xl p-1.5"
+        className="flex items-center justify-between rounded-2xl p-1.5"
         style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
         <button
           onClick={() => changeMonth(-1)}
-          className="px-4 py-2 rounded-lg text-xl font-bold"
+          className="px-4 py-2 rounded-xl text-xl font-bold"
           style={{ color: "#111827" }}>
           ‹
         </button>
-        <span className="text-sm font-bold" style={{ color: "#111827" }}>
-          {formatYearMonth(monthFilter)}
-        </span>
+        <div className="text-center">
+          <p className="text-xs font-bold" style={{ color: "#94a3b8" }}>
+            비용 장부
+          </p>
+          <span className="text-base font-black" style={{ color: "#111827" }}>
+            {formatYearMonth(monthFilter)}
+          </span>
+        </div>
         <button
           onClick={() => changeMonth(1)}
-          className="px-4 py-2 rounded-lg text-xl font-bold"
+          className="px-4 py-2 rounded-xl text-xl font-bold"
           style={{ color: "#111827" }}>
           ›
         </button>
@@ -329,246 +349,279 @@ export default function ExpenseTab({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
-        {summaryCards.map((card) => (
-          <div
-            key={card.label}
-            className="rounded-2xl p-4"
-            style={{
-              backgroundColor: "#ffffff",
-              border: "1px solid #e5e7eb",
-            }}>
+      <section
+        className="rounded-2xl p-5"
+        style={{
+          backgroundColor: "#ffffff",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 8px 24px rgba(15,23,42,0.05)",
+        }}>
+        <div className="flex items-start justify-between gap-3 mb-5">
+          <div>
+            <p className="text-xs font-bold mb-1" style={{ color: "#94a3b8" }}>
+              이번 달 손익
+            </p>
             <p
-              className="text-xs mb-2 font-medium"
-              style={{ color: "#64748b" }}>
-              {card.label}
-            </p>
-            <p className="text-xl font-black" style={{ color: card.color }}>
-              {formatPrice(card.value)}
-            </p>
-            <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
-              {card.sub}
+              className="text-3xl font-black leading-tight"
+              style={{ color: totals.profit >= 0 ? "#111827" : "#ef4444" }}>
+              {formatWon(totals.profit)}
             </p>
           </div>
-        ))}
-      </div>
-
-      <div
-        className="rounded-2xl p-4"
-        style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-bold" style={{ color: "#111827" }}>
-            총 비용
+          <span
+            className="text-xs font-black px-3 py-1.5 rounded-full"
+            style={{
+              color: totals.profit >= 0 ? "#16a34a" : "#ef4444",
+              backgroundColor: totals.profit >= 0 ? "#dcfce7" : "#fef2f2",
+            }}>
+            {totals.profitRate}%
           </span>
-          <span className="text-sm font-black" style={{ color: "#ef4444" }}>
-            {formatPrice(totals.totalExpense)}
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 mb-5">
+          {summaryCards.map((card) => (
+            <div
+              key={card.label}
+              className="rounded-xl p-3"
+              style={{ backgroundColor: "#f8fafc" }}>
+              <p
+                className="text-[11px] font-bold mb-1"
+                style={{ color: "#64748b" }}>
+                {card.label}
+              </p>
+              <p
+                className="text-sm font-black leading-snug break-keep"
+                style={{ color: card.color }}>
+                {formatWon(card.value)}
+              </p>
+              <p className="text-[11px] mt-1" style={{ color: "#94a3b8" }}>
+                {card.sub}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-xs font-bold" style={{ color: "#64748b" }}>
+            매출 대비 비용률
+          </span>
+          <span className="text-xs font-black" style={{ color: "#111827" }}>
+            {totals.expenseRate}%
           </span>
         </div>
         <div
-          className="h-3 rounded-full overflow-hidden"
+          className="h-2.5 rounded-full overflow-hidden"
           style={{ backgroundColor: "#e5e7eb" }}>
           <div
-            className="h-full"
+            className="h-full rounded-full"
             style={{
               width: `${Math.min(totals.expenseRate, 100)}%`,
               background: "linear-gradient(to right, #1f66ff, #8b5cf6)",
             }}
           />
         </div>
-        <div
-          className="flex items-center justify-between text-xs mt-2"
-          style={{ color: "#64748b" }}>
-          <span>매출 대비 비용률</span>
-          <span className="font-bold">{totals.expenseRate}%</span>
-        </div>
+      </section>
+
+      <div
+        className="grid grid-cols-2 gap-2 rounded-2xl p-1"
+        style={{ backgroundColor: "#e9eef7" }}>
+        {(["material", "marketing"] as const).map((group) => {
+          const meta = GROUP_META[group];
+          const selected = activeGroup === group;
+          return (
+            <button
+              key={group}
+              onClick={() => setActiveGroup(group)}
+              className="rounded-xl px-3 py-3 text-left"
+              style={{
+                backgroundColor: selected ? "#ffffff" : "transparent",
+                boxShadow: selected ? "0 4px 14px rgba(15,23,42,0.08)" : "none",
+              }}>
+              <span
+                className="block text-xs font-bold"
+                style={{ color: selected ? meta.color : "#64748b" }}>
+                {meta.title}
+              </span>
+              <span
+                className="block text-sm font-black mt-1"
+                style={{ color: selected ? "#111827" : "#64748b" }}>
+                {formatWon(groupTotal(group))}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {(["material", "marketing"] as const).map((group) => {
-        const meta = GROUP_META[group];
-        const items = EXPENSE_ITEMS.filter((item) => item.group === group);
-        const groupTotal = rows
-          .filter((row) => row.group_key === group)
-          .reduce((sum, row) => sum + (row.amount || 0), 0);
+      <section
+        className="rounded-2xl"
+        style={{
+          backgroundColor: "#ffffff",
+          border: `1px solid ${activeMeta.color}22`,
+          overflow: "hidden",
+        }}>
+        <div className="px-5 py-4" style={{ backgroundColor: activeMeta.softBg }}>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-black" style={{ color: "#111827" }}>
+                {activeMeta.title}
+              </h2>
+              <p className="text-xs mt-1" style={{ color: "#64748b" }}>
+                {activeMeta.subtitle}
+              </p>
+            </div>
+            <span
+              className="text-sm font-black px-3 py-1 rounded-full"
+              style={{ color: activeMeta.color, backgroundColor: "#ffffff" }}>
+              {formatWon(groupTotal(activeGroup))}
+            </span>
+          </div>
+        </div>
 
-        return (
-          <section
-            key={group}
-            className="rounded-2xl p-4"
-            style={{
-              backgroundColor: "#ffffff",
-              border: `1px solid ${meta.color}22`,
-            }}>
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h2
-                  className="text-base font-black"
-                  style={{ color: "#111827" }}>
-                  {meta.title}
-                </h2>
-                <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
-                  {meta.subtitle}
-                </p>
-              </div>
-              <span
-                className="text-sm font-black px-3 py-1 rounded-full"
+        <div className="flex flex-col">
+          {activeItems.map((item, index) => {
+            const key = expenseKey(item);
+            const draftRow = draft[key] ?? { amount: 0, memo: "" };
+            const itemEntries = entries[key] ?? [];
+            const itemTotal = itemEntries.reduce(
+              (sum, row) => sum + (row.amount || 0),
+              0,
+            );
+            const isSaving = savingKey === key;
+
+            return (
+              <div
+                key={key}
+                className="px-5 py-5"
                 style={{
-                  color: meta.color,
-                  backgroundColor: meta.color + "14",
+                  borderTop: index > 0 ? "1px solid #f1f5f9" : "none",
                 }}>
-                {formatPrice(groupTotal)}
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              {items.map((item) => {
-                const key = expenseKey(item);
-                const draftRow = draft[key] ?? { amount: 0, memo: "" };
-                const itemEntries = entries[key] ?? [];
-                const itemTotal = itemEntries.reduce(
-                  (sum, row) => sum + (row.amount || 0),
-                  0,
-                );
-                const isSaving = savingKey === key;
-
-                return (
-                  <div
-                    key={key}
-                    style={{
-                      borderTop: "1px solid #f1f5f9",
-                      paddingTop: 16,
-                    }}>
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div>
-                        <p
-                          className="text-sm font-bold"
-                          style={{ color: "#111827" }}>
-                          {item.label}
-                        </p>
-                        <p className="text-xs" style={{ color: "#94a3b8" }}>
-                          {item.helper}
-                        </p>
-                      </div>
-                      <span
-                        className="text-xs font-black px-2.5 py-1 rounded-full"
-                        style={{
-                          color: meta.color,
-                          backgroundColor: meta.color + "12",
-                        }}>
-                        {formatPrice(itemTotal)}
-                      </span>
-                    </div>
-
-                    <div
-                      className="grid gap-2 mb-3"
-                      style={{ gridTemplateColumns: "minmax(0, 1fr) 76px" }}>
-                      <div className="flex flex-col gap-2">
-                        <input
-                          inputMode="numeric"
-                          value={
-                            draftRow.amount
-                              ? draftRow.amount.toLocaleString()
-                              : ""
-                          }
-                          onChange={(e) =>
-                            updateDraft(key, {
-                              amount: toAmount(e.target.value),
-                            })
-                          }
-                          placeholder="금액"
-                          className="w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold"
-                          style={{
-                            backgroundColor: "#f8fafc",
-                            border: "1px solid #e5e7eb",
-                            color: "#111827",
-                            outline: "none",
-                          }}
-                        />
-                        <input
-                          value={draftRow.memo}
-                          onChange={(e) =>
-                            updateDraft(key, { memo: e.target.value })
-                          }
-                          placeholder="메모"
-                          className="w-full rounded-xl px-3 py-2 text-xs"
-                          style={{
-                            backgroundColor: "#ffffff",
-                            border: "1px solid #eef2f7",
-                            color: "#64748b",
-                            outline: "none",
-                          }}
-                        />
-                      </div>
-                      <button
-                        onClick={() => addExpense(item)}
-                        disabled={draftRow.amount <= 0 || Boolean(savingKey)}
-                        className="rounded-xl text-sm font-black"
-                        style={{
-                          backgroundColor:
-                            draftRow.amount > 0 && !savingKey
-                              ? meta.color
-                              : "#cbd5e1",
-                          color: "white",
-                        }}>
-                        {isSaving ? "저장" : "추가"}
-                      </button>
-                    </div>
-
-                    {itemEntries.length === 0 ? (
-                      <p className="text-xs" style={{ color: "#cbd5e1" }}>
-                        추가 내역 없음
-                      </p>
-                    ) : (
-                      <div className="flex flex-col gap-2">
-                        {itemEntries.map((row) => (
-                          <div
-                            key={row.id}
-                            className="flex items-center justify-between gap-2 rounded-xl px-3 py-2"
-                            style={{
-                              backgroundColor: "#f8fafc",
-                              border: "1px solid #eef2f7",
-                            }}>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className="text-sm font-black"
-                                  style={{ color: "#111827" }}>
-                                  {formatPrice(row.amount || 0)}
-                                </span>
-                                <span
-                                  className="text-[11px]"
-                                  style={{ color: "#94a3b8" }}>
-                                  {shortDate(row.created_at)}
-                                </span>
-                              </div>
-                              {row.memo && (
-                                <p
-                                  className="text-xs truncate"
-                                  style={{ color: "#64748b" }}>
-                                  {row.memo}
-                                </p>
-                              )}
-                            </div>
-                            <button
-                              onClick={() => removeExpense(row)}
-                              disabled={Boolean(savingKey)}
-                              className="text-xs font-bold px-2 py-1 rounded-lg"
-                              style={{
-                                color: "#ef4444",
-                                backgroundColor: "#fef2f2",
-                              }}>
-                              삭제
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <div>
+                    <p className="text-base font-black" style={{ color: "#111827" }}>
+                      {item.label}
+                    </p>
+                    <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
+                      {item.helper} · {itemEntries.length}건
+                    </p>
                   </div>
-                );
-              })}
-            </div>
-          </section>
-        );
-      })}
+                  <span
+                    className="text-base font-black text-right"
+                    style={{ color: itemTotal > 0 ? "#111827" : "#cbd5e1" }}>
+                    {formatWon(itemTotal)}
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-2 mb-4">
+                  <label className="text-xs font-bold" style={{ color: "#64748b" }}>
+                    추가할 금액
+                  </label>
+                  <input
+                    inputMode="numeric"
+                    value={
+                      draftRow.amount ? draftRow.amount.toLocaleString("ko-KR") : ""
+                    }
+                    onChange={(e) =>
+                      updateDraft(key, {
+                        amount: toAmount(e.target.value),
+                      })
+                    }
+                    placeholder="0"
+                    className="w-full rounded-xl px-4 py-3 text-right text-lg font-black"
+                    style={{
+                      backgroundColor: "#f8fafc",
+                      border: "1px solid #e5e7eb",
+                      color: "#111827",
+                      outline: "none",
+                    }}
+                  />
+                  <input
+                    value={draftRow.memo}
+                    onChange={(e) => updateDraft(key, { memo: e.target.value })}
+                    placeholder="메모 선택 입력"
+                    className="w-full rounded-xl px-4 py-3 text-sm"
+                    style={{
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #eef2f7",
+                      color: "#475569",
+                      outline: "none",
+                    }}
+                  />
+                  <button
+                    onClick={() => addExpense(item)}
+                    disabled={draftRow.amount <= 0 || Boolean(savingKey)}
+                    className="w-full rounded-xl py-3 text-sm font-black"
+                    style={{
+                      backgroundColor:
+                        draftRow.amount > 0 && !savingKey
+                          ? activeMeta.color
+                          : "#cbd5e1",
+                      color: "white",
+                    }}>
+                    {isSaving ? "추가 중..." : `${item.label} 비용 추가`}
+                  </button>
+                </div>
+
+                {itemEntries.length === 0 ? (
+                  <div
+                    className="rounded-xl px-4 py-3 text-sm"
+                    style={{ backgroundColor: "#f8fafc", color: "#94a3b8" }}>
+                    아직 추가된 내역이 없어요.
+                  </div>
+                ) : (
+                  <div
+                    className="flex flex-col gap-2"
+                    style={{
+                      maxHeight: itemEntries.length > 4 ? 240 : "none",
+                      overflowY: itemEntries.length > 4 ? "auto" : "visible",
+                    }}>
+                    {itemEntries.map((row) => (
+                      <div
+                        key={row.id}
+                        className="flex items-center justify-between gap-3 rounded-xl px-4 py-3"
+                        style={{
+                          backgroundColor: "#f8fafc",
+                          border: "1px solid #eef2f7",
+                        }}>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-sm font-black"
+                              style={{ color: "#111827" }}>
+                              {formatWon(row.amount || 0)}
+                            </span>
+                            <span
+                              className="text-[11px] font-bold"
+                              style={{ color: "#94a3b8" }}>
+                              {shortDate(row.created_at)}
+                            </span>
+                          </div>
+                          {row.memo && (
+                            <p
+                              className="text-xs truncate mt-1"
+                              style={{ color: "#64748b" }}>
+                              {row.memo}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => removeExpense(row)}
+                          disabled={Boolean(savingKey)}
+                          className="text-xs font-bold px-2.5 py-1.5 rounded-lg"
+                          style={{
+                            color: "#ef4444",
+                            backgroundColor: "#fef2f2",
+                            flexShrink: 0,
+                          }}>
+                          삭제
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       {loading && (
         <p className="text-center text-xs" style={{ color: "#94a3b8" }}>
