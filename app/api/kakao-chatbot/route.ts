@@ -9,13 +9,15 @@ const FALLBACK_TEXT =
   "정확한 확인이 필요한 내용이에요.\n아래 [✅ 담당자에게 문의하기] 버튼을 눌러주시면 담당자가 직접 확인해드릴게요.";
 
 const HOME_TEXT =
-  "안녕하세요, 리스토리입니다.\n\n사진 한 장으로 수리·리폼 가능 여부를 먼저 확인해드립니다.\n문제 부위 사진, 전체 사진, 지역을 보내주세요.\n\n사진을 보내주셨다면 마지막으로 아래 [✅ 사진 상담 접수하기] 버튼을 눌러주세요.\n버튼을 눌러야 담당자가 사진을 확인할 수 있습니다.";
+  "안녕하세요, 리스토리입니다.\n\n사진 한 장으로 수리·리폼 가능 여부를 먼저 확인해드립니다.\n원하시는 서비스를 선택하거나 문의 내용을 남겨주세요. 사진 상담 단계에서 문제 부위와 전체 구조 사진을 안내해드리겠습니다.";
 
 const CONSULTATION_TRIGGER_TEXT = "상담직원 연결";
+const PHOTO_CONSULT_BUTTON_LABEL = "📷 사진 2장 보내기";
+const PHOTO_CONSULT_TITLE = "사진 상담 접수";
 const PHOTO_RECEIVED_TEXT =
-  "사진이 전송되었습니다.\n\n아래 [✅ 사진 상담 접수하기] 버튼까지 눌러야 상담 접수가 완료됩니다.\n버튼을 눌러야 담당자가 사진을 확인할 수 있습니다.";
+  "사진이 전송되었습니다.\n\n아래 [📷 사진 2장 보내기] 버튼을 누르면 카카오톡 1:1 상담으로 연결됩니다.\n연결된 상담창에서 문제 부위 가까운 사진 1장과 전체 구조 사진 1장을 보내주세요.";
 const PHOTO_CONSULT_INSTRUCTION =
-  "\n\n사진을 보내주셨다면 아래 [✅ 사진 상담 접수하기] 버튼을 눌러주세요.\n버튼을 눌러야 담당자가 사진을 확인할 수 있습니다.";
+  "\n\n정확한 확인을 위해 사진 2장을 보내주세요.\n① 문제 부위 가까이\n② 전체 구조가 보이게\n\n아래 [📷 사진 2장 보내기] 버튼을 누르면 카카오톡 1:1 상담으로 연결됩니다.";
 
 type QuickReply = {
   label: string;
@@ -23,10 +25,14 @@ type QuickReply = {
   messageText: string;
 };
 
-const PHOTO_CONSULT_QUICK_REPLY: QuickReply = {
-  label: "✅ 사진 상담 접수하기",
-  action: "message",
-  messageText: CONSULTATION_TRIGGER_TEXT,
+type OperatorButton = {
+  label: string;
+  action: "operator";
+};
+
+const PHOTO_CONSULT_OPERATOR_BUTTON: OperatorButton = {
+  label: PHOTO_CONSULT_BUTTON_LABEL,
+  action: "operator",
 };
 
 const STAFF_CONSULT_QUICK_REPLY: QuickReply = {
@@ -92,10 +98,31 @@ function kakaoResponse(text: string, quickReply: QuickReply = STAFF_CONSULT_QUIC
 }
 
 function photoConsultResponse(text: string) {
-  const answer = text.includes("사진 상담 접수하기")
+  const answer = text.includes(PHOTO_CONSULT_BUTTON_LABEL)
     ? text
     : `${text.slice(0, 520)}${PHOTO_CONSULT_INSTRUCTION}`;
-  return kakaoResponse(answer, PHOTO_CONSULT_QUICK_REPLY);
+
+  return operatorCardResponse(answer);
+}
+
+function operatorCardResponse(text: string) {
+  const answer = text.slice(0, 350);
+
+  return NextResponse.json({
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          textCard: {
+            title: PHOTO_CONSULT_TITLE,
+            description: answer,
+            buttons: [PHOTO_CONSULT_OPERATOR_BUTTON],
+          },
+        },
+      ],
+    },
+    data: { answer },
+  });
 }
 
 function getUtterance(body: KakaoSkillRequest): string {
@@ -227,6 +254,37 @@ function includesAny(text: string, words: string[]) {
   return words.some((word) => text.includes(word));
 }
 
+function shouldUsePhotoConsultButton(
+  utterance: string,
+  answer: string,
+  context: ConversationContext,
+) {
+  if (context.hasPhoto) return true;
+
+  const normalized = utterance.replace(/\s+/g, " ").trim();
+  if (
+    includesAny(normalized, [
+      "싱크대 문짝 교체",
+      "싱크대 문짝",
+      "문짝 교체",
+      "문짝만 교체",
+      "상부장 처짐/추락",
+      "상부장 처짐",
+      "상부장 추락",
+      "상부장 떨어",
+      "소파 꺼짐",
+      "쇼파 꺼짐",
+      "기타 문의",
+      "사진 상담",
+      "사진 보내",
+    ])
+  ) {
+    return true;
+  }
+
+  return answer.includes("사진") && (answer.includes("보내") || answer.includes("확인"));
+}
+
 function getDirectReply(
   utterance: string,
   context: ConversationContext,
@@ -278,6 +336,22 @@ function getDirectReply(
 
   if (/^(안녕|안녕하세요|하이|문의|상담|상담 가능|문의 가능)[.!?~ ]*$/i.test(lower)) {
     return HOME_TEXT;
+  }
+
+  if (includesAny(normalized, ["싱크대 문짝 교체", "싱크대 문짝", "문짝 교체", "문짝만 교체"])) {
+    return "싱크대 문짝 교체는 기존 몸통을 살릴 수 있는지와 문짝·서랍 앞판 수량을 먼저 확인합니다. 작업 지역과 교체를 원하는 범위를 함께 남겨주세요.";
+  }
+
+  if (includesAny(normalized, ["상부장 처짐/추락", "상부장 처짐", "상부장 추락", "상부장 떨어"])) {
+    return "상부장 처짐이나 추락은 고정 상태 확인이 먼저입니다. 안전을 위해 무리하게 사용하지 말고, 작업 지역과 현재 증상을 함께 남겨주세요.";
+  }
+
+  if (includesAny(normalized, ["소파 꺼짐", "쇼파 꺼짐", "소파 쿠션", "쇼파 쿠션"])) {
+    return "소파 꺼짐은 쿠션, 스펀지, 밴드, 하부 프레임 상태를 사진으로 먼저 봐야 합니다. 작업 지역과 좌석 수를 함께 남겨주세요.";
+  }
+
+  if (includesAny(normalized, ["기타 문의"])) {
+    return "확인이 필요한 부분을 사진으로 먼저 살펴보겠습니다. 작업 지역과 불편한 증상을 한 줄로 함께 남겨주세요.";
   }
 
   if (includesAny(normalized, ["소파 천갈이", "소파 가죽 수선", "누박가죽", "가죽 복원", "염색", "클리닝"])) {
@@ -389,7 +463,7 @@ export async function POST(request: Request) {
 
     const directReply = getDirectReply(utterance, context);
     if (directReply) {
-      return context.hasPhoto
+      return shouldUsePhotoConsultButton(utterance, directReply, context)
         ? photoConsultResponse(directReply)
         : kakaoResponse(directReply);
     }
@@ -421,7 +495,7 @@ export async function POST(request: Request) {
     );
 
     const aiText = response.output_text.trim() || FALLBACK_TEXT;
-    return context.hasPhoto
+    return shouldUsePhotoConsultButton(utterance, aiText, context)
       ? photoConsultResponse(aiText)
       : kakaoResponse(aiText);
   } catch (error) {
