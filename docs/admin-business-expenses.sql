@@ -1,13 +1,20 @@
 create table if not exists public.business_expenses (
   id uuid primary key default gen_random_uuid(),
   expense_month text not null check (expense_month ~ '^[0-9]{4}-[0-9]{2}$'),
-  group_key text not null check (group_key in ('material', 'marketing')),
+  group_key text not null check (group_key in ('material', 'labor', 'marketing')),
   category text not null,
   amount integer not null default 0 check (amount >= 0),
   memo text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.business_expenses
+drop constraint if exists business_expenses_group_key_check;
+
+alter table public.business_expenses
+add constraint business_expenses_group_key_check
+check (group_key in ('material', 'labor', 'marketing'));
 
 alter table public.business_expenses
 drop constraint if exists business_expenses_expense_month_group_key_category_key;

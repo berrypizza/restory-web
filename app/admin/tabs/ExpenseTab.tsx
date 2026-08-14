@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Job } from "../lib/types";
 import { formatYearMonth, getSupabase } from "../lib/utils";
 
-type ExpenseGroup = "material" | "marketing";
+type ExpenseGroup = "material" | "labor" | "marketing";
 
 type ExpenseItem = {
   group: ExpenseGroup;
@@ -52,7 +52,13 @@ const EXPENSE_ITEMS: ExpenseItem[] = [
     helper: "검색/플레이스",
   },
   { group: "marketing", category: "메타", label: "메타", helper: "페북/인스타" },
+  { group: "labor", category: "팀장", label: "팀장", helper: "현장/관리" },
+  { group: "labor", category: "기사", label: "기사", helper: "시공 인력" },
+  { group: "labor", category: "외주", label: "외주", helper: "외부 작업" },
+  { group: "labor", category: "기타", label: "기타", helper: "식대/추가 인건" },
 ];
+
+const EXPENSE_GROUPS: ExpenseGroup[] = ["material", "labor", "marketing"];
 
 const GROUP_META: Record<
   ExpenseGroup,
@@ -63,6 +69,12 @@ const GROUP_META: Record<
     subtitle: "지엔, 스폰지, 가죽, 기타",
     color: "#1f66ff",
     softBg: "#eff6ff",
+  },
+  labor: {
+    title: "인건비",
+    subtitle: "팀장, 기사, 외주, 기타",
+    color: "#0f766e",
+    softBg: "#ecfdf5",
   },
   marketing: {
     title: "마케팅비",
@@ -178,14 +190,18 @@ export default function ExpenseTab({
     const material = rows
       .filter((row) => row.group_key === "material")
       .reduce((sum, row) => sum + (row.amount || 0), 0);
+    const labor = rows
+      .filter((row) => row.group_key === "labor")
+      .reduce((sum, row) => sum + (row.amount || 0), 0);
     const marketing = rows
       .filter((row) => row.group_key === "marketing")
       .reduce((sum, row) => sum + (row.amount || 0), 0);
-    const totalExpense = material + marketing;
+    const totalExpense = material + labor + marketing;
     const profit = revenue - totalExpense;
 
     return {
       material,
+      labor,
       marketing,
       totalExpense,
       profit,
@@ -422,9 +438,9 @@ export default function ExpenseTab({
       </section>
 
       <div
-        className="grid grid-cols-2 gap-2 rounded-2xl p-1"
+        className="grid grid-cols-3 gap-2 rounded-2xl p-1"
         style={{ backgroundColor: "#e9eef7" }}>
-        {(["material", "marketing"] as const).map((group) => {
+        {EXPENSE_GROUPS.map((group) => {
           const meta = GROUP_META[group];
           const selected = activeGroup === group;
           return (
