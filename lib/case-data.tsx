@@ -102,6 +102,7 @@ export const cases: CaseItem[] = [
     afterImg: "/images/cases/case-108-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224381221536",
     date: "2026-08-17",
+    price: "75만원",
     tags: [
       "인천 검단 싱크대 문짝 교체",
       "검단 싱크대 리폼",
