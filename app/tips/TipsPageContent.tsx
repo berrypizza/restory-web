@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { tips, TIP_CATEGORIES, type TipCategory } from "@/lib/tips";
+import { useTipViews } from "./useTipViews";
 
 function TipsPageInner() {
   const searchParams = useSearchParams();
@@ -15,13 +16,17 @@ function TipsPageInner() {
       : "전체",
   );
   const [sortBy, setSortBy] = useState<"popular" | "latest">("popular");
+  const viewCounts = useTipViews(tips);
+  const getViews = (id: string, fallback: number) => viewCounts[id] ?? fallback;
 
   const filtered =
     activeCat === "전체" ? tips : tips.filter((t) => t.category === activeCat);
 
   const sorted = [...filtered].sort((a, b) => {
     if (sortBy === "popular") {
-      if (b.views !== a.views) return b.views - a.views;
+      const viewDiff =
+        getViews(b.id, b.views) - getViews(a.id, a.views);
+      if (viewDiff !== 0) return viewDiff;
       return b.createdAt.localeCompare(a.createdAt);
     }
     return b.createdAt.localeCompare(a.createdAt);
@@ -179,7 +184,7 @@ function TipsPageInner() {
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                             <circle cx="12" cy="12" r="3" />
                           </svg>
-                          {tip.views.toLocaleString()}
+                          {getViews(tip.id, tip.views).toLocaleString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <svg
@@ -245,7 +250,7 @@ function TipsPageInner() {
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                             <circle cx="12" cy="12" r="3" />
                           </svg>
-                          {tip.views.toLocaleString()}
+                          {getViews(tip.id, tip.views).toLocaleString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <svg

@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { tips, type Tip, type TipCategory } from "@/lib/tips";
+import { useTipViewCounter } from "../useTipViews";
 
 /* ═══════════════════════════════════════════
    카테고리별 하단 배너 데이터
@@ -143,6 +144,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
   const related = tips
     .filter((t) => t.category === tip.category && t.id !== tip.id)
     .slice(0, 4);
+  const { currentViews, viewCounts } = useTipViewCounter(tip, related);
 
   const contentHtml = parseMarkdown(tip.content);
   const banner = CATEGORY_BANNER[tip.category];
@@ -193,7 +195,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-                {tip.views.toLocaleString()}
+                {currentViews.toLocaleString()}
               </span>
               <span>·</span>
               <span>{tip.createdAt}</span>
@@ -282,7 +284,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
                         {r.title}
                       </p>
                       <span className="mt-1 text-[11px] text-neutral-400">
-                        👁 {r.views.toLocaleString()}
+                        👁 {(viewCounts[r.id] ?? r.views).toLocaleString()}
                       </span>
                     </div>
                   </Link>
