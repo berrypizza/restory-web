@@ -13,6 +13,8 @@ const PHONE = "tel:1688-2957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 const MAIN_IMAGE = "/images/sink-top-crack/main.png";
 const AFTER_IMAGE = "/images/sink-top-crack/main-after.png";
+const COMPARE_BEFORE_IMAGE = "/images/sink-top-crack/compare-before.png";
+const COMPARE_AFTER_IMAGE = "/images/sink-top-crack/compare-after.png";
 
 const FAQ_ITEMS = [
   {
@@ -582,7 +584,7 @@ export default function CountertopCrackLanding({ keyword }: Props) {
                   className="relative overflow-hidden"
                   style={{ aspectRatio: "4/3" }}>
                   <Image
-                    src={MAIN_IMAGE}
+                    src={COMPARE_BEFORE_IMAGE}
                     alt="상판 크랙 수리 전 균열"
                     fill
                     className="object-cover"
@@ -606,7 +608,7 @@ export default function CountertopCrackLanding({ keyword }: Props) {
                   className="relative overflow-hidden"
                   style={{ aspectRatio: "4/3" }}>
                   <Image
-                    src={AFTER_IMAGE}
+                    src={COMPARE_AFTER_IMAGE}
                     alt="상판 크랙 수리 후 마감"
                     fill
                     className="object-cover"
@@ -632,164 +634,9 @@ export default function CountertopCrackLanding({ keyword }: Props) {
         </div>
       </section>
 
-      <section className="px-5 py-14 md:py-20" style={{ background: "#f8f9fb" }}>
-        <div className="mx-auto max-w-lg">
-          <FadeIn>
-            <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">
-              REALITY
-            </p>
-            <h2
-              className="mb-4 font-black leading-[1.2]"
-              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-              갈라진 모양보다
-              <br />
-              먼저 볼 것이 있습니다
-            </h2>
-            <p className="mb-8 text-[14px] leading-[1.8] text-neutral-500">
-              상판 크랙은 겉으로 보이는 선만 보고 판단하기 어렵습니다. 모서리
-              파손인지, 피스 구멍 주변 균열인지, 하중이 걸린 부분인지에 따라
-              수리 방향이 달라질 수 있습니다.
-            </p>
-          </FadeIn>
-          <FadeIn delay={80}>
-            <div
-              className="overflow-hidden rounded-2xl"
-              style={{ border: "1px solid #e5e7eb" }}>
-              <div className="relative aspect-[4/3] bg-neutral-100">
-                <Image
-                  src={MAIN_IMAGE}
-                  alt="싱크대 상판 크랙 가까운 사진"
-                  fill
-                  className="object-cover"
-                  sizes="100vw"
-                />
-              </div>
-              <div className="bg-white p-4">
-                <p className="text-[15px] font-black text-neutral-900">
-                  사진에서 먼저 확인할 부분
-                </p>
-                <p className="mt-2 text-[13px] leading-[1.75] text-neutral-500">
-                  갈라진 길이, 벌어진 틈, 모서리 파손, 구멍 주변 균열을 함께
-                  봅니다. 원인을 모르는 부분은 단정하지 않고 확인이 필요한
-                  항목으로 남깁니다.
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
       <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
           <FadeIn>
-            <div className="mb-8 flex items-end gap-3">
-              <div>
-                <p className="mb-1 text-[12px] font-bold tracking-widest text-[#1a5cff]">
-                  REVIEWS
-                </p>
-                <h2
-                  className="font-black leading-[1.2]"
-                  style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-                  직접 겪은 고객님들
-                </h2>
-              </div>
-              <div className="ml-auto flex-shrink-0 pb-1 text-right">
-                <p
-                  className="text-[28px] font-black"
-                  style={{ color: "#1a5cff" }}>
-                  4.9★
-                </p>
-                <p className="text-[11px] text-neutral-400">고객 평점</p>
-              </div>
-            </div>
-          </FadeIn>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {[
-              {
-                keyword: "교체 전 확인",
-                unit: "싱크대 상판 크랙 수리",
-                area: "지역 확인 필요",
-                name: "고객 후기",
-                quote:
-                  "상판을 바로 교체하기 전에 크랙 위치와 깊이를 먼저 확인하고 수리 가능 범위를 안내받았습니다.",
-              },
-              {
-                keyword: "비용 부담 감소",
-                unit: "싱크대 상판 크랙 수리",
-                area: "지역 확인 필요",
-                name: "고객 후기",
-                quote:
-                  "상판 교체 비용과 크랙 수리 비용을 나눠 보고, 현재 상태에 맞는 선택을 할 수 있었습니다.",
-              },
-            ].map((r, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div
-                  className="h-full overflow-hidden rounded-2xl"
-                  style={{ border: "1px solid #e5e7eb" }}>
-                  <div
-                    className="relative aspect-[16/9] overflow-hidden bg-neutral-100"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 52%, #eef4ff 100%)",
-                    }}>
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.56) 0%, transparent 58%)",
-                      }}
-                    />
-                    <div className="absolute inset-0 flex flex-col justify-end p-4">
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="text-[11px] font-semibold text-white/60">
-                            {r.unit}
-                          </p>
-                          <p
-                            className="font-black leading-none text-white"
-                            style={{
-                              fontSize: "clamp(1.1rem, 3.5vw, 1.5rem)",
-                            }}>
-                            {r.keyword}
-                          </p>
-                        </div>
-                        <span
-                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
-                          수리 완료
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <p className="mb-2 text-[12px] text-neutral-400">
-                      {r.name} · {r.area}
-                    </p>
-                    <p className="text-[14px] leading-[1.7] text-neutral-700">
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                      {r.quote}
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-          <FadeIn delay={100}>
             <CaseStrip region={region} />
           </FadeIn>
         </div>
@@ -863,6 +710,23 @@ export default function CountertopCrackLanding({ keyword }: Props) {
               </FadeIn>
             ))}
           </div>
+          <FadeIn delay={200}>
+            <a
+              href={KAKAO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex items-center justify-center gap-2.5 rounded-2xl text-[15px] font-black"
+              style={{
+                background: "#FEE500",
+                color: "#1a1a1a",
+                padding: "18px 24px",
+              }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+              </svg>
+              사진 보내고 견적 받기
+            </a>
+          </FadeIn>
         </div>
       </section>
 
