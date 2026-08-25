@@ -63,6 +63,24 @@ export const businessLines: BusinessLineConfig[] = [
         ],
         process: ["사진으로 손상 범위 확인", "밑판 사이즈 측정", "현장 교체"],
       },
+      {
+        slug: "sink-top-crack",
+        title: "싱크대 상판 크랙 수리",
+        shortTitle: "상판 크랙 수리",
+        description:
+          "갈라진 싱크대 상판 상태를 확인하고 수리 가능 여부를 안내합니다.",
+        hero: "상판 크랙,\n교체 전에 확인하세요.",
+        painPoints: [
+          "상판이 갈라졌다",
+          "물이 들어갈까봐 불안하다",
+          "수리와 교체 중 무엇이 맞는지 모르겠다",
+        ],
+        process: [
+          "사진으로 크랙 위치 확인",
+          "재질과 벌어짐 범위 판단",
+          "수리 가능 여부와 보강 방향 안내",
+        ],
+      },
       // {
       //   slug: "door-fall",
       //   title: "문짝 떨어짐 수리",

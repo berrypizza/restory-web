@@ -67,6 +67,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: "2026-05-01",
     },
     {
+      path: "/repair/sink-top-crack",
+      priority: 0.8,
+      changeFrequency: "weekly" as const,
+      lastModified: "2026-08-25",
+    },
+    {
       path: "/repair/hinge",
       priority: 0.7,
       changeFrequency: "monthly" as const,

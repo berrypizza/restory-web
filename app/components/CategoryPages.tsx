@@ -10,6 +10,7 @@ import {
 const serviceIconMap: Record<string, string> = {
   sangbujang: "/images/icon/icon-upper.png",
   habujang: "/images/icon/icon-down.png",
+  "sink-top-crack": "/images/icon_sink_repair.png",
   "door-fall": "/images/icon/icon-door-drop.png",
   hinge: "/images/icon/icon-door-gear.png",
   "drawer-rail": "/images/icon/icon-rail.png",

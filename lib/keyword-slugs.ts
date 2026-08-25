@@ -707,6 +707,39 @@ const SOFA_REGIONAL = REGIONS.flatMap((region) => [
   ...SOFA_SYMPTOMS.map((s) => `${region}-쇼파-${s}`),
 ]);
 
+const COUNTERTOP_CRACK_BASE = [
+  "싱크대-상판-크랙",
+  "싱크대-상판-크랙-수리",
+  "싱크대-상판-수리",
+  "싱크대-상판-갈라짐",
+  "싱크대-상판-갈라짐-수리",
+  "싱크대-상판-깨짐",
+  "싱크대-상판-깨짐-수리",
+  "싱크대-상판-보수",
+  "씽크대-상판-크랙",
+  "씽크대-상판-크랙-수리",
+  "씽크대-상판-수리",
+  "인조대리석-상판-크랙",
+  "인조대리석-상판-크랙-수리",
+  "인조대리석-상판-수리",
+  "주방-상판-크랙",
+  "주방-상판-크랙-수리",
+  "주방-상판-수리",
+  "상판-크랙-수리",
+  "상판-갈라짐-수리",
+  "상판-깨짐-수리",
+];
+
+const COUNTERTOP_CRACK_REGIONAL = REGIONS.flatMap((region) => [
+  `${region}-싱크대-상판-크랙`,
+  `${region}-싱크대-상판-크랙-수리`,
+  `${region}-싱크대-상판-수리`,
+  `${region}-싱크대-상판-갈라짐`,
+  `${region}-싱크대-상판-깨짐`,
+  `${region}-인조대리석-상판-크랙`,
+  `${region}-주방-상판-수리`,
+]);
+
 // ─────────────────────────────────────────────
 // Named exports (라우트별)
 // ─────────────────────────────────────────────
@@ -716,6 +749,8 @@ export const REPAIR_KEYWORD_SLUGS: string[] = [
   ...SANGBUJANG_SHORT,
   ...HABUJANG_BASE,
   ...HABUJANG_REGIONAL,
+  ...COUNTERTOP_CRACK_BASE,
+  ...COUNTERTOP_CRACK_REGIONAL,
 ];
 
 export const KITCHEN_KEYWORD_SLUGS: string[] = [...DOOR_BASE, ...DOOR_REGIONAL];
