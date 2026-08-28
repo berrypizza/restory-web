@@ -19,6 +19,11 @@ export interface Tip {
   createdAt: string;
   views: number;
   readingTime: number;
+  ctaBanner?: {
+    text: string;
+    sub: string;
+    href: string;
+  };
   content: string;
 }
 

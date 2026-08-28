@@ -147,7 +147,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
   const { currentViews, viewCounts } = useTipViewCounter(tip, related);
 
   const contentHtml = parseMarkdown(tip.content);
-  const banner = CATEGORY_BANNER[tip.category];
+  const banner = tip.ctaBanner ?? CATEGORY_BANNER[tip.category];
 
   return (
     <main

@@ -28,6 +28,7 @@ import meetingTableArtificialLeatherReplacement from "./contents/meeting-table-a
 import sinkDoorOnlyNewKitchenLook from "./contents/sink-door-only-new-kitchen-look";
 import whyKitchenLooksOldGlossyUvDoors from "./contents/why-kitchen-looks-old-glossy-uv-doors";
 import sinkHingeAdjustmentGuide from "./contents/sink-hinge-adjustment-guide";
+import sinkTopCrackRepairVsReplacement from "./contents/sink-top-crack-repair-vs-replacement";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -50,6 +51,7 @@ const tipModules = [
   sinkDoorOnlyNewKitchenLook,
   whyKitchenLooksOldGlossyUvDoors,
   sinkHingeAdjustmentGuide,
+  sinkTopCrackRepairVsReplacement,
 
   // sofaSelfCheck,
   // chairReplaceTiming,
