@@ -66,13 +66,18 @@ export default function YoutubeProblemFinder() {
       typeof sessionStorage !== "undefined" &&
       sessionStorage.getItem(STORAGE_KEY) === "1";
 
-    if ((forced || fromYoutube) && !dismissed) {
+    if (forced || (fromYoutube && !dismissed)) {
       const timer = window.setTimeout(() => setOpen(true), 450);
       return () => window.clearTimeout(timer);
     }
   }, []);
 
   const close = () => {
+    sessionStorage.setItem(STORAGE_KEY, "1");
+    setOpen(false);
+  };
+
+  const dismissForSelection = () => {
     sessionStorage.setItem(STORAGE_KEY, "1");
     setOpen(false);
   };
@@ -119,7 +124,7 @@ export default function YoutubeProblemFinder() {
               <Link
                 key={choice.href}
                 href={choice.href}
-                onClick={() => sessionStorage.setItem(STORAGE_KEY, "1")}
+                onClick={dismissForSelection}
                 className="flex min-h-[76px] items-center gap-4 rounded-xl bg-[#f4f6fa] px-4 py-3 text-left transition hover:-translate-y-0.5 hover:bg-[#eef2f8] active:translate-y-0"
                 style={{ textDecoration: "none" }}>
                 <span
@@ -144,7 +149,7 @@ export default function YoutubeProblemFinder() {
           href={`${KAKAO_URL}?utm_source=youtube&utm_medium=problem_finder&utm_campaign=choice_unknown`}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => sessionStorage.setItem(STORAGE_KEY, "1")}
+          onClick={dismissForSelection}
           className="mt-4 flex min-h-[52px] items-center justify-center rounded-xl bg-[#fee500] px-4 text-[15px] font-black text-[#241f1f]"
           style={{ textDecoration: "none" }}>
           잘 모르겠어요. 사진으로 먼저 확인할게요
