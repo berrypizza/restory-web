@@ -1070,7 +1070,7 @@ export default function SangbujangLanding({ keyword }: Props) {
             </h2>
           </FadeIn>
           <FadeIn delay={80}>
-            <YouTubeFacade videoId="fp2clUUef24" />
+            <YouTubeFacade videoId="tDAtB2ClG08" />
           </FadeIn>
         </div>
       </section>
