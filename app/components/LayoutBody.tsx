@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
+import YoutubeProblemFinder from "@/app/components/YoutubeProblemFinder";
 
 export default function LayoutBody({
   children,
@@ -15,6 +16,7 @@ export default function LayoutBody({
     <>
       {!isAdmin && <Navbar />}
       {children}
+      {!isAdmin && <YoutubeProblemFinder />}
     </>
   );
 }
