@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { buildTrackedContactPath } from "@/lib/attribution";
 import { tips, type Tip, type TipCategory } from "@/lib/tips";
 import { useTipViewCounter } from "../useTipViews";
 
@@ -136,9 +137,9 @@ function parseMarkdown(md: string): string {
   return result.join("\n");
 }
 
-const PHONE = "tel:1688-2957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHOTO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHONE = buildTrackedContactPath("phone", "tip_detail");
+const KAKAO_URL = buildTrackedContactPath("kakao", "tip_detail");
+const PHOTO_URL = buildTrackedContactPath("kakao", "tip_photo");
 
 export default function TipDetailContent({ tip }: { tip: Tip }) {
   const related = tips

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { buildTrackedContactPath } from "@/lib/attribution";
 
 interface FloatingCTAProps {
   phone?: string;
@@ -9,8 +10,8 @@ interface FloatingCTAProps {
 }
 
 export default function FloatingCTA({
-  phone = "tel:1688-2957",
-  kakaoUrl = "http://pf.kakao.com/_hQExjX/chat",
+  phone = buildTrackedContactPath("phone", "floating_cta"),
+  kakaoUrl = buildTrackedContactPath("kakao", "floating_cta"),
 }: FloatingCTAProps) {
   const [showSticky, setShowSticky] = useState(false);
 
@@ -38,6 +39,7 @@ export default function FloatingCTA({
         </button>
         <a
           href={phone}
+          data-cta="floating_phone"
           className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.35)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           aria-label="전화 문의">
           <Image
@@ -52,6 +54,7 @@ export default function FloatingCTA({
           href={kakaoUrl}
           target="_blank"
           rel="noopener noreferrer"
+          data-cta="floating_kakao_icon"
           className="flex h-12 w-12 items-center justify-center rounded-full shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
           style={{ background: "#FEE500" }}
           aria-label="카카오톡 상담">
@@ -68,6 +71,7 @@ export default function FloatingCTA({
         href={kakaoUrl}
         target="_blank"
         rel="noopener noreferrer"
+        data-cta="floating_kakao_bar"
         className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4"
         style={{
           background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",

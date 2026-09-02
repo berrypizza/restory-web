@@ -6,14 +6,15 @@ import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
+import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
 
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
-const PHONE = "tel:1688-2957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHONE = buildTrackedContactPath("phone", "sofa_cushion");
+const KAKAO_URL = buildTrackedContactPath("kakao", "sofa_cushion");
 
 const FAQ_ITEMS = [
   {

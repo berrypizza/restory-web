@@ -1,7 +1,9 @@
 import React from "react";
 import FadeIn from "@/app/components/FadeIn";
+import { buildTrackedContactPath } from "@/lib/attribution";
 
-const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_hQExjX/chat";
+const KAKAO_CHANNEL_URL = buildTrackedContactPath("kakao", "contact_cta");
+const PHONE_URL = buildTrackedContactPath("phone", "contact_cta");
 
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
@@ -76,6 +78,7 @@ export default function ContactCTA() {
               href={KAKAO_CHANNEL_URL}
               target="_blank"
               rel="noopener noreferrer"
+              data-cta="contact_kakao"
               className="flex items-center justify-center gap-2.5 rounded-xl py-4 font-bold text-center transition-opacity hover:opacity-90"
               style={{
                 backgroundColor: "#FEE500",
@@ -95,7 +98,8 @@ export default function ContactCTA() {
                 📷 사진 접수
               </a>
               <a
-                href="tel:1688-2957"
+                href={PHONE_URL}
+                data-cta="contact_phone"
                 className="rounded-xl px-5 py-3.5 font-semibold text-center transition-opacity hover:opacity-80"
                 style={{
                   border: "1px solid #e5e5e5",

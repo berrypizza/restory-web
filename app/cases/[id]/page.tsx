@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import BeforeAfterToggle from "./BeforeAfterToggle";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
@@ -51,8 +52,8 @@ export async function generateMetadata({
   };
 }
 
-const PHONE = "tel:1688-2957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHONE = buildTrackedContactPath("phone", "case_detail");
+const KAKAO_URL = buildTrackedContactPath("kakao", "case_detail");
 
 export default async function CaseDetailPage({
   params,

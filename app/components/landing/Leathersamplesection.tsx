@@ -3,9 +3,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import FadeIn from "@/app/components/FadeIn";
+import { buildTrackedContactPath } from "@/lib/attribution";
 
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHONE = "tel:1688-2957";
+const KAKAO_URL = buildTrackedContactPath("kakao", "leather_sample");
+const PHONE = buildTrackedContactPath("phone", "leather_sample");
 
 // 카탈로그별 대표 색상 — 실제 이미지 기반
 const CATALOGS = [

@@ -175,7 +175,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const kitchenKeywordEntries = KITCHEN_KEYWORD_SLUGS.map((slug) => ({
-    url: `${base}/kitchen/${encodeURIComponent(slug)}`,
+    url: `${base}/kitchen/sink-door/${encodeURIComponent(slug)}`,
     lastModified: new Date("2026-06-01").toISOString(),
     changeFrequency: "monthly" as const,
     priority: 0.5,

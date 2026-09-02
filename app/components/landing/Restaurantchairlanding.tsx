@@ -7,11 +7,12 @@ import FadeIn from "@/app/components/FadeIn";
 import LeatherSampleSection from "./Leathersamplesection";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
+import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
 
-const PHONE = "tel:1688-2957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHONE = buildTrackedContactPath("phone", "restaurant_chair");
+const KAKAO_URL = buildTrackedContactPath("kakao", "restaurant_chair");
 
 const FAQ_ITEMS = [
   {

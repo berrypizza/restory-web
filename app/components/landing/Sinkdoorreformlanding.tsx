@@ -6,16 +6,22 @@ import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd } from "@/app/components/JsonLd";
+import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
 
-const PHONE = "tel:1688-2957";
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
+const PHONE = buildTrackedContactPath("phone", "sink_door");
+const KAKAO_URL = buildTrackedContactPath("kakao", "sink_door");
+const SINK_DOOR_VIDEO_ID = "tC4VLNFgvCE";
+const MAIN_IMAGE = "/images/door/sink-door-main.png";
+const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
+const FILM_EDGE_IMAGE = "/images/door/onedraw-door-edge.png";
+const PET_ZEROJOINT_EDGE_IMAGE = "/images/door/pet-zerojoint-edge.png";
 
 const FAQ_ITEMS = [
   {
     q: "싱크대 문짝 교체 비용은 어떻게 계산되나요?",
-    a: "문짝 개수와 자재 종류, 서랍·양념통 앞판 수량을 기준으로 계산합니다.\n\n현재 기준으로 UV 하이그로시 백색 유광 문짝은 1개 5만 원, 서랍·양념통 앞판은 1개 3만 원입니다. PET 제로조인트 무광 문짝은 1개 6만 5천 원, 서랍·양념통 앞판은 1개 4만 원이며 출장비 3만 원이 별도로 있습니다.\n\n상·하부장 전체 교체 비용은 문짝과 앞판 수량을 합산해 계산하며, 정확한 수량과 최종 금액은 방문 실측 후 확정합니다.",
+    a: "싱크대 문짝 교체 비용은 교체할 문짝 개수와 자재 종류를 기준으로 계산합니다.\n\n문짝과 서랍 앞판은 개수 기준으로 확인하고, 걸레받이와 몰딩은 필요한 길이를 m 단위로 측정해 반영합니다.\n\n정확한 수량과 최종 금액은 사진 확인 또는 방문 실측 후 확정합니다.",
   },
   {
     q: "싱크대 전체를 철거하지 않고 문짝만 교체할 수 있나요?",
@@ -234,12 +240,29 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
   );
 }
 
+function YouTubeAutoplayHero({ videoId }: { videoId: string }) {
+  return (
+    <div
+      className="relative overflow-hidden bg-black"
+      style={{ aspectRatio: "16 / 9" }}>
+      <iframe
+        className="absolute inset-0 h-full w-full"
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`}
+        title="리스토리 싱크대 문짝 교체 영상"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+      />
+    </div>
+  );
+}
+
 interface Props {
   keyword?: string;
 }
 
 export default function SinkdoorReformLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<"detail" | "reviews">("detail");
 
   const { region, type } = keyword
     ? parseKeyword(keyword)
@@ -260,6 +283,10 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         (c) => c.category === "싱크대 리폼" && c.region.includes(region),
       ).length
     : 0;
+  const reviewCases = cases
+    .filter((c) => c.category === "싱크대 리폼" && c.title.includes("문짝"))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    ;
 
   return (
     <main
@@ -280,9 +307,116 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         }
       />
 
-      {/* 1. HERO */}
+      {/* 1. HERO VIDEO */}
+      <section className="bg-white px-0 pb-8 pt-0 md:pb-12">
+        <div className="mx-auto max-w-[900px]">
+          <YouTubeAutoplayHero videoId={SINK_DOOR_VIDEO_ID} />
+          <div className="px-5 pt-5 md:px-0">
+            <FadeIn>
+              <p className="mb-2 text-[13px] font-black text-[#1a5cff]">
+                {region
+                  ? `${region} 싱크대 문짝 교체`
+                  : "싱크대 문짝 교체"}
+              </p>
+              <h1 className="text-[24px] font-black leading-tight text-neutral-950 md:text-[34px]">
+                {heroTitle}
+              </h1>
+              <p className="mt-3 text-[15px] font-medium leading-relaxed text-neutral-500 md:text-[17px]">
+                {heroSub}
+              </p>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={KAKAO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cta="sink_door_video_kakao"
+                  className="flex min-h-[54px] items-center justify-center rounded-xl bg-[#FEE500] px-5 text-[15px] font-black text-[#1a1a1a]"
+                  style={{ textDecoration: "none" }}>
+                  카카오로 사진 보내기
+                </a>
+                <a
+                  href={PHONE}
+                  data-cta="sink_door_video_phone"
+                  className="flex min-h-[54px] items-center justify-center rounded-xl px-5 text-[15px] font-black text-white"
+                  style={{
+                    background: "#1a5cff",
+                    textDecoration: "none",
+                  }}>
+                  1688-2957 전화 문의
+                </a>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      <nav className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 px-4 backdrop-blur">
+        <div className="mx-auto grid max-w-[720px] grid-cols-2 text-center">
+          <button
+            type="button"
+            onClick={() => setActiveTab("detail")}
+            className={`py-4 text-[15px] ${
+              activeTab === "detail"
+                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
+                : "border-0 font-bold text-neutral-500"
+            }`}>
+            서비스 상세
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("reviews")}
+            className={`py-4 text-[15px] ${
+              activeTab === "reviews"
+                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
+                : "border-0 font-bold text-neutral-500"
+            }`}>
+            리뷰
+          </button>
+        </div>
+      </nav>
+
+      <div className={activeTab === "detail" ? "block" : "hidden"}>
+
+      {/* 2. MAIN IMAGE INTRO */}
       <section
-        className="relative overflow-hidden"
+        id="service-detail"
+        className="scroll-mt-20 border-b border-neutral-200 bg-white px-4 py-14 md:py-18">
+        <div className="mx-auto max-w-[720px] text-center">
+          <FadeIn>
+            <p className="mb-3 text-[15px] font-black leading-[1.45] text-[#1a5cff] md:text-[17px]">
+              왜 주방이 먼저 눈에 들어올까요?
+            </p>
+            <h2
+              className="mb-6 font-black leading-[1.24] text-neutral-950"
+              style={{ fontSize: "clamp(1.75rem, 6vw, 2.65rem)" }}>
+              집 전체를 고치지 않아도,
+              <br />
+              변화는 가장 크게
+            </h2>
+            <p className="mx-auto mb-8 max-w-[520px] text-[16px] font-medium leading-[1.9] text-neutral-500 md:text-[18px]">
+              낡은 문짝은 멀쩡한 주방까지 오래돼 보이게 합니다.
+              <br />
+              전체 철거 없이 문짝만 바꿔, 비용은 줄이고 변화는 크게.
+            </p>
+          </FadeIn>
+          <FadeIn delay={80}>
+            <div className="relative mt-7 overflow-hidden rounded-lg bg-neutral-100">
+              <Image
+                src={MAIN_IMAGE}
+                alt="화이트 싱크대 문짝 교체 후 주방"
+                width={1834}
+                height={850}
+                className="h-auto w-full object-cover"
+                priority
+                sizes="(min-width: 768px) 720px, 100vw"
+              />
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section
+        className="hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
         <div className="absolute inset-0 md:hidden">
           <Image
@@ -469,14 +603,33 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
-            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
-              BEFORE / AFTER
-            </p>
-            <h2
-              className="font-black leading-[1.2] mb-8"
-              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-              말보다 사진이 빠릅니다
-            </h2>
+            <div className="mb-8 text-center">
+              <p className="mb-4 text-[20px] font-black leading-[1.45] text-neutral-500 md:text-[24px]">
+                오래돼 보이는 주방,
+                <br />
+                전체를 바꿔야 할까요?
+              </p>
+              <h2
+                className="mb-6 font-black leading-[1.22] text-neutral-950"
+                style={{ fontSize: "clamp(2rem, 7vw, 3.15rem)" }}>
+                전체가 아니라,
+                <br />
+                <span
+                  className="px-1"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(31,102,255,0.24) 38%, transparent 38%)",
+                  }}>
+                  문짝만
+                </span>{" "}
+                바꾸세요.
+              </h2>
+              <p className="text-[16px] font-medium leading-[1.9] text-neutral-500 md:text-[18px]">
+                상판과 몸통이 멀쩡하다면
+                <br />
+                쓸 수 있는 주방까지 전부 바꿀 필요는 없습니다.
+              </p>
+            </div>
           </FadeIn>
           <FadeIn delay={80}>
             <div className="grid grid-cols-2 gap-2 mb-4">
@@ -527,38 +680,404 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 문짝만 교체했습니다
               </p>
             </div>
+            <div
+              className="mx-[-20px] mt-12 overflow-hidden bg-[#e7edf6] text-left md:mx-0 md:rounded-2xl"
+              style={{ border: "1px solid #d4deea" }}>
+              <div className="h-2 bg-[#1a5cff]" />
+              <div className="px-5 py-10 md:px-10 md:py-12">
+                <p className="mb-4 text-center text-[13px] font-black tracking-[0.28em] text-[#1a5cff] md:text-[15px]">
+                  WHY RESTORY
+                </p>
+                <h2
+                  className="mb-8 text-center font-black leading-[1.18] text-neutral-950"
+                  style={{ fontSize: "clamp(2rem, 7vw, 3.4rem)" }}>
+                  주방 전체를 바꾸면
+                  <br />
+                  오히려 손해인 경우
+                </h2>
+                <div className="space-y-4">
+                  {[
+                    {
+                      title: "전체 리모델링의 비용과 공사 기간이 부담될 때",
+                      desc: "주방은 바꾸고 싶지만 큰 비용과 긴 공사까지 감수하고 싶지 않을 때.",
+                    },
+                    {
+                      title: "세입자지만 낡은 주방을 참고 살기 싫을 때",
+                      desc: "집주인과 협의 후, 큰 공사 없이 앞으로 지낼 공간을 바꾸고 싶을 때.",
+                    },
+                    {
+                      title: "명절·집들이를 앞두고 주방이 신경 쓰일 때",
+                      desc: "손님이 오기 전, 가장 눈에 띄는 주방부터 깔끔하게 정돈하고 싶을 때.",
+                    },
+                    {
+                      title: "매매·임대를 내놨는데 반응이 아쉬울 때",
+                      desc: "전체 공사 없이 집의 첫인상을 빠르게 개선하고 싶을 때.",
+                    },
+                  ].map((item, index) => (
+                    <div
+                      key={item.title}
+                      className="flex gap-4 rounded-lg px-4 py-5 md:gap-6 md:px-6"
+                      style={{
+                        background: "#fff",
+                        border: "1px solid rgba(26,92,255,0.12)",
+                        boxShadow: "0 8px 22px rgba(15,23,42,0.04)",
+                      }}>
+                      <div className="w-[58px] flex-shrink-0 md:w-[74px]">
+                        <p
+                          className="inline-block px-1 text-[42px] font-black leading-none text-neutral-950 md:text-[56px]"
+                          style={{
+                            background:
+                              "linear-gradient(to top, rgba(26,92,255,0.16) 42%, transparent 42%)",
+                          }}>
+                          {String(index + 1).padStart(2, "0")}
+                        </p>
+                      </div>
+                      <div className="min-w-0 pt-0.5">
+                        <p className="text-[18px] font-black leading-[1.35] text-neutral-950 md:text-[22px]">
+                          {item.title}
+                        </p>
+                        <p className="mt-2 text-[14px] font-medium leading-[1.65] text-neutral-500 md:text-[17px]">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 text-center">
+              <p className="mb-3 text-[14px] font-black text-[#1a5cff] md:text-[16px]">
+                가격부터 말씀드리면
+              </p>
+              <h2
+                className="mb-5 font-black leading-[1.28] text-neutral-950"
+                style={{ fontSize: "clamp(1.65rem, 5.8vw, 2.45rem)" }}>
+                주방 인테리어,
+                <br />
+                수백만원은 써야 한다고
+                <br />
+                생각 하셨나요?
+              </h2>
+              <p className="mb-8 text-[16px] font-medium leading-[1.9] text-neutral-500 md:text-[18px]">
+                전체를 바꾸면 그렇습니다.
+                <br />
+                <strong className="font-black text-neutral-800">
+                  도어만
+                </strong>{" "}
+                바꾸면 비용도 달라집니다.
+              </p>
+            </div>
           </FadeIn>
           <FadeIn delay={150}>
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div
+              className="mt-5 grid grid-cols-2 overflow-hidden rounded-lg"
+              style={{ border: "1px solid #cfd8e3" }}>
               <div
-                className="rounded-2xl p-4 text-center"
-                style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
-                <p className="text-[11px] font-semibold text-neutral-400 mb-1">
-                  싱크대 전체 교체
+                className="p-4 text-center md:p-5"
+                style={{ background: "#f8f9fb" }}>
+                <p className="mb-2 text-[13px] font-black text-neutral-500">
+                  주방 전체 인테리어
                 </p>
                 <p
-                  className="text-[22px] font-black"
-                  style={{ color: "#ef4444" }}>
-                  200~500만원
-                </p>
-                <p className="text-[11px] text-neutral-400 mt-1">
-                  + 공사 2~3일 대기
+                  className="text-[18px] font-black line-through md:text-[22px]"
+                  style={{ color: "#8b949e" }}>
+                  300만~500만원
                 </p>
               </div>
               <div
-                className="rounded-2xl p-4 text-center"
-                style={{ background: "#eef4ff", border: "1px solid #c7d7ff" }}>
-                <p className="text-[11px] font-semibold text-[#1a5cff] mb-1">
-                  리스토리 문짝 리폼
+                className="p-4 text-center md:p-5"
+                style={{ background: "#eef4ff", borderLeft: "1px solid #c7d7ff" }}>
+                <p className="mb-1 text-[13px] font-black text-neutral-900">
+                  도어 교체
+                </p>
+                <p className="mb-1 text-[11px] font-semibold text-neutral-500">
+                  25~35평 기준
                 </p>
                 <p
-                  className="text-[22px] font-black"
+                  className="text-[20px] font-black md:text-[24px]"
                   style={{ color: "#1a5cff" }}>
-                  40~100만원~
+                  54만~79만원
                 </p>
-                <p className="text-[11px] text-[#1a5cff]/60 mt-1">
-                  + 당일 완료
+              </div>
+            </div>
+            <p className="mt-5 text-center text-[14px] font-medium leading-[1.8] text-neutral-500 md:text-[16px]">
+              평수가 아니라{" "}
+              <strong className="font-black text-neutral-900">
+                교체할 도어 개수로 계산합니다.
+              </strong>
+              <br />
+              도어 크기와 자재에 따라{" "}
+              <strong className="font-black text-neutral-900">
+                1짝 단가가 달라집니다.
+              </strong>
+            </p>
+            <div
+              className="mt-7 rounded-lg bg-white p-2 shadow-[0_8px_28px_rgba(15,23,42,0.08)]"
+              style={{ border: "1px solid #d9e0e8" }}>
+              <div className="flex items-center justify-between px-2 pb-2 pt-1">
+                <p className="text-[13px] font-black text-neutral-700">
+                  우리 집
                 </p>
+                <p className="text-[13px] font-black text-neutral-700">
+                  예상 견적
+                </p>
+              </div>
+              {[
+                {
+                  home: "8평 원룸",
+                  type: "一자형 주방",
+                  parts: "도어·서랍 6짝 + 걸레받이 1개",
+                  note: "소형 주방 기준",
+                  price: "42만원",
+                  width: "21%",
+                  shape: "line",
+                },
+                {
+                  home: "15평 빌라",
+                  type: "一자형 주방",
+                  parts: "도어·서랍 8짝 + 걸레받이 1개",
+                  note: "기본 주방 기준",
+                  price: "55만원",
+                  width: "27%",
+                  shape: "line",
+                },
+                {
+                  home: "25평 아파트",
+                  type: "ㄱ자형 주방",
+                  parts: "도어·서랍 12짝 + 걸레받이 2개",
+                  note: "표준 주방 기준",
+                  price: "84만원",
+                  width: "41%",
+                  shape: "l",
+                },
+                {
+                  home: "35평 아파트",
+                  type: "ㄷ자형 주방",
+                  parts: "도어·서랍 16짝 + 걸레받이 2개",
+                  note: "대형 주방 기준",
+                  price: "110만원",
+                  width: "54%",
+                  shape: "u",
+                },
+                {
+                  home: "50평 아파트",
+                  type: "ㄷ자형 주방",
+                  parts: "도어·서랍 22짝 + 걸레받이 3개",
+                  note: "대형 주방 기준",
+                  price: "152만원",
+                  width: "74%",
+                  shape: "u",
+                },
+              ].map((row) => (
+                <div
+                  key={row.home}
+                  className="relative mb-1.5 overflow-hidden rounded-lg px-3 py-4 last:mb-0 md:px-4"
+                  style={{ border: "1px solid rgba(26,92,255,0.18)" }}>
+                  <div
+                    className="absolute inset-y-0 left-0"
+                    style={{
+                      width: row.width,
+                      background:
+                        "linear-gradient(90deg, rgba(26,92,255,0.12), rgba(26,92,255,0.06))",
+                    }}
+                  />
+                  <div className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0_0_18px_rgba(26,92,255,0.08)]" />
+                  <div className="relative z-10 flex items-center justify-between gap-3">
+                    <div className="min-w-0 text-left">
+                      <div className="flex items-center gap-2">
+                        <p className="text-[18px] font-black leading-tight text-neutral-950">
+                          {row.home}
+                        </p>
+                        <svg
+                          width="28"
+                          height="22"
+                          viewBox="0 0 28 22"
+                          fill="none"
+                          aria-hidden="true"
+                          className="flex-shrink-0 text-neutral-500">
+                          {row.shape === "line" && (
+                            <>
+                              <rect
+                                x="2"
+                                y="4"
+                                width="20"
+                                height="6"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                              />
+                              <rect
+                                x="2"
+                                y="12"
+                                width="20"
+                                height="6"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                              />
+                              <path d="M9 4v14M16 4v14" stroke="currentColor" />
+                            </>
+                          )}
+                          {row.shape === "l" && (
+                            <>
+                              <rect
+                                x="3"
+                                y="3"
+                                width="17"
+                                height="6"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                              />
+                              <rect
+                                x="3"
+                                y="3"
+                                width="6"
+                                height="17"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                              />
+                              <path d="M12 3v6M3 12h6" stroke="currentColor" />
+                            </>
+                          )}
+                          {row.shape === "u" && (
+                            <>
+                              <path
+                                d="M4 3h16v5h-11v9h-5z"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                              />
+                              <path
+                                d="M20 3h4v17h-8v-5h4z"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                              />
+                              <path d="M12 3v5M20 10h4" stroke="currentColor" />
+                            </>
+                          )}
+                        </svg>
+                      </div>
+                      <p className="mt-1 text-[13px] font-semibold text-neutral-600">
+                        {row.type}
+                      </p>
+                      <p className="mt-1 text-[12px] font-semibold text-neutral-600">
+                        {row.parts}
+                      </p>
+                      <p className="mt-1 text-[11px] font-medium text-neutral-400">
+                        {row.note}
+                      </p>
+                    </div>
+                    <p className="flex-shrink-0 text-[25px] font-black text-[#1a5cff] md:text-[28px]">
+                      {row.price}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-center text-[12px] leading-[1.7] text-neutral-400">
+              실제 금액은 현장 실측, 색상, 자재 등급, 옵션에 따라 달라질 수
+              있습니다.
+            </p>
+          </FadeIn>
+          <FadeIn delay={170}>
+            <div className="mt-12 text-center">
+              <p className="mb-3 text-[14px] font-black text-[#1a5cff] md:text-[16px]">
+                가격만 보고 결정하지 마세요
+              </p>
+              <h2
+                className="mb-6 font-black leading-[1.24] text-neutral-950"
+                style={{ fontSize: "clamp(1.8rem, 6vw, 2.75rem)" }}>
+                필름 부착과
+                <br />
+                PET 제로조인트,
+                <br />
+                무엇이 다를까요?
+              </h2>
+              <p className="mb-7 text-[15px] font-medium leading-[1.85] text-neutral-500 md:text-[18px]">
+                기존 문짝을 덮는 방식과 문짝 자체를 새로 만드는 방식의
+                차이입니다.
+              </p>
+              <div className="overflow-hidden rounded-2xl text-left">
+                <div className="grid gap-6 bg-[#f7f2ea] px-5 py-8 md:grid-cols-[1fr_240px] md:items-center md:px-8 md:py-10">
+                  <div>
+                    <p className="mb-4 text-[15px] font-black italic text-neutral-500">
+                      Point 01
+                    </p>
+                    <h3 className="mb-4 text-[26px] font-black leading-[1.22] text-neutral-950 md:text-[34px]">
+                      인테리어
+                      <br />
+                      필름 부착
+                    </h3>
+                    <p className="text-[15px] font-medium leading-[1.85] text-neutral-600 md:text-[17px]">
+                      기존 문짝 위에 필름을 붙여 분위기를 바꾸는
+                      방식입니다. 문짝 상태가 좋고 간단한 변화를 원할 때
+                      선택할 수 있지만, 물먹음·들뜸·변형이 있으면 결과에
+                      영향을 받을 수 있습니다.
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {["기존 문짝 활용", "이음선 보일 수 있음", "들뜸 가능"].map(
+                        (tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-full bg-white px-3 py-1.5 text-[12px] font-black text-neutral-600">
+                            {tag}
+                          </span>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100 shadow-[0_14px_34px_rgba(15,23,42,0.12)] md:aspect-[4/5]">
+                    <Image
+                      src={FILM_EDGE_IMAGE}
+                      alt="인테리어 필름 부착 마감"
+                      fill
+                      className="object-cover"
+                      quality={100}
+                      sizes="(min-width: 768px) 360px, calc(100vw - 40px)"
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-6 bg-[#eef4ff] px-5 py-8 md:grid-cols-[240px_1fr] md:items-center md:px-8 md:py-10">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100 shadow-[0_14px_34px_rgba(26,92,255,0.12)] md:aspect-[4/5]">
+                    <Image
+                      src={PET_ZEROJOINT_EDGE_IMAGE}
+                      alt="PET 제로조인트 문짝 마감"
+                      fill
+                      className="object-cover"
+                      quality={100}
+                      sizes="(min-width: 768px) 360px, calc(100vw - 40px)"
+                    />
+                  </div>
+                  <div>
+                    <p className="mb-4 text-[15px] font-black italic text-[#1a5cff]">
+                      Point 02
+                    </p>
+                    <h3 className="mb-4 text-[26px] font-black leading-[1.22] text-neutral-950 md:text-[34px]">
+                      PET 제로조인트
+                      <br />
+                      문짝 교체
+                    </h3>
+                    <p className="text-[15px] font-medium leading-[1.85] text-neutral-600 md:text-[17px]">
+                      기존 문짝을 철거한 뒤 새 문짝을 맞춤 제작하는
+                      방식입니다. 면과 엣지가 정밀하게 이어져 접합선이 거의
+                      보이지 않고, 기존 문짝의 표면 손상과 관계없이 새 제품으로
+                      교체할 수 있습니다.
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {["새 문짝 맞춤 제작", "깔끔한 무광 마감", "마감·내구성"].map(
+                        (tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-full bg-white px-3 py-1.5 text-[12px] font-black text-[#1a5cff]">
+                            {tag}
+                          </span>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white px-5 py-5 text-left text-[15px] font-black leading-[1.8] text-neutral-950 md:px-8 md:text-[18px]">
+                  문짝이 이미 오래됐거나 물먹음·들뜸이 있다면
+                  <br />
+                  겉만 덮기보다 새 문짝으로 교체하는 편이 더 안정적입니다.
+                </div>
               </div>
             </div>
           </FadeIn>
@@ -780,7 +1299,9 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
       </section>
 
       {/* 3. COLORS */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+      <section
+        className="px-5 py-14 md:py-20"
+        style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
@@ -856,32 +1377,132 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         </div>
       </section>
 
+      </div>
+
       {/* 4. REVIEWS */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
-        <div className="mx-auto max-w-2xl">
-          <FadeIn>
-            <div className="flex items-end gap-3 mb-8">
-              <div>
-                <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-1">
-                  REVIEWS
-                </p>
-                <h2
-                  className="font-black leading-[1.2]"
-                  style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-                  직접 겪은 고객님들
-                </h2>
-              </div>
-              <div className="ml-auto text-right pb-1 flex-shrink-0">
-                <p
-                  className="text-[28px] font-black"
-                  style={{ color: "#1a5cff" }}>
-                  4.9★
-                </p>
-                <p className="text-[11px] text-neutral-400">고객 평점</p>
-              </div>
+      <section
+        id="restory-reviews"
+        className={`scroll-mt-20 border-t border-neutral-200 px-4 py-4 md:py-6 ${
+          activeTab === "reviews" ? "block" : "hidden"
+        }`}
+        style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-[720px]">
+          <div
+            className="mb-8 px-4 pb-2 pt-4 text-center md:px-8 md:pt-6">
+            <Image
+              src={REVIEW_BADGE_IMAGE}
+              alt="압도적 만족"
+              width={220}
+              height={280}
+              className="mx-auto mb-5 h-[108px] w-auto object-contain md:h-[136px]"
+              sizes="160px"
+            />
+            <p className="mb-3 text-[17px] font-semibold leading-[1.55] text-neutral-600 md:text-[22px]">
+              사진으로 먼저 확인하는
+            </p>
+            <h2
+              className="font-black leading-[1.18] text-neutral-950"
+              style={{ fontSize: "clamp(2.25rem, 7.2vw, 3.8rem)" }}>
+              <span
+                className="px-1 text-[#1a5cff]"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(26,92,255,0.14) 34%, transparent 34%)",
+                }}>
+                비포·애프터
+              </span>
+              <br />
+              리얼 후기
+            </h2>
+            <p className="mt-5 text-[14px] font-medium leading-[1.85] text-neutral-500 md:text-[17px]">
+              문짝 교체 전후가 어떻게 달라졌는지
+              <br />
+              실제 사례 사진으로 확인해보세요.
+            </p>
+          </div>
+          <div
+            className="mb-5 flex items-center gap-5 rounded-2xl px-5 py-5 md:px-7"
+            style={{ background: "#f8f9fb" }}>
+            <div>
+              <p className="text-[34px] font-black leading-none text-neutral-950">
+                4.9
+              </p>
+              <p className="mt-2 text-[17px] font-black leading-none text-[#fbbc04]">
+                ★★★★★
+              </p>
             </div>
-          </FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="min-w-0">
+              <p className="text-[14px] font-bold text-neutral-500">
+                비포 애프터 리뷰
+              </p>
+              <p className="mt-1 text-[12px] font-semibold text-neutral-500">
+                실제 시공 사진 기준
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {reviewCases.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/cases/${item.id}`}
+                  className="block h-full rounded-2xl bg-white p-4 md:p-5"
+                  style={{
+                    border: "1px solid #e5e7eb",
+                    textDecoration: "none",
+                  }}>
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[16px] font-black leading-none text-[#fbbc04]">
+                        ★★★★★
+                      </p>
+                    </div>
+                    <span className="flex-shrink-0 text-[12px] text-neutral-400">
+                      {item.date.replaceAll("-", ".")}
+                    </span>
+                  </div>
+                  <p className="mb-2 text-[15px] font-black leading-snug text-neutral-950">
+                    {item.title}
+                  </p>
+                  <p className="mb-3 text-[12px] font-semibold text-neutral-400">
+                    {item.region}
+                    {item.price ? ` · ${item.price}` : ""}
+                  </p>
+                  <div className="mb-4 grid grid-cols-2 gap-2 md:gap-3">
+                      {[
+                        { label: "BEFORE", src: item.beforeImg },
+                        { label: "AFTER", src: item.afterImg },
+                      ].map((photo) => (
+                        <div
+                          key={photo.label}
+                          className="relative aspect-[4/3] overflow-hidden rounded-lg bg-neutral-100">
+                          <Image
+                            src={photo.src}
+                            alt={`${item.title} ${photo.label}`}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 768px) 340px, calc(50vw - 32px)"
+                          />
+                          <span
+                            className="absolute bottom-2 left-2 rounded-md px-2 py-1 text-[10px] font-black text-white"
+                            style={{
+                              background:
+                                photo.label === "AFTER"
+                                  ? "#1a5cff"
+                                  : "rgba(0,0,0,0.62)",
+                            }}>
+                            {photo.label}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                  <p className="text-[14px] leading-[1.75] text-neutral-600">
+                    {item.summary}
+                  </p>
+                </Link>
+            ))}
+          </div>
+
+          <div className="hidden grid-cols-1 md:grid-cols-2 gap-4">
             {[
               {
                 img: "/images/door/review-1.png",
@@ -969,11 +1590,10 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </FadeIn>
             ))}
           </div>
-          <FadeIn delay={100}>
-            <CaseStrip region={region} />
-          </FadeIn>
         </div>
       </section>
+
+      <div className={activeTab === "detail" ? "block" : "hidden"}>
 
       {/* 5. HOW */}
       <section
@@ -1325,6 +1945,8 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
           </FadeIn>
         </div>
       </section>
+
+      </div>
 
       <FloatingCTA />
     </main>

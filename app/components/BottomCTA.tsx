@@ -1,7 +1,8 @@
 import Image from "next/image";
+import { buildTrackedContactPath } from "@/lib/attribution";
 
-const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
-const PHONE = "tel:1688-2957";
+const KAKAO_URL = buildTrackedContactPath("kakao", "bottom_cta");
+const PHONE = buildTrackedContactPath("phone", "bottom_cta");
 
 export default function BottomCTA() {
   return (
@@ -25,6 +26,7 @@ export default function BottomCTA() {
           </p>
           <a
             href={PHONE}
+            data-cta="bottom_phone"
             className="flex items-center gap-2 mb-5"
             style={{ textDecoration: "none" }}>
             <Image
@@ -44,6 +46,7 @@ export default function BottomCTA() {
             href={KAKAO_URL}
             target="_blank"
             rel="noopener noreferrer"
+            data-cta="bottom_kakao"
             className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-sm font-black text-white md:rounded-2xl md:px-10 md:py-4 md:text-base transition hover:opacity-90"
             style={{
               background: "linear-gradient(to right, #1f66ff, #4f8fff)",
