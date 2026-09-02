@@ -389,7 +389,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             <h2
               className="mb-6 font-black leading-[1.24] text-neutral-950"
               style={{ fontSize: "clamp(1.75rem, 6vw, 2.65rem)" }}>
-              집 전체를 고치지 않아도,
+              주방 전체를 바꾸지 않아도,
               <br />
               변화는 가장 크게
             </h2>
