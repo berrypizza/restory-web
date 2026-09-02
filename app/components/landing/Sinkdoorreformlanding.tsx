@@ -796,7 +796,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 <p
                   className="text-[20px] font-black md:text-[24px]"
                   style={{ color: "#1a5cff" }}>
-                  54만~79만원
+                  55만~84만원
                 </p>
               </div>
             </div>
