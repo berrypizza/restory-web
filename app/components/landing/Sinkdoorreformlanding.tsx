@@ -353,7 +353,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
 
   const heroTitle = region
     ? `${region} 싱크대 문짝 ${type}`
-    : "문짝만 바꿔도\n새 주방됩니다";
+    : "싱크대 문짝 교체만 해도\n새 주방 됩니다";
   const heroSub = region
     ? `${region} 당일 시공 가능 · 전체 교체 비용의 1/5~`
     : "싱크대 전체 교체 없이, 문짝만 바꾸면 됩니다";
