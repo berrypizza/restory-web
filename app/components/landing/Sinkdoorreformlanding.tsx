@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
@@ -13,66 +13,73 @@ import { REGIONS } from "@/lib/seo-regions";
 const PHONE = buildTrackedContactPath("phone", "sink_door");
 const KAKAO_URL = buildTrackedContactPath("kakao", "sink_door");
 const SINK_DOOR_VIDEO_ID = "tC4VLNFgvCE";
+const REAL_VIDEO_ID = "sydwgU5o4DY";
 const MAIN_IMAGE = "/images/door/sink-door-main.png";
 const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
 const FILM_EDGE_IMAGE = "/images/door/onedraw-door-edge.png";
 const PET_ZEROJOINT_EDGE_IMAGE = "/images/door/pet-zerojoint-edge.png";
+const CHAT_CONSULT_EXAMPLE_IMAGE =
+  "/images/door/chat-consult-example-safe.webp";
+const VISIT_MEASUREMENT_IMAGE = "/images/door/visit-measurement.webp";
+const REAL_SAMPLE_CHECK_IMAGE = "/images/door/real-sample-check.webp";
+const CUSTOM_PRODUCTION_IMAGE = "/images/door/factory-direct.gif";
+const FIELD_INSTALLATION_IMAGE = "/images/door/field-installation.webp";
 
 const COLOR_SAMPLE_PREVIEWS = [
   {
     name: "로지핑크",
     color: "#e8d7cf",
-    image: "/images/door/preview-rosy-pink.png",
+    image: "/images/door/preview-rosy-pink.webp",
   },
   {
     name: "모노그레이",
     color: "#c6cbca",
-    image: "/images/door/preview-mono-gray.png",
+    image: "/images/door/preview-mono-gray.webp",
   },
   {
     name: "백색 무광",
     color: "#fbfbf8",
-    image: "/images/door/preview-white-matte.png",
+    image: "/images/door/preview-white-matte.webp",
   },
   {
     name: "백색 유광",
     color: "#fbfbf8",
-    image: "/images/door/preview-white-gloss.png",
+    image: "/images/door/preview-white-gloss.webp",
   },
   {
     name: "블랙",
     color: "#171717",
-    image: "/images/door/preview-black.png",
+    image: "/images/door/preview-black.webp",
   },
   {
     name: "샌드 그레이",
     color: "#bdb4aa",
-    image: "/images/door/preview-sand-gray.png",
+    image: "/images/door/preview-sand-gray.webp",
   },
   {
     name: "인디고블루",
     color: "#1d3a46",
-    image: "/images/door/preview-indigo-blue.png",
+    image: "/images/door/preview-indigo-blue.webp",
   },
   {
     name: "진그레이 유광",
     color: "#3a3a3a",
-    image: "/images/door/preview-dark-gray-gloss.png",
+    image: "/images/door/preview-dark-gray-gloss.webp",
   },
   {
     name: "진그레이 무광",
     color: "#3f3f3f",
-    image: "/images/door/preview-dark-gray-matte.png",
+    image: "/images/door/preview-dark-gray-matte.webp",
   },
   {
     name: "크림화이트",
     color: "#f0eee6",
-    image: "/images/door/preview-cream-white.png",
+    image: "/images/door/preview-cream-white.webp",
   },
   {
     name: "포그 그레이",
     color: "#e4ddd3",
-    image: "/images/door/preview-fog-gray.png",
+    image: "/images/door/preview-fog-gray.webp",
   },
 ];
 
@@ -327,6 +334,18 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
   const selectedColor =
     COLOR_SAMPLE_PREVIEWS.find((sample) => sample.name === selectedColorName) ??
     COLOR_SAMPLE_PREVIEWS[0];
+
+  useEffect(() => {
+    const preloadTimer = window.setTimeout(() => {
+      COLOR_SAMPLE_PREVIEWS.forEach((sample) => {
+        const img = new window.Image();
+        img.decoding = "async";
+        img.src = sample.image;
+      });
+    }, 0);
+
+    return () => window.clearTimeout(preloadTimer);
+  }, []);
 
   const { region, type } = keyword
     ? parseKeyword(keyword)
@@ -1042,6 +1061,125 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
           </FadeIn>
           <FadeIn delay={170}>
             <div className="mt-12 text-center">
+              <p className="mb-6 text-[18px] font-black leading-[1.55] text-neutral-500 md:text-[22px]">
+                오래된 견적 방식,
+                <br />
+                아직도 1자 단위로 계산하시나요?
+              </p>
+              <h2
+                className="mb-8 font-black leading-[1.28] text-neutral-950"
+                style={{ fontSize: "clamp(2.2rem, 7vw, 3.45rem)" }}>
+                전체 길이가 아니라,
+                <br />
+                <span
+                  className="px-1"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(26,92,255,0.18) 34%, transparent 34%)",
+                  }}>
+                  실제 교체할 문짝만
+                </span>{" "}
+                세어주세요.
+              </h2>
+              <div className="mx-auto mb-8 max-w-[560px] space-y-3 text-left text-[15px] font-medium leading-[1.9] text-neutral-500 md:text-[17px]">
+                <p>
+                  예전에는 싱크대 전체 길이를{" "}
+                  <strong className="font-black text-neutral-800">
+                    1자(약 30cm) 단위
+                  </strong>
+                  로 나누어 견적을 내는 방식이 많았습니다.
+                </p>
+                <p>
+                  하지만 문짝 교체는 전체 길이보다{" "}
+                  <strong className="font-black text-neutral-800">
+                    실제로 교체할 문짝과 서랍 앞판의 개수
+                  </strong>
+                  가 더 중요합니다.
+                </p>
+                <p>
+                  리스토리는 문짝과 서랍 앞판을 하나씩 확인해{" "}
+                  <strong className="font-black text-neutral-800">
+                    필요한 부분만 정확하게 계산합니다.
+                  </strong>
+                </p>
+                <p>
+                  교체하지 않는 부분까지 비용에 포함하지 않아,{" "}
+                  <strong className="font-black text-neutral-800">
+                    견적은 더 투명하고 부담은 줄어듭니다.
+                  </strong>
+                </p>
+                <p className="text-[13px] text-neutral-400 md:text-[15px]">
+                  ※ 걸레받이와 몰딩은 길이에 따라{" "}
+                  <strong className="font-black text-neutral-600">
+                    m당 측정
+                  </strong>
+                  합니다.
+                </p>
+              </div>
+              <div
+                className="overflow-hidden rounded-2xl"
+                style={{ border: "1px solid #e5e7eb" }}>
+                <Image
+                  src="/images/door/estimate-count-guide.webp"
+                  alt="싱크대 문짝과 서랍 앞판 개수 세는 견적 산정 예시"
+                  width={1400}
+                  height={933}
+                  unoptimized
+                  className="h-auto w-full"
+                  sizes="(max-width: 768px) 100vw, 512px"
+                />
+              </div>
+            </div>
+          </FadeIn>
+          {/* ★ PET 직거래 섹션 — 문짝 개수 산정 안내 바로 아래 */}
+          <FadeIn delay={220}>
+            <div className="mt-4 bg-white px-5 py-12 text-center md:px-10 md:py-16">
+              <p className="mb-4 text-[22px] font-black leading-[1.25] text-neutral-900 md:text-[30px]">
+                왜 이 가격이 가능할까요?
+              </p>
+              <h3 className="mb-10 text-[38px] font-black leading-[1.08] text-[#1a5cff] md:text-[56px]">
+                공장가 그대로,
+                <br />
+                소비자가 됩니다
+              </h3>
+              <div className="mx-auto max-w-[420px] text-left">
+                <div>
+                  <div className="mx-auto mb-6 flex h-10 max-w-[220px] items-center justify-center rounded-full bg-[#1a5cff] px-6 text-[14px] font-black text-white">
+                    리스토리 직거래
+                  </div>
+                  <div
+                    className="relative mb-5 overflow-hidden rounded-lg bg-neutral-100"
+                    style={{ aspectRatio: "16/9" }}>
+                    <Image
+                      src="/images/door/factory-direct.gif"
+                      alt="리스토리 PET 문짝 공장 직거래"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      sizes="(min-width: 768px) 300px, 100vw"
+                    />
+                  </div>
+                  <ul className="space-y-2 text-[14px] font-medium leading-[1.65] text-neutral-700">
+                    <li>
+                      - PET 문짝 공장에서{" "}
+                      <strong className="font-black text-[#1a5cff]">
+                        직접 매입
+                      </strong>
+                    </li>
+                    <li>
+                      - 필요한 문짝만 제작해{" "}
+                      <strong className="font-black text-[#1a5cff]">
+                        교체 비용 감소
+                      </strong>
+                    </li>
+                    <li>- 소재와 수량을 확인한 뒤 견적 안내</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+          <FadeIn delay={170}>
+            <div className="mt-12 text-center">
               <p className="mb-3 text-[14px] font-black text-[#1a5cff] md:text-[16px]">
                 가격만 보고 결정하지 마세요
               </p>
@@ -1058,29 +1196,35 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 기존 문짝을 덮는 방식과 문짝 자체를 새로 만드는 방식의
                 차이입니다.
               </p>
-              <div className="overflow-hidden rounded-2xl text-left">
-                <div className="grid gap-6 bg-[#f7f2ea] px-5 py-8 md:grid-cols-[1fr_240px] md:items-center md:px-8 md:py-10">
+              <div className="overflow-hidden rounded-2xl text-left shadow-[0_14px_34px_rgba(15,23,42,0.08)]">
+                <div
+                  className="grid gap-6 bg-[#fff4f1] px-5 py-8 md:grid-cols-[1fr_240px] md:items-center md:px-8 md:py-10"
+                  style={{ borderLeft: "5px solid #ef4444" }}>
                   <div>
-                    <p className="mb-4 text-[15px] font-black italic text-neutral-500">
-                      Point 01
-                    </p>
+                    <div className="mb-4 flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-[#ef4444] px-3 py-1 text-[12px] font-black text-white">
+                        주의 01
+                      </span>
+                      <span className="text-[12px] font-black text-[#b91c1c]">
+                        기존 문짝을 덮는 방식
+                      </span>
+                    </div>
                     <h3 className="mb-4 text-[26px] font-black leading-[1.22] text-neutral-950 md:text-[34px]">
-                      인테리어
+                      필름 부착은
                       <br />
-                      필름 부착
+                      상태 영향을 받습니다
                     </h3>
-                    <p className="text-[15px] font-medium leading-[1.85] text-neutral-600 md:text-[17px]">
-                      기존 문짝 위에 필름을 붙여 분위기를 바꾸는
-                      방식입니다. 문짝 상태가 좋고 간단한 변화를 원할 때
-                      선택할 수 있지만, 물먹음·들뜸·변형이 있으면 결과에
-                      영향을 받을 수 있습니다.
+                    <p className="text-[15px] font-medium leading-[1.85] text-[#7f1d1d] md:text-[17px]">
+                      기존 문짝 위를 덮어 분위기를 바꾸는 방식입니다.
+                      문짝이 이미 물먹었거나 들뜬 상태라면 기존 문제가
+                      새 마감 위로 다시 드러날 수 있습니다.
                     </p>
                     <div className="mt-5 flex flex-wrap gap-2">
-                      {["기존 문짝 활용", "이음선 보일 수 있음", "들뜸 가능"].map(
+                      {["물먹음 영향", "들뜸 재발 가능", "기존 표면 상태 중요"].map(
                         (tag) => (
                           <span
                             key={tag}
-                            className="rounded-full bg-white px-3 py-1.5 text-[12px] font-black text-neutral-600">
+                            className="rounded-full bg-white px-3 py-1.5 text-[12px] font-black text-[#b91c1c]">
                             {tag}
                           </span>
                         ),
@@ -1096,9 +1240,15 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                       quality={100}
                       sizes="(min-width: 768px) 360px, calc(100vw - 40px)"
                     />
+                    <div className="absolute inset-0 bg-[#7f1d1d]/12" />
+                    <div className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1.5 text-[12px] font-black text-[#b91c1c] shadow">
+                      상태 나쁘면 비추천
+                    </div>
                   </div>
                 </div>
-                <div className="grid gap-6 bg-[#eef4ff] px-5 py-8 md:grid-cols-[240px_1fr] md:items-center md:px-8 md:py-10">
+                <div
+                  className="grid gap-6 bg-[#eef4ff] px-5 py-8 md:grid-cols-[240px_1fr] md:items-center md:px-8 md:py-10"
+                  style={{ borderLeft: "5px solid #1a5cff" }}>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100 shadow-[0_14px_34px_rgba(26,92,255,0.12)] md:aspect-[4/5]">
                     <Image
                       src={PET_ZEROJOINT_EDGE_IMAGE}
@@ -1110,9 +1260,14 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     />
                   </div>
                   <div>
-                    <p className="mb-4 text-[15px] font-black italic text-[#1a5cff]">
-                      Point 02
-                    </p>
+                    <div className="mb-4 flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-[#1a5cff] px-3 py-1 text-[12px] font-black text-white">
+                        선택 02
+                      </span>
+                      <span className="text-[12px] font-black text-[#1a5cff]">
+                        문짝 자체를 새로 만드는 방식
+                      </span>
+                    </div>
                     <h3 className="mb-4 text-[26px] font-black leading-[1.22] text-neutral-950 md:text-[34px]">
                       PET 제로조인트
                       <br />
@@ -1120,12 +1275,11 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     </h3>
                     <p className="text-[15px] font-medium leading-[1.85] text-neutral-600 md:text-[17px]">
                       기존 문짝을 철거한 뒤 새 문짝을 맞춤 제작하는
-                      방식입니다. 면과 엣지가 정밀하게 이어져 접합선이 거의
-                      보이지 않고, 기존 문짝의 표면 손상과 관계없이 새 제품으로
-                      교체할 수 있습니다.
+                      방식입니다. 표면 손상을 덮는 것이 아니라 교체하는
+                      방식이라 마감과 내구성을 더 안정적으로 잡을 수 있습니다.
                     </p>
                     <div className="mt-5 flex flex-wrap gap-2">
-                      {["새 문짝 맞춤 제작", "깔끔한 무광 마감", "마감·내구성"].map(
+                      {["새 문짝 맞춤 제작", "제로조인트 마감", "마감·내구성 안정"].map(
                         (tag) => (
                           <span
                             key={tag}
@@ -1177,53 +1331,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </div>
             </div>
           </FadeIn>
-          {/* ★ PET 직거래 섹션 — 제로조인트 카드 바로 아래 */}
-          <FadeIn delay={220}>
-            <div className="mt-4 bg-white px-5 py-12 text-center md:px-10 md:py-16">
-              <p className="mb-4 text-[22px] font-black leading-[1.25] text-neutral-900 md:text-[30px]">
-                왜 이 가격이 가능할까요?
-              </p>
-              <h3 className="mb-10 text-[38px] font-black leading-[1.08] text-[#1a5cff] md:text-[56px]">
-                공장가 그대로,
-                <br />
-                소비자가 됩니다
-              </h3>
-              <div className="mx-auto max-w-[420px] text-left">
-                <div>
-                  <div className="mx-auto mb-6 flex h-10 max-w-[220px] items-center justify-center rounded-full bg-[#1a5cff] px-6 text-[14px] font-black text-white">
-                    리스토리 직거래
-                  </div>
-                  <div
-                    className="relative mb-5 overflow-hidden rounded-lg bg-neutral-100"
-                    style={{ aspectRatio: "16/9" }}>
-                    <Image
-                      src="/images/door/factory-direct.gif"
-                      alt="리스토리 PET 문짝 공장 직거래"
-                      fill
-                      unoptimized
-                      className="object-cover"
-                      sizes="(min-width: 768px) 300px, 100vw"
-                    />
-                  </div>
-                  <ul className="space-y-2 text-[14px] font-medium leading-[1.65] text-neutral-700">
-                    <li>
-                      - PET 문짝 공장에서{" "}
-                      <strong className="font-black text-[#1a5cff]">
-                        직접 매입
-                      </strong>
-                    </li>
-                    <li>
-                      - 필요한 문짝만 제작해{" "}
-                      <strong className="font-black text-[#1a5cff]">
-                        교체 비용 감소
-                      </strong>
-                    </li>
-                    <li>- 소재와 수량을 확인한 뒤 견적 안내</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
         </div>
       </section>
 
@@ -1244,11 +1351,11 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               골라보세요
             </h2>
             <p className="text-[14px] text-neutral-500 mb-6">
-              화이트 · 아이보리 · 그레이 · 블랙 · 인디고 블루.
+              백색 · 크림화이트 · 포그 그레이 · 샌드 그레이 · 인디고블루.
               <br />
-              실측 출장 방문 시 실물 샘플을 직접 눈으로 보고
+              색상칩을 누르면 주방 적용 이미지를 먼저 볼 수 있고
               <br />
-              손으로 만져보고 선택하실 수 있습니다.
+              방문 시 실물 샘플을 직접 확인하실 수 있습니다.
             </p>
           </FadeIn>
           <FadeIn delay={80}>
@@ -1260,6 +1367,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 alt={`${selectedColor.name} 싱크대 문짝 색상 적용 미리보기`}
                 width={1084}
                 height={1451}
+                unoptimized
                 className="w-full h-auto"
                 sizes="(max-width: 768px) 100vw, 512px"
               />
@@ -1549,79 +1657,204 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
       <section
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
-        <div className="mx-auto max-w-lg">
+        <div className="mx-auto max-w-[720px]">
           <FadeIn>
             <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
               HOW IT WORKS
             </p>
             <h2
-              className="font-black leading-[1.2] mb-2"
-              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-              사진 한 장이면
+              className="font-black leading-[1.18] mb-4"
+              style={{ fontSize: "clamp(1.9rem, 6vw, 3rem)" }}>
+              직접 세어도,
               <br />
-              나머지는 저희가 합니다
+              사진으로 상담받아도
+              <br />
+              문짝 교체는 어렵지 않습니다
             </h2>
-            <p className="text-[14px] text-neutral-400 mb-10">
-              실측 방문 후 영업일 3일 이내 시공 완료
+            <p className="mb-10 max-w-[620px] text-[14px] font-medium leading-[1.85] text-neutral-500 md:text-[17px]">
+              문짝 개수를 직접 확인하거나, 주방 사진 2장만 보내주세요.
+              <br className="hidden md:block" />
+              예상 견적부터 실측·제작·설치까지 리스토리가 순서대로
+              안내합니다.
             </p>
           </FadeIn>
-          <div className="flex flex-col gap-3">
+          <div className="space-y-4">
+            <FadeIn delay={60}>
+              <div
+                className="rounded-2xl bg-white p-5 md:p-6"
+                style={{ border: "1px solid #dbe6ff" }}>
+                <div className="mb-5 flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1a5cff] text-[14px] font-black text-white">
+                    01
+                  </span>
+                  <div>
+                    <p className="text-[11px] font-black tracking-[0.22em] text-[#1a5cff]">
+                      STEP 01
+                    </p>
+                    <h3 className="text-[20px] font-black leading-tight text-neutral-950 md:text-[24px]">
+                      상담으로 예상 견적 확인하기
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-xl bg-[#f8f9fb] p-4">
+                    <div className="mb-4 flex items-center gap-1.5">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <span
+                          key={n}
+                          className="flex h-12 flex-1 items-center justify-center rounded-md bg-white text-[11px] font-black text-[#1a5cff]"
+                          style={{ border: "1px solid #dbe6ff" }}>
+                          {n}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="mb-2 text-[16px] font-black text-neutral-950">
+                      직접 확인
+                    </p>
+                    <p className="text-[13px] font-medium leading-[1.75] text-neutral-600">
+                      상부장·하부장 문짝과 서랍 앞판을 각각 세어 예상 금액을
+                      확인할 수 있습니다.
+                    </p>
+                    <p className="mt-3 rounded-lg bg-white px-3 py-2 text-[12px] font-bold leading-[1.65] text-neutral-500">
+                      걸레받이와 몰딩은 개수가 아닌 길이에 따라 m당
+                      측정합니다.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl bg-[#eef4ff] p-4">
+                    <div
+                      className="relative mb-4 overflow-hidden rounded-lg bg-white shadow-sm"
+                      style={{ aspectRatio: "347 / 406" }}>
+                      <Image
+                        src={CHAT_CONSULT_EXAMPLE_IMAGE}
+                        alt="개인정보를 블러 처리한 사진 상담 예시"
+                        fill
+                        unoptimized
+                        sizes="(min-width: 768px) 310px, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                    <p className="mb-2 text-[16px] font-black text-neutral-950">
+                      사진으로 무료 상담
+                    </p>
+                    <p className="text-[13px] font-medium leading-[1.75] text-neutral-600">
+                      아래 사진 2장을 보내주시면 교체 가능한 범위와 예상
+                      견적을 안내해 드립니다.
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-[12px] font-bold text-[#1a5cff]">
+                      <p>문짝이 잘 보이는 사진 1장</p>
+                      <p>주방 전체가 보이는 사진 1장</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
             {[
               {
-                step: "01",
-                icon: "📸",
-                title: "사진 보내기",
-                desc: "현재 싱크대 사진만 카카오로 보내주세요. 교체 가능 여부와 예상 비용 범위를 바로 안내드립니다.",
-                time: "30초",
-              },
-              {
                 step: "02",
-                icon: "🎨",
-                title: "방문 실측 + 샘플 선택",
-                desc: "방문 시 실물 샘플을 직접 눈으로 보고 손으로 만져보며 색상을 선택하세요.",
-                time: "무료",
+                title: "방문 실측",
+                badge: "규격 확인",
+                desc:
+                  "예상 견적을 확인한 뒤 방문 일정을 잡습니다. 현장에서 문짝과 서랍 앞판의 크기, 경첩 위치, 걸레받이·몰딩 길이를 정확하게 측정합니다.",
+                note: "기존 싱크대 몸통을 그대로 사용할 수 있는지도 함께 확인합니다.",
+                bars: ["w-10", "w-16", "w-20"],
+                image: VISIT_MEASUREMENT_IMAGE,
+                imageAlt: "현장에서 싱크대 문짝 교체 범위를 실측하는 모습",
+                imageRatio: "4 / 3",
               },
               {
-                step: "03",
-                icon: "✅",
-                title: "당일 시공 완료",
-                desc: `문짝 제작 후 방문 시공. 1~2시간이면 완료되고 바로 사용 가능합니다.${region ? ` ${region} 당일 작업 마무리.` : ""}`,
-                time: "당일 완료",
+                step: "2-1",
+                title: "실제 샘플 눈으로 확인",
+                badge: "실물 확인",
+                desc:
+                  "원하는 문짝의 색상과 마감 방식을 선택합니다. 백색 유광 하이그로시와 PET 제로조인트 무광 등 현장에 맞는 방향을 함께 봅니다.",
+                note: "실측한 규격과 수량을 기준으로 최종 견적과 설치 일정을 확정합니다.",
+                bars: ["#fbfbf8", "#1d3a46", "#f0eee6"],
+                image: REAL_SAMPLE_CHECK_IMAGE,
+                imageAlt: "실제 PET 문짝 색상 샘플",
+                imageRatio: "16 / 9",
               },
-            ].map((s, i) => (
-              <FadeIn key={i} delay={i * 80}>
+              {
+                step: "3",
+                title: "맞춤 제작",
+                badge: "영업일 3~5일",
+                desc:
+                  "문짝과 서랍 앞판은 측정한 규격에 맞춰 하나씩 주문 제작합니다.",
+                note: "실측일을 기준으로 제작에는 보통 영업일 3~5일 정도 소요됩니다.",
+                bars: ["w-20", "w-14", "w-24"],
+                image: CUSTOM_PRODUCTION_IMAGE,
+                imageAlt: "PET 문짝 공장에서 맞춤 제작을 준비하는 모습",
+                imageRatio: "16 / 9",
+              },
+              {
+                step: "4",
+                title: "현장 설치",
+                badge: "약 2~3시간",
+                desc:
+                  "기존 문짝을 철거하고 새 문짝을 설치합니다. 설치 후에는 경첩과 간격, 수평을 세밀하게 조절합니다.",
+                note: "현장 설치는 주방 규모에 따라 보통 약 2~3시간 정도 소요됩니다.",
+                bars: ["w-12", "w-12", "w-12"],
+                image: FIELD_INSTALLATION_IMAGE,
+                imageAlt: "현장에서 기존 싱크대 문짝을 철거하고 설치를 준비하는 모습",
+                imageRatio: "4 / 3",
+              },
+            ].map((item, i) => (
+              <FadeIn key={item.step} delay={120 + i * 60}>
                 <div
-                  className="flex gap-4 rounded-2xl p-5"
-                  style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
-                  <div className="flex-shrink-0 flex flex-col items-center">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-[18px]"
-                      style={{ background: "#eef4ff" }}>
-                      {s.icon}
-                    </div>
-                    {i < 2 && (
-                      <div
-                        className="w-px flex-1 mt-2"
-                        style={{ background: "#e5e7eb", minHeight: 24 }}
-                      />
-                    )}
+                  className="grid gap-4 rounded-2xl bg-white p-5 md:grid-cols-[92px_1fr]"
+                  style={{ border: "1px solid #e5e7eb" }}>
+                  <div className="flex items-center gap-3 md:block">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-950 text-[14px] font-black text-white md:mb-3">
+                      {item.step}
+                    </span>
+                    <span className="rounded-full bg-[#eef4ff] px-3 py-1.5 text-[11px] font-black text-[#1a5cff]">
+                      {item.badge}
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-black text-neutral-300">
-                        {s.step}
-                      </span>
-                      <span className="text-[15px] font-black text-neutral-900">
-                        {s.title}
-                      </span>
-                      <span
-                        className="ml-auto rounded-full px-2.5 py-1 text-[11px] font-bold flex-shrink-0"
-                        style={{ background: "#eef4ff", color: "#1a5cff" }}>
-                        {s.time}
-                      </span>
-                    </div>
-                    <p className="text-[13px] leading-[1.6] text-neutral-500">
-                      {s.desc}
+                  <div>
+                    <h3 className="mb-3 text-[20px] font-black leading-tight text-neutral-950 md:text-[24px]">
+                      {item.title}
+                    </h3>
+                    {item.image ? (
+                      <div
+                        className="relative mb-4 overflow-hidden rounded-xl bg-neutral-100"
+                        style={{ aspectRatio: item.imageRatio ?? "4 / 3" }}>
+                        <Image
+                          src={item.image}
+                          alt={item.imageAlt ?? ""}
+                          fill
+                          unoptimized
+                          sizes="(min-width: 768px) 520px, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="mb-4 flex h-14 items-center gap-2 rounded-xl bg-[#f8f9fb] px-4">
+                        {item.bars.map((bar, index) => (
+                          <span
+                            key={`${item.step}-${index}`}
+                            className={`h-7 rounded-md ${
+                              bar.startsWith("#") ? "w-10" : bar
+                            }`}
+                            style={{
+                              background: bar.startsWith("#")
+                                ? bar
+                                : index === 1
+                                  ? "#1a5cff"
+                                  : "#dbe6ff",
+                              border: "1px solid rgba(15,23,42,0.08)",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    <p className="text-[14px] font-medium leading-[1.75] text-neutral-600">
+                      {item.desc}
+                    </p>
+                    <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-400">
+                      {item.note}
                     </p>
                   </div>
                 </div>
@@ -1646,7 +1879,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 fill="currentColor">
                 <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
               </svg>
-              사진 보내고 견적 받기
+              사진 2장 보내고 예상 견적 받기
             </a>
           </FadeIn>
         </div>
@@ -1681,11 +1914,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 icon: "📋",
                 title: "생산물 배상책임보험 가입",
                 desc: "시공 중 예상치 못한 문제가 생겨도 보험으로 100% 보상됩니다.",
-              },
-              {
-                icon: "💬",
-                title: "방문 전 가격 확정",
-                desc: "방문 후 갑자기 금액이 올라가는 일 없습니다. 견적 그대로 진행됩니다.",
               },
             ].map((t, i) => (
               <FadeIn key={i} delay={i * 60}>
@@ -1755,7 +1983,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             </h2>
           </FadeIn>
           <FadeIn delay={80}>
-            <YouTubeFacade videoId="tC4VLNFgvCE" />
+            <YouTubeFacade videoId={REAL_VIDEO_ID} />
           </FadeIn>
         </div>
       </section>
