@@ -18,6 +18,64 @@ const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
 const FILM_EDGE_IMAGE = "/images/door/onedraw-door-edge.png";
 const PET_ZEROJOINT_EDGE_IMAGE = "/images/door/pet-zerojoint-edge.png";
 
+const COLOR_SAMPLE_PREVIEWS = [
+  {
+    name: "로지핑크",
+    color: "#e8d7cf",
+    image: "/images/door/preview-rosy-pink.png",
+  },
+  {
+    name: "모노그레이",
+    color: "#c6cbca",
+    image: "/images/door/preview-mono-gray.png",
+  },
+  {
+    name: "백색 무광",
+    color: "#fbfbf8",
+    image: "/images/door/preview-white-matte.png",
+  },
+  {
+    name: "백색 유광",
+    color: "#fbfbf8",
+    image: "/images/door/preview-white-gloss.png",
+  },
+  {
+    name: "블랙",
+    color: "#171717",
+    image: "/images/door/preview-black.png",
+  },
+  {
+    name: "샌드 그레이",
+    color: "#bdb4aa",
+    image: "/images/door/preview-sand-gray.png",
+  },
+  {
+    name: "인디고블루",
+    color: "#1d3a46",
+    image: "/images/door/preview-indigo-blue.png",
+  },
+  {
+    name: "진그레이 유광",
+    color: "#3a3a3a",
+    image: "/images/door/preview-dark-gray-gloss.png",
+  },
+  {
+    name: "진그레이 무광",
+    color: "#3f3f3f",
+    image: "/images/door/preview-dark-gray-matte.png",
+  },
+  {
+    name: "크림화이트",
+    color: "#f0eee6",
+    image: "/images/door/preview-cream-white.png",
+  },
+  {
+    name: "포그 그레이",
+    color: "#e4ddd3",
+    image: "/images/door/preview-fog-gray.png",
+  },
+];
+
 const FAQ_ITEMS = [
   {
     q: "싱크대 문짝 교체 비용은 어떻게 계산되나요?",
@@ -263,6 +321,12 @@ interface Props {
 export default function SinkdoorReformLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"detail" | "reviews">("detail");
+  const [selectedColorName, setSelectedColorName] = useState(
+    COLOR_SAMPLE_PREVIEWS[0].name,
+  );
+  const selectedColor =
+    COLOR_SAMPLE_PREVIEWS.find((sample) => sample.name === selectedColorName) ??
+    COLOR_SAMPLE_PREVIEWS[0];
 
   const { region, type } = keyword
     ? parseKeyword(keyword)
@@ -1082,215 +1146,80 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             </div>
           </FadeIn>
           <FadeIn delay={180}>
-            <div
-              className="mt-4 overflow-hidden rounded-2xl"
-              style={{ border: "1px solid #e5e7eb" }}>
-              <div className="p-5" style={{ background: "#fff" }}>
-                <p className="text-[11px] font-bold tracking-widest text-neutral-400 mb-3">
-                  QUALITY PROOF
-                </p>
-                <h3 className="text-[18px] font-black text-neutral-900 leading-[1.3] mb-1">
-                  왜 오래 써도 안 들뜰까요?
-                </h3>
-                <p className="text-[13px] leading-[1.7] text-neutral-500 mb-5">
-                  일반 문짝은 테두리에 엣지 테이프를 붙여요.
-                  <br />
-                  리스토리는{" "}
-                  <strong className="text-neutral-800">제로 조인트</strong> —
-                  이음새 없이 일체화 마감합니다.
-                </p>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div
-                    className="rounded-xl p-4"
-                    style={{
-                      background: "#f8f9fb",
-                      border: "1px solid #e5e7eb",
-                    }}>
-                    <p className="text-[11px] font-bold text-neutral-400 mb-2">
-                      일반 문짝
-                    </p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div
-                        className="flex-1 h-6 rounded"
-                        style={{
-                          background: "#e5e7eb",
-                          position: "relative",
-                          overflow: "hidden",
-                        }}>
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            width: 6,
-                            background: "#94a3b8",
-                            borderRadius: "0 4px 4px 0",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <p className="text-[12px] font-black text-neutral-500">
-                      엣지 테이프 부착
-                    </p>
-                    <p className="text-[11px] text-neutral-400 mt-1 leading-[1.5]">
-                      시간 지나면 수분·열로
-                      <br />
-                      들뜨고 벗겨짐
-                    </p>
-                  </div>
-                  <div
-                    className="rounded-xl p-4"
-                    style={{
-                      background: "#eef4ff",
-                      border: "1px solid #c7d7ff",
-                    }}>
-                    <p
-                      className="text-[11px] font-bold mb-2"
-                      style={{ color: "#1a5cff" }}>
-                      리스토리
-                    </p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <div
-                        className="flex-1 h-6 rounded-lg"
-                        style={{ background: "#1a5cff" }}
-                      />
-                    </div>
-                    <p
-                      className="text-[12px] font-black"
-                      style={{ color: "#1a5cff" }}>
-                      제로 조인트 마감
-                    </p>
-                    <p
-                      className="text-[11px] mt-1 leading-[1.5]"
-                      style={{ color: "rgba(26,92,255,0.6)" }}>
-                      이음새 없이 일체화
-                      <br />
-                      들뜸·벗겨짐 없음
-                    </p>
-                  </div>
-                </div>
+            <div className="mt-4 bg-white px-5 py-11 text-center md:px-10 md:py-14">
+              <p className="mb-5 text-[13px] font-black text-[#1a5cff] md:text-[15px]">
+                왜 오래 써도 차이가 날까요?
+              </p>
+              <h3 className="mb-8 text-[32px] font-black leading-[1.12] text-neutral-950 md:text-[44px]">
+                틈새가 적을수록,
+                <br />
+                물에 강한 문짝이 됩니다
+              </h3>
+              <p className="mb-9 text-[16px] font-medium leading-[1.9] text-neutral-500 md:text-[18px]">
+                제로조인트는 모서리 틈새를 줄여 물이 스며드는 길을 줄입니다.
+                <br />
+                24시간 물 접촉 테스트에서도 엣지 벌어짐과 물불림 걱정을
+                <br className="hidden md:block" />
+                낮추는 방식으로 제작합니다.
+              </p>
+              <div className="mx-auto w-full max-w-[520px]">
                 <div
-                  className="flex items-center justify-center gap-2 rounded-xl py-3"
-                  style={{ background: "#eef4ff" }}>
-                  <span
-                    className="text-[16px] font-black"
-                    style={{ color: "#1a5cff" }}>
-                    마감선 제로
-                  </span>
-                  <span
-                    className="text-[13px]"
-                    style={{ color: "rgba(26,92,255,0.5)" }}>
-                    → 오래 써도 새것처럼
-                  </span>
-                </div>
-              </div>
-              <div
-                className="grid grid-cols-2 border-t"
-                style={{ borderColor: "#f3f4f6" }}>
-                <div
-                  className="relative overflow-hidden"
-                  style={{ aspectRatio: "4/3" }}>
+                  className="relative overflow-hidden rounded-lg bg-white"
+                  style={{ aspectRatio: "1160/1352" }}>
                   <Image
-                    src="/images/door/edge-normal.jpg"
-                    alt="일반 엣지 들뜸"
+                    src="/images/door/zerojoint-hotmelt-comparison.png"
+                    alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
                     fill
                     className="object-cover"
-                    sizes="50vw"
+                    sizes="(min-width: 768px) 520px, 100vw"
                   />
-                  <div
-                    className="absolute inset-0 flex flex-col justify-end p-3"
-                    style={{
-                      background:
-                        "linear-gradient(to top, rgba(0,0,0,0.65), transparent)",
-                    }}>
-                    <p className="text-[10px] font-semibold text-white/70">
-                      일반 엣지
-                    </p>
-                    <p className="text-[13px] font-black text-white">
-                      들뜸 발생
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="relative overflow-hidden"
-                  style={{ aspectRatio: "4/3" }}>
-                  <Image
-                    src="/images/door/edge-zerojoint.png"
-                    alt="제로 조인트 마감"
-                    fill
-                    className="object-cover"
-                    sizes="50vw"
-                  />
-                  <div
-                    className="absolute inset-0 flex flex-col justify-end p-3"
-                    style={{
-                      background:
-                        "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
-                    }}>
-                    <p className="text-[10px] font-semibold text-white/70">
-                      리스토리 제로 조인트
-                    </p>
-                    <p className="text-[13px] font-black text-white">
-                      이음새 없음
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
           </FadeIn>
           {/* ★ PET 직거래 섹션 — 제로조인트 카드 바로 아래 */}
           <FadeIn delay={220}>
-            <div
-              className="mt-4 overflow-hidden rounded-2xl"
-              style={{ border: "1px solid #e5e7eb" }}>
-              {/* 공장 사진 풀너비 */}
-              <div
-                className="relative overflow-hidden"
-                style={{ aspectRatio: "16/9" }}>
-                <Image
-                  src="/images/upper/factory-1.png"
-                  alt="리스토리 PET 문짝 직매입 — 공장 직거래"
-                  fill
-                  className="object-cover"
-                  sizes="100vw"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
-                  }}
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="text-[11px] font-bold tracking-widest text-white/50 mb-1">
-                    WHY SO AFFORDABLE
-                  </p>
-                  <h3 className="text-[22px] font-black text-white leading-[1.2] mb-1">
-                    공장 직거래, 중간 마진 없음
-                  </h3>
-                  <p className="text-[13px] text-white/60">
-                    PET 문짝 공장 직거래 · 중간 유통 없음
-                  </p>
-                </div>
-              </div>
-
-              {/* 하단 메시지 */}
-              <div className="p-5" style={{ background: "#fff" }}>
-                <p className="text-[13px] leading-[1.7] text-neutral-500">
-                  인테리어 대리점·자재상을 거치지 않아요. PET 문짝 공장에서{" "}
-                  <strong className="text-neutral-800">직매입</strong>하니까
-                  고급 소재를 전체 교체의 1/5 수준으로 시공합니다.
-                </p>
-                <div
-                  className="mt-4 flex items-center justify-center gap-3 rounded-xl py-3.5"
-                  style={{ background: "#0a1628" }}>
-                  <span className="text-[17px] font-black text-white">
-                    공장가 = 소비자가
-                  </span>
-                  <span className="text-[12px] text-white/40">
-                    마진 없이 저렴한 이유
-                  </span>
+            <div className="mt-4 bg-white px-5 py-12 text-center md:px-10 md:py-16">
+              <p className="mb-4 text-[22px] font-black leading-[1.25] text-neutral-900 md:text-[30px]">
+                왜 이 가격이 가능할까요?
+              </p>
+              <h3 className="mb-10 text-[38px] font-black leading-[1.08] text-[#1a5cff] md:text-[56px]">
+                공장가 그대로,
+                <br />
+                소비자가 됩니다
+              </h3>
+              <div className="mx-auto max-w-[420px] text-left">
+                <div>
+                  <div className="mx-auto mb-6 flex h-10 max-w-[220px] items-center justify-center rounded-full bg-[#1a5cff] px-6 text-[14px] font-black text-white">
+                    리스토리 직거래
+                  </div>
+                  <div
+                    className="relative mb-5 overflow-hidden rounded-lg bg-neutral-100"
+                    style={{ aspectRatio: "16/9" }}>
+                    <Image
+                      src="/images/door/factory-direct.gif"
+                      alt="리스토리 PET 문짝 공장 직거래"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      sizes="(min-width: 768px) 300px, 100vw"
+                    />
+                  </div>
+                  <ul className="space-y-2 text-[14px] font-medium leading-[1.65] text-neutral-700">
+                    <li>
+                      - PET 문짝 공장에서{" "}
+                      <strong className="font-black text-[#1a5cff]">
+                        직접 매입
+                      </strong>
+                    </li>
+                    <li>
+                      - 필요한 문짝만 제작해{" "}
+                      <strong className="font-black text-[#1a5cff]">
+                        교체 비용 감소
+                      </strong>
+                    </li>
+                    <li>- 소재와 수량을 확인한 뒤 견적 안내</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -1327,10 +1256,10 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               className="overflow-hidden rounded-2xl"
               style={{ border: "1px solid #e5e7eb" }}>
               <Image
-                src="/images/door/color-samples.png"
-                alt="싱크대 문짝 색상 샘플 — 화이트, 그레이, 블랙, 인디고 블루 등 100가지 이상"
-                width={1080}
-                height={1080}
+                src={selectedColor.image}
+                alt={`${selectedColor.name} 싱크대 문짝 색상 적용 미리보기`}
+                width={1084}
+                height={1451}
                 className="w-full h-auto"
                 sizes="(max-width: 768px) 100vw, 512px"
               />
@@ -1338,19 +1267,40 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
           </FadeIn>
           <FadeIn delay={120}>
             <div
-              className="mt-4 rounded-2xl p-4 flex items-start gap-3"
+              className="mt-4 rounded-2xl p-4"
               style={{ background: "#f8f9fb", border: "1px solid #e5e7eb" }}>
-              <span className="text-[22px] flex-shrink-0">🎨</span>
-              <div>
-                <p className="text-[14px] font-black text-neutral-900 mb-1">
-                  실측 출장 방문 시 실물 샘플 지참
-                </p>
-                <p className="text-[13px] leading-[1.6] text-neutral-500">
-                  화면으로 보는 색상과 실물은 달라요. 출장 방문 시 실제 샘플을
-                  직접 가져가서 주방 조명 아래에서 직접 비교하고 선택하실 수
-                  있습니다. 결정은 천천히 하셔도 됩니다.
-                </p>
+              <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-5">
+                {COLOR_SAMPLE_PREVIEWS.map((sample) => (
+                  <button
+                    key={sample.name}
+                    type="button"
+                    onClick={() => setSelectedColorName(sample.name)}
+                    className="text-center"
+                    aria-pressed={selectedColorName === sample.name}>
+                    <div
+                      className="h-10 rounded-md"
+                      style={{
+                        background: sample.color,
+                        border:
+                          selectedColorName === sample.name
+                            ? "2px solid #1a5cff"
+                            : "1px solid rgba(15,23,42,0.12)",
+                        boxShadow:
+                          selectedColorName === sample.name
+                            ? "0 0 0 3px rgba(26,92,255,0.14)"
+                            : "none",
+                      }}
+                    />
+                    <p className="mt-1.5 break-keep text-[12px] font-medium leading-[1.35] text-neutral-600">
+                      {sample.name}
+                    </p>
+                  </button>
+                ))}
               </div>
+              <p className="mt-4 text-[12px] leading-[1.65] text-neutral-500">
+                사진과 화면 색상은 실제 샘플과 다를 수 있어 출장 방문 시
+                실물을 보고 선택하실 수 있습니다.
+              </p>
             </div>
           </FadeIn>
           <FadeIn delay={160}>
