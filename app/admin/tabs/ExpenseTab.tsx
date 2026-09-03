@@ -400,12 +400,16 @@ export default function ExpenseTab({
               className="rounded-xl p-3"
               style={{ backgroundColor: "#f8fafc" }}>
               <p
-                className="text-[11px] font-bold mb-1"
+                className={`font-bold mb-1 ${
+                  card.label === "매출" ? "text-xs" : "text-[11px]"
+                }`}
                 style={{ color: "#64748b" }}>
                 {card.label}
               </p>
               <p
-                className="text-sm font-black leading-snug break-keep"
+                className={`font-black leading-snug break-keep ${
+                  card.label === "매출" ? "text-lg" : "text-sm"
+                }`}
                 style={{ color: card.color }}>
                 {formatWon(card.value)}
               </p>
