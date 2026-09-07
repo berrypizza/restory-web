@@ -12,6 +12,7 @@ import {
   type ParentCategory,
   type CaseCategory,
 } from "@/lib/case-data";
+import { sanitizePublicCaseText } from "@/lib/public-case-text";
 
 const PER_PAGE = 6;
 const PAGE_WINDOW = 10;
@@ -229,7 +230,7 @@ export default function CasesPageContent() {
                     <p
                       className="text-xs mb-2 line-clamp-2"
                       style={{ color: "#64748b" }}>
-                      {item.summary}
+                      {sanitizePublicCaseText(item.summary)}
                     </p>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span

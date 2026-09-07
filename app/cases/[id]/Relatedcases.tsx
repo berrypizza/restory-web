@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { cases, type CaseItem } from "@/lib/case-data";
+import type { CaseItem } from "@/lib/case-data";
 
 const REFORM_CATEGORIES = ["싱크대 리폼", "가죽 리폼"] as const;
 function isReformCategory(cat: string) {
@@ -11,37 +11,18 @@ function isReformCategory(cat: string) {
 }
 
 interface Props {
-  currentId: string;
-  currentParentCategory: string;
+  similarCases: CaseItem[];
+  otherCases: CaseItem[];
 }
 
 export default function RelatedCases({
-  currentId,
-  currentParentCategory,
+  similarCases,
+  otherCases,
 }: Props) {
   const [tab, setTab] = useState<"similar" | "other">("similar");
 
-  // 비슷한 사례: 같은 parentCategory, 최신 6개
-  const similar = cases
-    .filter(
-      (c) => c.parentCategory === currentParentCategory && c.id !== currentId,
-    )
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 6);
-
-  // 다른 서비스: 다른 parentCategory에서 카테고리별 최신 1개씩
-  const OTHER_CATEGORIES = [
-    "싱크대 수리",
-    "싱크대 리폼",
-    "가죽 리폼",
-    "소파 복원",
-  ].filter((c) => c !== currentParentCategory);
-  const other = OTHER_CATEGORIES.flatMap((cat) =>
-    cases
-      .filter((c) => c.parentCategory === cat && c.id !== currentId)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 2),
-  );
+  const similar = similarCases;
+  const other = otherCases;
 
   const list = tab === "similar" ? similar : other;
 

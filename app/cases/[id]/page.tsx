@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
+import { sanitizePublicCaseText } from "@/lib/public-case-text";
 import BeforeAfterToggle from "./BeforeAfterToggle";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import CollapsibleContent from "./CollapsibleContent";
@@ -22,16 +23,17 @@ export async function generateMetadata({
   if (!item) return {};
 
   const imageUrl = `https://www.restorystudio.co.kr${item.afterImg}`;
+  const summary = sanitizePublicCaseText(item.summary);
 
   return {
     title: item.title,
-    description: item.summary,
+    description: summary,
     alternates: {
       canonical: `https://www.restorystudio.co.kr/cases/${item.id}`,
     },
     openGraph: {
       title: item.title,
-      description: item.summary,
+      description: summary,
       url: `https://www.restorystudio.co.kr/cases/${item.id}`,
       type: "article",
       images: [
@@ -46,7 +48,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: item.title,
-      description: item.summary,
+      description: summary,
       images: [imageUrl],
     },
   };
@@ -54,6 +56,25 @@ export async function generateMetadata({
 
 const PHONE = buildTrackedContactPath("phone", "case_detail");
 const KAKAO_URL = buildTrackedContactPath("kakao", "case_detail");
+const OTHER_CATEGORIES = [
+  "싱크대 수리",
+  "싱크대 리폼",
+  "가죽 리폼",
+  "소파 복원",
+];
+
+function toPublicCaseItem(item: (typeof cases)[number]) {
+  const publicContent = item.content
+    ? sanitizePublicCaseText(item.content)
+    : undefined;
+
+  return {
+    ...item,
+    summary: sanitizePublicCaseText(item.summary),
+    content: publicContent,
+    price: undefined,
+  };
+}
 
 export default async function CaseDetailPage({
   params,
@@ -63,13 +84,34 @@ export default async function CaseDetailPage({
   const { id } = await params;
   const item = cases.find((c) => c.id === id);
   if (!item) notFound();
+  const publicSummary = sanitizePublicCaseText(item.summary);
+  const publicContent = item.content
+    ? sanitizePublicCaseText(item.content)
+    : undefined;
+  const publicItem = toPublicCaseItem(item);
+  const similarCases = cases
+    .filter(
+      (c) => c.parentCategory === item.parentCategory && c.id !== item.id,
+    )
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 6)
+    .map(toPublicCaseItem);
+  const otherCases = OTHER_CATEGORIES.filter(
+    (category) => category !== item.parentCategory,
+  ).flatMap((category) =>
+    cases
+      .filter((c) => c.parentCategory === category && c.id !== item.id)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 2)
+      .map(toPublicCaseItem),
+  );
 
   // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: item.title,
-    description: item.summary,
+    description: publicSummary,
     datePublished: item.date,
     dateModified: item.date,
     image: [
@@ -167,11 +209,11 @@ export default async function CaseDetailPage({
         <p
           className="text-base leading-relaxed mb-6"
           style={{ color: "#64748b" }}>
-          {item.summary}
+          {publicSummary}
         </p>
 
         {/* Before / After 토글 — before 이미지가 HTML에 존재, 네이버 썸네일 수집 */}
-        <BeforeAfterToggle item={item} />
+        <BeforeAfterToggle item={publicItem} />
 
         {/* 인라인 CTA */}
         <div
@@ -216,14 +258,14 @@ export default async function CaseDetailPage({
         </div>
 
         {/* 작업 내용 */}
-        {item.content && (
+        {publicContent && (
           <section className="mb-8">
             <h2
               className="text-xl font-black mb-4"
               style={{ color: "#111827" }}>
               작업 내용
             </h2>
-            <CollapsibleContent content={item.content} collapsedHeight={160} />
+            <CollapsibleContent content={publicContent} collapsedHeight={160} />
           </section>
         )}
 
@@ -246,8 +288,8 @@ export default async function CaseDetailPage({
 
         {/* 관련 사례 */}
         <RelatedCases
-          currentId={item.id}
-          currentParentCategory={item.parentCategory}
+          similarCases={similarCases}
+          otherCases={otherCases}
         />
 
         {/* 하단 CTA */}
