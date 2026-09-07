@@ -206,23 +206,6 @@ function CaseStrip({ region }: { region?: string }) {
                   style={{ background: "#1a5cff" }}>
                   AFTER
                 </div>
-                {item.price && (
-                  <div
-                    className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-lg px-2.5 py-1.5"
-                    style={{
-                      background: "rgba(255,255,255,0.94)",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.16)",
-                      backdropFilter: "blur(8px)",
-                    }}>
-                    <span className="text-[10px] font-bold" style={{ color: "#6b7684" }}>
-                      작업 비용
-                    </span>
-                    <span className="h-3 w-px" style={{ background: "#e5e8eb" }} />
-                    <span className="text-[20px] font-black leading-none" style={{ color: "#3182f6" }}>
-                      {item.price}
-                    </span>
-                  </div>
-                )}
               </div>
               <div className="p-3 bg-white">
                 <p className="text-[13px] font-extrabold text-neutral-900 truncate">
@@ -370,6 +353,14 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
     .filter((c) => c.category === "싱크대 리폼" && c.title.includes("문짝"))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     ;
+  const showReviews = () => {
+    setActiveTab("reviews");
+    window.setTimeout(() => {
+      document
+        .getElementById("restory-reviews")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
 
   return (
     <main
@@ -851,7 +842,8 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </p>
             </div>
           </FadeIn>
-          <FadeIn delay={150}>
+          {false && (
+            <FadeIn delay={150}>
             <div
               className="mt-5 grid grid-cols-2 overflow-hidden rounded-lg"
               style={{ border: "1px solid #cfd8e3" }}>
@@ -1058,7 +1050,8 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               실제 금액은 현장 실측, 색상, 자재 등급, 옵션에 따라 달라질 수
               있습니다.
             </p>
-          </FadeIn>
+            </FadeIn>
+          )}
           <FadeIn delay={170}>
             <div className="mt-12 text-center">
               <p className="mb-6 text-[18px] font-black leading-[1.55] text-neutral-500 md:text-[22px]">
@@ -1523,7 +1516,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                   </p>
                   <p className="mb-3 text-[12px] font-semibold text-neutral-400">
                     {item.region}
-                    {item.price ? ` · ${item.price}` : ""}
                   </p>
                   <div className="mb-4 grid grid-cols-2 gap-2 md:gap-3">
                       {[
@@ -2126,7 +2118,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
 
       </div>
 
-      <FloatingCTA />
+      <FloatingCTA onReviewClick={showReviews} />
     </main>
   );
 }
