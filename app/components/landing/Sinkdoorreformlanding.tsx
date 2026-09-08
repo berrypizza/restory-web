@@ -1325,56 +1325,82 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             </div>
           </FadeIn>
           <FadeIn delay={180}>
-            <div className="mt-4 bg-white px-5 py-11 text-center md:px-10 md:py-14">
-              <p className="mb-5 text-[13px] font-black text-[#1a5cff] md:text-[15px]">
-                왜 오래 써도 차이가 날까요?
-              </p>
-              <h3 className="mb-8 text-[32px] font-black leading-[1.12] text-neutral-950 md:text-[44px]">
-                틈새가 적을수록,
-                <br />
-                물에 강한 문짝이 됩니다
-              </h3>
-              <p className="mb-9 text-[16px] font-medium leading-[1.9] text-neutral-500 md:text-[18px]">
-                제로조인트는 모서리 틈새를 줄여 물이 스며드는 길을 줄입니다.
-                <br />
-                24시간 물 접촉 테스트에서도 엣지 벌어짐과 물불림 걱정을
-                <br className="hidden md:block" />
-                낮추는 방식으로 제작합니다.
-              </p>
-              <div className="mx-auto w-full max-w-[720px]">
-                <div
-                  className="relative overflow-hidden rounded-lg bg-white"
-                  style={{ aspectRatio: "1122/1402" }}>
-                  <Image
-                    src="/images/door/pet-difference.png"
-                    alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 768px) 720px, 100vw"
-                  />
-                </div>
+            <div className="relative left-1/2 mt-4 w-[calc(100vw-40px)] max-w-[880px] -translate-x-1/2 overflow-hidden rounded-[28px] bg-white shadow-[0_18px_48px_rgba(31,102,255,0.10)] ring-1 ring-[#d8e8ff]">
+              <div className="relative bg-[#f4f9ff]">
+                <Image
+                  src="/images/door/pet-difference.png"
+                  alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
+                  width={1122}
+                  height={1402}
+                  className="h-auto w-full"
+                  sizes="(min-width: 768px) 880px, 100vw"
+                />
               </div>
-              <div className="mx-auto mt-7 grid max-w-[720px] gap-3 text-left md:grid-cols-2">
-                <div className="rounded-xl bg-[#f8f9fb] p-5">
-                  <p className="mb-2 text-[15px] font-black text-neutral-950">
-                    신경 안 쓰면 가장 먼저 후회하는 부분
-                  </p>
-                  <p className="text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
-                    문짝 가격만 보고 고르면 모서리 마감은 놓치기 쉽습니다.
-                    시간이 지나 엣지 접착선이 벌어지면 물과 오염이 스며들고,
-                    처음엔 예뻤던 문짝도 물먹음·들뜸 때문에 후회가 남을 수
-                    있습니다.
-                  </p>
-                </div>
-                <div className="rounded-xl bg-[#eef4ff] p-5">
-                  <p className="mb-2 text-[15px] font-black text-[#1a5cff]">
-                    리스토리는 엣지 마감까지 확인합니다
-                  </p>
-                  <p className="text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
-                    PET 제로조인트처럼 모서리 틈을 줄이는 고급 마감은 물과
-                    오염이 들어갈 길을 줄여 오래 보기 좋은 문짝 선택에
-                    도움이 됩니다.
-                  </p>
+              <div className="px-6 py-9 text-left md:px-10 md:py-12">
+                <div className="grid gap-9 md:grid-cols-[0.9fr_1.1fr] md:gap-10">
+                  <div>
+                    <p className="mb-4 font-serif text-[13px] italic leading-none text-[#1f66ff]">
+                      Check Point
+                    </p>
+                    <h3 className="text-[31px] font-black leading-[1.18] text-neutral-950 md:text-[42px]">
+                      리스토리를
+                      <br />
+                      선택해야 하는 이유는
+                      <br />
+                      차고 넘칩니다!
+                    </h3>
+                  </div>
+                  <div className="space-y-7">
+                    <div className="relative pr-4 md:pr-12">
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="text-[12px] font-black text-[#1f66ff]">
+                          첫 번째
+                        </span>
+                        <span className="h-px flex-1 bg-[#1f66ff]/55" />
+                        <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
+                      </div>
+                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
+                        시간이 지나도 덜 후회하는 엣지 마감
+                      </p>
+                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                        처음엔 색상만 보여도, 오래 쓰면 모서리 접착선과 물먹음
+                        차이가 먼저 보입니다. 문짝은 엣지까지 봐야 합니다.
+                      </p>
+                    </div>
+                    <div className="relative pr-4 md:pr-12">
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="text-[12px] font-black text-[#1f66ff]">
+                          두 번째
+                        </span>
+                        <span className="h-px flex-1 bg-[#1f66ff]/55" />
+                        <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
+                      </div>
+                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
+                        PET 제로조인트로 없애는 틈새
+                      </p>
+                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                        모서리 접착 틈을 보이지 않게 마감해 물과 오염이
+                        스며드는 길을 줄이고, 주방처럼 물을 자주 쓰는 공간에
+                        잘 맞습니다.
+                      </p>
+                    </div>
+                    <div className="relative pr-4 md:pr-12">
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="text-[12px] font-black text-[#1f66ff]">
+                          세 번째
+                        </span>
+                        <span className="h-px flex-1 bg-[#1f66ff]/55" />
+                        <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
+                      </div>
+                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
+                        상태를 보고 설명하는 선택 기준
+                      </p>
+                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                        리스토리는 사진으로 문짝 상태와 사용 환경을 먼저 보고,
+                        바꿔야 할 부분과 살릴 수 있는 부분을 나눠 안내합니다.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
