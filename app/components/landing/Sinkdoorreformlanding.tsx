@@ -1325,24 +1325,24 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
             </div>
           </FadeIn>
           <FadeIn delay={180}>
-            <div className="relative left-1/2 mt-4 w-[calc(100vw-40px)] max-w-[880px] -translate-x-1/2 overflow-hidden rounded-[28px] bg-white shadow-[0_18px_48px_rgba(31,102,255,0.10)] ring-1 ring-[#d8e8ff]">
-              <div className="relative bg-[#f4f9ff]">
+            <div className="relative left-1/2 mt-4 w-[calc(100vw-40px)] max-w-[760px] -translate-x-1/2 overflow-hidden rounded-[28px] bg-white shadow-[0_18px_48px_rgba(31,102,255,0.10)] ring-1 ring-[#d8e8ff]">
+              <div className="relative bg-[#f4f9ff] px-4 pt-4 md:px-10 md:pt-8">
                 <Image
                   src="/images/door/pet-difference.png"
                   alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
                   width={1122}
                   height={1402}
-                  className="h-auto w-full"
-                  sizes="(min-width: 768px) 880px, 100vw"
+                  className="mx-auto h-auto w-full max-w-[600px] rounded-[18px]"
+                  sizes="(min-width: 768px) 600px, calc(100vw - 72px)"
                 />
               </div>
-              <div className="px-6 py-9 text-left md:px-10 md:py-12">
-                <div className="grid gap-9 md:grid-cols-[0.9fr_1.1fr] md:gap-10">
+              <div className="px-6 py-8 text-left md:px-9 md:py-10">
+                <div className="grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-9">
                   <div>
                     <p className="mb-4 font-serif text-[13px] italic leading-none text-[#1f66ff]">
                       Check Point
                     </p>
-                    <h3 className="text-[31px] font-black leading-[1.18] text-neutral-950 md:text-[42px]">
+                    <h3 className="text-[31px] font-black leading-[1.18] text-neutral-950 md:text-[36px]">
                       리스토리를
                       <br />
                       선택해야 하는 이유는
@@ -1360,7 +1360,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                         <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
                       </div>
                       <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
-                        시간이 지나도 덜 후회하는 엣지 마감
+                        현존하는 최고의 엣지 기술
                       </p>
                       <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
                         처음엔 색상만 보여도, 오래 쓰면 모서리 접착선과 물먹음
