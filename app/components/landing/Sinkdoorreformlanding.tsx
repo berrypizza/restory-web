@@ -842,6 +842,38 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               </p>
             </div>
           </FadeIn>
+          <div className="mb-12 flex justify-center px-2">
+            <div className="w-full max-w-[430px] text-center md:max-w-[560px]">
+              <div className="relative mx-auto h-[260px] w-[280px] md:h-[350px] md:w-[380px]">
+                <Image
+                  src="/images/door/ritory-mascot.png"
+                  alt="리스토리 캐릭터"
+                  fill
+                  className="object-contain object-bottom drop-shadow-[0_18px_34px_rgba(15,23,42,0.14)]"
+                  sizes="(min-width: 768px) 380px, 280px"
+                />
+              </div>
+              <div className="-mt-2 flex items-stretch justify-center gap-2 font-black tracking-normal md:-mt-4 md:gap-4">
+                <div className="flex flex-col justify-between text-left leading-none">
+                  <p
+                    className="whitespace-nowrap text-neutral-950"
+                    style={{ fontSize: "clamp(2.25rem, 9.6vw, 4.5rem)" }}>
+                    전체 교체
+                  </p>
+                  <p
+                    className="whitespace-nowrap text-[#1a5cff]"
+                    style={{ fontSize: "clamp(1.85rem, 8.2vw, 3.7rem)" }}>
+                    대비 4~5배
+                  </p>
+                </div>
+                <p
+                  className="flex items-center whitespace-nowrap leading-none text-[#ef334e]"
+                  style={{ fontSize: "clamp(5.05rem, 21vw, 8.8rem)" }}>
+                  절감
+                </p>
+              </div>
+            </div>
+          </div>
           {false && (
             <FadeIn delay={150}>
             <div
@@ -1690,28 +1722,15 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-xl bg-[#f8f9fb] p-4">
-                    <div className="mb-4 flex items-center gap-1.5">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <span
-                          key={n}
-                          className="flex h-12 flex-1 items-center justify-center rounded-md bg-white text-[11px] font-black text-[#1a5cff]"
-                          style={{ border: "1px solid #dbe6ff" }}>
-                          {n}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="mb-2 text-[16px] font-black text-neutral-950">
-                      직접 확인
-                    </p>
-                    <p className="text-[13px] font-medium leading-[1.75] text-neutral-600">
-                      상부장·하부장 문짝과 서랍 앞판을 각각 세어 예상 금액을
-                      확인할 수 있습니다.
-                    </p>
-                    <p className="mt-3 rounded-lg bg-white px-3 py-2 text-[12px] font-bold leading-[1.65] text-neutral-500">
-                      걸레받이와 몰딩은 개수가 아닌 길이에 따라 m당
-                      측정합니다.
-                    </p>
+                  <div className="overflow-hidden rounded-xl bg-white">
+                    <Image
+                      src="/images/door/send-photo-guide.png"
+                      alt="문짝이 모두 보이게 정면에서 찍어주세요"
+                      width={1122}
+                      height={1402}
+                      className="h-auto w-full object-contain"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
                   </div>
 
                   <div className="rounded-xl bg-[#eef4ff] p-4">
