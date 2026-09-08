@@ -14,7 +14,7 @@ const PHONE = buildTrackedContactPath("phone", "sink_door");
 const KAKAO_URL = buildTrackedContactPath("kakao", "sink_door");
 const SINK_DOOR_VIDEO_ID = "tC4VLNFgvCE";
 const REAL_VIDEO_ID = "sydwgU5o4DY";
-const MAIN_IMAGE = "/images/door/sink-door-main.png";
+const MAIN_IMAGE = "/images/door/sink-door-main-renewal.png";
 const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
 const FILM_EDGE_IMAGE = "/images/door/onedraw-door-edge.png";
 const PET_ZEROJOINT_EDGE_IMAGE = "/images/door/pet-zerojoint-edge.png";
@@ -478,9 +478,9 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               <Image
                 src={MAIN_IMAGE}
                 alt="화이트 싱크대 문짝 교체 후 주방"
-                width={1834}
-                height={850}
-                className="h-auto w-full object-cover"
+                width={1080}
+                height={1350}
+                className="h-auto w-full"
                 priority
                 sizes="(min-width: 768px) 720px, 100vw"
               />
