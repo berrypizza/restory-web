@@ -1188,7 +1188,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     <li>
                       - PET 문짝 공장에서{" "}
                       <strong className="font-black text-[#1a5cff]">
-                        직접 매입
+                        주문제작
                       </strong>
                     </li>
                     <li>
@@ -1197,7 +1197,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                         교체 비용 감소
                       </strong>
                     </li>
-                    <li>- 소재와 수량을 확인한 뒤 견적 안내</li>
                   </ul>
                 </div>
               </div>
