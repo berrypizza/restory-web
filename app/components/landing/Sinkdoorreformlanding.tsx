@@ -1341,17 +1341,40 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 <br className="hidden md:block" />
                 낮추는 방식으로 제작합니다.
               </p>
-              <div className="mx-auto w-full max-w-[520px]">
+              <div className="mx-auto w-full max-w-[720px]">
                 <div
                   className="relative overflow-hidden rounded-lg bg-white"
-                  style={{ aspectRatio: "1160/1352" }}>
+                  style={{ aspectRatio: "1122/1402" }}>
                   <Image
-                    src="/images/door/zerojoint-hotmelt-comparison.png"
+                    src="/images/door/pet-difference.png"
                     alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
                     fill
                     className="object-cover"
-                    sizes="(min-width: 768px) 520px, 100vw"
+                    sizes="(min-width: 768px) 720px, 100vw"
                   />
+                </div>
+              </div>
+              <div className="mx-auto mt-7 grid max-w-[720px] gap-3 text-left md:grid-cols-2">
+                <div className="rounded-xl bg-[#f8f9fb] p-5">
+                  <p className="mb-2 text-[15px] font-black text-neutral-950">
+                    신경 안 쓰면 가장 먼저 후회하는 부분
+                  </p>
+                  <p className="text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                    문짝 가격만 보고 고르면 모서리 마감은 놓치기 쉽습니다.
+                    시간이 지나 엣지 접착선이 벌어지면 물과 오염이 스며들고,
+                    처음엔 예뻤던 문짝도 물먹음·들뜸 때문에 후회가 남을 수
+                    있습니다.
+                  </p>
+                </div>
+                <div className="rounded-xl bg-[#eef4ff] p-5">
+                  <p className="mb-2 text-[15px] font-black text-[#1a5cff]">
+                    리스토리는 엣지 마감까지 확인합니다
+                  </p>
+                  <p className="text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                    PET 제로조인트처럼 모서리 틈을 줄이는 고급 마감은 물과
+                    오염이 들어갈 길을 줄여 오래 보기 좋은 문짝 선택에
+                    도움이 됩니다.
+                  </p>
                 </div>
               </div>
             </div>
