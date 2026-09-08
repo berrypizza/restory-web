@@ -288,16 +288,16 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
   );
 }
 
-function YouTubeAutoplayHero({ videoId }: { videoId: string }) {
+function YouTubeHeroPlayer({ videoId }: { videoId: string }) {
   return (
     <div
       className="relative overflow-hidden bg-black"
       style={{ aspectRatio: "16 / 9" }}>
       <iframe
         className="absolute inset-0 h-full w-full"
-        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`}
+        src={`https://www.youtube.com/embed/${videoId}?playsinline=1&rel=0&modestbranding=1`}
         title="리스토리 싱크대 문짝 교체 영상"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
       />
     </div>
@@ -384,7 +384,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
       {/* 1. HERO VIDEO */}
       <section className="bg-white px-0 pb-8 pt-0 md:pb-12">
         <div className="mx-auto max-w-[900px]">
-          <YouTubeAutoplayHero videoId={SINK_DOOR_VIDEO_ID} />
+          <YouTubeHeroPlayer videoId={SINK_DOOR_VIDEO_ID} />
           <div className="px-5 pt-5 md:px-0">
             <FadeIn>
               <p className="mb-2 text-[13px] font-black text-[#1a5cff]">
@@ -1326,16 +1326,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
           </FadeIn>
           <FadeIn delay={180}>
             <div className="relative left-1/2 mt-4 w-[calc(100vw-40px)] max-w-[760px] -translate-x-1/2 overflow-hidden rounded-[28px] bg-white shadow-[0_18px_48px_rgba(31,102,255,0.10)] ring-1 ring-[#d8e8ff]">
-              <div className="relative bg-[#f4f9ff] px-4 pt-4 md:px-10 md:pt-8">
-                <Image
-                  src="/images/door/pet-difference.png"
-                  alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
-                  width={1122}
-                  height={1402}
-                  className="mx-auto h-auto w-full max-w-[600px] rounded-[18px]"
-                  sizes="(min-width: 768px) 600px, calc(100vw - 72px)"
-                />
-              </div>
               <div className="px-6 py-8 text-left md:px-9 md:py-10">
                 <div className="grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-9">
                   <div>
@@ -1350,57 +1340,85 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                       차고 넘칩니다!
                     </h3>
                   </div>
-                  <div className="space-y-7">
-                    <div className="relative pr-4 md:pr-12">
-                      <div className="mb-2 flex items-center gap-3">
-                        <span className="text-[12px] font-black text-[#1f66ff]">
-                          첫 번째
-                        </span>
-                        <span className="h-px flex-1 bg-[#1f66ff]/55" />
-                        <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
-                      </div>
-                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
-                        현존하는 최고의 엣지 기술
-                      </p>
-                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
-                        처음엔 색상만 보여도, 오래 쓰면 모서리 접착선과 물먹음
-                        차이가 먼저 보입니다. 문짝은 엣지까지 봐야 합니다.
-                      </p>
+                  <div className="self-end">
+                    <div className="mb-2 flex items-center gap-3">
+                      <span className="text-[12px] font-black text-[#1f66ff]">
+                        Check Point
+                      </span>
+                      <span className="h-px flex-1 bg-[#1f66ff]/55" />
+                      <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
                     </div>
-                    <div className="relative pr-4 md:pr-12">
-                      <div className="mb-2 flex items-center gap-3">
-                        <span className="text-[12px] font-black text-[#1f66ff]">
-                          두 번째
-                        </span>
-                        <span className="h-px flex-1 bg-[#1f66ff]/55" />
-                        <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
-                      </div>
-                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
-                        PET 제로조인트로 없애는 틈새
-                      </p>
-                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
-                        모서리 접착 틈을 보이지 않게 마감해 물과 오염이
-                        스며드는 길을 줄이고, 주방처럼 물을 자주 쓰는 공간에
-                        잘 맞습니다.
-                      </p>
-                    </div>
-                    <div className="relative pr-4 md:pr-12">
-                      <div className="mb-2 flex items-center gap-3">
-                        <span className="text-[12px] font-black text-[#1f66ff]">
-                          세 번째
-                        </span>
-                        <span className="h-px flex-1 bg-[#1f66ff]/55" />
-                        <span className="h-2 w-2 rounded-full bg-[#1f66ff]" />
-                      </div>
-                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
-                        상태를 보고 설명하는 선택 기준
-                      </p>
-                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
-                        리스토리는 사진으로 문짝 상태와 사용 환경을 먼저 보고,
-                        바꿔야 할 부분과 살릴 수 있는 부분을 나눠 안내합니다.
-                      </p>
-                    </div>
+                    <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
+                      현존하는 최고의 엣지 기술
+                    </p>
+                    <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                      처음엔 색상만 보여도, 오래 쓰면 모서리 접착선과 물먹음
+                      차이가 먼저 보입니다. 문짝은 엣지까지 봐야 합니다.
+                    </p>
                   </div>
+                </div>
+              </div>
+              <div className="relative bg-[#f4f9ff] px-4 pt-4 md:px-10 md:pt-8">
+                <Image
+                  src="/images/door/pet-difference.png"
+                  alt="PET 제로조인트와 핫멜트 엣지 마감 비교"
+                  width={1122}
+                  height={1402}
+                  className="mx-auto h-auto w-full max-w-[600px] rounded-[18px]"
+                  sizes="(min-width: 768px) 600px, calc(100vw - 72px)"
+                />
+              </div>
+              <div className="border-y border-[#d8e8ff] bg-[#f7fbff] px-5 py-6 md:px-10 md:py-8">
+                <div className="text-left">
+                  <p className="mb-3 text-[13px] font-black text-[#e32e40] md:text-[14px]">
+                    시간이 지나고 나서 보이는 차이
+                  </p>
+                    <p className="text-[24px] font-black leading-[1.25] text-neutral-950 md:text-[32px]">
+                      신경 안 쓰면
+                      <br />
+                      가장 먼저{" "}
+                      <span className="bg-gradient-to-t from-[#ffe16a] from-[48%] to-transparent to-[48%] px-1">
+                        후회하는 부분,
+                      </span>
+                      <br />
+                      엣지 마감입니다
+                    </p>
+                  <p className="mt-4 text-[14px] font-medium leading-[1.75] text-neutral-600 md:text-[16px]">
+                    문짝 모서리로 물이 스며들면 시간이 지나 들뜸과 물먹음이
+                    생길 수 있습니다. 그래서 처음 선택할 때 색상만큼 엣지 마감
+                    방식도 같이 봐야 합니다.
+                  </p>
+                </div>
+                <div className="mt-5 overflow-hidden rounded-[18px] bg-white shadow-[0_12px_28px_rgba(15,23,42,0.10)]">
+                  <Image
+                    src="/images/door/edge-water-damage.jpg"
+                    alt="시간이 지나 물먹음이 생긴 싱크대 문짝 엣지 마감"
+                    width={1632}
+                    height={2184}
+                    className="h-auto w-full"
+                    sizes="(min-width: 768px) 680px, calc(100vw - 72px)"
+                  />
+                </div>
+              </div>
+              <div className="px-6 py-8 text-left md:px-9 md:py-10">
+                <div className="grid gap-7 md:grid-cols-2 md:gap-8">
+                    <div className="relative pr-4 md:pr-12">
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="text-[12px] font-black text-[#e32e40]">
+                          Check Point
+                        </span>
+                        <span className="h-px flex-1 bg-[#e32e40]/55" />
+                        <span className="h-2 w-2 rounded-full bg-[#e32e40]" />
+                      </div>
+                      <p className="text-[17px] font-black leading-snug text-neutral-950 md:text-[19px]">
+                        물에 약해질 수 있는 핫멜트 접합
+                      </p>
+                      <p className="mt-2 text-[13px] font-medium leading-[1.7] text-neutral-600 md:text-[14px]">
+                        핫멜트 방식의 접합 방식은 물에 지속적으로 노출될 때
+                        불어 터질 수 있어, 주방처럼 물을 자주 쓰는 공간에서는
+                        엣지 마감을 함께 확인해야 합니다.
+                      </p>
+                    </div>
                 </div>
               </div>
             </div>
@@ -1732,24 +1750,25 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-[720px]">
           <FadeIn>
-            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
-              HOW IT WORKS
-            </p>
-            <h2
-              className="font-black leading-[1.18] mb-4"
-              style={{ fontSize: "clamp(1.9rem, 6vw, 3rem)" }}>
-              직접 세어도,
-              <br />
-              사진으로 상담받아도
-              <br />
-              문짝 교체는 어렵지 않습니다
-            </h2>
-            <p className="mb-10 max-w-[620px] text-[14px] font-medium leading-[1.85] text-neutral-500 md:text-[17px]">
-              문짝 개수를 직접 확인하거나, 주방 사진 2장만 보내주세요.
-              <br className="hidden md:block" />
-              예상 견적부터 실측·제작·설치까지 리스토리가 순서대로
-              안내합니다.
-            </p>
+            <div className="mb-8 text-center">
+              <Image
+                src="/images/door/ritory-question.png"
+                alt="진행 방법을 궁금해하는 리스토리 캐릭터"
+                width={1024}
+                height={1024}
+                className="mx-auto mb-[-10px] h-auto w-[210px] md:w-[270px]"
+                sizes="(min-width: 768px) 270px, 210px"
+              />
+              <p className="mb-3 text-[13px] font-black text-[#1f66ff] md:text-[15px]">
+                HOW IT WORKS
+              </p>
+              <h2 className="font-black leading-[1.05] text-neutral-950">
+                <span className="block text-[42px] md:text-[64px]">그래서</span>
+                <span className="block text-[44px] text-[#1f66ff] md:text-[68px]">
+                  진행 방법은??
+                </span>
+              </h2>
+            </div>
           </FadeIn>
           <div className="space-y-4">
             <FadeIn delay={60}>
