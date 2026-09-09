@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
@@ -123,121 +123,6 @@ function parseKeyword(keyword: string): { region: string; type: string } {
   const region = REGIONS.find((r) => kw.includes(r)) ?? "";
   const type = kw.includes("리폼") ? "리폼" : "교체";
   return { region, type };
-}
-
-function CaseStrip({ region }: { region?: string }) {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const allCases = cases
-    .filter((c) => c.category === "싱크대 리폼")
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  const matched = region
-    ? allCases.filter((c) => c.region.includes(region))
-    : [];
-  const rest = allCases.filter((c) => !matched.includes(c));
-  const CASE_ITEMS = [...matched, ...rest].slice(0, 6);
-
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.firstElementChild
-      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
-      : 0;
-    if (cardWidth > 0) setActiveIdx(Math.round(el.scrollLeft / cardWidth));
-  };
-
-  const scrollTo = (i: number) => {
-    const el = scrollRef.current;
-    if (!el || !el.firstElementChild) return;
-    el.scrollTo({
-      left: i * ((el.firstElementChild as HTMLElement).offsetWidth + 12),
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    <div className="mt-8">
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-[15px] font-bold text-neutral-900">실제 시공 사례</p>
-        <Link
-          href="/cases?cat=싱크대 리폼"
-          className="text-[12px] font-bold"
-          style={{ color: "#1a5cff", textDecoration: "none" }}>
-          전체 보기 →
-        </Link>
-      </div>
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex gap-3 overflow-x-auto"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}>
-        {CASE_ITEMS.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              scrollSnapAlign: "start",
-              flexShrink: 0,
-              width: "72%",
-              maxWidth: 300,
-            }}>
-            <Link
-              href={`/cases/${item.id}`}
-              draggable={false}
-              className="block overflow-hidden rounded-2xl"
-              style={{ border: "1px solid #e5e7eb", textDecoration: "none" }}>
-              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-                <Image
-                  src={item.afterImg}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  sizes="72vw"
-                  draggable={false}
-                />
-                <div
-                  className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-black text-white"
-                  style={{ background: "#1a5cff" }}>
-                  AFTER
-                </div>
-              </div>
-              <div className="p-3 bg-white">
-                <p className="text-[13px] font-extrabold text-neutral-900 truncate">
-                  {item.title}
-                </p>
-                <p className="text-[11px] text-neutral-400 mt-0.5">
-                  {item.region}
-                </p>
-              </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-center gap-1.5 mt-4">
-        {CASE_ITEMS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => scrollTo(i)}
-            className="rounded-full transition-all"
-            style={{
-              width: i === activeIdx ? 20 : 6,
-              height: 6,
-              background: i === activeIdx ? "#1a5cff" : "#d1d5db",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
 }
 
 function YouTubeFacade({ videoId }: { videoId: string }) {
@@ -444,7 +329,11 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
                 : "border-0 font-bold text-neutral-500"
             }`}>
-            리뷰
+            <span className="inline-flex items-center justify-center gap-1.5">
+              <span className="text-[#fbbc04]">★</span>
+              <span>리뷰</span>
+              <span className="text-[#fbbc04]">★</span>
+            </span>
           </button>
         </div>
       </nav>
@@ -1647,95 +1536,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     {item.summary}
                   </p>
                 </Link>
-            ))}
-          </div>
-
-          <div className="hidden grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              {
-                img: "/images/door/review-1.png",
-                keyword: "비용 1/5",
-                unit: "싱크대 문짝 리폼",
-                area: "서울 마포구",
-                name: "정** 고객님",
-                quote:
-                  "전체 교체하면 300만원인데 문짝만 해서 60만원에 끝났어요. 20년 된 아파트인데 새 주방 같아요.",
-              },
-              {
-                img: "/images/door/review-3.png",
-                keyword: "주방이 환해졌어요",
-                unit: "싱크대 문짝 리폼",
-                area: "경기 수원시",
-                name: "한** 고객님",
-                quote:
-                  "색상도 원하는 걸로 골랐는데 기존 싱크대랑 완벽하게 맞아요. 시공 시간도 짧고 대만족입니다.",
-              },
-            ].map((r, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div
-                  className="overflow-hidden rounded-2xl h-full"
-                  style={{ border: "1px solid #e5e7eb" }}>
-                  <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
-                    <Image
-                      src={r.img}
-                      alt={r.name}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                    />
-                    <div
-                      className="absolute inset-0 flex flex-col justify-end p-4"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)",
-                      }}>
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="text-[11px] font-semibold text-white/60">
-                            {r.unit}
-                          </p>
-                          <p
-                            className="font-black text-white leading-none"
-                            style={{
-                              fontSize: "clamp(1.1rem, 3.5vw, 1.5rem)",
-                            }}>
-                            {r.keyword}
-                          </p>
-                        </div>
-                        <span
-                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
-                          당일 완료
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-[12px] text-neutral-400 mb-2">
-                      {r.name} · {r.area}
-                    </p>
-                    <p className="text-[14px] leading-[1.7] text-neutral-700">
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                      {r.quote}
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </FadeIn>
             ))}
           </div>
         </div>
