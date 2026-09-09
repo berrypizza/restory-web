@@ -348,7 +348,11 @@ export default function SangbujangLanding({ keyword }: Props) {
                 ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
                 : "border-0 font-bold text-neutral-500"
             }`}>
-            리뷰
+            <span className="inline-flex items-center justify-center gap-1.5">
+              <span className="text-[#fbbc04]">★</span>
+              <span>리뷰</span>
+              <span className="text-[#fbbc04]">★</span>
+            </span>
           </button>
         </div>
       </nav>
