@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
@@ -15,6 +15,7 @@ import { REGIONS } from "@/lib/seo-regions";
 ───────────────────────────────────────── */
 const PHONE = buildTrackedContactPath("phone", "sangbujang");
 const KAKAO_URL = buildTrackedContactPath("kakao", "sangbujang");
+const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
 
 const FAQ_ITEMS = [
   {
@@ -61,122 +62,6 @@ function parseKeyword(keyword: string): { region: string; symptom: string } {
             ? "수리"
             : "처짐";
   return { region, symptom };
-}
-
-/* ─────────────────────────────────────────
-   CaseStrip
-───────────────────────────────────────── */
-function CaseStrip({ region }: { region?: string }) {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const allCases = cases
-    .filter((c) => c.category === "상부장 처짐")
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  const matched = region
-    ? allCases.filter((c) => c.region.includes(region))
-    : [];
-  const rest = allCases.filter((c) => !matched.includes(c));
-  const CASE_ITEMS = [...matched, ...rest].slice(0, 6);
-
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.firstElementChild
-      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
-      : 0;
-    if (cardWidth > 0) setActiveIdx(Math.round(el.scrollLeft / cardWidth));
-  };
-
-  const scrollTo = (i: number) => {
-    const el = scrollRef.current;
-    if (!el || !el.firstElementChild) return;
-    const cardWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
-    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
-  };
-
-  return (
-    <div className="mt-8">
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-[15px] font-bold text-neutral-900">실제 수리 사례</p>
-        <Link
-          href="/cases?cat=상부장 처짐"
-          className="text-[12px] font-bold"
-          style={{ color: "#1a5cff", textDecoration: "none" }}>
-          전체 보기 →
-        </Link>
-      </div>
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex gap-3 overflow-x-auto"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}>
-        {CASE_ITEMS.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              scrollSnapAlign: "start",
-              flexShrink: 0,
-              width: "72%",
-              maxWidth: 300,
-            }}>
-            <Link
-              href={`/cases/${item.id}`}
-              draggable={false}
-              className="block overflow-hidden rounded-2xl"
-              style={{ border: "1px solid #e5e7eb", textDecoration: "none" }}>
-              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-                <Image
-                  src={item.beforeImg}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  sizes="72vw"
-                  draggable={false}
-                />
-                <div
-                  className="absolute top-2 left-2 rounded-full px-2.5 py-0.5 text-[10px] font-black text-white"
-                  style={{ background: "#e32e40" }}>
-                  BEFORE
-                </div>
-              </div>
-              <div className="p-3 bg-white">
-                <p className="text-[13px] font-extrabold text-neutral-900 truncate">
-                  {item.title}
-                </p>
-                <p className="text-[11px] text-neutral-400 mt-0.5">
-                  {item.region}
-                </p>
-              </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-center gap-1.5 mt-4">
-        {CASE_ITEMS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => scrollTo(i)}
-            className="rounded-full transition-all"
-            style={{
-              width: i === activeIdx ? 20 : 6,
-              height: 6,
-              background: i === activeIdx ? "#1a5cff" : "#d1d5db",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
 }
 
 /* ─────────────────────────────────────────
@@ -242,6 +127,7 @@ interface Props {
 ───────────────────────────────────────── */
 export default function SangbujangLanding({ keyword }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<"detail" | "reviews">("detail");
 
   const { region, symptom } = keyword
     ? parseKeyword(keyword)
@@ -263,6 +149,18 @@ export default function SangbujangLanding({ keyword }: Props) {
         (c) => c.category === "상부장 처짐" && c.region.includes(region),
       ).length
     : 0;
+  const reviewCases = cases
+    .filter((c) => c.category === "상부장 처짐")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const showReviews = () => {
+    setActiveTab("reviews");
+    window.setTimeout(() => {
+      document
+        .getElementById("restory-reviews")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
 
   return (
     <main
@@ -429,6 +327,33 @@ export default function SangbujangLanding({ keyword }: Props) {
           </div>
         </div>
       </section>
+
+      <nav className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 px-4 backdrop-blur">
+        <div className="mx-auto grid max-w-[720px] grid-cols-2 text-center">
+          <button
+            type="button"
+            onClick={() => setActiveTab("detail")}
+            className={`py-4 text-[15px] ${
+              activeTab === "detail"
+                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
+                : "border-0 font-bold text-neutral-500"
+            }`}>
+            서비스 상세
+          </button>
+          <button
+            type="button"
+            onClick={showReviews}
+            className={`py-4 text-[15px] ${
+              activeTab === "reviews"
+                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
+                : "border-0 font-bold text-neutral-500"
+            }`}>
+            리뷰
+          </button>
+        </div>
+      </nav>
+
+      <div className={activeTab === "detail" ? "block" : "hidden"}>
 
       {/* ★ 지역 배너 */}
       {region && (
@@ -749,122 +674,136 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
+      </div>
+
       {/* 3. REVIEWS */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
-        <div className="mx-auto max-w-2xl">
+      <section
+        id="restory-reviews"
+        className={`scroll-mt-20 border-t border-neutral-200 px-4 py-4 md:py-6 ${
+          activeTab === "reviews" ? "block" : "hidden"
+        }`}
+        style={{ background: "#fff" }}>
+        <div className="mx-auto max-w-[720px]">
           <FadeIn>
-            <div className="flex items-end gap-3 mb-8">
-              <div>
-                <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-1">
-                  REVIEWS
-                </p>
-                <h2
-                  className="font-black leading-[1.2]"
-                  style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-                  직접 겪은 고객님들
-                </h2>
-              </div>
-              <div className="ml-auto text-right pb-1 flex-shrink-0">
-                <p
-                  className="text-[28px] font-black"
-                  style={{ color: "#1a5cff" }}>
-                  4.9★
-                </p>
-                <p className="text-[11px] text-neutral-400">고객 평점</p>
-              </div>
+            <div className="mb-8 px-4 pb-2 pt-4 text-center md:px-8 md:pt-6">
+              <Image
+                src={REVIEW_BADGE_IMAGE}
+                alt="압도적 만족"
+                width={220}
+                height={280}
+                className="mx-auto mb-5 h-[108px] w-auto object-contain md:h-[136px]"
+                sizes="160px"
+              />
+              <p className="mb-3 text-[17px] font-semibold leading-[1.55] text-neutral-600 md:text-[22px]">
+                사진으로 먼저 확인하는
+              </p>
+              <h2
+                className="font-black leading-[1.18] text-neutral-950"
+                style={{ fontSize: "clamp(2.25rem, 7.2vw, 3.8rem)" }}>
+                <span
+                  className="px-1 text-[#1a5cff]"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(26,92,255,0.14) 34%, transparent 34%)",
+                  }}>
+                  비포·애프터
+                </span>
+                <br />
+                리얼 후기
+              </h2>
+              <p className="mt-5 text-[14px] font-medium leading-[1.85] text-neutral-500 md:text-[17px]">
+                처진 상부장이 어떻게 다시 잡혔는지
+                <br />
+                실제 수리 사례 사진으로 확인해보세요.
+              </p>
             </div>
           </FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              {
-                img: "/images/review-photo-1.jpg",
-                keyword: "처짐 재발 없음",
-                unit: "상부장 수리",
-                area: "서울 강서구 화곡동",
-                name: "김현* 고객님",
-                quote:
-                  "상부장이 떨어졌는데, 합판 시공목으로 튼튼하게 고쳐주셨어요. 작업 후에도 먼지 하나 없이 깨끗하게 청소해주셔서 감동했습니다.",
-              },
-              {
-                img: "/images/review-photo-2.jpg",
-                keyword: "교체 비용의 1/3",
-                unit: "상부장 수리",
-                area: "부천 작동",
-                name: "이승* 고객님",
-                quote:
-                  "다른 데는 교체하라고만 했는데 여기서 수리로 해결됐어요. 비용도 1/3 수준이었습니다. 보양지 쓰시는 거 보고 놀랐어요.",
-              },
-            ].map((r, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div
-                  className="overflow-hidden rounded-2xl h-full"
-                  style={{ border: "1px solid #e5e7eb" }}>
-                  <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
-                    <Image
-                      src={r.img}
-                      alt={r.name}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                    />
-                    <div
-                      className="absolute inset-0 flex flex-col justify-end p-4"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)",
-                      }}>
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="text-[11px] font-semibold text-white/60">
-                            {r.unit}
-                          </p>
-                          <p
-                            className="font-black text-white leading-none"
-                            style={{ fontSize: "clamp(1.2rem, 4vw, 1.6rem)" }}>
-                            {r.keyword}
-                          </p>
-                        </div>
-                        <span
-                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
-                          당일 완료
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-[12px] text-neutral-400 mb-2">
-                      {r.name} · {r.area}
-                    </p>
-                    <p className="text-[14px] leading-[1.7] text-neutral-700">
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                      {r.quote}
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
+
+          <div
+            className="mb-5 flex items-center gap-5 rounded-2xl px-5 py-5 md:px-7"
+            style={{ background: "#f8f9fb" }}>
+            <div>
+              <p className="text-[34px] font-black leading-none text-neutral-950">
+                4.9
+              </p>
+              <p className="mt-2 text-[17px] font-black leading-none text-[#fbbc04]">
+                ★★★★★
+              </p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[14px] font-bold text-neutral-500">
+                상부장 수리 리뷰
+              </p>
+              <p className="mt-1 text-[12px] font-semibold text-neutral-500">
+                실제 비포 애프터 사례 기준
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {reviewCases.map((item) => (
+              <Link
+                key={item.id}
+                href={`/cases/${item.id}`}
+                className="block h-full rounded-2xl bg-white p-4 md:p-5"
+                style={{
+                  border: "1px solid #e5e7eb",
+                  textDecoration: "none",
+                }}>
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[16px] font-black leading-none text-[#fbbc04]">
+                      ★★★★★
                     </p>
                   </div>
+                  <span className="flex-shrink-0 text-[12px] text-neutral-400">
+                    {item.date.replaceAll("-", ".")}
+                  </span>
                 </div>
-              </FadeIn>
+                <p className="mb-2 text-[15px] font-black leading-snug text-neutral-950">
+                  {item.title}
+                </p>
+                <p className="mb-3 text-[12px] font-semibold text-neutral-400">
+                  {item.region}
+                </p>
+                <div className="mb-4 grid grid-cols-2 gap-2 md:gap-3">
+                  {[
+                    { label: "BEFORE", src: item.beforeImg },
+                    { label: "AFTER", src: item.afterImg },
+                  ].map((photo) => (
+                    <div
+                      key={photo.label}
+                      className="relative aspect-[4/3] overflow-hidden rounded-lg bg-neutral-100">
+                      <Image
+                        src={photo.src}
+                        alt={`${item.title} ${photo.label}`}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 768px) 340px, calc(50vw - 32px)"
+                      />
+                      <span
+                        className="absolute bottom-2 left-2 rounded-md px-2 py-1 text-[10px] font-black text-white"
+                        style={{
+                          background:
+                            photo.label === "AFTER"
+                              ? "#1a5cff"
+                              : "rgba(0,0,0,0.62)",
+                        }}>
+                        {photo.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[14px] leading-[1.75] text-neutral-600">
+                  {item.summary}
+                </p>
+              </Link>
             ))}
           </div>
-          <FadeIn delay={100}>
-            <CaseStrip region={region} />
-          </FadeIn>
         </div>
       </section>
+
+      <div className={activeTab === "detail" ? "block" : "hidden"}>
 
       {/* 4. HOW */}
       <section
@@ -1229,7 +1168,9 @@ export default function SangbujangLanding({ keyword }: Props) {
         </div>
       </section>
 
-      <FloatingCTA />
+      </div>
+
+      <FloatingCTA onReviewClick={showReviews} />
     </main>
   );
 }
