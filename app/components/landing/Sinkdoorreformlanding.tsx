@@ -16,7 +16,7 @@ const SINK_DOOR_VIDEO_ID = "tC4VLNFgvCE";
 const REAL_VIDEO_ID = "sydwgU5o4DY";
 const MAIN_IMAGE = "/images/door/sink-door-main-renewal.png";
 const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
-const FILM_EDGE_IMAGE = "/images/door/onedraw-door-edge.png";
+const FILM_EDGE_IMAGE = "/images/door/film.png";
 const PET_ZEROJOINT_EDGE_IMAGE = "/images/door/pet-zerojoint-edge.png";
 const CHAT_CONSULT_EXAMPLE_IMAGE =
   "/images/door/chat-consult-example-safe.webp";
