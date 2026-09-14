@@ -1039,9 +1039,9 @@ export default function FridgeCabinetLanding({ keyword }: Props) {
                   왜 이 가격이 가능할까요?
                 </p>
                 <h3 className="mb-10 text-[38px] font-black leading-[1.08] text-[#1a5cff] md:text-[56px]">
-                  공장가 그대로,
+                  공장 맞춤 제작!
                   <br />
-                  소비자가 됩니다
+                  필요한 부분만 바꿉니다
                 </h3>
                 <div className="mx-auto max-w-[420px] text-left">
                   <div>
