@@ -3,6 +3,7 @@ import { ServiceLandingPage } from "@/app/components/CategoryPages";
 import { getService, getAllSlugs } from "@/lib/site-config";
 import { KITCHEN_KEYWORD_SLUGS } from "@/lib/keyword-slugs";
 import Sinkdoorreformlanding from "@/app/components/landing/Sinkdoorreformlanding";
+import FridgeCabinetLanding from "@/app/components/landing/FridgeCabinetLanding";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";
@@ -20,8 +21,9 @@ export function generateStaticParams() {
   return [...existing, ...keywords];
 }
 
-function getLandingType(slug: string): "door" | null {
+function getLandingType(slug: string): "door" | "fridge-cabinet" | null {
   const kw = slug.replace(/-/g, " ");
+  if (kw.includes("냉장고장")) return "fridge-cabinet";
   if (kw.includes("문짝") || kw.includes("도어") || kw.includes("문 교체"))
     return "door";
   return null;
@@ -49,6 +51,8 @@ export async function generateMetadata({
   let desc = `${kw} 전문 리스토리. 당일 시공, 3년 무상 A/S.`;
   if (type === "door")
     desc = `${kw} 전문 리스토리. 전체 교체 비용의 1/3~1/5. 100가지 이상 색상 선택. 당일 시공, 3년 무상 A/S.`;
+  if (type === "fridge-cabinet")
+    desc = `${kw} 전문 리스토리. 전체 주방 공사 전 냉장고장 문짝·패널 교체 가능 여부를 사진으로 먼저 확인합니다.`;
 
   return {
     title: `${kw} | 리스토리 스튜디오`,
@@ -61,7 +65,10 @@ export async function generateMetadata({
       url: `${BASE}/kitchen/${slug}`,
       images: [
         {
-          url: "/images/hero-door.webp",
+          url:
+            type === "fridge-cabinet"
+              ? "/images/fridge-cabinet/refmain.png"
+              : "/images/hero-door.webp",
           width: 1080,
           height: 1350,
           alt: `리스토리 ${kw}`,
@@ -87,6 +94,8 @@ export default async function Page({
 
   const type = getLandingType(slug);
   if (type === "door") return <Sinkdoorreformlanding keyword={slug} />;
+  if (type === "fridge-cabinet")
+    return <FridgeCabinetLanding keyword={slug} />;
 
   return notFound();
 }

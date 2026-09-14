@@ -410,6 +410,29 @@ const DOOR_REGIONAL = REGIONS.flatMap((region) => [
   `${region}-씽크대-도어-리폼`,
 ]);
 
+const FRIDGE_CABINET_BASE = [
+  "냉장고장-리폼",
+  "냉장고장-문짝-교체",
+  "냉장고장-패널-교체",
+  "빌트인-냉장고장-리폼",
+  "키친핏-냉장고장-리폼",
+  "냉장고-수납장-리폼",
+  "냉장고장-맞춤-제작",
+  "냉장고장-제작",
+  "냉장고장-부분-리폼",
+  "냉장고장-리폼-비용",
+  "냉장고장-리폼-가격",
+  "냉장고장-리폼-전문업체",
+];
+
+const FRIDGE_CABINET_REGIONAL = REGIONS.flatMap((region) => [
+  `${region}-냉장고장-리폼`,
+  `${region}-냉장고장-문짝-교체`,
+  `${region}-냉장고장-패널-교체`,
+  `${region}-빌트인-냉장고장-리폼`,
+  `${region}-키친핏-냉장고장-리폼`,
+]);
+
 // ─────────────────────────────────────────────
 // LEATHER — 의자 천갈이
 // ─────────────────────────────────────────────
@@ -753,7 +776,12 @@ export const REPAIR_KEYWORD_SLUGS: string[] = [
   ...COUNTERTOP_CRACK_REGIONAL,
 ];
 
-export const KITCHEN_KEYWORD_SLUGS: string[] = [...DOOR_BASE, ...DOOR_REGIONAL];
+export const KITCHEN_KEYWORD_SLUGS: string[] = [
+  ...DOOR_BASE,
+  ...DOOR_REGIONAL,
+  ...FRIDGE_CABINET_BASE,
+  ...FRIDGE_CABINET_REGIONAL,
+];
 
 export const LEATHER_KEYWORD_SLUGS: string[] = [
   ...CHAIR_BASE,
