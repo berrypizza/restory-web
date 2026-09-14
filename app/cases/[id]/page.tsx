@@ -59,6 +59,7 @@ const KAKAO_URL = buildTrackedContactPath("kakao", "case_detail");
 const OTHER_CATEGORIES = [
   "싱크대 수리",
   "싱크대 리폼",
+  "냉장고장 리폼",
   "가죽 리폼",
   "소파 복원",
 ];
