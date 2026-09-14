@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { LocalBusinessJsonLd } from "@/app/components/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -93,6 +94,34 @@ export default function RootLayout({
         <Analytics />
 
         <GoogleAnalytics gaId="G-ZT8HRBBXVR" />
+        <Script
+          id="acecounter-mobile-vars"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+var m_id = '';
+var m_ag = 0;
+var m_mr = '';
+var m_gd = '';
+var m_skey = '';
+var m_jn = '';
+var m_jid = '';
+var m_ud1 = '';
+var m_ud2 = '';
+var m_ud3 = '';
+`,
+          }}
+        />
+        <Script
+          id="acecounter-gathering"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+var _AceGID=(function(){var Inf=['restorystudio.co.kr','www.restorystudio.co.kr,restorystudio.co.kr,m.restorystudio.co.kr','AZ1A106207','1','NaPm,Ncisy','1']; var _CI=(!window._AceGID)?[]:window._AceGID.val;var _N=0;if(_CI.join('.').indexOf(Inf[2])<0){ _CI.push(Inf);  _N=_CI.length; } return {o: _N,val:_CI}; })();
+var _AceCounter=(function(){var G=_AceGID;var _sc=document.createElement('script');var _sm=document.getElementsByTagName('script')[0];if(G.o!=0){var _A=G.val[G.o-1];var _U=(_A[4]).replace(/\\,/g,'_');_sc.src='https:/'+'/cr.acecounter.com/ac.j'+'s?gc='+_A[2]+'&py='+_A[1]+'&up='+_U+'&rd='+(new Date().getTime());_sm.parentNode.insertBefore(_sc,_sm);return _sc.src;}})();
+`,
+          }}
+        />
       </body>
     </html>
   );
