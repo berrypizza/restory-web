@@ -268,17 +268,15 @@ export default function FridgeCabinetLanding({ keyword }: Props) {
               <FadeIn>
                 <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#7adbd8]/45 bg-[#7adbd8]/20 px-3 py-1.5 text-[11px] font-black text-[#a6f4ef] shadow-[0_0_18px_rgba(122,219,216,0.25)] md:text-[12px]">
                   <span className="h-2 w-2 rounded-full bg-[#7adbd8]" />
-                  <span>SINCE 2014 · 리스토리스튜디오</span>
+                  <span>리스토리스튜디오</span>
                 </div>
-                <h1 className="text-[52px] font-black leading-[0.9] text-white drop-shadow-[0_6px_20px_rgba(0,0,0,0.35)] md:text-[84px]">
-                  <span className="block">REFORM</span>
-                  <span className="block text-[#e46773]">RESTORY</span>
-                  <span className="block text-[#e46773]">STUDIO</span>
+                <h1 className="whitespace-pre-line text-[44px] font-black leading-[1.05] text-white drop-shadow-[0_6px_20px_rgba(0,0,0,0.35)] md:text-[72px]">
+                  {heroTitle}
                 </h1>
                 <p className="mt-6 max-w-[430px] text-[15px] font-bold leading-[1.7] text-white/78 md:text-[18px]">
-                  냉장고장 리폼 전문 · 프리미엄 주방 리모델링
+                  냉장고장 문짝·패널 리폼 전문
                   <br />
-                  {heroTitle.replace("\n", " ")}
+                  전체 주방 공사 전 필요한 부분부터 확인합니다
                 </p>
                 <p className="mt-2 max-w-[430px] text-[13px] font-semibold leading-[1.7] text-white/58 md:text-[15px]">
                   {heroSub}
@@ -441,12 +439,12 @@ export default function FridgeCabinetLanding({ keyword }: Props) {
                       : "냉장고장 리폼 전문"}
                   </span>
                 </div>
-                <h1
+                <h2
                   className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                   style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}
                 >
                   {heroTitle}
-                </h1>
+                </h2>
                 <p
                   className="font-medium text-white/60 mb-4"
                   style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}
