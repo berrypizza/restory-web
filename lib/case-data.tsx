@@ -204,7 +204,7 @@ export const cases: CaseItem[] = [
 `,
     beforeImg: "/images/cases/case-116-before.jpg",
     afterImg: "/images/cases/case-116-after.jpg",
-    blogUrl: "https://blog.naver.com/sofaresq/224406169557",
+    blogUrl: "https://blog.naver.com/sofaresq/224413829766",
     date: "2026-09-09",
     tags: [
       "화성 회의 테이블 인조가죽 교체",
