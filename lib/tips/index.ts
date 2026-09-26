@@ -30,6 +30,7 @@ import whyKitchenLooksOldGlossyUvDoors from "./contents/why-kitchen-looks-old-gl
 import sinkHingeAdjustmentGuide from "./contents/sink-hinge-adjustment-guide";
 import sinkTopCrackRepairVsReplacement from "./contents/sink-top-crack-repair-vs-replacement";
 import hotmeltEdgeVsZerojointEdge from "./contents/hotmelt-edge-vs-zerojoint-edge";
+import highglossVsPetKitchenDoors from "./contents/highgloss-vs-pet-kitchen-doors";
 // import sofaSelfCheck from "./sofa-self-check";
 // import chairReplaceTiming from "./chair-replace-timing";
 // import doorReformGuide from "./door-reform-guide";
@@ -54,6 +55,7 @@ const tipModules = [
   sinkHingeAdjustmentGuide,
   sinkTopCrackRepairVsReplacement,
   hotmeltEdgeVsZerojointEdge,
+  highglossVsPetKitchenDoors,
 
   // sofaSelfCheck,
   // chairReplaceTiming,
