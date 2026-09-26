@@ -62,12 +62,37 @@ export async function generateMetadata({
   const type = getLandingType(slug);
 
   let desc = `${kw} 전문 리스토리. 당일 출장, 3년 무상 A/S.`;
-  if (type === "habujang")
+  let image = {
+    url: "/images/og-image-2.png",
+    width: 1200,
+    height: 630,
+    alt: `리스토리 ${kw}`,
+  };
+  if (type === "habujang") {
     desc = `${kw} 전문 리스토리. 하부장 밑판 물먹음·부풀음 지판 교체. 교체 비용의 1/5. 당일 시공, 3년 무상 A/S.`;
-  else if (type === "sangbujang")
+    image = {
+      url: "/images/hero-habujang.webp",
+      width: 1080,
+      height: 1350,
+      alt: `리스토리 ${kw}`,
+    };
+  } else if (type === "sangbujang") {
     desc = `${kw} 전문 리스토리. 합판 시공목으로 더 튼튼하게. 교체 비용의 1/3~. 당일 시공, 3년 무상 A/S.`;
-  else if (type === "sink-top-crack")
+    image = {
+      url: "/images/hero-sangbujang.webp",
+      width: 1080,
+      height: 1350,
+      alt: `리스토리 ${kw}`,
+    };
+  } else if (type === "sink-top-crack") {
     desc = `${kw} 전문 리스토리. 싱크대 상판 크랙·갈라짐·깨짐 상태를 사진으로 먼저 확인하고 수리 가능 여부를 안내합니다.`;
+    image = {
+      url: "/images/sink-top-crack/main.png",
+      width: 590,
+      height: 500,
+      alt: "리스토리 싱크대 상판 크랙 수리",
+    };
+  }
 
   return {
     title: `${kw} | 리스토리 스튜디오`,
@@ -78,17 +103,10 @@ export async function generateMetadata({
       title: `${kw} | 리스토리 스튜디오`,
       description: desc,
       url: `${BASE}/repair/${slug}`,
-      images:
-        type === "sink-top-crack"
-          ? [
-              {
-                url: "/images/sink-top-crack/main.png",
-                width: 590,
-                height: 500,
-                alt: "리스토리 싱크대 상판 크랙 수리",
-              },
-            ]
-          : undefined,
+      images: [image],
+      type: "website",
+      siteName: "리스토리",
+      locale: "ko_KR",
     },
   };
 }
