@@ -34,7 +34,13 @@ export interface CaseItem {
   blogUrl: string;
   date: string;
   price?: string;
+  review?: CaseReview;
   tags: string[];
+}
+
+export interface CaseReview {
+  author: string;
+  content: string;
 }
 
 export const PARENT_CATEGORIES: ParentCategory[] = [
@@ -492,6 +498,11 @@ export const cases: CaseItem[] = [
 
 인천 검암동 싱크대 문짝 교체나 상부장 문짝 리폼을 고민 중이라면 주방 전체 사진 1장과 문짝 가까운 사진 1장을 보내주세요. 문짝만 교체할 수 있는 상태인지 먼저 확인해드리겠습니다.
 `,
+    review: {
+      author: "kkh08***",
+      content:
+        "주방 볼 때마다 누런 문짝이 신경 쓰였는데 드디어 바꿨어요 ㅜㅜ 진작 할걸… 아침에 물 마시러 나왔다가 괜히 한번 더 보고 들어갑니다.",
+    },
     beforeImg: "/images/cases/case-114-before.jpg",
     afterImg: "/images/cases/case-114-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224401854779",
@@ -593,6 +604,11 @@ export const cases: CaseItem[] = [
 
 고양시 싱크대 문짝 교체나 주방 리폼을 고민 중이라면 전체 사진 1장과 문짝 가까운 사진 1장을 보내주세요. 문짝만 교체할 수 있는 상태인지 먼저 확인해드리겠습니다.
 `,
+    review: {
+      author: "minjh0***",
+      content:
+        "전체 교체까지는 부담돼서 문만 바꿨습니다. 안쪽 수납공간은 그대로고 겉이 깔끔해졌어요. 저희 집은 이 정도면 충분하네요. 좋았던건 그 안에 내용물 안빼도 되서 좋았습돠",
+    },
     beforeImg: "/images/cases/case-112-before.jpg",
     afterImg: "/images/cases/case-112-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224393025219",
@@ -785,6 +801,11 @@ export const cases: CaseItem[] = [
 
 싱크대가 오래돼 보여도 항상 전체 교체가 필요한 것은 아닙니다. 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
+    review: {
+      author: "yoon5664***",
+      content:
+        "남편이 굳이 바꿔야 하냐더니 끝나고 사진 제일 많이 찍음ㅋㅋㅋ 말 안 하고 있었으면 본인이 하자고 한 줄 알겠어요.",
+    },
     beforeImg: "/images/cases/case-108-before.jpg",
     afterImg: "/images/cases/case-108-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224381221536",
@@ -978,6 +999,11 @@ PB 시공목은 나무 입자를 압축해 만든 판재라 수분이나 노후�
 
 싱크대가 오래돼 보인다고 해서 항상 전체를 바꿔야 하는 것은 아닙니다. 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
+    review: {
+      author: "hjs91***",
+      content:
+        "색상 때문에 고민 많이 했는데 잘 고른 것 같아요ㅎㅎ 샘플로 볼 때랑 넓게 달아놓고 볼 때 느낌이 조금 다르네요. 저는 달아놓으니까 더 맘에 들었어요!",
+    },
     beforeImg: "/images/cases/case-104-before-v2.jpg",
     afterImg: "/images/cases/case-104-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224373743978",
@@ -1040,6 +1066,11 @@ PB 시공목은 나무 입자를 압축해 만든 판재라 수분이나 노후�
 
 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
+    review: {
+      author: "sora312***",
+      content:
+        "오래된 주방이라 문만 바꿔도 괜찮을까 싶었거든요. 물론 상판이나 타일까지 새것이 되는 건 아닌데 눈에 제일 많이 보이던 부분이 바뀌니까 훨씬 보기 편해요.",
+    },
     beforeImg: "/images/cases/case-102-before.jpg",
     afterImg: "/images/cases/case-102-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224168837668",
@@ -1099,6 +1130,11 @@ PB 시공목은 나무 입자를 압축해 만든 판재라 수분이나 노후�
 
 싱크대가 오래돼 보인다고 해서 항상 전체를 철거할 필요는 없습니다. 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
+    review: {
+      author: "jmk6***",
+      content:
+        "깔끔합니다. 문 사이 간격도 고르게 맞춰주셨고 열고 닫을 때 걸리는 부분 없습니다. 잘 쓰겠습니다.",
+    },
     beforeImg: "/images/cases/case-100-before.jpg",
     afterImg: "/images/cases/case-100-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224367428079",
@@ -1135,6 +1171,11 @@ PET 제로조인트 포그그레이 문짝을 규격에 맞춰 제작한 뒤, �
 싱크대가 오래돼 보인다고 해서 항상 전체를 바꿔야 하는 것은 아닙니다.
 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
+    review: {
+      author: "bomi09***",
+      content:
+        "엄마네 해드렸는데 좋아하시네요^^ 사진 보내달라고 했더니 영상통화 걸어서 하나하나 보여주셨어요. 저도 바꾸길 잘했다 싶습니다.",
+    },
     beforeImg: "/images/cases/case-099-before.jpg",
     afterImg: "/images/cases/case-099-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224364236641",
@@ -1183,6 +1224,11 @@ PET 포그 그레이 문짝으로 제작했습니다.
 
 사진 보내주시면 먼저 상태를 확인해드리겠습니다.
 `,
+    review: {
+      author: "dodo6***",
+      content:
+        "주방 정리하면서 문짝까지 바꿨더니 속이 다 시원함 ㅋㅋ 근데 깨끗해지니까 위에 올려놓은 잡동사니가 더 잘 보여요… 이제 그것도 정리해야겠어요.",
+    },
     beforeImg: "/images/cases/case-098-before.jpg",
     afterImg: "/images/cases/case-098-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224361996383",
@@ -1529,6 +1575,11 @@ PET 포그 그레이 문짝으로 제작했습니다.
 싱크대 문짝 교체가 고민되는 상태라면
 사진을 먼저 보내주시면 확인 가능한 범위부터 상태를 살펴드리겠습니다.
 `,
+    review: {
+      author: "eunh42***",
+      content:
+        "사진만 보고 고르려다 직접 색 보고 결정했어요. 집 조명 아래에서 보니까 제가 생각했던 흰색이랑 조금 다르더라고요. 색 고민하시는 분들은 샘플 보고 고르시면 좋을 듯해요.",
+    },
     beforeImg: "/images/cases/case-090-before.jpg",
     afterImg: "/images/cases/case-090-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224351162104",
@@ -2309,6 +2360,11 @@ UV 하이그로시 문짝을 분리했습니다.
 살릴 수 있는 부분부터
 먼저 말씀드리겠습니다.
 `,
+    review: {
+      author: "woojin18***",
+      content:
+        "큰 공사는 엄두가 안 나서 계속 미뤘는데 문짝 교체로 진행했습니다. 쓰던 주방 구조가 그대로라 따로 적응할 것도 없네요. 만족스럽습니다.",
+    },
     beforeImg: "/images/cases/case-082-before.jpg",
     afterImg: "/images/cases/case-082-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224344799597",
@@ -3729,6 +3785,11 @@ PB 시공목이 약해지거나,
 사진으로 먼저 확인 후
 가능한 범위부터 안내드리겠습니다.
 `,
+    review: {
+      author: "lala859***",
+      content:
+        "와… 옛날 손잡이 없어지니까 느낌이 이렇게 달라지네요ㅠㅠ 저는 색보다 손잡이 바뀐 게 더 마음에 들어요.",
+    },
     beforeImg: "/images/cases/case-073-before.jpg",
     afterImg: "/images/cases/case-073-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224331610985",
@@ -3879,6 +3940,11 @@ PB 시공목이 약해지거나,
 어디까지 바꾸는 것이 좋은지
 먼저 확인해드리겠습니다.
 `,
+    review: {
+      author: "psh300***",
+      content:
+        "처음 해보는 거라 뭘 여쭤봐야 할지도 몰랐는데 사진 보내고 설명 들으니 이해됐어요. 저희 집도 문만 교체할 수 있는 줄은 몰랐네요.",
+    },
     beforeImg: "/images/cases/case-072-before.png",
     afterImg: "/images/cases/case-072-after.png",
     blogUrl: "https://blog.naver.com/sofaresq/224330344732",
@@ -5470,6 +5536,11 @@ A/S는 가능한지까지 함께 확인해야
 주방 문짝 변색, 필름 들뜸, 기름때, 생활 흠집으로 고민하고 계시다면
 전체 교체보다 문짝 교체가 가능한지 먼저 확인해 보시는 것을 추천드립니다.
 `,
+    review: {
+      author: "nari671***",
+      content:
+        "상부장만 바꿨어요! 아래쪽이랑 안 어울릴까 걱정했는데 생각보다 괜찮네요ㅎㅎ 전부 다 바꿔야 하나 고민했었는데 일단 여기까지만 해도 좋습니다.",
+    },
     beforeImg: "/images/cases/case-055-before.jpg",
     afterImg: "/images/cases/case-055-after.jpg",
     blogUrl: "https://blog.naver.com/sofaresq/224174874666",
@@ -6172,6 +6243,11 @@ PET 제로조인트 도어를 사용해
 시공 후에는 새 주방처럼 깔끔한 분위기로 바뀌었으며,
 전체 교체 대비 비용을 크게 절감할 수 있었습니다.
 `,
+    review: {
+      author: "taek***",
+      content:
+        "견적 확인하고 실측한 다음 설치받았습니다. 진행 과정 설명해주신 대로였고 마무리 상태도 괜찮습니다.",
+    },
     beforeImg: "/images/door/before-after-8.png",
     afterImg: "/images/door/before-after-7.png",
     blogUrl: "https://blog.naver.com/sofaresq/224306662990",
@@ -6688,6 +6764,11 @@ PET 제로조인트 도어를 사용해
 
 리폼 후에는 밝고 깔끔한 주방 분위기로 바뀌었으며 전체 교체 대비 비용도 크게 절약할 수 있었습니다.
 `,
+    review: {
+      author: "mong49***",
+      content:
+        "무광으로 바꿨는데 혼자 계속 만져봄ㅋㅋㅋㅋ 반짝이는 문만 쓰다가 바꾸니까 처음엔 좀 낯설었는데 지금은 이게 더 좋아요.",
+    },
     beforeImg: "/images/cases/case-026-before.jpg",
     afterImg: "/images/cases/case-026-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115/224132059623",
@@ -6799,6 +6880,11 @@ PET 제로조인트 도어를 사용해
 
 시공 후에는 주방 전체 분위기가 밝아졌으며 새 주방처럼 깔끔한 느낌을 얻을 수 있었습니다.
 `,
+    review: {
+      author: "heej7***",
+      content:
+        "이사 오고 다른 데는 정리했는데 주방이 계속 마음에 걸렸어요. 이제야 제 취향대로 된 느낌이에요. 저녁에 조명 켜놓고 보면 더 예쁘네요 :)",
+    },
     beforeImg: "/images/cases/case-022-before.jpeg",
     afterImg: "/images/cases/case-022-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223627902056",
@@ -6822,6 +6908,11 @@ PET 제로조인트 도어를 사용해
 
 리폼 후에는 주방 분위기가 훨씬 깔끔해졌으며 전체 교체 대비 비용 부담도 줄일 수 있었습니다.
 `,
+    review: {
+      author: "ryu83***",
+      content:
+        "문짝 바꾸는 김에 삐뚤어져 있던 것도 같이 맞췄습니다. 겉모습도 그렇지만 문 닫을 때 옆 문이랑 안 부딪히는 게 제일 좋네요.",
+    },
     beforeImg: "/images/cases/case-021-before.jpeg",
     afterImg: "/images/cases/case-021-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223561594571",
@@ -6852,6 +6943,11 @@ PET 제로조인트 도어를 사용해
 
 시공 후에는 훨씬 밝고 정돈된 분위기로 바뀌었으며 비용 부담도 최소화할 수 있었습니다.
 `,
+    review: {
+      author: "jini***",
+      content:
+        "후기 잘 안 쓰는데 남겨요. 제가 색을 쉽게 못 골라서 질문이 많았거든요ㅠ 답변 듣고 결정하니까 마음이 좀 놓였어요. 완성된 색도 마음에 듭니다.",
+    },
     beforeImg: "/images/cases/case-020-before.jpeg",
     afterImg: "/images/cases/case-020-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223721448726",
@@ -6882,6 +6978,11 @@ PET 제로조인트 도어를 사용해
 
 작업 후에는 주방 분위기가 새것처럼 깔끔하게 바뀌었고 전체 교체보다 경제적으로 개선할 수 있었습니다.
 `,
+    review: {
+      author: "cks58***",
+      content:
+        "부모님은 원래 것도 쓸 만하다고 하셨는데 바꾸고 나니 밝아져서 좋다 하십니다. 익숙한 수납 위치 그대로 쓰실 수 있는 점도 좋았어요.",
+    },
     beforeImg: "/images/cases/case-019-before.jpeg",
     afterImg: "/images/cases/case-019-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1515-/223853692269",
@@ -6945,6 +7046,11 @@ PET 제로조인트 도어를 사용해
 
 시공 후에는 전체 교체 없이도 새 주방 같은 분위기를 얻을 수 있었고 비용 부담도 줄일 수 있었습니다.
 `,
+    review: {
+      author: "peach14***",
+      content:
+        "전후 사진 꼭 찍어두세요… 저는 정신없어서 전 사진을 제대로 못 찍음 ㅜㅜ 예전 집 사진 구석에 나온 주방 찾아서 비교 중이에요ㅋㅋ",
+    },
     beforeImg: "/images/cases/case-017-before.jpg",
     afterImg: "/images/cases/case-017-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1515-/223944501024",
@@ -7138,6 +7244,11 @@ PET 제로조인트 도어를 사용해
 
 시공 후에는 전체 교체 없이도 깔끔한 주방 분위기를 만들 수 있었고 비용도 절약할 수 있었습니다.
 `,
+    review: {
+      author: "sjh9540***",
+      content:
+        "오래된 집이라 큰 기대는 안 했는데 생각보다 변화가 큽니다. 다만 문이 깨끗해지니 오래된 상판이 눈에 들어오네요ㅎㅎ 주방은 한 번 손대니 끝이 없나 봅니다.",
+    },
     beforeImg: "/images/cases/case-010-before.jpeg",
     afterImg: "/images/cases/case-010-after.jpeg",
     blogUrl: "https://blog.naver.com/kohh1115/224229109558",
@@ -7161,6 +7272,11 @@ PET 제로조인트 도어를 사용해
 
 작업 후에는 새 주방 같은 느낌으로 바뀌었고 고객님 만족도도 높았습니다.
 `,
+    review: {
+      author: "gom62***",
+      content:
+        "요란한 색 말고 무난하게 골랐어요. 처음엔 좀 심심한가 했는데 며칠 보니까 편안하고 괜찮네요. 오래 써도 질리지 않았으면 좋겠습니다.",
+    },
     beforeImg: "/images/cases/case-009-before.jpg",
     afterImg: "/images/cases/case-009-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115/224259313207",
@@ -7232,6 +7348,11 @@ PET 제로조인트 도어를 사용해
     region: "경기 부천시",
     summary:
       "20년 된 주방 문짝 색상 변색. 본체는 그대로 두고 문짝만 42장 교체.",
+    review: {
+      author: "hyun4***",
+      content:
+        "설치 끝나고 문 하나씩 열어보면서 확인했어요. 마지막에 간격 다시 봐주셔서 좋았습니다. 매일 쓰는 거라 이런 부분이 은근 신경 쓰이더라고요.",
+    },
     beforeImg: "/images/cases/case-003-before.jpg",
     afterImg: "/images/cases/case-003-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115",
@@ -7247,6 +7368,11 @@ PET 제로조인트 도어를 사용해
     region: "서울 강서구",
     summary:
       "상판 스크래치 심하고 문짝 들뜸. 상판 교체 + 문짝 리폼으로 새 주방 느낌.",
+    review: {
+      author: "zzu***",
+      content:
+        "친구 왔는데 주방 공사했냐고 물어봄 ㅋㅋ 문만 바꿨다니까 안쪽도 열어보더라고요. 괜히 뿌듯했어요. 이제 이 상태로 깨끗하게 좀 써보려고요ㅎㅎ",
+    },
     beforeImg: "/images/cases/case-004-before.jpg",
     afterImg: "/images/cases/case-004-after.jpg",
     blogUrl: "https://blog.naver.com/kohh1115",

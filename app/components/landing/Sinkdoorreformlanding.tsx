@@ -235,9 +235,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
       ).length
     : 0;
   const reviewCases = cases
-    .filter((c) => c.category === "싱크대 리폼" && c.title.includes("문짝"))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    ;
+    .filter((c) => c.category === "싱크대 리폼" && c.review);
   const showReviews = () => {
     setActiveTab("reviews");
     window.setTimeout(() => {
@@ -1474,9 +1472,17 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                 비포 애프터 리뷰
               </p>
               <p className="mt-1 text-[12px] font-semibold text-neutral-500">
-                실제 시공 사진 기준
+                고객 리뷰와 실제 시공 사진 기준
               </p>
             </div>
+          </div>
+          <div className="mb-4">
+            <p className="text-[12px] font-black tracking-[0.18em] text-[#1a5cff]">
+              BEFORE AFTER
+            </p>
+            <h3 className="mt-1 text-[22px] font-black leading-tight text-neutral-950 md:text-[28px]">
+              실제 시공 사례 사진
+            </h3>
           </div>
           <div className="grid grid-cols-1 gap-4">
             {reviewCases.map((item) => (
@@ -1499,12 +1505,15 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     </span>
                   </div>
                   <p className="mb-2 text-[15px] font-black leading-snug text-neutral-950">
-                    {item.title}
+                    {item.review?.author ?? item.title}
                   </p>
                   <p className="mb-3 text-[12px] font-semibold text-neutral-400">
                     {item.region}
                   </p>
-                  <div className="mb-4 grid grid-cols-2 gap-2 md:gap-3">
+                  <p className="mb-4 text-[14px] leading-[1.75] text-neutral-600">
+                    {item.review?.content ?? item.summary}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 md:gap-3">
                       {[
                         { label: "BEFORE", src: item.beforeImg },
                         { label: "AFTER", src: item.afterImg },
@@ -1532,9 +1541,6 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                         </div>
                       ))}
                   </div>
-                  <p className="text-[14px] leading-[1.75] text-neutral-600">
-                    {item.summary}
-                  </p>
                 </Link>
             ))}
           </div>
