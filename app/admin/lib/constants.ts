@@ -61,6 +61,32 @@ export const QUICK_TIMES = [
 export const AM_HOURS = [6, 7, 8, 9, 10, 11, 12];
 export const PM_HOURS = [1, 2, 3, 4, 5, 6, 7, 8];
 
+
+// ── 품목 ─────────────────────────────────────────────────────
+export const PRODUCT_OPTIONS = [
+  "싱크대 상부장",
+  "싱크대 하부장",
+  "싱크대 문짝",
+  "싱크대 상판",
+  "붙박이장",
+  "신발장",
+  "소파 쿠션",
+  "소파 가죽",
+  "식탁의자",
+  "업소용 의자",
+  "회의테이블",
+] as const;
+
+export type ProductOption = (typeof PRODUCT_OPTIONS)[number];
+
+export function isProductOption(value: string): value is ProductOption {
+  return PRODUCT_OPTIONS.includes(value as ProductOption);
+}
+
+export function productBucket(value: string) {
+  return isProductOption(value) ? value : "기타";
+}
+
 // ── 자재 ─────────────────────────────────────────────────────
 export type MaterialStatus = "발주필요" | "발주완료" | "준비완료";
 export type MaterialSupplier = "지엔공장" | "대명상사" | "탑소파" | "기타";

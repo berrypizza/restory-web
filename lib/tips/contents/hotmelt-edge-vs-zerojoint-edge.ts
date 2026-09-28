@@ -16,7 +16,7 @@ const tip: Tip = {
   ],
   thumbnail: "/images/tips/hotmelt-vs-zerojoint-edge.png",
   createdAt: "2026-09-08",
-  views: 0,
+  views: 5001,
   readingTime: 5,
   content: `
 ## 싱크대 문짝은 정면보다 모서리에서 차이가 납니다

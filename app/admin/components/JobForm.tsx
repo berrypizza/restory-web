@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import type { Job, JobFormState } from "../lib/types";
+import type { JobFormState } from "../lib/types";
 import type { Status, Tech } from "../lib/constants";
-import { TECHS, STATUSES } from "../lib/constants";
+import { PRODUCT_OPTIONS, TECHS, STATUSES, isProductOption } from "../lib/constants";
 import {
   getSupabase,
   adjTime,
@@ -70,6 +69,7 @@ export default function JobForm({
     const newUrls: string[] = [];
     for (const file of files) {
       const compressed = await compressImage(file);
+      // eslint-disable-next-line react-hooks/purity -- generated inside an upload event handler, not during render
       const path = `intake-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
       const { error } = await getSupabase()
         .storage.from("completion-photos")
@@ -118,11 +118,6 @@ export default function JobForm({
             { label: "이름 *", key: "name", placeholder: "홍길동" },
             { label: "연락처", key: "phone", placeholder: "010-0000-0000" },
             { label: "지역 *", key: "region", placeholder: "인천 서구 ○○동" },
-            {
-              label: "증상 *",
-              key: "symptom",
-              placeholder: "싱크대 상부장 처짐",
-            },
           ] as const
         ).map((f) => (
           <label key={f.key} className="flex flex-col gap-1.5">
@@ -141,6 +136,40 @@ export default function JobForm({
             />
           </label>
         ))}
+
+        {/* 품목 */}
+        <label className="flex flex-col gap-1.5">
+          <span className="text-xs font-semibold" style={{ color: "#6b7280" }}>
+            품목 *
+          </span>
+          <select
+            value={isProductOption(form.symptom) ? form.symptom : form.symptom ? "__custom" : ""}
+            onChange={(e) =>
+              setForm((p) => ({
+                ...p,
+                symptom: e.target.value === "__custom" ? "" : e.target.value,
+              }))
+            }
+            style={inputStyle}>
+            <option value="">품목 선택</option>
+            {PRODUCT_OPTIONS.map((product) => (
+              <option key={product} value={product}>
+                {product}
+              </option>
+            ))}
+            <option value="__custom">직접 입력</option>
+          </select>
+          {(!isProductOption(form.symptom) || !form.symptom) && (
+            <input
+              value={isProductOption(form.symptom) ? "" : form.symptom}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, symptom: e.target.value }))
+              }
+              placeholder="직접 입력한 품목은 분석에서 기타로 집계"
+              style={inputStyle}
+            />
+          )}
+        </label>
 
         {/* 방문일 + 시간 */}
         <div className="grid grid-cols-2 gap-3">

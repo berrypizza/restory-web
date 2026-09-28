@@ -326,7 +326,8 @@ export const cases: CaseItem[] = [
     id: "case-117",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
-    title: "인천 검암동 싱크대 상부장 처짐 파손 수리, 내려앉은 유리장을 다시 맞춘 사례",
+    title:
+      "인천 검암동 싱크대 상부장 처짐 파손 수리, 내려앉은 유리장을 다시 맞춘 사례",
     region: "인천 검암동",
     summary:
       "인천 검암동 싱크대 상부장 처짐 파손 수리 사례입니다. 유리 상부장이 아래로 내려앉고 문 위치가 틀어진 상태를 확인한 뒤, 기존 상부장을 살릴 수 있는 범위에서 고정 상태와 수평을 다시 맞췄습니다.",
@@ -423,7 +424,8 @@ export const cases: CaseItem[] = [
     id: "case-115",
     category: "붙박이 소파 천갈이",
     parentCategory: "가죽 리폼",
-    title: "인천 계양구 매장 붙박이 소파 천갈이, 찢어진 좌방석을 다시 정리한 사례",
+    title:
+      "인천 계양구 매장 붙박이 소파 천갈이, 찢어진 좌방석을 다시 정리한 사례",
     region: "인천 계양구",
     summary:
       "인천 계양구 매장 붙박이 소파 천갈이 사례입니다. 좌방석 앞쪽 인조가죽이 찢어지고 내부 충전재가 보이는 상태를 확인한 뒤, 기존 구조를 살려 새 인조가죽으로 다시 마감했습니다.",
@@ -471,7 +473,8 @@ export const cases: CaseItem[] = [
     id: "case-114",
     category: "싱크대 리폼",
     parentCategory: "싱크대 리폼",
-    title: "인천 검암동 싱크대 문짝 교체, 검은 유광 상부장을 포그그레이로 바꾼 사례",
+    title:
+      "인천 검암동 싱크대 문짝 교체, 검은 유광 상부장을 포그그레이로 바꾼 사례",
     region: "인천 검암동",
     summary:
       "인천 검암동 싱크대 문짝 교체 사례입니다. 기존 몸통은 그대로 사용하고 검은 유광 상부장 문짝만 포그그레이 PET 무광으로 교체해 주방 위쪽 인상을 차분하게 정리했습니다.",
@@ -501,7 +504,7 @@ export const cases: CaseItem[] = [
     review: {
       author: "kkh08***",
       content:
-        "주방 볼 때마다 누런 문짝이 신경 쓰였는데 드디어 바꿨어요 ㅜㅜ 진작 할걸… 아침에 물 마시러 나왔다가 괜히 한번 더 보고 들어갑니다.",
+        "검은색 문짝이 답답하고 싫어서 밝은 포그그레이로 바꾸게 되었습니다. 일단 당일에 공사가 끝나는게 너무 좋네요..ㅎ^^",
     },
     beforeImg: "/images/cases/case-114-before.jpg",
     afterImg: "/images/cases/case-114-after.png",
@@ -524,7 +527,8 @@ export const cases: CaseItem[] = [
     id: "case-113",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
-    title: "인천 석남동 싱크대 상부장 처짐 수리, 벌어진 상단 라인을 다시 잡은 사례",
+    title:
+      "인천 석남동 싱크대 상부장 처짐 수리, 벌어진 상단 라인을 다시 잡은 사례",
     region: "인천 석남동",
     summary:
       "인천 석남동 싱크대 상부장 처짐 수리 사례입니다. 천장과 상부장 사이로 벌어진 라인을 확인하고, 기존 상부장을 다시 사용할 수 있도록 고정 상태를 점검한 뒤 보강 재설치했습니다.",
@@ -726,7 +730,8 @@ export const cases: CaseItem[] = [
     id: "case-109",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
-    title: "용산 효창동 싱크대 상부장 처짐 수리, 벌어진 상단 라인을 다시 잡은 사례",
+    title:
+      "용산 효창동 싱크대 상부장 처짐 수리, 벌어진 상단 라인을 다시 잡은 사례",
     region: "서울 용산구 효창동",
     summary:
       "서울 용산구 효창동 싱크대 상부장 처짐 수리 사례입니다. 천장과 상부장 사이 틈이 벌어져 보이는 상태를 확인하고, 기존 상부장을 다시 사용할 수 있도록 고정 상태를 점검한 뒤 보강 재설치했습니다.",
@@ -804,7 +809,7 @@ export const cases: CaseItem[] = [
     review: {
       author: "yoon5664***",
       content:
-        "남편이 굳이 바꿔야 하냐더니 끝나고 사진 제일 많이 찍음ㅋㅋㅋ 말 안 하고 있었으면 본인이 하자고 한 줄 알겠어요.",
+        "경매 받고 집이 안나가서, 주방이 문젠가... 하고 인테리어 알아보다가 문짝만 바꿀 수 있다고 해서 진행했습니다! 누렇던 주방이 좀 화사해져서 기대가 되네요 ㅎㅎ 제발 빨리 나가야 하는데 ㅠ",
     },
     beforeImg: "/images/cases/case-108-before.jpg",
     afterImg: "/images/cases/case-108-after.png",
@@ -826,8 +831,7 @@ export const cases: CaseItem[] = [
     id: "case-107",
     category: "상부장 처짐",
     parentCategory: "싱크대 수리",
-    title:
-      "계양구 싱크대 상부장 처짐 수리, PB 시공목 교체 보강 재설치 사례",
+    title: "계양구 싱크대 상부장 처짐 수리, PB 시공목 교체 보강 재설치 사례",
     region: "인천 계양구",
     summary:
       "인천 계양구 싱크대 상부장 처짐 수리 사례입니다. 뒤쪽 PB 시공목 부식으로 한쪽이 기울고 벽과 벌어진 상부장을 분리해 합판 시공목으로 교체하고 보강 재설치했습니다.",
@@ -880,8 +884,7 @@ PB 시공목은 나무 입자를 압축해 만든 판재라 수분이나 노후�
     id: "case-106",
     category: "회의실 테이블 가죽 교체",
     parentCategory: "가죽 리폼",
-    title:
-      "종로구 회장실 회의 테이블 인조가죽 교체, 검정 상판 패드 정리 사례",
+    title: "종로구 회장실 회의 테이블 인조가죽 교체, 검정 상판 패드 정리 사례",
     region: "서울 종로구",
     summary:
       "서울 종로구 회장실 회의 테이블 인조가죽 교체 사례입니다. 기존 검정 상판 패드의 들뜸과 사용 흔적을 확인한 뒤 새 인조가죽으로 교체해 회의 공간을 다시 정돈했습니다.",
@@ -1051,7 +1054,8 @@ PB 시공목은 나무 입자를 압축해 만든 판재라 수분이나 노후�
     id: "case-102",
     category: "싱크대 리폼",
     parentCategory: "싱크대 리폼",
-    title: "강서구 화곡동 싱크대 하부장 문짝 교체, 물에 불어 터진 도어 부분 교체 사례",
+    title:
+      "강서구 화곡동 싱크대 하부장 문짝 교체, 물에 불어 터진 도어 부분 교체 사례",
     region: "서울 강서구 화곡동",
     summary:
       "물에 불어 벌어진 싱크대 하부장 MDF 문짝과 경첩부 상태를 확인한 뒤, 손상된 도어만 보강 후 교체한 사례입니다.",
@@ -1068,8 +1072,7 @@ PB 시공목은 나무 입자를 압축해 만든 판재라 수분이나 노후�
 `,
     review: {
       author: "sora312***",
-      content:
-        "오래된 주방이라 문만 바꿔도 괜찮을까 싶었거든요. 물론 상판이나 타일까지 새것이 되는 건 아닌데 눈에 제일 많이 보이던 부분이 바뀌니까 훨씬 보기 편해요.",
+      content: "문짝이 불어서 교체신청했습니다. 빠르고 좋아요",
     },
     beforeImg: "/images/cases/case-102-before.jpg",
     afterImg: "/images/cases/case-102-after.png",
@@ -1226,8 +1229,7 @@ PET 포그 그레이 문짝으로 제작했습니다.
 `,
     review: {
       author: "dodo6***",
-      content:
-        "주방 정리하면서 문짝까지 바꿨더니 속이 다 시원함 ㅋㅋ 근데 깨끗해지니까 위에 올려놓은 잡동사니가 더 잘 보여요… 이제 그것도 정리해야겠어요.",
+      content: "붉은 버건디? 촌스러운 빨간 느낌 바꿔서 속이 다 시원하네요^^",
     },
     beforeImg: "/images/cases/case-098-before.jpg",
     afterImg: "/images/cases/case-098-after.jpg",
@@ -3788,7 +3790,7 @@ PB 시공목이 약해지거나,
     review: {
       author: "lala859***",
       content:
-        "와… 옛날 손잡이 없어지니까 느낌이 이렇게 달라지네요ㅠㅠ 저는 색보다 손잡이 바뀐 게 더 마음에 들어요.",
+        "집이 오래됬는디 좀 화사해진 기분이네요 직원인지 사장님인지 친절하셔서 좋네요 ",
     },
     beforeImg: "/images/cases/case-073-before.jpg",
     afterImg: "/images/cases/case-073-after.png",
@@ -5538,8 +5540,7 @@ A/S는 가능한지까지 함께 확인해야
 `,
     review: {
       author: "nari671***",
-      content:
-        "상부장만 바꿨어요! 아래쪽이랑 안 어울릴까 걱정했는데 생각보다 괜찮네요ㅎㅎ 전부 다 바꿔야 하나 고민했었는데 일단 여기까지만 해도 좋습니다.",
+      content: "친절해서 좋습니다",
     },
     beforeImg: "/images/cases/case-055-before.jpg",
     afterImg: "/images/cases/case-055-after.jpg",
@@ -7048,8 +7049,7 @@ PET 제로조인트 도어를 사용해
 `,
     review: {
       author: "peach14***",
-      content:
-        "전후 사진 꼭 찍어두세요… 저는 정신없어서 전 사진을 제대로 못 찍음 ㅜㅜ 예전 집 사진 구석에 나온 주방 찾아서 비교 중이에요ㅋㅋ",
+      content: "주방 갈때마다 보면서 스트레스였는데 까진거 없어져서 좋네요! ",
     },
     beforeImg: "/images/cases/case-017-before.jpg",
     afterImg: "/images/cases/case-017-after.jpg",
@@ -7371,7 +7371,7 @@ PET 제로조인트 도어를 사용해
     review: {
       author: "zzu***",
       content:
-        "친구 왔는데 주방 공사했냐고 물어봄 ㅋㅋ 문만 바꿨다니까 안쪽도 열어보더라고요. 괜히 뿌듯했어요. 이제 이 상태로 깨끗하게 좀 써보려고요ㅎㅎ",
+        "집 원상복구 해야해서 전체 교체 해야하나.. 하다가 문만 바꿨습니다.",
     },
     beforeImg: "/images/cases/case-004-before.jpg",
     afterImg: "/images/cases/case-004-after.jpg",

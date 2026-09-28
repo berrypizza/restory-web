@@ -17,7 +17,7 @@ const tip: Tip = {
   ],
   thumbnail: "/images/tips/sink-top-crack-repair-vs-replacement-thumb.png",
   createdAt: "2026-08-28",
-  views: 0,
+  views: 5005,
   readingTime: 5,
   ctaBanner: {
     text: "상판 크랙, 교체 전에 먼저 확인하세요",

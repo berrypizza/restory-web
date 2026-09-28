@@ -16,7 +16,7 @@ import JobForm from "./components/JobForm";
 import CalendarTab from "./tabs/CalendarTab";
 import StatsTab from "./tabs/StatsTab";
 import ListTab from "./tabs/ListTab";
-import MaterialTab from "./tabs/MaterialTab";
+import AnalysisTab from "./tabs/AnalysisTab";
 import ExpenseTab from "./tabs/ExpenseTab";
 
 // ── 메인 ─────────────────────────────────────────────────────
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
     useJobs(loggedUser);
 
   // 탭/필터
-  const [tab, setTab] = useState<"비용" | "전체" | "달력" | "통계" | "자재">(
+  const [tab, setTab] = useState<"비용" | "전체" | "달력" | "통계" | "분석">(
     "달력",
   );
   const [statusFilter, setStatusFilter] = useState<Status | "전체">("전체");
@@ -397,7 +397,7 @@ export default function AdminDashboard() {
             border: "1px solid #e5e7eb",
             boxShadow: "0 2px 10px rgba(15,23,42,0.04)",
           }}>
-          {(["달력", "비용", "전체", "자재", "통계"] as const).map((t) => (
+          {(["달력", "비용", "전체", "분석", "통계"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -529,8 +529,13 @@ export default function AdminDashboard() {
           />
         )}
 
-        {!loading && tab === "자재" && (
-          <MaterialTab jobs={jobs} isAdmin={isAdmin} />
+        {!loading && tab === "분석" && (
+          <AnalysisTab
+            monthFilter={monthFilter}
+            setMonthFilter={setMonthFilter}
+            doneMonth={doneMonth}
+            isAdmin={isAdmin}
+          />
         )}
       </div>
 

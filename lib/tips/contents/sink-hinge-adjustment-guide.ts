@@ -15,7 +15,7 @@ const tip: Tip = {
   ],
   thumbnail: "/images/tips/sink-hinge-adjustment-thumbnail.png",
   createdAt: "2026-08-18",
-  views: 0,
+  views: 5007,
   readingTime: 4,
   content: `
 ## 싱크대 문짝이 삐뚤어졌다면 먼저 경첩을 봐야 합니다
