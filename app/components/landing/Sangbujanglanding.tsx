@@ -17,6 +17,169 @@ const PHONE = buildTrackedContactPath("phone", "sangbujang");
 const KAKAO_URL = buildTrackedContactPath("kakao", "sangbujang");
 const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
 
+const SANGBUJANG_REVIEWS = [
+  {
+    author: "kimgun0214***",
+    content:
+      "상부장이 왼쪽이 기울었는데 진짜 떨어지는줄 알았어요... 아무튼 당일 방문해서 끝내주셔서 감사합니다.",
+  },
+  {
+    author: "parksh1004***",
+    content: "집이 오래되서 걱정했는데 감사합니다.",
+  },
+  {
+    author: "leejw9408***",
+    content: "굳 잘 해주시네요",
+  },
+  {
+    author: "choiym8802***",
+    content:
+      "티비에서 떨어져서 다친사람들 봤는데 저희집도 그래서 진짜 너무 불안했습니다.... 근데 빠르게 수리해주시고 원인도 말씀해주셔서 너무 감사합니다!!!",
+  },
+  {
+    author: "jungsy5839***",
+    content: "실리콘도 잘 쏴주셔서 감사해요!",
+  },
+  {
+    author: "kangmh012***",
+    content: "장이 앞으로 떨어지는줄... 깔끔하게 잘 시공하셔요 감사합니다",
+  },
+  {
+    author: "hanseok92***",
+    content:
+      "자취방에 상부장이 떨어짐ㅋㅋㅋ 후 암튼 당일에 해결 해주셔서 감사합니다. 무슨 60만원 부르는 업체도 있던데;;;",
+  },
+  {
+    author: "songhw7701***",
+    content: "무리하게 당일 부탁했는데 와주셔서 감사합니다 ㅠㅠ",
+  },
+  {
+    author: "jinhoo486***",
+    content: "일처리 잘하십니다 ^^",
+  },
+  {
+    author: "hyunjee1205***",
+    content: "틈새 부분 떨어지는줄 알고 조마좀마 했는데 감사합니당",
+  },
+  {
+    author: "seowoo9901***",
+    content:
+      "장이 떨어져서 진짜 다 박살이 났습니다. 저희 어머니 혼자 계셨는데 다치시진 않았찌만, 더 걱정되서 여기저기 업체 찾다가 알게됬습니다! 진짜 설명 원인 다 잘 해주시고 암튼 굳입니다.",
+  },
+  {
+    author: "dabin321***",
+    content: "빠르고 편해요 감사합니다",
+  },
+  {
+    author: "yerin8282***",
+    content: "계양구에서 다른 업체는 진짜 50만원 말하던데 암튼 반값으로 했네요",
+  },
+  {
+    author: "junsu1993***",
+    content: "상부장이 떨어지는건지도 몰랐는데 암튼 감사합니당 ㅎㅎ..",
+  },
+  {
+    author: "jiwonmom87***",
+    content: "앞으로 쏠려서 진짜 심장 쫄렸습니다",
+  },
+  {
+    author: "minjae0524***",
+    content: "빠른 시공 감사합니다",
+  },
+  {
+    author: "sohee7979***",
+    content:
+      "앞에 선반 아니었으면 진짜 떨어질뻔했다네요... 원인 설명 잘해주시고 진짜 친절하십니다! 상담 한번 받아보세요~",
+  },
+  {
+    author: "taemin9012***",
+    content:
+      "진짜 ㅋㅋㅋ 세입자가 저러고 2년 살았다는데 후... 아무튼 잘해주셔서 감사합니다",
+  },
+  {
+    author: "chaeyun0819***",
+    content: "오래된 싱크대 수리해주셔서 감사해요",
+  },
+  {
+    author: "dongjun2486***",
+    content:
+      "상부장 내부가 다 터지고 그래서 리스토리를 찾게 되었씁니다. 후회 안하고 너무 친절하십니다",
+  },
+  {
+    author: "sujin0312***",
+    content: "감사합니다",
+  },
+  {
+    author: "gamin840***",
+    content:
+      "위에가 쩍~ 벌어져서 떨어지는 줄 알았는데. 혼자 오셔서 뚝딲~ 하고 고쳐주고 가셨어요~ ^^",
+  },
+  {
+    author: "seungwoo0611***",
+    content: "벽 뒤가 헐었던데,, 암튼 실력자입니다! 이걸 하시네 ㅎㅎ",
+  },
+  {
+    author: "eunsung9588***",
+    content: "젊으신 분 같은데 사업 번창하세요~",
+  },
+  {
+    author: "wooseok8301***",
+    content:
+      "장이 처지고 부셔졌는데 저걸 복구해주셨어요... 대박입니다 감사합니다 감사합니다!",
+  },
+  {
+    author: "hayoung0921***",
+    content: "pb? 뭐 암튼 터저서 불렀는데 친절하시고 좋네요 ^^",
+  },
+  {
+    author: "yebin7710***",
+    content:
+      "진짜 머리 위에서 쿵 하면서 소리 나서 봤는데 후.. 다들 안다치게 조짐 보이면 수리하세요",
+  },
+  {
+    author: "jiwan9004***",
+    content: "전자 랜지 아니었으면 이승에 없었을듯 하네요;;",
+  },
+  {
+    author: "dojun2305***",
+    content:
+      "퇴근하고 집에오니 이렇게... 진짜 앞에 있엇다면 상상도 하기 싫네요..... 당일 출장 와주셔서 뚝딱 수리해주셨습니다. 정말 감사합니다!",
+  },
+  {
+    author: "sujin1029***",
+    content: "빠르고 좋아요",
+  },
+  {
+    author: "kyungsoo860***",
+    content:
+      "내부 나무 상태까지 체크해주시고 너무 꼼꼼하시네요! 저보다 더 신경 쓰시는듯.. ㅎ 암튼 감사합니다",
+  },
+  {
+    author: "sihyun1407***",
+    content: "굳",
+  },
+  {
+    author: "junhyuk9812***",
+    content: "잘해주셔요~",
+  },
+  {
+    author: "dahye0215***",
+    content: "감사합니다",
+  },
+  {
+    author: "sangmin7890***",
+    content: "전화도 잘 받아주시고 무었보다 너무 친절하세요~",
+  },
+  {
+    author: "hyesung812***",
+    content: "아무도 안다쳐서 다행입니다.",
+  },
+  {
+    author: "yoojin9308***",
+    content: "애아빠가 발견했는데 빠르게 해결되서 너무 편히했습니다!",
+  },
+];
+
 const FAQ_ITEMS = [
   {
     q: "상부장이 처졌는데 전체를 교체해야 하나요?",
@@ -151,7 +314,11 @@ export default function SangbujangLanding({ keyword }: Props) {
     : 0;
   const reviewCases = cases
     .filter((c) => c.category === "상부장 처짐")
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((item, index) => ({
+      ...item,
+      review: SANGBUJANG_REVIEWS[index],
+    }));
 
   const showReviews = () => {
     setActiveTab("reviews");
@@ -765,10 +932,13 @@ export default function SangbujangLanding({ keyword }: Props) {
                   </span>
                 </div>
                 <p className="mb-2 text-[15px] font-black leading-snug text-neutral-950">
-                  {item.title}
+                  {item.review?.author ?? item.title}
                 </p>
                 <p className="mb-3 text-[12px] font-semibold text-neutral-400">
                   {item.region}
+                </p>
+                <p className="mb-4 text-[14px] leading-[1.75] text-neutral-600">
+                  {item.review?.content ?? item.summary}
                 </p>
                 <div className="mb-4 grid grid-cols-2 gap-2 md:gap-3">
                   {[
@@ -798,8 +968,8 @@ export default function SangbujangLanding({ keyword }: Props) {
                     </div>
                   ))}
                 </div>
-                <p className="text-[14px] leading-[1.75] text-neutral-600">
-                  {item.summary}
+                <p className="text-[13px] font-semibold leading-[1.65] text-neutral-400">
+                  {item.title}
                 </p>
               </Link>
             ))}
