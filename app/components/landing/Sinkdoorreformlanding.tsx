@@ -27,9 +27,9 @@ const FIELD_INSTALLATION_IMAGE = "/images/door/field-installation.webp";
 
 const COLOR_SAMPLE_PREVIEWS = [
   {
-    name: "로지핑크",
-    color: "#e8d7cf",
-    image: "/images/door/preview-rosy-pink.webp",
+    name: "포그 그레이",
+    color: "#e4ddd3",
+    image: "/images/door/preview-fog-gray.webp",
   },
   {
     name: "모노그레이",
@@ -57,7 +57,7 @@ const COLOR_SAMPLE_PREVIEWS = [
     image: "/images/door/preview-sand-gray.webp",
   },
   {
-    name: "인디고블루",
+    name: "딥블루",
     color: "#1d3a46",
     image: "/images/door/preview-indigo-blue.webp",
   },
@@ -77,9 +77,33 @@ const COLOR_SAMPLE_PREVIEWS = [
     image: "/images/door/preview-cream-white.webp",
   },
   {
-    name: "포그 그레이",
-    color: "#e4ddd3",
-    image: "/images/door/preview-fog-gray.webp",
+    name: "로지핑크",
+    color: "#e8d7cf",
+    image: "/images/door/preview-rosy-pink.webp",
+  },
+  {
+    name: "LPM 샤이엔",
+    color: "#d8bd92",
+    image: "/images/door/preview-lpm-cheyenne.webp",
+    swatchImage: "/images/door/lpm-swatch-cheyenne.webp",
+  },
+  {
+    name: "LPM 내츄럴오크",
+    color: "#cda44e",
+    image: "/images/door/preview-lpm-natural-oak.webp",
+    swatchImage: "/images/door/lpm-swatch-natural-oak.webp",
+  },
+  {
+    name: "LPM 로얄오크",
+    color: "#c58f45",
+    image: "/images/door/preview-lpm-royal-oak.webp",
+    swatchImage: "/images/door/lpm-swatch-royal-oak.webp",
+  },
+  {
+    name: "LPM 리옹",
+    color: "#9d6331",
+    image: "/images/door/preview-lpm-lyon.webp",
+    swatchImage: "/images/door/lpm-swatch-lyon.webp",
   },
 ];
 
@@ -1329,7 +1353,7 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
               골라보세요
             </h2>
             <p className="text-[14px] text-neutral-500 mb-6">
-              백색 · 크림화이트 · 포그 그레이 · 샌드 그레이 · 인디고블루.
+              백색 · 크림화이트 · 포그 그레이 · 샌드 그레이 · 딥블루 · LPM 목무늬.
               <br />
               색상칩을 누르면 주방 적용 이미지를 먼저 볼 수 있고
               <br />
@@ -1366,7 +1390,9 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     <div
                       className="h-10 rounded-md"
                       style={{
-                        background: sample.color,
+                        background: sample.swatchImage
+                          ? `${sample.color} url(${sample.swatchImage}) center / cover`
+                          : sample.color,
                         border:
                           selectedColorName === sample.name
                             ? "2px solid #1a5cff"
