@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     url: "https://www.restorystudio.co.kr/kitchen/sink-door",
     images: [
       {
-        url: "/images/hero-door.webp",
+        url: "/images/door/sink-door-main-renewal.png",
         width: 1080,
         height: 1350,
         alt: "리스토리 싱크대 문짝 교체 리폼",
