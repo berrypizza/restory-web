@@ -1,3 +1,9 @@
+import {
+  buildBreadcrumbJsonLd,
+  buildWebPageJsonLd,
+  type BreadcrumbItem,
+} from "@/lib/landing-seo";
+
 export function LocalBusinessJsonLd() {
   const data = {
     "@context": "https://schema.org",
@@ -153,6 +159,40 @@ export function FAQJsonLd({ faqs }: { faqs: { q: string; a: string }[] }) {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(buildBreadcrumbJsonLd(items)),
+      }}
+    />
+  );
+}
+
+export function WebPageJsonLd({
+  name,
+  description,
+  url,
+  image,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  image?: string;
+}) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(
+          buildWebPageJsonLd({ name, description, url, image }),
+        ),
+      }}
     />
   );
 }

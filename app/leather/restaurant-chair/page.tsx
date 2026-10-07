@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { BreadcrumbJsonLd, WebPageJsonLd } from "@/app/components/JsonLd";
 import Restaurantchairlanding from "@/app/components/landing/Restaurantchairlanding";
 import { makeRegionalKeywords } from "@/lib/seo-regions";
+import { withLandingSeo } from "@/lib/landing-seo";
 
 const BASE_KEYWORDS = [
   "식당 의자 가죽 교체",
@@ -20,7 +22,7 @@ const BASE_KEYWORDS = [
   "업소용 붙박이 소파 천갈이",
 ];
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withLandingSeo({
   title: "식당·카페 의자 가죽 교체 전문 | 개당 3만원~ | 리스토리",
   description:
     "식당·카페·병원 의자 가죽 교체. 새 의자 구매 비용의 1/3~1/5. 영업 외 시간 시공 가능. 1,000건+ 연간 실적. 고급 인조가죽 1000+ 샘플.",
@@ -48,8 +50,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.restorystudio.co.kr/leather/restaurant-chair",
   },
-};
+});
 
 export default function Page() {
-  return <Restaurantchairlanding />;
+  return (
+    <>
+      <WebPageJsonLd
+        name="식당·카페 의자 가죽 교체"
+        description="식당·카페·병원 의자 가죽 손상 상태를 사진으로 먼저 확인하고 천갈이 가능 여부를 안내합니다."
+        url="https://www.restorystudio.co.kr/leather/restaurant-chair"
+        image="/images/chair/hero-chair.webp"
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "홈", url: "https://www.restorystudio.co.kr" },
+          { name: "가죽 리폼", url: "https://www.restorystudio.co.kr/leather" },
+          {
+            name: "식당 의자 가죽 교체",
+            url: "https://www.restorystudio.co.kr/leather/restaurant-chair",
+          },
+        ]}
+      />
+      <Restaurantchairlanding />
+    </>
+  );
 }

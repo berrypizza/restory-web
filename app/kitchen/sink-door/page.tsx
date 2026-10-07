@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { BreadcrumbJsonLd, WebPageJsonLd } from "@/app/components/JsonLd";
 import Sinkdoorreformlanding from "@/app/components/landing/Sinkdoorreformlanding";
 import { makeRegionalKeywords } from "@/lib/seo-regions";
+import { withLandingSeo } from "@/lib/landing-seo";
 
 const BASE_KEYWORDS = [
   "싱크대 문짝 교체",
@@ -21,7 +23,7 @@ const BASE_KEYWORDS = [
   "제로 조인트 싱크대 문짝",
 ];
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withLandingSeo({
   title: "싱크대 문짝 교체·리폼 전문 | 당일 시공 | 리스토리",
   description:
     "싱크대 문짝 교체·리폼으로 새 주방처럼. 전체 교체 비용의 1/3~1/5. 당일 시공 완료. 3년 무상 A/S. 100가지 이상 색상 선택 가능.",
@@ -48,8 +50,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.restorystudio.co.kr/kitchen/sink-door",
   },
-};
+});
 
 export default function Page() {
-  return <Sinkdoorreformlanding />;
+  return (
+    <>
+      <WebPageJsonLd
+        name="싱크대 문짝 교체·리폼"
+        description="싱크대 전체 교체 전 문짝만 교체해 주방 분위기를 바꿀 수 있는지 사진으로 먼저 확인합니다."
+        url="https://www.restorystudio.co.kr/kitchen/sink-door"
+        image="/images/door/sink-door-main-renewal.png"
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "홈", url: "https://www.restorystudio.co.kr" },
+          { name: "주방 리폼", url: "https://www.restorystudio.co.kr/kitchen" },
+          {
+            name: "싱크대 문짝 교체",
+            url: "https://www.restorystudio.co.kr/kitchen/sink-door",
+          },
+        ]}
+      />
+      <Sinkdoorreformlanding />
+    </>
+  );
 }

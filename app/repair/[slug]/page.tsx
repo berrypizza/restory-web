@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { BreadcrumbJsonLd, WebPageJsonLd } from "@/app/components/JsonLd";
 import { ServiceLandingPage } from "@/app/components/CategoryPages";
 import { getService, getAllSlugs } from "@/lib/site-config";
 import type { Metadata } from "next";
@@ -6,6 +7,7 @@ import SangbujangLanding from "@/app/components/landing/Sangbujanglanding";
 import HabujangLanding from "@/app/components/landing/HabujangLanding";
 import CountertopCrackLanding from "@/app/components/landing/CountertopCrackLanding";
 import { REPAIR_KEYWORD_SLUGS } from "@/lib/keyword-slugs";
+import { withLandingSeo } from "@/lib/landing-seo";
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
@@ -42,6 +44,36 @@ function getLandingType(
   return null;
 }
 
+function LandingSeoScripts({
+  name,
+  description,
+  url,
+  image,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  image: string;
+}) {
+  return (
+    <>
+      <WebPageJsonLd
+        name={name}
+        description={description}
+        url={url}
+        image={image}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "홈", url: BASE },
+          { name: "가구 수리", url: `${BASE}/repair` },
+          { name, url },
+        ]}
+      />
+    </>
+  );
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -52,10 +84,16 @@ export async function generateMetadata({
 
   const service = getService("repair", slug);
   if (service) {
-    return {
+    return withLandingSeo({
       title: `${service.title} | Re'Story`,
       description: service.description,
-    };
+      alternates: { canonical: `${BASE}/repair/${slug}` },
+      openGraph: {
+        title: `${service.title} | Re'Story`,
+        description: service.description,
+        url: `${BASE}/repair/${slug}`,
+      },
+    });
   }
 
   const kw = slug.replace(/-/g, " ");
@@ -94,7 +132,7 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return withLandingSeo({
     title: `${kw} | 리스토리 스튜디오`,
     description: desc,
     robots: { index: true, follow: true },
@@ -108,7 +146,7 @@ export async function generateMetadata({
       siteName: "리스토리",
       locale: "ko_KR",
     },
-  };
+  });
 }
 
 export default async function Page({
@@ -120,13 +158,57 @@ export default async function Page({
   const slug = decodeURIComponent(rawSlug);
 
   const service = getService("repair", slug);
-  if (service) return <ServiceLandingPage service={service} />;
+  if (service)
+    return (
+      <>
+        <LandingSeoScripts
+          name={service.title}
+          description={service.description}
+          url={`${BASE}/repair/${slug}`}
+          image="/images/og-image-2.png"
+        />
+        <ServiceLandingPage service={service} />
+      </>
+    );
 
   const type = getLandingType(slug);
-  if (type === "sangbujang") return <SangbujangLanding keyword={slug} />;
-  if (type === "habujang") return <HabujangLanding keyword={slug} />;
+  const kw = slug.replace(/-/g, " ");
+  if (type === "sangbujang")
+    return (
+      <>
+        <LandingSeoScripts
+          name={kw}
+          description={`${kw} 상태를 사진으로 먼저 확인하고 상부장 처짐 수리 가능 여부를 안내합니다.`}
+          url={`${BASE}/repair/${slug}`}
+          image="/images/hero-sangbujang.webp"
+        />
+        <SangbujangLanding keyword={slug} />
+      </>
+    );
+  if (type === "habujang")
+    return (
+      <>
+        <LandingSeoScripts
+          name={kw}
+          description={`${kw} 손상 범위를 사진으로 먼저 확인하고 수리·교체 기준을 안내합니다.`}
+          url={`${BASE}/repair/${slug}`}
+          image="/images/hero-habujang.webp"
+        />
+        <HabujangLanding keyword={slug} />
+      </>
+    );
   if (type === "sink-top-crack")
-    return <CountertopCrackLanding keyword={slug} />;
+    return (
+      <>
+        <LandingSeoScripts
+          name={kw}
+          description={`${kw} 상태를 사진으로 먼저 확인하고 상판 수리 가능 여부를 안내합니다.`}
+          url={`${BASE}/repair/${slug}`}
+          image="/images/sink-top-crack/main.png"
+        />
+        <CountertopCrackLanding keyword={slug} />
+      </>
+    );
 
   return notFound();
 }

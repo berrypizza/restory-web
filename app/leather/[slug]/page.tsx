@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
+import { BreadcrumbJsonLd, WebPageJsonLd } from "@/app/components/JsonLd";
 import { ServiceLandingPage } from "@/app/components/CategoryPages";
 import { getService, getAllSlugs } from "@/lib/site-config";
 import type { Metadata } from "next";
 import RestaurantChairLanding from "@/app/components/landing/Restaurantchairlanding";
 import MeetingTableLeatherLanding from "@/app/components/landing/MeetingTableLeatherLanding";
 import { LEATHER_KEYWORD_SLUGS } from "@/lib/keyword-slugs";
+import { withLandingSeo } from "@/lib/landing-seo";
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
@@ -46,6 +48,36 @@ function getLandingType(slug: string): "chair" | "table" | null {
   return null;
 }
 
+function LandingSeoScripts({
+  name,
+  description,
+  url,
+  image,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  image: string;
+}) {
+  return (
+    <>
+      <WebPageJsonLd
+        name={name}
+        description={description}
+        url={url}
+        image={image}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "홈", url: BASE },
+          { name: "가죽 리폼", url: `${BASE}/leather` },
+          { name, url },
+        ]}
+      />
+    </>
+  );
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -58,10 +90,16 @@ export async function generateMetadata({
   const type = getLandingType(slug);
 
   if (service && type !== "table") {
-    return {
+    return withLandingSeo({
       title: `${service.title} | Re'Story`,
       description: service.description,
-    };
+      alternates: { canonical: `${BASE}/leather/${slug}` },
+      openGraph: {
+        title: `${service.title} | Re'Story`,
+        description: service.description,
+        url: `${BASE}/leather/${slug}`,
+      },
+    });
   }
 
   const kw = slug.replace(/-/g, " ");
@@ -74,7 +112,7 @@ export async function generateMetadata({
     desc = `${kw} 전문 리스토리. 회의실 테이블·중역 테이블 상판 가죽 벗겨짐, 오염, 갈라짐을 새 인조가죽으로 교체합니다. 사무실 방문 시공, 무상 A/S.`;
   }
 
-  return {
+  return withLandingSeo({
     title: `${kw} | 리스토리 스튜디오`,
     description: desc,
     robots: { index: true, follow: true },
@@ -98,7 +136,7 @@ export async function generateMetadata({
       siteName: "리스토리",
       locale: "ko_KR",
     },
-  };
+  });
 }
 
 export default async function Page({
@@ -111,9 +149,43 @@ export default async function Page({
 
   const service = getService("leather", slug);
   const type = getLandingType(slug);
-  if (type === "table") return <MeetingTableLeatherLanding keyword={slug} />;
-  if (service) return <ServiceLandingPage service={service} />;
-  if (type === "chair") return <RestaurantChairLanding keyword={slug} />;
+  const kw = slug.replace(/-/g, " ");
+  if (type === "table")
+    return (
+      <>
+        <LandingSeoScripts
+          name={kw}
+          description={`${kw} 상판 가죽 손상 상태를 사진으로 먼저 확인하고 교체 가능 여부를 안내합니다.`}
+          url={`${BASE}/leather/${slug}`}
+          image="/images/cases/case-014-after.jpg"
+        />
+        <MeetingTableLeatherLanding keyword={slug} />
+      </>
+    );
+  if (service)
+    return (
+      <>
+        <LandingSeoScripts
+          name={service.title}
+          description={service.description}
+          url={`${BASE}/leather/${slug}`}
+          image="/images/chair/hero-chair.webp"
+        />
+        <ServiceLandingPage service={service} />
+      </>
+    );
+  if (type === "chair")
+    return (
+      <>
+        <LandingSeoScripts
+          name={kw}
+          description={`${kw} 상태를 사진으로 먼저 확인하고 의자 가죽 교체 가능 여부를 안내합니다.`}
+          url={`${BASE}/leather/${slug}`}
+          image="/images/chair/hero-chair.webp"
+        />
+        <RestaurantChairLanding keyword={slug} />
+      </>
+    );
 
   return notFound();
 }
