@@ -9,6 +9,7 @@ import DrawerMenu from "@/app/components/DrawerMenu";
 
 const quickLinks = [
   { label: "작업사례", href: "/cases" },
+  { label: "사업 철학", href: "/philosophy" },
   { label: "이벤트", href: "/events" },
   { label: "꿀팁 게시판", href: "/tips" },
 ];
@@ -16,6 +17,7 @@ const quickLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const isPhilosophy = pathname === "/philosophy";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -26,10 +28,15 @@ export default function Navbar() {
   return (
     <>
       <div
-        className={`bg-white overflow-hidden transition-transform duration-300 ${
+        className={`${isPhilosophy ? "bg-black text-white" : "bg-white"} overflow-hidden transition-transform duration-300 ${
           scrolled ? "-translate-y-full" : "translate-y-0"
         }`}>
-        <div className="bg-[#1f66ff] text-white">
+        <div
+          className={
+            isPhilosophy
+              ? "border-b border-white/10 bg-black text-white"
+              : "bg-[#1f66ff] text-white"
+          }>
           <div className="mx-auto flex h-9 max-w-6xl items-center justify-center px-4 text-xs font-bold md:text-sm">
             사진 한 장으로 수리·리폼 가능 여부 먼저 확인
           </div>
@@ -43,27 +50,41 @@ export default function Navbar() {
                 alt="Re'Story"
                 width={120}
                 height={120}
-                className=" w-auto object-contain"
+                className={`${isPhilosophy ? "brightness-0 invert" : ""} w-auto object-contain`}
                 priority
               />
             </Link>
 
-            <nav className="hidden md:flex items-center gap-7 text-sm font-extrabold text[#1f2631]">
+            <nav className="hidden md:flex items-center gap-7 text-sm font-extrabold">
               {quickLinks.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="transition hover:text-[#1f66ff]">
+                  className={`transition ${
+                    isPhilosophy
+                      ? "text-white/72 hover:text-white"
+                      : "text-[#1f2631] hover:text-[#1f66ff]"
+                  }`}>
                   {item.label}
                 </Link>
               ))}
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
+            <Link
+              href="/philosophy"
+              className={`md:hidden rounded-xl border px-2.5 py-1.5 text-xs font-bold shadow-sm transition ${
+                isPhilosophy
+                  ? "border-[#1f66ff] bg-[#1f66ff] text-white"
+                  : "border-neutral-200 bg-white text-[#1f2631]"
+              }`}>
+              사업 철학
+            </Link>
+
             <Link
               href="/cases"
-              className="md:hidden transition text-[#1f2631] border border-[#f5c542] rounded-xl px-3 py-1.5 bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
+              className="md:hidden transition text-[#1f2631] border border-[#f5c542] rounded-xl px-2.5 py-1.5 text-xs bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
               작업 사례
             </Link>
 
@@ -73,7 +94,11 @@ export default function Navbar() {
 
             <a
               href="tel:1688-2957"
-              className="hidden md:inline-flex rounded-xl bg-neutral-100 px-4 py-2 text-xs font-black text-neutral-800">
+              className={`hidden md:inline-flex rounded-xl px-4 py-2 text-xs font-black ${
+                isPhilosophy
+                  ? "border border-white/10 bg-white/10 text-white"
+                  : "bg-neutral-100 text-neutral-800"
+              }`}>
               전화문의
             </a>
             <a
@@ -85,7 +110,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 border-b border-neutral-100 bg-white shadow-[0_1px_0_rgba(0,0,0,0.08)]">
+      <header
+        className={`sticky top-0 z-50 border-b shadow-[0_1px_0_rgba(0,0,0,0.08)] ${
+          isPhilosophy
+            ? "border-white/10 bg-black"
+            : "border-neutral-100 bg-white"
+        }`}>
         <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
           <nav
             className="nav-scroll flex-1 flex h-full items-center gap-0.5 overflow-x-auto overflow-y-hidden"
@@ -103,7 +133,9 @@ export default function Navbar() {
                 className={`relative flex h-full items-center px-2 font-bold transition ${
                   pathname === "/"
                     ? "text-[#1f66ff]"
-                    : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
+                    : isPhilosophy
+                      ? "text-white/68 hover:text-white"
+                      : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
                 }`}>
                 홈
                 {pathname === "/" && (
@@ -124,10 +156,12 @@ export default function Navbar() {
                   className="group relative flex h-full shrink-0 items-center">
                   <Link
                     href={line.href}
-                    className={`relative flex h-full items-center px-2 text-black font-bold transition ${
+                    className={`relative flex h-full items-center px-2 font-bold transition ${
                       isActive
                         ? "text-[#1f66ff]"
-                        : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
+                        : isPhilosophy
+                          ? "text-white/68 hover:text-white"
+                          : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
                     }`}>
                     {line.title}
                     {isActive && (

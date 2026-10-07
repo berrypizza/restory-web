@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: "2026-06-01",
     },
     {
+      path: "/philosophy",
+      priority: 0.7,
+      changeFrequency: "monthly" as const,
+      lastModified: "2026-10-07",
+    },
+    {
       path: "/repair/sangbujang",
       priority: 0.9,
       changeFrequency: "weekly" as const,

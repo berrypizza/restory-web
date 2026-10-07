@@ -209,6 +209,12 @@ export default function DrawerMenu() {
                       highlight: false,
                     },
                     {
+                      label: "사업 철학",
+                      href: "/philosophy",
+                      external: false,
+                      highlight: false,
+                    },
+                    {
                       label: "⭐ 이벤트",
                       href: "/events",
                       external: false,
