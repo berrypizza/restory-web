@@ -16,6 +16,8 @@ import { REGIONS } from "@/lib/seo-regions";
 const PHONE = buildTrackedContactPath("phone", "sangbujang");
 const KAKAO_URL = buildTrackedContactPath("kakao", "sangbujang");
 const REVIEW_BADGE_IMAGE = "/images/door/before-after-review-badge.png";
+const SITE_URL = "https://www.restorystudio.co.kr";
+type SangbujangCase = (typeof cases)[number];
 
 const SANGBUJANG_REVIEWS = [
   {
@@ -278,6 +280,46 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
   );
 }
 
+function RegionalCaseItemListJsonLd({
+  name,
+  items,
+}: {
+  name: string;
+  items: SangbujangCase[];
+}) {
+  if (items.length === 0) return null;
+
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${SITE_URL}/cases/${item.id}`,
+      item: {
+        "@type": "Article",
+        headline: item.title,
+        description: item.summary,
+        image: `${SITE_URL}${item.afterImg}`,
+        url: `${SITE_URL}/cases/${item.id}`,
+        datePublished: item.date,
+        author: {
+          "@type": "Organization",
+          name: "리스토리 스튜디오",
+        },
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
 /* ─────────────────────────────────────────
    PROPS
 ───────────────────────────────────────── */
@@ -307,11 +349,15 @@ export default function SangbujangLanding({ keyword }: Props) {
     : "교체 비용의 1/3~";
 
   // 지역 케이스 수 (thin content 방지용 동적 데이터)
-  const regionCaseCount = region
-    ? cases.filter(
-        (c) => c.category === "상부장 처짐" && c.region.includes(region),
-      ).length
-    : 0;
+  const regionalSangbujangCases = region
+    ? cases
+        .filter(
+          (c) => c.category === "상부장 처짐" && c.region.includes(region),
+        )
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    : [];
+  const regionCaseCount = regionalSangbujangCases.length;
+  const featuredRegionalCases = regionalSangbujangCases.slice(0, 3);
   const reviewCases = cases
     .filter((c) => c.category === "상부장 처짐")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -346,6 +392,10 @@ export default function SangbujangLanding({ keyword }: Props) {
         }
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
+      <RegionalCaseItemListJsonLd
+        name={`${region || "수도권"} 싱크대 상부장 처짐 실제 수리 사례`}
+        items={featuredRegionalCases}
+      />
 
       {/* 1. HERO */}
       <section
@@ -563,6 +613,85 @@ export default function SangbujangLanding({ keyword }: Props) {
               사진 한 장 보내주시면 {region} 출장 가능 여부와 비용을 바로
               안내드립니다.
             </p>
+          </div>
+        </section>
+      )}
+
+      {featuredRegionalCases.length > 0 && (
+        <section className="px-5 py-12" style={{ background: "#f8f9fb" }}>
+          <div className="mx-auto max-w-lg">
+            <FadeIn>
+              <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">
+                {region} REAL CASES
+              </p>
+              <h2
+                className="mb-3 font-black leading-[1.2] text-neutral-950"
+                style={{ fontSize: "clamp(1.55rem, 5vw, 2.3rem)" }}>
+                {region} 싱크대 상부장 처짐
+                <br />
+                실제 수리 사례
+              </h2>
+              <p className="mb-7 text-[14px] font-medium leading-[1.8] text-neutral-500">
+                같은 상부장 처짐이라도 현장마다 처진 위치, 시공목 상태,
+                고정 방식이 다릅니다. 아래 사례들은 {region} 지역에서 실제로
+                확인하고 수리한 작업입니다.
+              </p>
+            </FadeIn>
+
+            <div className="space-y-4">
+              {featuredRegionalCases.map((item, index) => (
+                <FadeIn key={item.id} delay={index * 70}>
+                  <Link
+                    href={`/cases/${item.id}`}
+                    className="block overflow-hidden rounded-2xl bg-white"
+                    style={{
+                      border: "1px solid #e5e7eb",
+                      textDecoration: "none",
+                    }}>
+                    <div className="grid grid-cols-2 gap-px bg-neutral-200">
+                      <div className="relative aspect-[4/3] bg-neutral-100">
+                        <Image
+                          src={item.beforeImg}
+                          alt={`${item.title} 작업 전`}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 768px) 260px, 50vw"
+                        />
+                        <span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-black text-white">
+                          BEFORE
+                        </span>
+                      </div>
+                      <div className="relative aspect-[4/3] bg-neutral-100">
+                        <Image
+                          src={item.afterImg}
+                          alt={`${item.title} 작업 후`}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 768px) 260px, 50vw"
+                        />
+                        <span className="absolute left-2 top-2 rounded-full bg-[#1a5cff] px-2 py-1 text-[10px] font-black text-white">
+                          AFTER
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <p className="mb-2 text-[12px] font-black text-[#1a5cff]">
+                        {item.region} · {item.date.replaceAll("-", ".")}
+                      </p>
+                      <h3 className="mb-3 text-[17px] font-black leading-[1.35] text-neutral-950">
+                        {item.title}
+                      </h3>
+                      <p className="line-clamp-3 text-[13px] font-medium leading-[1.75] text-neutral-500">
+                        {item.summary}
+                      </p>
+                      <p className="mt-4 text-[13px] font-black text-neutral-900">
+                        사례 자세히 보기 →
+                      </p>
+                    </div>
+                  </Link>
+                </FadeIn>
+              ))}
+            </div>
           </div>
         </section>
       )}
