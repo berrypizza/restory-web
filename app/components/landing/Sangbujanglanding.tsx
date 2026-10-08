@@ -348,23 +348,33 @@ export default function SangbujangLanding({ keyword }: Props) {
     ? `${region} 출장 · 교체 비용의 1/3~`
     : "교체 비용의 1/3~";
 
+  const latestSangbujangCases = cases
+    .filter((c) => c.category === "상부장 처짐")
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   // 지역 케이스 수 (thin content 방지용 동적 데이터)
   const regionalSangbujangCases = region
-    ? cases
-        .filter(
-          (c) => c.category === "상부장 처짐" && c.region.includes(region),
-        )
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    ? latestSangbujangCases.filter((c) => c.region.includes(region))
     : [];
+  const regionalCaseIds = new Set(
+    regionalSangbujangCases.map((item) => item.id),
+  );
+  const supplementalSangbujangCases =
+    region && regionalSangbujangCases.length < 3
+      ? latestSangbujangCases
+          .filter((item) => !regionalCaseIds.has(item.id))
+          .slice(0, 3 - regionalSangbujangCases.length)
+      : [];
   const regionCaseCount = regionalSangbujangCases.length;
-  const featuredRegionalCases = regionalSangbujangCases.slice(0, 3);
-  const reviewCases = cases
-    .filter((c) => c.category === "상부장 처짐")
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .map((item, index) => ({
-      ...item,
-      review: SANGBUJANG_REVIEWS[index],
-    }));
+  const featuredRegionalCases = [
+    ...regionalSangbujangCases.slice(0, 3),
+    ...supplementalSangbujangCases,
+  ];
+  const hasSupplementalCases = supplementalSangbujangCases.length > 0;
+  const reviewCases = latestSangbujangCases.map((item, index) => ({
+    ...item,
+    review: SANGBUJANG_REVIEWS[index],
+  }));
 
   const showReviews = () => {
     setActiveTab("reviews");
@@ -393,7 +403,11 @@ export default function SangbujangLanding({ keyword }: Props) {
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalCaseItemListJsonLd
-        name={`${region || "수도권"} 싱크대 상부장 처짐 실제 수리 사례`}
+        name={
+          hasSupplementalCases
+            ? `${region || "수도권"} 싱크대 상부장 처짐 지역·최신 수리 사례`
+            : `${region || "수도권"} 싱크대 상부장 처짐 실제 수리 사례`
+        }
         items={featuredRegionalCases}
       />
 
@@ -633,64 +647,81 @@ export default function SangbujangLanding({ keyword }: Props) {
               </h2>
               <p className="mb-7 text-[14px] font-medium leading-[1.8] text-neutral-500">
                 같은 상부장 처짐이라도 현장마다 처진 위치, 시공목 상태,
-                고정 방식이 다릅니다. 아래 사례들은 {region} 지역에서 실제로
-                확인하고 수리한 작업입니다.
+                고정 방식이 다릅니다.{" "}
+                {hasSupplementalCases
+                  ? regionCaseCount > 0
+                    ? `먼저 ${region} 지역 사례를 보여드리고, 부족한 부분은 최근 상부장 처짐 수리 사례로 함께 보강했습니다.`
+                    : `${region} 지역 사례가 아직 부족해, 최근 상부장 처짐 수리 사례를 먼저 함께 보여드립니다.`
+                  : `아래 사례들은 ${region} 지역에서 실제로 확인하고 수리한 작업입니다.`}
               </p>
             </FadeIn>
 
             <div className="space-y-4">
-              {featuredRegionalCases.map((item, index) => (
-                <FadeIn key={item.id} delay={index * 70}>
-                  <Link
-                    href={`/cases/${item.id}`}
-                    className="block overflow-hidden rounded-2xl bg-white"
-                    style={{
-                      border: "1px solid #e5e7eb",
-                      textDecoration: "none",
-                    }}>
-                    <div className="grid grid-cols-2 gap-px bg-neutral-200">
-                      <div className="relative aspect-[4/3] bg-neutral-100">
-                        <Image
-                          src={item.beforeImg}
-                          alt={`${item.title} 작업 전`}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 768px) 260px, 50vw"
-                        />
-                        <span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-black text-white">
-                          BEFORE
-                        </span>
+              {featuredRegionalCases.map((item, index) => {
+                const isSupplementalCase = region
+                  ? !item.region.includes(region)
+                  : false;
+
+                return (
+                  <FadeIn key={item.id} delay={index * 70}>
+                    <Link
+                      href={`/cases/${item.id}`}
+                      className="block overflow-hidden rounded-2xl bg-white"
+                      style={{
+                        border: "1px solid #e5e7eb",
+                        textDecoration: "none",
+                      }}>
+                      <div className="grid grid-cols-2 gap-px bg-neutral-200">
+                        <div className="relative aspect-[4/3] bg-neutral-100">
+                          <Image
+                            src={item.beforeImg}
+                            alt={`${item.title} 작업 전`}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 768px) 260px, 50vw"
+                          />
+                          <span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-black text-white">
+                            BEFORE
+                          </span>
+                        </div>
+                        <div className="relative aspect-[4/3] bg-neutral-100">
+                          <Image
+                            src={item.afterImg}
+                            alt={`${item.title} 작업 후`}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 768px) 260px, 50vw"
+                          />
+                          <span className="absolute left-2 top-2 rounded-full bg-[#1a5cff] px-2 py-1 text-[10px] font-black text-white">
+                            AFTER
+                          </span>
+                        </div>
                       </div>
-                      <div className="relative aspect-[4/3] bg-neutral-100">
-                        <Image
-                          src={item.afterImg}
-                          alt={`${item.title} 작업 후`}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 768px) 260px, 50vw"
-                        />
-                        <span className="absolute left-2 top-2 rounded-full bg-[#1a5cff] px-2 py-1 text-[10px] font-black text-white">
-                          AFTER
-                        </span>
+                      <div className="p-5">
+                        <p className="mb-2 flex flex-wrap items-center gap-2 text-[12px] font-black text-[#1a5cff]">
+                          <span>
+                            {item.region} · {item.date.replaceAll("-", ".")}
+                          </span>
+                          {isSupplementalCase && (
+                            <span className="rounded-full bg-neutral-100 px-2 py-1 text-[10px] font-black text-neutral-500">
+                              유사 최신 사례
+                            </span>
+                          )}
+                        </p>
+                        <h3 className="mb-3 text-[17px] font-black leading-[1.35] text-neutral-950">
+                          {item.title}
+                        </h3>
+                        <p className="line-clamp-3 text-[13px] font-medium leading-[1.75] text-neutral-500">
+                          {item.summary}
+                        </p>
+                        <p className="mt-4 text-[13px] font-black text-neutral-900">
+                          사례 자세히 보기 →
+                        </p>
                       </div>
-                    </div>
-                    <div className="p-5">
-                      <p className="mb-2 text-[12px] font-black text-[#1a5cff]">
-                        {item.region} · {item.date.replaceAll("-", ".")}
-                      </p>
-                      <h3 className="mb-3 text-[17px] font-black leading-[1.35] text-neutral-950">
-                        {item.title}
-                      </h3>
-                      <p className="line-clamp-3 text-[13px] font-medium leading-[1.75] text-neutral-500">
-                        {item.summary}
-                      </p>
-                      <p className="mt-4 text-[13px] font-black text-neutral-900">
-                        사례 자세히 보기 →
-                      </p>
-                    </div>
-                  </Link>
-                </FadeIn>
-              ))}
+                    </Link>
+                  </FadeIn>
+                );
+              })}
             </div>
           </div>
         </section>
