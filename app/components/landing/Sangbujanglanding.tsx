@@ -21,6 +21,11 @@ type SangbujangCase = (typeof cases)[number];
 
 const SANGBUJANG_REVIEWS = [
   {
+    author: "qkrekgo7***",
+    content:
+      "인스타에 추락 영상 보고 문의 드렸는데 친절하게 설명해주시고 시공도 깔끔하게 해주셨습니다! 감사합니다!",
+  },
+  {
     author: "kimgun0214***",
     content:
       "상부장이 왼쪽이 기울었는데 진짜 떨어지는줄 알았어요... 아무튼 당일 방문해서 끝내주셔서 감사합니다.",
