@@ -297,20 +297,37 @@ export default function PhilosophyPage() {
         </div>
       </section>
 
-      <section className="bg-black px-5 pb-20 md:px-6 md:pb-28">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 border-t border-white/10 pt-12 md:flex-row md:justify-between">
-          <Image
-            src="/images/bro.webp"
-            alt="리스토리 대표"
-            width={420}
-            height={420}
-            className="h-auto w-full max-w-[260px] object-contain"
-          />
-          <Link
-            href="/cases"
-            className="flex w-full max-w-[320px] items-center justify-center rounded-lg bg-white px-6 py-4 text-sm font-black text-black transition hover:bg-white/86 md:w-auto">
-            작업 사례 보기
-          </Link>
+      <section className="bg-black px-5 py-20 md:px-6 md:py-28">
+        <div className="mx-auto max-w-6xl border-t border-white/10 pt-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-base font-medium leading-8 text-white/66 md:text-lg">
+              리스토리에 부동산 매매업자들이 많이 오는 이유가 그 증거입니다.
+            </p>
+            <p className="mt-8 text-2xl font-black leading-relaxed text-white md:text-4xl">
+              시공을 단순한 돈벌이가 아닌,
+              <br />
+              <span className="text-[#ff6a2a]">
+                신념을 가지고 작은 일에도 최선을 다하는 업체
+              </span>
+              <br />
+              "리스토리"입니다.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-12 flex max-w-3xl flex-col items-center gap-8 md:flex-row md:justify-center">
+            <Image
+              src="/images/bro.webp"
+              alt="리스토리 대표"
+              width={420}
+              height={420}
+              className="h-auto w-full max-w-[240px] object-contain"
+            />
+            <Link
+              href="/cases"
+              className="flex w-full max-w-[320px] items-center justify-center rounded-lg bg-[#ff6a2a] px-8 py-4 text-sm font-black text-white transition hover:bg-[#ef5d1f] md:w-auto">
+              작업 사례 보기
+            </Link>
+          </div>
         </div>
       </section>
     </main>

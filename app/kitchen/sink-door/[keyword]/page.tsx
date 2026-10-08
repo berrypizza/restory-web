@@ -79,7 +79,7 @@ export default async function Page({
           { name: titleKeyword, url },
         ]}
       />
-      <Sinkdoorreformlanding keyword={keyword} />
+      <Sinkdoorreformlanding keyword={keyword} canonicalUrl={url} />
     </>
   );
 }

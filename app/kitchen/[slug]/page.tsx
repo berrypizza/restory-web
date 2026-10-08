@@ -152,7 +152,10 @@ export default async function Page({
           url={`${BASE}/kitchen/${slug}`}
           image="/images/hero-door.webp"
         />
-        <Sinkdoorreformlanding keyword={slug} />
+        <Sinkdoorreformlanding
+          keyword={slug}
+          canonicalUrl={`${BASE}/kitchen/${slug}`}
+        />
       </>
     );
   if (type === "fridge-cabinet")
@@ -164,7 +167,10 @@ export default async function Page({
           url={`${BASE}/kitchen/${slug}`}
           image="/images/fridge-cabinet/refmain.png"
         />
-        <FridgeCabinetLanding keyword={slug} />
+        <FridgeCabinetLanding
+          keyword={slug}
+          canonicalUrl={`${BASE}/kitchen/${slug}`}
+        />
       </>
     );
 

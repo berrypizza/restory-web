@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
-import { ServiceJsonLd } from "@/app/components/JsonLd";
+import { FAQJsonLd, ServiceJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
@@ -200,9 +200,10 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
 
 interface Props {
   keyword?: string;
+  canonicalUrl?: string;
 }
 
-export default function FridgeCabinetLanding({ keyword }: Props) {
+export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"detail" | "reviews">("detail");
   const [selectedColorName, setSelectedColorName] = useState(
@@ -237,6 +238,11 @@ export default function FridgeCabinetLanding({ keyword }: Props) {
   const heroBadge = region
     ? `${region} 사진 상담 가능`
     : "전체 공사보다 가볍게";
+  const serviceUrl =
+    canonicalUrl ??
+    (keyword
+      ? `https://www.restorystudio.co.kr/kitchen/${keyword}`
+      : "https://www.restorystudio.co.kr/kitchen/fridge-cabinet");
 
   const regionCaseCount = region
     ? cases.filter(
@@ -267,12 +273,9 @@ export default function FridgeCabinetLanding({ keyword }: Props) {
       <ServiceJsonLd
         name={region ? `${region} 냉장고장 리폼` : "냉장고장 리폼"}
         description="냉장고장 문짝·패널 리폼으로 주방 중심을 정돈합니다. 전체 공사 전 사진으로 가능 여부를 먼저 확인합니다."
-        url={
-          keyword
-            ? `https://www.restorystudio.co.kr/kitchen/${keyword}`
-            : "https://www.restorystudio.co.kr/kitchen/fridge-cabinet"
-        }
+        url={serviceUrl}
       />
+      <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
       <section className="bg-white px-0 pb-8 pt-0 md:pb-12">

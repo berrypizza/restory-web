@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
-import { ServiceJsonLd } from "@/app/components/JsonLd";
+import { FAQJsonLd, ServiceJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
@@ -215,9 +215,10 @@ function YouTubeHeroPlayer({ videoId }: { videoId: string }) {
 
 interface Props {
   keyword?: string;
+  canonicalUrl?: string;
 }
 
-export default function SinkdoorReformLanding({ keyword }: Props) {
+export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"detail" | "reviews">("detail");
   const [selectedColorName, setSelectedColorName] = useState(
@@ -252,6 +253,11 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
   const heroBadge = region
     ? `${region} 당일 시공 · 교체 비용의 1/5~`
     : "교체 비용의 1/5~";
+  const serviceUrl =
+    canonicalUrl ??
+    (keyword
+      ? `https://www.restorystudio.co.kr/kitchen/${keyword}`
+      : "https://www.restorystudio.co.kr/kitchen/sink-door");
 
   const regionCaseCount = region
     ? cases.filter(
@@ -281,12 +287,9 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
           region ? `${region} 싱크대 문짝 교체·리폼` : "싱크대 문짝 교체·리폼"
         }
         description="싱크대 문짝만 교체해도 새 주방처럼. 전체 교체 비용의 1/5~. 당일 시공, 3년 무상 A/S, 경첩 무료 교체."
-        url={
-          keyword
-            ? `https://www.restorystudio.co.kr/kitchen/${keyword}`
-            : "https://www.restorystudio.co.kr/kitchen/sink-door"
-        }
+        url={serviceUrl}
       />
+      <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO VIDEO */}
       <section className="bg-white px-0 pb-8 pt-0 md:pb-12">
@@ -445,11 +448,11 @@ export default function SinkdoorReformLanding({ keyword }: Props) {
                     : "싱크대 문짝 교체 전문"}
                 </span>
               </div>
-              <h1
+              <h2
                 className="font-black text-white leading-[1.15] mb-3 whitespace-pre-line"
                 style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
                 {heroTitle}
-              </h1>
+              </h2>
               <p
                 className="font-medium text-white/60 mb-4"
                 style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>

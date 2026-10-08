@@ -3,6 +3,17 @@ import type { Metadata } from "next";
 export const SITE_URL = "https://www.restorystudio.co.kr";
 export const SITE_NAME = "리스토리";
 export const DEFAULT_OG_IMAGE = "/images/og-image.png";
+const DEFAULT_ROBOTS: Metadata["robots"] = {
+  index: true,
+  follow: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    "max-video-preview": -1,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+  },
+};
 
 type AnyMetadata = Metadata & {
   openGraph?: Metadata["openGraph"] & {
@@ -74,6 +85,36 @@ function imageUrls(images: ReturnType<typeof normalizeOpenGraphImages>) {
     .filter((url): url is string => Boolean(url));
 }
 
+function normalizeRobots(robots: Metadata["robots"]): Metadata["robots"] {
+  if (!robots || typeof robots === "string" || Array.isArray(robots)) {
+    return robots ?? DEFAULT_ROBOTS;
+  }
+
+  if (robots.index === false) return robots;
+
+  const defaultRobots = DEFAULT_ROBOTS as Record<string, unknown> & {
+    googleBot?: Record<string, unknown>;
+  };
+  const robotOverrides = robots as Record<string, unknown> & {
+    googleBot?: unknown;
+  };
+  const googleBotOverrides =
+    robotOverrides.googleBot &&
+    typeof robotOverrides.googleBot === "object" &&
+    !Array.isArray(robotOverrides.googleBot)
+      ? (robotOverrides.googleBot as Record<string, unknown>)
+      : {};
+
+  return {
+    ...defaultRobots,
+    ...robotOverrides,
+    googleBot: {
+      ...defaultRobots.googleBot,
+      ...googleBotOverrides,
+    },
+  } as Metadata["robots"];
+}
+
 export function withLandingSeo(metadata: AnyMetadata): Metadata {
   const canonical = normalizeCanonical(metadata);
   const openGraph = metadata.openGraph ?? {};
@@ -85,10 +126,7 @@ export function withLandingSeo(metadata: AnyMetadata): Metadata {
 
   return {
     ...metadata,
-    robots: metadata.robots ?? {
-      index: true,
-      follow: true,
-    },
+    robots: normalizeRobots(metadata.robots),
     alternates: canonical
       ? {
           ...metadata.alternates,
