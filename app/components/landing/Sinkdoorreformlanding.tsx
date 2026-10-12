@@ -315,10 +315,9 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           .slice(0, 3 - regionalDoorCases.length)
       : [];
   const regionCaseCount = regionalDoorCases.length;
-  const featuredRegionalDoorCases = [
-    ...regionalDoorCases.slice(0, 3),
-    ...supplementalDoorCases,
-  ];
+  const featuredRegionalDoorCases = region
+    ? [...regionalDoorCases.slice(0, 3), ...supplementalDoorCases]
+    : latestDoorCases.slice(0, 3);
   const hasSupplementalDoorCases = supplementalDoorCases.length > 0;
   const reviewCases = latestDoorCases.filter((c) => c.review);
   const showReviews = () => {
@@ -347,9 +346,11 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalDoorCaseItemListJsonLd
         name={
-          hasSupplementalDoorCases
-            ? `${region || "수도권"} 싱크대 문짝 교체 지역·최신 시공 사례`
-            : `${region || "수도권"} 싱크대 문짝 교체 실제 시공 사례`
+          !region
+            ? "싱크대 문짝 교체 최신 실제 시공 사례"
+            : hasSupplementalDoorCases
+              ? `${region} 싱크대 문짝 교체 지역·최신 시공 사례`
+              : `${region} 싱크대 문짝 교체 실제 시공 사례`
         }
         items={featuredRegionalDoorCases}
       />
@@ -653,23 +654,25 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           <div className="mx-auto max-w-lg">
             <FadeIn>
               <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">
-                {region} REAL CASES
+                {region ? `${region} REAL CASES` : "REAL CASES"}
               </p>
               <h2
                 className="mb-3 font-black leading-[1.2] text-neutral-950"
                 style={{ fontSize: "clamp(1.55rem, 5vw, 2.3rem)" }}>
-                {region} 싱크대 문짝 교체
+                {region ? `${region} 싱크대 문짝 교체` : "싱크대 문짝 교체"}
                 <br />
                 실제 시공 사례
               </h2>
               <p className="mb-7 text-[14px] font-medium leading-[1.8] text-neutral-500">
                 문짝 교체·리폼도 현장마다 기존 몸통 상태, 문짝 수량,
                 마감 방식이 다릅니다.{" "}
-                {hasSupplementalDoorCases
-                  ? regionCaseCount > 0
-                    ? `먼저 ${region} 지역 사례를 보여드리고, 부족한 부분은 최근 문짝 교체·리폼 사례로 함께 보강했습니다.`
-                    : `${region} 지역 사례가 아직 부족해, 최근 문짝 교체·리폼 사례를 먼저 함께 보여드립니다.`
-                  : `아래 사례들은 ${region} 지역에서 실제로 확인하고 시공한 작업입니다.`}
+                {!region
+                  ? "최근 실제 시공 사례에서 작업 전후와 현장별 선택 기준을 확인해보세요."
+                  : hasSupplementalDoorCases
+                    ? regionCaseCount > 0
+                      ? `먼저 ${region} 지역 사례를 보여드리고, 부족한 부분은 최근 문짝 교체·리폼 사례로 함께 보강했습니다.`
+                      : `${region} 지역 사례가 아직 부족해, 최근 문짝 교체·리폼 사례를 먼저 함께 보여드립니다.`
+                    : `아래 사례들은 ${region} 지역에서 실제로 확인하고 시공한 작업입니다.`}
               </p>
             </FadeIn>
 
@@ -740,6 +743,11 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                 );
               })}
             </div>
+            <Link
+              href={`/cases?cat=${encodeURIComponent("싱크대 리폼")}`}
+              className="mt-6 inline-block text-[13px] font-bold text-[#1a5cff]">
+              싱크대 리폼 사례 전체 보기 →
+            </Link>
           </div>
         </section>
       )}

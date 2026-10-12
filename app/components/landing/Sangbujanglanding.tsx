@@ -371,10 +371,9 @@ export default function SangbujangLanding({ keyword }: Props) {
           .slice(0, 3 - regionalSangbujangCases.length)
       : [];
   const regionCaseCount = regionalSangbujangCases.length;
-  const featuredRegionalCases = [
-    ...regionalSangbujangCases.slice(0, 3),
-    ...supplementalSangbujangCases,
-  ];
+  const featuredRegionalCases = region
+    ? [...regionalSangbujangCases.slice(0, 3), ...supplementalSangbujangCases]
+    : latestSangbujangCases.slice(0, 3);
   const hasSupplementalCases = supplementalSangbujangCases.length > 0;
   const reviewCases = latestSangbujangCases.map((item, index) => ({
     ...item,
@@ -409,9 +408,11 @@ export default function SangbujangLanding({ keyword }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalCaseItemListJsonLd
         name={
-          hasSupplementalCases
-            ? `${region || "수도권"} 싱크대 상부장 처짐 지역·최신 수리 사례`
-            : `${region || "수도권"} 싱크대 상부장 처짐 실제 수리 사례`
+          !region
+            ? "싱크대 상부장 처짐 최신 실제 수리 사례"
+            : hasSupplementalCases
+              ? `${region} 싱크대 상부장 처짐 지역·최신 수리 사례`
+              : `${region} 싱크대 상부장 처짐 실제 수리 사례`
         }
         items={featuredRegionalCases}
       />
@@ -641,23 +642,25 @@ export default function SangbujangLanding({ keyword }: Props) {
           <div className="mx-auto max-w-lg">
             <FadeIn>
               <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">
-                {region} REAL CASES
+                {region ? `${region} REAL CASES` : "REAL CASES"}
               </p>
               <h2
                 className="mb-3 font-black leading-[1.2] text-neutral-950"
                 style={{ fontSize: "clamp(1.55rem, 5vw, 2.3rem)" }}>
-                {region} 싱크대 상부장 처짐
+                {region ? `${region} 싱크대 상부장 처짐` : "싱크대 상부장 처짐"}
                 <br />
                 실제 수리 사례
               </h2>
               <p className="mb-7 text-[14px] font-medium leading-[1.8] text-neutral-500">
                 같은 상부장 처짐이라도 현장마다 처진 위치, 시공목 상태,
                 고정 방식이 다릅니다.{" "}
-                {hasSupplementalCases
-                  ? regionCaseCount > 0
-                    ? `먼저 ${region} 지역 사례를 보여드리고, 부족한 부분은 최근 상부장 처짐 수리 사례로 함께 보강했습니다.`
-                    : `${region} 지역 사례가 아직 부족해, 최근 상부장 처짐 수리 사례를 먼저 함께 보여드립니다.`
-                  : `아래 사례들은 ${region} 지역에서 실제로 확인하고 수리한 작업입니다.`}
+                {!region
+                  ? "최근 실제 수리 사례에서 작업 전후와 현장별 확인 내용을 살펴보세요."
+                  : hasSupplementalCases
+                    ? regionCaseCount > 0
+                      ? `먼저 ${region} 지역 사례를 보여드리고, 부족한 부분은 최근 상부장 처짐 수리 사례로 함께 보강했습니다.`
+                      : `${region} 지역 사례가 아직 부족해, 최근 상부장 처짐 수리 사례를 먼저 함께 보여드립니다.`
+                    : `아래 사례들은 ${region} 지역에서 실제로 확인하고 수리한 작업입니다.`}
               </p>
             </FadeIn>
 
@@ -728,6 +731,11 @@ export default function SangbujangLanding({ keyword }: Props) {
                 );
               })}
             </div>
+            <Link
+              href={`/cases?cat=${encodeURIComponent("상부장 처짐")}`}
+              className="mt-6 inline-block text-[13px] font-bold text-[#1a5cff]">
+              상부장 처짐 수리 사례 전체 보기 →
+            </Link>
           </div>
         </section>
       )}

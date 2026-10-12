@@ -16,9 +16,14 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 5184000,
   },
 
-  // ★ non-www → www 리다이렉트
+  // 검색에 사용되던 주방 주소를 대표로 유지하고 www로 통일합니다.
   async redirects() {
     return [
+      {
+        source: "/kitchen/sink-door/:keyword",
+        destination: "https://www.restorystudio.co.kr/kitchen/:keyword",
+        permanent: true,
+      },
       {
         source: "/:path*",
         has: [{ type: "host", value: "restorystudio.co.kr" }],

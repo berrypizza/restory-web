@@ -47,13 +47,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       path: "/repair/sangbujang",
       priority: 0.9,
       changeFrequency: "weekly" as const,
-      lastModified: "2026-06-01",
+      lastModified: "2026-10-12",
     },
     {
       path: "/kitchen/sink-door",
       priority: 0.9,
       changeFrequency: "weekly" as const,
-      lastModified: "2026-06-01",
+      lastModified: "2026-10-12",
     },
     {
       path: "/leather/restaurant-chair",
@@ -128,8 +128,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const kitchenKeywordEntries = KITCHEN_KEYWORD_SLUGS.map((slug) => ({
-    url: `${base}/kitchen/sink-door/${encodeURIComponent(slug)}`,
-    lastModified: new Date("2026-06-01").toISOString(),
+    url: `${base}/kitchen/${encodeURIComponent(slug)}`,
+    lastModified: new Date("2026-10-12").toISOString(),
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));

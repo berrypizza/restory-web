@@ -25,8 +25,15 @@ export function generateStaticParams() {
 
 function getLandingType(slug: string): "door" | "fridge-cabinet" | null {
   const kw = slug.replace(/-/g, " ");
-  if (kw.includes("냉장고장")) return "fridge-cabinet";
-  if (kw.includes("문짝") || kw.includes("도어") || kw.includes("문 교체"))
+  if (kw.includes("냉장고장") || kw.includes("냉장고 수납장"))
+    return "fridge-cabinet";
+  if (
+    kw.includes("문짝") ||
+    kw.includes("도어") ||
+    kw.includes("문 교체") ||
+    kw.includes("주방 문 리폼") ||
+    kw.includes("리폼 vs 교체")
+  )
     return "door";
   return null;
 }
