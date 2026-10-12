@@ -317,7 +317,9 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
   const regionCaseCount = regionalDoorCases.length;
   const featuredRegionalDoorCases = region
     ? [...regionalDoorCases.slice(0, 3), ...supplementalDoorCases]
-    : latestDoorCases.slice(0, 3);
+    : latestDoorCases
+        .filter((item) => /싱크대|씽크대|주방/.test(item.title))
+        .slice(0, 3);
   const hasSupplementalDoorCases = supplementalDoorCases.length > 0;
   const reviewCases = latestDoorCases.filter((c) => c.review);
   const showReviews = () => {
