@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { cases } from "@/lib/case-data";
+import { events } from "@/lib/event-data";
 import {
   REPAIR_KEYWORD_SLUGS,
   KITCHEN_KEYWORD_SLUGS,
@@ -82,7 +83,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       path: "/events",
       priority: 0.7,
       changeFrequency: "weekly" as const,
-      lastModified: "2026-06-01",
+      lastModified: "2026-10-12",
     },
     {
       path: "/repair/habujang",
@@ -151,19 +152,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
+  // 실제 제목 수정일을 반영합니다. 현장 작업 날짜는 변경하지 않습니다.
+  const revisedCaseIds = new Set([
+    "case-009", "case-017", "case-019", "case-020", "case-021",
+    "case-022", "case-029", "case-030", "case-035", "case-038",
+  ]);
   const caseEntries = cases.map((c) => {
     const caseDate = c.date ? new Date(c.date) : new Date(0);
     const isRecent = caseDate >= thirtyDaysAgo;
     return {
       url: `${base}/cases/${c.id}`,
-      lastModified: caseDate.toISOString(),
+      lastModified: revisedCaseIds.has(c.id)
+        ? new Date("2026-10-12").toISOString()
+        : caseDate.toISOString(),
       changeFrequency: "monthly" as const,
       priority: isRecent ? 0.8 : 0.6,
     };
   });
 
+  const eventEntries = events.map((event) => ({
+    url: base + "/events/" + event.id,
+    lastModified: new Date("2026-10-12").toISOString(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
   return [
     ...staticEntries,
+    ...eventEntries,
     ...repairKeywordEntries,
     ...kitchenKeywordEntries,
     ...leatherKeywordEntries,

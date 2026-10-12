@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getLandingBySlug, landingPages } from "@/lib/landing-config";
 import type { Metadata } from "next";
+import { withLandingSeo } from "@/lib/landing-seo";
 
 export function generateStaticParams() {
   return landingPages.map((lp) => ({ slug: lp.slug }));
@@ -13,8 +14,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const config = getLandingBySlug(slug);
-  if (!config) return {};
-  return { title: config.title, description: config.description };
+  if (!config) notFound();
+  // 본문이 준비되지 않은 임시 페이지는 완성 전까지 검색에서 제외합니다.
+  return withLandingSeo({
+    title: config.title,
+    description: config.description,
+    alternates: { canonical: "/landing/" + slug },
+    robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
+  });
 }
 
 export default async function LandingPage({

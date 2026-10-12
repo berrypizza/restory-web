@@ -1,32 +1,40 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { withLandingSeo } from "@/lib/landing-seo";
 import { events } from "@/lib/event-data";
 
-export default function EventDetailPage() {
-  const { id } = useParams();
-  const item = events.find((e) => e.id === id);
+type Props = { params: Promise<{ id: string }> };
 
-  if (!item) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <p className="text-4xl mb-3">🔍</p>
-          <p className="text-lg font-bold" style={{ color: "#111827" }}>
-            이벤트를 찾을 수 없어요
-          </p>
-          <Link
-            href="/events"
-            className="mt-4 inline-block text-sm font-bold"
-            style={{ color: "#1f66ff" }}>
-            ← 목록으로 돌아가기
-          </Link>
-        </div>
-      </main>
-    );
-  }
+export function generateStaticParams() {
+  return events.map((item) => ({ id: item.id }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const item = events.find((event) => event.id === id);
+  if (!item) notFound();
+  const period = item.startDate + " ~ " + item.endDate;
+  const title = item.startDate.slice(0, 4) + " " + item.title;
+  const description = period + " 진행 행사. " + item.summary;
+  return withLandingSeo({
+    title,
+    description,
+    alternates: { canonical: "/events/" + item.id },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: [{ url: item.thumbnail, alt: item.title }],
+    },
+  });
+}
+
+export default async function EventDetailPage({ params }: Props) {
+  const { id } = await params;
+  const item = events.find((event) => event.id === id);
+  if (!item) notFound();
 
   const isEnded = item.status === "종료";
 
