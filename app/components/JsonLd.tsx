@@ -28,8 +28,9 @@ export function LocalBusinessJsonLd() {
     ],
     address: {
       "@type": "PostalAddress",
-      addressLocality: "서울",
-      addressRegion: "서울특별시",
+      streetAddress: "염곡로498번안길 5-13, 302호 (가정동)",
+      addressLocality: "서구",
+      addressRegion: "인천광역시",
       addressCountry: "KR",
     },
     aggregateRating: {
@@ -50,8 +51,8 @@ export function LocalBusinessJsonLd() {
         "Saturday",
         "Sunday",
       ],
-      opens: "08:00",
-      closes: "22:00",
+      opens: "09:00",
+      closes: "21:00",
     },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
