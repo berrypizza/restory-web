@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /.next-community-verify/
+/.next-community-local/
 /supabase/.temp/
 /out/
 
