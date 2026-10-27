@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { communityClient } from "@/lib/community/client";
+import { communityReturnPath } from "@/lib/community/types";
 
 export default function CommunityAuthCallback() {
   const [error, setError] = useState(false);
@@ -26,16 +27,13 @@ export default function CommunityAuthCallback() {
         .select("id")
         .eq("id", user.id)
         .maybeSingle();
-      const destination =
-        sessionStorage.getItem("community-return") === "/community/new"
-          ? "/community/new"
-          : "/community";
+      const destination = communityReturnPath(sessionStorage.getItem("community-return"));
       sessionStorage.removeItem("community-return");
       if (active)
         router.replace(
           data
             ? destination
-            : `/community/login${destination.endsWith("/new") ? "?next=new" : ""}`,
+            : `/community/login${destination === "/community" ? "" : `?next=${encodeURIComponent(destination.split("/").pop()!)}`}`,
         );
     }
     void finish().catch(() => {

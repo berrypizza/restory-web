@@ -12,6 +12,8 @@ import {
 } from "@/lib/community/types";
 import { useCommunity } from "./CommunityProvider";
 import CommunityPostThumbnail from "./CommunityPostThumbnail";
+import CommunityLikeButton from "./CommunityLikeButton";
+import { useCommunityLikes } from "./useCommunityLikes";
 
 export default function CommunityBoard({
   initialPosts,
@@ -29,6 +31,7 @@ export default function CommunityBoard({
   const [loading, setLoading] = useState(false);
   const [unavailable, setUnavailable] = useState(initialUnavailable);
   const [reload, setReload] = useState(0);
+  const likes = useCommunityLikes(posts.map((post) => post.id));
 
   useEffect(() => {
     const controller = new AbortController();
@@ -180,6 +183,15 @@ export default function CommunityBoard({
                         {post.image_paths.length > 0 && (
                           <span>사진 {post.image_paths.length}</span>
                         )}
+                        <CommunityLikeButton
+                          key={`${post.id}:${auth.user?.id ?? "guest"}`}
+                          postId={post.id}
+                          state={likes.items[post.id]}
+                          loadError={likes.error}
+                          reload={likes.reload}
+                          refresh={likes.refresh}
+                          compact
+                        />
                       </div>
                     </div>
                     {post.image_paths[0] && (

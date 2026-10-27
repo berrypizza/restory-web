@@ -54,6 +54,14 @@ export const POST_SELECT =
   "id,author_id,category,title,body,image_paths,status,created_at,updated_at,author:community_profiles(nickname),comments:community_comments(count)";
 export const BUCKET = "community-photos";
 
+export function communityReturnPath(value: string | null) {
+  if (value === "new" || value === "/community/new") return "/community/new";
+  const id = value?.replace(/^\/community\//, "");
+  return id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    ? `/community/${id}`
+    : "/community";
+}
+
 export function categoryLabel(id: string) {
   return (
     COMMUNITY_CATEGORIES.find((category) => category.id === id)?.label ??

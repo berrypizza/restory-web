@@ -371,6 +371,66 @@
 .community-comment-count > span {
   font-size: 23px;
 }
+.community-like-control {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.community-like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 15px;
+  border: 1px solid #e2e7ef;
+  border-radius: 24px;
+  background: white;
+  color: #718096;
+  font-size: 13px;
+  cursor: pointer;
+}
+.community-like-button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.community-like-button[aria-pressed="true"] {
+  color: #cf3e64;
+  border-color: #f4cbd6;
+  background: #fff4f7;
+}
+.community-like-button:hover:not(:disabled) {
+  color: #cf3e64;
+  background: #fff4f7;
+}
+.community-like-button:focus-visible {
+  outline: 2px solid var(--community-blue);
+  outline-offset: 3px;
+}
+.community-like-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.community-like-control.compact .community-like-button {
+  min-height: 32px;
+  padding: 4px 7px;
+  gap: 5px;
+  font-size: 11px;
+}
+.community-like-control.compact svg {
+  width: 15px;
+  height: 15px;
+}
+.community-like-error {
+  max-width: 240px;
+  color: #b33850;
+  font-size: 11px;
+  white-space: normal;
+}
+.community-detail-reactions {
+  margin: 24px 0;
+}
 .community-member-card {
   background: white;
   border: 1px solid #e2e7ef;

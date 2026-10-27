@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
+import { RESTORY_SUPABASE_PUBLISHABLE_KEY } from "./lib/supabase-public";
 
 const nextConfig: NextConfig = {
+  env: { NEXT_PUBLIC_SUPABASE_ANON_KEY: RESTORY_SUPABASE_PUBLISHABLE_KEY },
   turbopack: { root: process.cwd() },
   distDir: process.env.RESTORY_BUILD_DIRECTORY || ".next",
   // 이미지 최적화

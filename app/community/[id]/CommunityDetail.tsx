@@ -13,6 +13,8 @@ import {
   type CommunityPost,
 } from "@/lib/community/types";
 import { useCommunity } from "../CommunityProvider";
+import CommunityLikeButton from "../CommunityLikeButton";
+import { useCommunityLikes } from "../useCommunityLikes";
 
 export default function CommunityDetail({
   initialPost: post,
@@ -21,6 +23,7 @@ export default function CommunityDetail({
 }) {
   const auth = useCommunity();
   const router = useRouter();
+  const likes = useCommunityLikes([post.id]);
   const [comments, setComments] = useState<CommunityComment[]>([]);
   const [body, setBody] = useState("");
   const [photos, setPhotos] = useState<{ path: string; signedUrl: string }[]>(
@@ -198,6 +201,16 @@ export default function CommunityDetail({
               사진을 다시 불러오기
             </button>
           )}
+        </div>
+        <div className="community-detail-reactions">
+          <CommunityLikeButton
+            key={`${post.id}:${auth.user?.id ?? "guest"}`}
+            postId={post.id}
+            state={likes.items[post.id]}
+            loadError={likes.error}
+            reload={likes.reload}
+            refresh={likes.refresh}
+          />
         </div>
         <div className="community-detail-actions">
           {auth.user?.id === post.author_id && (

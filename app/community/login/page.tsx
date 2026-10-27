@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { communityClient, communityError } from "@/lib/community/client";
-import { validNickname } from "@/lib/community/types";
+import { communityReturnPath, validNickname } from "@/lib/community/types";
 import { useCommunity } from "../CommunityProvider";
 
 export default function CommunityLogin() {
@@ -14,9 +14,7 @@ export default function CommunityLogin() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   function destination() {
-    return new URLSearchParams(window.location.search).get("next") === "new"
-      ? "/community/new"
-      : "/community";
+    return communityReturnPath(new URLSearchParams(window.location.search).get("next"));
   }
   async function login() {
     setBusy(true);
@@ -87,9 +85,9 @@ export default function CommunityLogin() {
         ) : auth.profile ? (
           <>
             <p>{auth.profile.nickname}님으로 로그인되어 있습니다.</p>
-            <Link href="/community" className="community-button">
+            <button onClick={() => router.replace(destination())} className="community-button">
               커뮤니티로 돌아가기
-            </Link>
+            </button>
             <button
               className="community-text-button"
               onClick={() => void auth.signOut()}
