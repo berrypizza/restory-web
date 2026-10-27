@@ -232,6 +232,12 @@ export default function DrawerMenu() {
                       external: false,
                       highlight: false,
                     },
+                    {
+                      label: "커뮤니티",
+                      href: "/community",
+                      external: false,
+                      highlight: false,
+                    },
                     // {
                     //   label: "❓ 자주 묻는 질문",
                     //   href: "/faq",

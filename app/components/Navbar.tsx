@@ -12,6 +12,7 @@ const quickLinks = [
   { label: "사업 철학", href: "/philosophy" },
   { label: "이벤트", href: "/events" },
   { label: "꿀팁 게시판", href: "/tips" },
+  { label: "커뮤니티", href: "/community" },
 ];
 
 export default function Navbar() {
@@ -55,7 +56,7 @@ export default function Navbar() {
               />
             </Link>
 
-            <nav className="hidden md:flex items-center gap-7 text-sm font-extrabold">
+            <nav className="hidden lg:flex items-center gap-7 text-sm font-extrabold">
               {quickLinks.map((item) => (
                 <Link
                   key={item.label}

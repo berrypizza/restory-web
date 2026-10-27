@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: { root: process.cwd() },
+  distDir: process.env.RESTORY_BUILD_DIRECTORY || ".next",
   // 이미지 최적화
   images: {
     formats: ["image/webp"],
