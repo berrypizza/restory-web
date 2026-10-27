@@ -38,7 +38,9 @@
     ".next-community-verify/types/**/*.ts",
     ".next-community-verify/dev/types/**/*.ts",
     ".next-community-local/types/**/*.ts",
-    ".next-community-local/dev/types/**/*.ts"
+    ".next-community-local/dev/types/**/*.ts",
+    ".next-community-release/types/**/*.ts",
+    ".next-community-release/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -17,6 +17,7 @@
 /.next/
 /.next-community-verify/
 /.next-community-local/
+/.next-community-release/
 /supabase/.temp/
 /out/
 

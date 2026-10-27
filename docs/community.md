@@ -39,14 +39,17 @@ Supabase의 사용자 JWT와 RLS로 권한을 확인합니다. 브라우저의 �
 - 타입 검사와 커뮤니티 코드 lint 통과. Webpack 프로덕션 빌드에서 기존 페이지를 포함한 6,846개 페이지 생성 완료.
 - 로컬 프로덕션 서버의 페이지 HTTP 200 확인만으로는 화면 검증이 부족했습니다. 드라이브 루트(`R:\`) 빌드에서 CSS 연결 누락을 발견했으며, 프로젝트 하위 경로를 유지하는 개발 서버로 수정했습니다. `/repair`, `/community`의 CSS 연결과 스타일 파일 HTTP 200, 수리 페이지의 모든 로컬 스크립트 HTTP 200을 확인했습니다.
 - 커뮤니티에 관한 Supabase 보안 점검의 신규 경고 없음. 기존 업무 함수·조회수 함수·비밀번호 보호 설정의 경고는 이번 범위에서 변경하지 않았습니다.
+- 로컬 실행 경로 수정 후 새 프로덕션 빌드도 6,846개 페이지 생성에 성공했습니다. 프로덕션 서버의 `/repair`, `/community`, `/community/login`에서 CSS·JavaScript 연결 및 모든 해당 파일 HTTP 200을 확인했습니다.
+- 운영 사이트와 로컬의 `/`, `/repair`, `/tips`, `/cases`를 비교해 제목·설명·canonical·robots가 같은 것을 확인했습니다.
+- 커밋 `9bfca3e`의 Vercel Preview 배포 성공을 GitHub 배포 상태로 확인했습니다. 미리보기 URL은 Vercel 인증으로 보호되며 운영 도메인 공개와는 구분합니다.
 
 ## 운영 공개 전에 남은 확인
 
 0. **기존 업무 데이터 권한 보완이 필요합니다.** 2026-10-27 읽기 전용 메타데이터 점검에서 `jobs`, `materials`, `business_expenses` 모두 `anon`에 조회·입력·수정·삭제 권한이 있고 공개 RLS 조건도 `true`인 것을 확인했습니다. 이번 커뮤니티 migration이 만든 정책은 아닙니다. 업무 관리 화면의 직원 인증과 데이터 권한을 함께 바꾸어야 하며, 현재 업무를 중단시킬 수 있는 일괄 권한 철회는 실행하지 않았습니다. 실제 업무 데이터 내용은 이 점검에서 읽지 않았습니다.
-1. 기존 카카오 로그인 공급자는 활성화되어 있습니다. Supabase Authentication URL Configuration에 `https://www.restorystudio.co.kr/community/auth`를 추가하고 실제 로그인 복귀를 검증해야 합니다. 기존 Site URL과 다른 서비스의 Redirect URL은 유지해야 합니다.
+1. 기존 카카오 로그인 공급자는 활성화되어 있습니다. 배포 전 만든 테스트 OAuth 요청에서 실제 선택된 복귀 주소가 `https://suridam.co.kr`인 것을 확인했습니다. Supabase Authentication URL Configuration에 `https://www.restorystudio.co.kr/community/auth`를 추가하고 실제 로그인 복귀를 검증해야 합니다. 기존 Site URL과 다른 서비스의 Redirect URL은 유지해야 합니다. Kakao Developers에 등록할 공급자 콜백은 별도 주소인 `https://qbotbuipbnkpxnvhgify.supabase.co/auth/v1/callback`입니다.
 2. 운영자 계정은 대표가 지정한 기존 카카오 회원으로 확인한 뒤 `community_moderators`에 연결합니다. 현재는 자동 부여하지 않았습니다.
 3. 브라우저 도구 오류로 실제 PC·모바일 화면 및 사진 첨부를 포함한 로그인 후 작성 흐름의 브라우저 검증은 아직 완료하지 못했습니다.
-4. 본 사이트 공개 여부를 확인한 뒤 프로덕션에 배포합니다. 현재 브랜치의 코드 준비와 운영 사이트 배포를 구분합니다.
+4. 2026-10-27 대표의 운영 배포 승인을 받았습니다. Vercel 연결의 팀 접근 403 및 로컬 CLI 미인증, 컴퓨터 제어 도구의 초기화 실패(`failed to write kernel assets`, OS error 3)로 설정 변경과 공개를 아직 완료하지 못했습니다. 현재 브랜치의 미리보기 배포와 운영 사이트 배포를 구분합니다.
 
 ## Windows 로컬 검증
 
