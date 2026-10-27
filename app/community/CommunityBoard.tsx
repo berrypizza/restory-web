@@ -11,6 +11,7 @@ import {
   type CommunityPost,
 } from "@/lib/community/types";
 import { useCommunity } from "./CommunityProvider";
+import CommunityPostThumbnail from "./CommunityPostThumbnail";
 
 export default function CommunityBoard({
   initialPosts,
@@ -165,7 +166,7 @@ export default function CommunityBoard({
               <div className="community-post-list">
                 {posts.map((post) => (
                   <article key={post.id} className="community-post-row">
-                    <div>
+                    <div className="community-post-summary">
                       <span className={`community-category ${post.category}`}>
                         {categoryLabel(post.category)}
                       </span>
@@ -181,6 +182,15 @@ export default function CommunityBoard({
                         )}
                       </div>
                     </div>
+                    {post.image_paths[0] && (
+                      <CommunityPostThumbnail
+                        key={post.image_paths[0]}
+                        postId={post.id}
+                        path={post.image_paths[0]}
+                        title={post.title}
+                        count={post.image_paths.length}
+                      />
+                    )}
                     <Link
                       href={`/community/${post.id}#comments`}
                       className="community-comment-count"
