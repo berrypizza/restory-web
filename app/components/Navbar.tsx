@@ -10,6 +10,7 @@ import DrawerMenu from "@/app/components/DrawerMenu";
 const quickLinks = [
   { label: "작업사례", href: "/cases" },
   { label: "사업 철학", href: "/philosophy" },
+  { label: "기술로 살아남기", href: "/academy" },
   { label: "이벤트", href: "/events" },
   { label: "꿀팁 게시판", href: "/tips" },
   { label: "커뮤니티", href: "/community" },
@@ -18,7 +19,7 @@ const quickLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const isPhilosophy = pathname === "/philosophy";
+  const isDarkPage = pathname === "/philosophy" || pathname.startsWith("/academy");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -29,12 +30,12 @@ export default function Navbar() {
   return (
     <>
       <div
-        className={`${isPhilosophy ? "bg-black text-white" : "bg-white"} overflow-hidden transition-transform duration-300 ${
+        className={`${isDarkPage ? "bg-black text-white" : "bg-white"} overflow-hidden transition-transform duration-300 ${
           scrolled ? "-translate-y-full" : "translate-y-0"
         }`}>
         <div
           className={
-            isPhilosophy
+            isDarkPage
               ? "border-b border-white/10 bg-black text-white"
               : "bg-[#1f66ff] text-white"
           }>
@@ -51,7 +52,7 @@ export default function Navbar() {
                 alt="Re'Story"
                 width={120}
                 height={120}
-                className={`${isPhilosophy ? "brightness-0 invert" : ""} w-auto object-contain`}
+                className={`${isDarkPage ? "brightness-0 invert" : ""} w-auto object-contain`}
                 priority
               />
             </Link>
@@ -61,8 +62,9 @@ export default function Navbar() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`transition ${
-                    isPhilosophy
+                  aria-current={pathname === item.href || pathname.startsWith(`${item.href}/`) ? "page" : undefined}
+                  className={`whitespace-nowrap transition ${
+                    isDarkPage
                       ? "text-white/72 hover:text-white"
                       : "text-[#1f2631] hover:text-[#1f66ff]"
                   }`}>
@@ -76,7 +78,7 @@ export default function Navbar() {
             <Link
               href="/philosophy"
               className={`md:hidden rounded-xl border px-2.5 py-1.5 text-xs font-bold shadow-sm transition ${
-                isPhilosophy
+                isDarkPage
                   ? "border-[#1f66ff] bg-[#1f66ff] text-white"
                   : "border-neutral-200 bg-white text-[#1f2631]"
               }`}>
@@ -96,7 +98,7 @@ export default function Navbar() {
             <a
               href="tel:1688-2957"
               className={`hidden md:inline-flex rounded-xl px-4 py-2 text-xs font-black ${
-                isPhilosophy
+                isDarkPage
                   ? "border border-white/10 bg-white/10 text-white"
                   : "bg-neutral-100 text-neutral-800"
               }`}>
@@ -113,7 +115,7 @@ export default function Navbar() {
 
       <header
         className={`sticky top-0 z-50 border-b shadow-[0_1px_0_rgba(0,0,0,0.08)] ${
-          isPhilosophy
+          isDarkPage
             ? "border-white/10 bg-black"
             : "border-neutral-100 bg-white"
         }`}>
@@ -134,7 +136,7 @@ export default function Navbar() {
                 className={`relative flex h-full items-center px-2 font-bold transition ${
                   pathname === "/"
                     ? "text-[#1f66ff]"
-                    : isPhilosophy
+                    : isDarkPage
                       ? "text-white/68 hover:text-white"
                       : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
                 }`}>
@@ -160,7 +162,7 @@ export default function Navbar() {
                     className={`relative flex h-full items-center px-2 font-bold transition ${
                       isActive
                         ? "text-[#1f66ff]"
-                        : isPhilosophy
+                        : isDarkPage
                           ? "text-white/68 hover:text-white"
                           : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
                     }`}>

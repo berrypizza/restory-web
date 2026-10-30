@@ -13,6 +13,7 @@ export default function LayoutBody({
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isAcademy = pathname?.startsWith("/academy");
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function LayoutBody({
       )}
       {!isAdmin && <Navbar />}
       {children}
-      {!isAdmin && <YoutubeProblemFinder />}
+      {!isAdmin && !isAcademy && <YoutubeProblemFinder />}
     </>
   );
 }

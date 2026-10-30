@@ -215,6 +215,12 @@ export default function DrawerMenu() {
                       highlight: false,
                     },
                     {
+                      label: "기술로 살아남기",
+                      href: "/academy",
+                      external: false,
+                      highlight: false,
+                    },
+                    {
                       label: "⭐ 이벤트",
                       href: "/events",
                       external: false,

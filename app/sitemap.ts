@@ -26,6 +26,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: "2026-10-07",
     },
     {
+      path: "/academy",
+      priority: 0.7,
+      changeFrequency: "monthly" as const,
+      lastModified: "2026-10-30",
+    },
+    {
+      path: "/academy/operator",
+      priority: 0.6,
+      changeFrequency: "monthly" as const,
+      lastModified: "2026-10-30",
+    },
+    {
       path: "/repair",
       priority: 0.85,
       changeFrequency: "weekly" as const,
