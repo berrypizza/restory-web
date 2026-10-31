@@ -29,13 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       path: "/academy",
       priority: 0.7,
       changeFrequency: "monthly" as const,
-      lastModified: "2026-10-30",
-    },
-    {
-      path: "/academy/operator",
-      priority: 0.6,
-      changeFrequency: "monthly" as const,
-      lastModified: "2026-10-30",
+      lastModified: "2026-10-31",
     },
     {
       path: "/repair",

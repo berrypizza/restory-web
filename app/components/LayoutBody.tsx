@@ -13,7 +13,7 @@ export default function LayoutBody({
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
-  const isAcademy = pathname?.startsWith("/academy");
+  const isAcademy = pathname === "/academy" || pathname?.startsWith("/academy/");
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function LayoutBody({
           <AttributionTracker />
         </Suspense>
       )}
-      {!isAdmin && <Navbar />}
+      {!isAdmin && !isAcademy && <Navbar />}
       {children}
       {!isAdmin && !isAcademy && <YoutubeProblemFinder />}
     </>

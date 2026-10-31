@@ -3,9 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const [contactOpen, setContactOpen] = useState(false);
+  const pathname = usePathname();
+  if (pathname === "/academy" || pathname?.startsWith("/academy/")) return null;
 
   return (
     <footer style={{ backgroundColor: "#fafafa", borderTop: "1px solid #eee" }}>
