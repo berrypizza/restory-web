@@ -178,4 +178,27 @@
 .page .artNote { font-size:9px; line-height:1.6; color:#a2aaa3; margin-top:10px; }
 .page .heroArtNote { position:absolute; bottom:9px; right:24px; font-size:8px; color:#a2aaa3; }
 .page .restoryHome { color:#b6fa45; text-decoration:underline; text-underline-offset:4px; white-space:nowrap; font-size:11px; }
+.page .nav { gap:16px; }
+.page .brandCollab { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+.page .collabCross { color:#8e9b85; font-family:Arial,sans-serif; font-size:23px; font-weight:400; line-height:1; }
+.page .restoryBrand { font-family:Arial,Helvetica,sans-serif; font-size:29px; font-weight:700; letter-spacing:-1.2px; line-height:1; white-space:nowrap; transition:color .18s; }
+.page .restoryBrand:hover { color:var(--green); }
+@media(max-width:1000px) and (min-width:761px) {
+  .page .brandCollab { gap:11px; }
+  .page .restoryBrand { font-size:25px; }
+  .page .nav nav { gap:16px; font-size:12px; }
+  .page .nav-cta { gap:16px; }
+}
+@media(max-width:760px) {
+  .page .nav { gap:10px; }
+  .page .brandCollab { gap:9px; }
+  .page .collabCross { font-size:18px; }
+  .page .restoryBrand { font-size:23px; letter-spacing:-.8px; }
+}
+@media(max-width:360px) {
+  .page .brandCollab { gap:7px; }
+  .page .brandCollab .brand-mark { font-size:27px; }
+  .page .collabCross { font-size:16px; }
+  .page .restoryBrand { font-size:20px; }
+}
 @media(max-width:760px) { .page .heroArtNote { position:static; text-align:right; padding:0 20px 12px; margin-top:-10px; } }

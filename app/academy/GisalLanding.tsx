@@ -11,7 +11,11 @@ export default function GisalLanding() {
   <a href="#main" className={cx("skip-link")}>본문으로 건너뛰기</a>
   <header className={cx("header")}>
     <div className={cx("wrap nav")}>
-      <a className={cx("brand")} href="#main" aria-label="기술로 살아남기 홈"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a>
+      <div className={cx("brandCollab")}>
+        <a className={cx("brand")} href="#main" aria-label="기술로 살아남기 홈"><span className={cx("brand-mark")}>기살<span>.</span></span></a>
+        <span className={cx("collabCross")} aria-hidden="true">×</span>
+        <Link className={cx("restoryBrand")} href="/" aria-label="Restory 리스토리 메인으로 이동">Restory</Link>
+      </div>
       <nav aria-label="메인 메뉴"><a href="#about">기살의 생각</a><a href="#people">현장 이야기</a><a href="#curriculum">커리큘럼</a><a href="#apply">모집 안내</a></nav>
       <EnrollButton className={cx("nav-cta")}>1기 신청 안내 <span aria-hidden="true">↗</span></EnrollButton>
     </div>
