@@ -1,0 +1,93 @@
+.video {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid #4c5944;
+  background: #0b0e0c;
+}
+
+.frame iframe,
+.poster {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.poster {
+  padding: 0;
+  background: #0b0e0c;
+  cursor: pointer;
+  color: #fff;
+  font: inherit;
+}
+
+.poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 46px;
+  border-radius: 12px;
+  background: #e62117;
+  box-shadow: 0 4px 20px #0005;
+}
+
+.poster:hover .play {
+  background: #ff3025;
+}
+
+.poster:focus-visible {
+  outline: 3px solid #b0ff44;
+  outline-offset: -4px;
+}
+
+.hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #0b0e0cdd;
+  font-size: 11px;
+}
+
+.caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #d9e2d4;
+}
+
+.caption a {
+  color: #b0bea5;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.caption a:hover {
+  color: #b0ff44;
+}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EnrollButton, EnrollmentProvider } from "./EnrollmentDialog";
+import FieldVideo from "./FieldVideo";
 import styles from "./gisal.module.css";
 
 function cx(names: string) { return names.split(" ").map(name => styles[name]).join(" "); }
@@ -67,7 +68,7 @@ export default function GisalLanding() {
 
     <section id="people" className={cx("people")} aria-labelledby="people-title">
       <div className={cx("wrap people-grid")}>
-        <figure className={cx("people-photo people-photo-team")} aria-label="리스토리 형제"><Image className={cx("people-photo-first")} src="/gisal-assets/restory-hero-portrait.png" width="1000" height="1000" alt="리스토리 형제의 첫 번째 프로필 사진" loading="lazy" decoding="async" /><Image className={cx("people-photo-second")} src="/gisal-assets/restory-second-cutout-v2.png" width="1060" height="1484" alt="리스토리 형제의 두 번째 프로필 사진" loading="lazy" decoding="async" /><figcaption><span>RESTORY STUDIO</span><strong>현장에서 시작된 이야기.</strong></figcaption></figure>
+        <FieldVideo />
         <div className={cx("people-copy")}><span className={cx("kicker")}>FROM THE FIELD — 현장의 경험을 교육으로</span><h2 id="people-title">기술을 아는 사람과,<br /><span className={cx("green")}>사업까지 함께.</span></h2><p>리스토리에서 가구 수리·리폼 서비스를 운영하며,<br />기술이 고객을 만나 사업이 되는 과정을 고민해 왔습니다.</p><p>기술로 살아남기에서는 그 경험을 바탕으로<br />일하는 기술, 나를 알리는 방법, 오래가는 사업을<br />함께 이야기합니다.</p><div className={cx("people-topics")}><span>가구 수리 · 리폼</span><span>고객과의 만남</span><span>나의 사업 운영</span></div><a href="#curriculum" className={cx("people-link")}>어떤 내용을 함께 배우나요? <span aria-hidden="true">↘</span></a></div>
       </div>
     </section>
