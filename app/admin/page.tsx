@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 import type { Job } from "./lib/types";
 import type { Status, Tech } from "./lib/constants";
@@ -288,6 +289,7 @@ export default function AdminDashboard() {
               }}>
               입장
             </button>
+            <Link href="/admin/consultations" className="block text-center text-sm font-semibold text-[#1f66ff] py-2">기살 상담 신청 관리 →</Link>
           </div>
         </div>
       </main>
@@ -360,6 +362,7 @@ export default function AdminDashboard() {
 
         {/* 액션 버튼 */}
         <div className="flex items-center justify-end gap-2 mb-4">
+          {isAdmin && <Link href="/admin/consultations" className="rounded-xl px-4 py-2.5 text-sm font-bold text-white bg-[#1f66ff]">상담 신청</Link>}
           <button
             onClick={() => load()}
             className="rounded-xl px-3 py-2.5 text-sm font-bold"

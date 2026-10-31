@@ -22,6 +22,11 @@ export default function CommunityAuthCallback() {
         setError(true);
         return;
       }
+      if (sessionStorage.getItem("academy-admin-return") === "consultations") {
+        sessionStorage.removeItem("academy-admin-return");
+        router.replace("/admin/consultations");
+        return;
+      }
       const { data } = await db
         .from("community_profiles")
         .select("id")
