@@ -3,11 +3,11 @@
 import { useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { communityClient } from "@/lib/community/client";
-import { CALL_TIMES, CONSENT_VERSION, CONSULTATION_TYPES, SITUATIONS } from "@/lib/academy/consultation";
+import { CALL_TIMES, CONSENT_VERSION, CONSULTATION_TYPES, SITUATIONS, REPAIR_EXPERIENCES, MARKETING_EXPERIENCES } from "@/lib/academy/consultation";
 import styles from "./consult.module.css";
 
 const steps = ["상담 방식", "현재 상황", "연락받을 정보"];
-const emptyContact = { name: "", phone: "", email: "", region: "", age_range: "", available_time: "", message: "", website: "" };
+const emptyContact = { name: "", phone: "", email: "", region: "", age_range: "", repair_experience: "", marketing_experience: "", available_time: "", message: "", website: "" };
 
 export default function ConsultationForm() {
   const [step, setStep] = useState(0);
@@ -34,6 +34,9 @@ export default function ConsultationForm() {
     if (!consent) { setError("개인정보 수집 및 이용 동의를 확인해주세요."); return; }
     if (!/^[0-9+\s()-]+$/.test(contact.phone) || !/^0\d{8,10}$/.test(contact.phone.replace(/\D/g, ""))) { setError("연락받을 전화번호를 확인해주세요. 예: 010-1234-5678"); return; }
     if (!contact.name.trim() || !contact.available_time.trim()) { setError("이름과 통화 가능한 시간대를 입력해주세요."); return; }
+    if (!contact.region.trim()) { setError("거주 지역을 입력해주세요."); return; }
+    if (!/^[1-9][0-9]{0,2}$/.test(contact.age_range) || Number(contact.age_range) > 120) { setError("나이를 숫자로 입력해주세요. 예: 34"); return; }
+    if (!REPAIR_EXPERIENCES.some(item => item.value === contact.repair_experience) || !MARKETING_EXPERIENCES.some(item => item.value === contact.marketing_experience)) { setError("수리·시공 경험과 마케팅 경험을 선택해주세요."); return; }
     submitting.current = true; setBusy(true); setError("");
     submissionId.current ??= crypto.randomUUID();
     try {
@@ -85,13 +88,15 @@ export default function ConsultationForm() {
             <label>이름 <span>*</span><input name="name" autoComplete="name" required maxLength={50} value={contact.name} onChange={e => field("name", e.target.value)} placeholder="성함을 입력해주세요" /></label>
             <label>전화번호 <span>*</span><input name="phone" type="tel" autoComplete="tel" required maxLength={20} value={contact.phone} onChange={e => field("phone", e.target.value)} placeholder="010-0000-0000" /></label>
             <label className={styles.fullWidth}>이메일 <small>(선택)</small><input name="email" type="email" autoComplete="email" maxLength={254} value={contact.email} onChange={e => field("email", e.target.value)} placeholder="example@email.com" /></label>
-            <label>거주 지역 <small>(선택)</small><input name="region" maxLength={80} value={contact.region} onChange={e => field("region", e.target.value)} placeholder="예) 서울 강남구 / 경기 성남시" /></label>
-            <label>나이 / 연령대 <small>(선택)</small><input name="age_range" maxLength={30} value={contact.age_range} onChange={e => field("age_range", e.target.value)} placeholder="예) 34세 / 30대" /></label>
+            <label>거주 지역 <span>*</span><input name="region" required maxLength={80} value={contact.region} onChange={e => field("region", e.target.value)} placeholder="예) 서울 강남구 / 경기 성남시" /></label>
+            <label>나이 <span>*</span><input name="age_range" required inputMode="numeric" pattern="[1-9][0-9]{0,2}" maxLength={3} value={contact.age_range} onChange={e => field("age_range", e.target.value)} placeholder="예) 34 (숫자만 입력)" /></label>
           </div>
           <fieldset className={styles.callTime}><legend>통화 가능 시간대 <span>*</span></legend><div className={styles.chips}>{CALL_TIMES.map(time => <button type="button" key={time} aria-pressed={contact.available_time === time} onClick={() => field("available_time", time)}>{time}</button>)}</div><input name="available_time" aria-label="통화 가능 시간대 직접 입력" required maxLength={150} value={contact.available_time} onChange={e => field("available_time", e.target.value)} placeholder="예) 평일 저녁 7시 이후 / 주말 오전이 편해요" /><p className={styles.hint}>버튼을 누르거나 편한 시간을 직접 적어주세요.</p></fieldset>
-          <label>미리 하고 싶은 말 <small>(선택)</small><textarea name="message" rows={5} maxLength={2000} value={contact.message} onChange={e => field("message", e.target.value)} placeholder="궁금한 점이나 상담 전에 알려주고 싶은 내용을 적어주세요." /></label>
+          <fieldset className={styles.experienceQuestion}><legend>집수리·가구수리 등 수리·시공 경험이 있으신가요? <span>*</span></legend><p className={styles.hint}>지금의 경험에 가장 가까운 항목을 골라주세요.</p><div className={styles.experienceOptions}>{REPAIR_EXPERIENCES.map(item => <label key={item.value} data-selected={contact.repair_experience === item.value}><input type="radio" name="repair_experience" required value={item.value} checked={contact.repair_experience === item.value} onChange={() => field("repair_experience", item.value)} />{item.label}</label>)}</div></fieldset>
+          <fieldset className={styles.experienceQuestion}><legend>마케팅을 직접 해보신 적이 있으신가요? <span>*</span></legend><p className={styles.hint}>블로그에 일상글을 써본 경험도 포함해요.</p><div className={styles.experienceOptions}>{MARKETING_EXPERIENCES.map(item => <label key={item.value} data-selected={contact.marketing_experience === item.value}><input type="radio" name="marketing_experience" required value={item.value} checked={contact.marketing_experience === item.value} onChange={() => field("marketing_experience", item.value)} />{item.label}</label>)}</div></fieldset>
+          <label>미리 하고 싶은 말 <small>(선택)</small><textarea name="message" rows={5} maxLength={2000} value={contact.message} onChange={e => field("message", e.target.value)} placeholder="해보신 작업이나 마케팅 경험, 궁금한 점 등 상담 전에 알려주고 싶은 내용을 적어주세요." /></label>
           <div className={styles.honeypot} aria-hidden="true"><label>웹사이트<input name="website" tabIndex={-1} autoComplete="off" value={contact.website} onChange={e => field("website", e.target.value)} /></label></div>
-          <div className={styles.consentBlock}><label className={styles.consent}><input name="consent" type="checkbox" required checked={consent} onChange={e => setConsent(e.target.checked)} /><span>개인정보 수집 및 이용에 동의합니다. <b>(필수)</b></span></label><details><summary>수집 및 이용 내용 보기</summary><div className={styles.consentDetails}><p>수집·이용 주체: 리스토리 스튜디오</p><p>필수 항목: 상담 방식, 현재 상황, 이름, 전화번호, 통화 가능 시간대, 동의 일시</p><p>선택 항목: 이메일, 거주 지역, 나이·연령대, 미리 하고 싶은 말</p><p>이용 목적: 기살 1:1 진단 및 상담 진행, 일정 안내</p><p>보유 기간: 접수일로부터 90일. 동의 철회 요청 시 지체 없이 삭제합니다.</p><p>동의를 거부하실 수 있으나, 동의하지 않으면 상담 신청이 어렵습니다. 선택 항목을 입력하지 않아도 신청할 수 있습니다.</p><p>동의 철회·삭제 문의: <a href="tel:16882957">1688-2957</a></p></div></details></div>
+          <div className={styles.consentBlock}><label className={styles.consent}><input name="consent" type="checkbox" required checked={consent} onChange={e => setConsent(e.target.checked)} /><span>개인정보 수집 및 이용에 동의합니다. <b>(필수)</b></span></label><details><summary>수집 및 이용 내용 보기</summary><div className={styles.consentDetails}><p>수집·이용 주체: 리스토리 스튜디오</p><p>필수 항목: 상담 방식, 현재 상황, 이름, 전화번호, 거주 지역, 나이, 수리·시공 경험, 마케팅 경험, 통화 가능 시간대, 동의 일시</p><p>선택 항목: 이메일, 미리 하고 싶은 말</p><p>이용 목적: 기살 1:1 기술 창업 상담 진행, 경험에 맞는 상담 준비 및 일정 안내</p><p>보유 기간: 접수일로부터 90일. 동의 철회 요청 시 지체 없이 삭제합니다.</p><p>동의를 거부하실 수 있으나, 동의하지 않으면 상담 신청이 어렵습니다. 선택 항목을 입력하지 않아도 신청할 수 있습니다.</p><p>동의 철회·삭제 문의: <a href="tel:16882957">1688-2957</a></p></div></details></div>
         </fieldset>
         {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}><button type="button" className={styles.secondary} disabled={busy} onClick={() => move(1)}>이전</button><button type="submit" className={styles.primary} disabled={busy}>{busy ? "접수 중…" : kind === "offline" ? "오프라인 상담 신청하기" : "1:1 무료 진단 신청하기"}<span aria-hidden="true">↗</span></button></div>

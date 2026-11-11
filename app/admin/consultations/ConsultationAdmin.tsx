@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { communityClient } from "@/lib/community/client";
-import { CONSULTATION_STATUSES, CONSULTATION_TYPES, SITUATIONS, type Consultation, type ConsultationStatus } from "@/lib/academy/consultation";
+import { CONSULTATION_STATUSES, CONSULTATION_TYPES, SITUATIONS, REPAIR_EXPERIENCES, MARKETING_EXPERIENCES, type Consultation, type ConsultationStatus } from "@/lib/academy/consultation";
 import styles from "./admin.module.css";
 
 const PAGE_SIZE = 20;
@@ -53,7 +53,7 @@ export default function ConsultationAdmin() {
     setLoading(true); setError("");
     try {
       const db = communityClient();
-      let query = db.from("academy_consultations").select("id,consultation_type,fee_krw,situation,name,phone,email,region,age_range,available_time,message,status,consent_version,consented_at,created_at", { count: "exact" }).order("created_at", { ascending: false }).order("id").range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      let query = db.from("academy_consultations").select("id,consultation_type,fee_krw,situation,name,phone,email,region,age_range,repair_experience,marketing_experience,available_time,message,status,consent_version,consented_at,created_at", { count: "exact" }).order("created_at", { ascending: false }).order("id").range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
       if (status) query = query.eq("status", status);
       if (kind) query = query.eq("consultation_type", kind);
       const [result, pending] = await Promise.all([query, db.from("academy_consultations").select("id", { count: "exact", head: true }).eq("status", "new")]);
@@ -126,6 +126,8 @@ export default function ConsultationAdmin() {
           <div><dt>이메일</dt><dd>{row.email || "미입력"}</dd></div>
           <div><dt>거주 지역</dt><dd>{row.region || "미입력"}</dd></div>
           <div><dt>나이 / 연령대</dt><dd>{row.age_range || "미입력"}</dd></div>
+          <div className={styles.full}><dt>수리·시공 경험</dt><dd>{REPAIR_EXPERIENCES.find(item => item.value === row.repair_experience)?.label || "미수집 (질문 추가 전 신청)"}</dd></div>
+          <div className={styles.full}><dt>마케팅 경험</dt><dd>{MARKETING_EXPERIENCES.find(item => item.value === row.marketing_experience)?.label || "미수집 (질문 추가 전 신청)"}</dd></div>
           <div className={styles.full}><dt>통화 가능 시간대</dt><dd>{row.available_time}</dd></div>
           <div className={styles.full}><dt>미리 하고 싶은 말</dt><dd className={styles.message}>{row.message || "미입력"}</dd></div>
           <div className={styles.full}><dt>개인정보 수집 동의</dt><dd>동의함 · {date(row.consented_at)} (한국 시간)<small>동의문 버전 {row.consent_version} · 접수 후 90일 보관</small></dd></div>
