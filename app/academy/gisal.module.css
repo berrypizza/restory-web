@@ -206,3 +206,24 @@
 @media(max-width:1100px){.page .nav nav{display:none}}
 @media(max-width:760px){.page .header{height:auto}.page .nav{height:auto;min-height:69px;padding-top:15px;padding-bottom:15px;flex-wrap:wrap}.page .nav-cta{margin-left:auto;font-size:12px;padding:12px 14px;gap:12px}.page .mobile-apply .button{font-size:12px;padding:13px 12px;gap:10px}}
 @media(max-width:430px){.page .nav-cta{width:100%;justify-content:space-between}.page .mobile-apply{gap:10px;padding-left:14px;padding-right:14px}.page .mobile-apply strong{font-size:16px}.page .mobile-apply .button{flex:1;justify-content:space-between}}
+
+/* Premium enrollment: follows the standard course, before the FAQ. */
+.page .premium{padding:0 0 75px}
+.page .premium-card{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;padding:48px 54px;background:#10180f;color:var(--paper);border:1px solid #34482a;box-shadow:7px 7px 0 #e0e5d7}
+.page .premium-offer{border-right:1px solid #35472b;padding-right:40px;min-width:0}
+.page .premium-label{display:inline-block;color:var(--green);font-size:11px;letter-spacing:2.5px;font-weight:800;border:1px solid #86b848;padding:8px 13px;margin-bottom:22px}
+.page .premium-offer h2{font-size:32px;line-height:1.4;letter-spacing:-1.5px}
+.page .premium-offer h2 span{color:var(--green);font-size:39px;letter-spacing:-1px}
+.page .premium-intro{font-size:12px;color:#b4c0ac;line-height:1.8;margin-top:14px}
+.page .premium-price{font-size:86px;font-weight:900;letter-spacing:-4px;line-height:1.1;margin-top:28px;white-space:nowrap}
+.page .premium-price span{font-size:24px;letter-spacing:-1px;margin-left:8px}
+.page .premium-care{min-width:0;align-self:center}
+.page .premium-care-label{font-size:11px;font-weight:700;letter-spacing:.5px;color:#b6c4ab}
+.page .premium-care h3{font-size:34px;line-height:1.45;letter-spacing:-1.7px;margin:16px 0 20px}
+.page .premium-care h3 span{color:var(--green)}
+.page .premium-care>p{font-size:13px;line-height:1.9;color:#bdc9b4}
+.page .premium-inclusions{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:22px 0 26px}
+.page .premium-inclusions li{font-size:10px;color:#d4dfca;border:1px solid #536744;padding:8px 10px}
+.page .premium-care .button{width:100%;font-size:14px;gap:20px}
+@media(max-width:1000px){.page .premium-card{padding:36px;gap:32px;grid-template-columns:1fr 1.2fr}.page .premium-offer{padding-right:28px}.page .premium-care h3{font-size:28px}.page .premium-break{display:none}}
+@media(max-width:760px){.page .premium{padding-bottom:42px}.page .premium-card{grid-template-columns:1fr;gap:28px;padding:28px 23px;box-shadow:5px 5px 0 #e0e5d7}.page .premium-offer{border-right:0;border-bottom:1px solid #35472b;padding:0 0 25px}.page .premium-label{font-size:10px;margin-bottom:17px}.page .premium-offer h2{font-size:27px;letter-spacing:-1.2px}.page .premium-offer h2 span{font-size:33px}.page .premium-price{font-size:72px;margin-top:21px}.page .premium-price span{font-size:22px}.page .premium-care h3{font-size:27px;letter-spacing:-1.2px;margin:14px 0 16px}.page .premium-care>p{font-size:12px}.page .premium-inclusions{gap:6px;margin:20px 0 23px}.page .premium-inclusions li{font-size:9px;padding:7px 8px}.page .premium-care .button{font-size:13px;padding:0 18px}}
