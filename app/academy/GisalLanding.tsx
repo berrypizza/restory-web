@@ -113,18 +113,21 @@ export default function GisalLanding() {
     <section id="apply" className={cx("enrollment section-light")}><div className={cx("wrap enrollment-grid")}><div className={cx("enrollment-copy")}><span className={cx("kicker")}>03 — YOUR FIRST CHAPTER</span><h2>첫 시작은,<br />딱 <span className={cx("underline-green")}>네 사람</span>과.</h2><p>기술을 배우고, 나를 알리고,<br />내 이름으로 행복하게 사업하고 싶다면.<br />기술로 살아남기 1기에서 시작하세요.</p><div className={cx("seat-illustration")} aria-label="모집 정원 4명"><span>01</span><span>02</span><span>03</span><span>04</span></div><p className={cx("seats-caption")}>함께 시작할 1기 모집 정원 · 4명</p></div><div className={cx("enrollment-ticket")}><div className={cx("ticket-top")}><span><span className={cx("status-dot")}></span> 1기 모집 중</span><b>FIRST CLASS</b></div><div className={cx("ticket-body")}><p className={cx("ticket-label")}>5주 사업 과정 + 수료 후 요청형 기술 교육</p><h3>기술로 살아남기</h3><div className={cx("ticket-old")}>정가 <del>10,000,000원</del><span>510만 원 할인</span></div><div className={cx("ticket-price")}>490<span>만 원</span></div><p className={cx("ticket-price-caption")}>1기 특별 수강료</p><dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>2026년 12월 1일 (화)</dd></div><div><dt>모집 인원</dt><dd>4명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>5주</dd></div><div><dt>현장 기술 수업</dt><dd>5주간 주 2회</dd></div><div><dt>수료 후 기술 교육</dt><dd>요청에 따라 계속</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl><EnrollButton className={cx("button button-green")}>1 : 1 무료 진단 시작하기 <span aria-hidden="true">↗</span></EnrollButton><p className={cx("ticket-note")}>교육 장소 · 세부 시간표는 추후 안내됩니다.</p></div></div></div></section>
 
     <section id="premium" className={cx("premium section-light")} aria-labelledby="premium-title">
-      <div className={cx("wrap")}>
+      <div className={cx("wrap enrollment-grid")}>
+        <div className={cx("premium-offer")}>
+          <span className={cx("premium-label")}>PREMIUM</span>
+          <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>Premium.</span></h2>
+          <p className={cx("premium-intro")}>기본 과정에 밀착 지원을 더한 과정</p>
+        </div>
         <div className={cx("premium-card")}>
-          <div className={cx("premium-offer")}>
-            <span className={cx("premium-label")}>PREMIUM</span>
-            <h2 id="premium-title">기술로 살아남기<br /><span>Premium.</span></h2>
-            <p className={cx("premium-intro")}>기본 과정에 밀착 지원을 더한 과정</p>
+          <div className={cx("premium-price-block")}>
+            <span className={cx("premium-price-label")}>PREMIUM · 기본 과정 + 밀착 지원</span>
             <p className={cx("premium-price")} aria-label="프리미엄 수강료 990만 원">990<span>만 원</span></p>
           </div>
           <div className={cx("premium-care")}>
             <span className={cx("premium-care-label")}>매출 안정화 밀착 지원 · 케어</span>
             <h3>월 매출 <span>500만 원,</span><br /><span>2개월 안정화</span>까지.</h3>
-            <p>월 매출 500만 원을 2개월간 안정적으로 유지할 때까지<br className={cx("premium-break")} /> 밀착 지원·케어합니다.</p>
+            <p>월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어합니다.</p>
             <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>매출 안정화 지원</li><li>밀착 케어</li></ul>
             <EnrollButton className={cx("button button-green")}>1 : 1 무료 진단 시작하기 <span aria-hidden="true">↗</span></EnrollButton>
           </div>
