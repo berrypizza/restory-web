@@ -117,7 +117,7 @@ export default function GisalLanding() {
         <div className={cx("premium-offer")}>
           <span className={cx("premium-label")}>PREMIUM</span>
           <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>Premium.</span></h2>
-          <p className={cx("premium-intro")}>기본 과정에 밀착 지원을 더한 과정</p>
+          <p className={cx("premium-intro")}>5주 이후에도 목표 달성까지 함께하는 과정</p>
         </div>
         <div className={cx("premium-card")}>
           <div className={cx("premium-price-block")}>
@@ -125,17 +125,17 @@ export default function GisalLanding() {
             <p className={cx("premium-price")} aria-label="프리미엄 수강료 990만 원">990<span>만 원</span></p>
           </div>
           <div className={cx("premium-care")}>
-            <span className={cx("premium-care-label")}>매출 안정화 밀착 지원 · 케어</span>
+            <span className={cx("premium-care-label")}>5주가 끝나도, 될 때까지 밀착 케어</span>
             <h3>월 매출 <span>500만 원,</span><br /><span>2개월 안정화</span>까지.</h3>
-            <p>월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어합니다.</p>
-            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>매출 안정화 지원</li><li>밀착 케어</li></ul>
+            <p><strong>5주 과정이 끝나도 지원은 계속됩니다.</strong><br />월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어합니다.</p>
+            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>매출 안정화 지원</li><li>5주 이후에도 밀착 케어</li></ul>
             <EnrollButton className={cx("button button-green")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton>
           </div>
         </div>
       </div>
     </section>
 
-    <section className={cx("faq section-light")}><div className={cx("wrap faq-grid")}><div><span className={cx("kicker")}>BEFORE WE START</span><h2>궁금한 이야기.</h2></div><div className={cx("faq-items")}><details><summary>기술만 배우는 강의인가요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>5주 동안 사업에 몰입하는 환경, 신념·사명·원칙, 브랜딩, 퍼널 마케팅, 바이브 코딩을 통한 사업 사이트 제작을 함께 배웁니다. 이 과정 내내 주 2회 현장 기술 수업을 진행합니다. 모든 기술은 실제 현장에서 직접 보고 배우며, 이론식 기술 강의는 진행하지 않습니다.</p></details><details><summary>언제 시작하고, 몇 명이 함께하나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>2026년 12월 1일 화요일 개강 예정이며, 5주 과정으로 진행합니다. 1기 모집 정원은 4명이며, 전 과정에 걸쳐 주 2회 실제 현장 기술 수업을 함께 진행합니다. 교육 장소와 세부 시간표는 추후 안내됩니다.</p></details><details><summary>5주가 끝나면 기술 교육도 끝나나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>아니요. 5주 사업 과정이 끝난 뒤에도 필요한 가구 수리·리폼 기술을 요청하면 계속 교육합니다. 배우고 싶은 항목을 요청하고 해당 작업 현장 일정을 조율해, 실제 현장에서 직접 보고 배웁니다.</p></details><details><summary>어떤 가구 수리·리폼 기술을 배울 수 있나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>상부장·하부장 수리, 싱크대 문짝 교체, 경첩·서랍 레일 교체, 슬라이딩 도어 수리, 의자·붙박이 소파 천갈이, 테이블 가죽 리폼, 소파 꺼짐·구조 복원, 생활 가구 수리와 주방 공간 리폼을 배울 수 있습니다. 필요한 기술에 맞는 실제 작업 현장에서 교육을 진행합니다.</p></details><details><summary>수강료와 신청 방법이 궁금해요.<span className={cx("expand")} aria-hidden="true"></span></summary><p>기본 과정의 정가는 1,000만 원이며 1기 특별 수강료는 490만 원입니다. Premium 과정은 990만 원으로, 기본 과정에 월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어를 더했습니다. ‘1:1 기술 창업 상담’ 버튼에서 온라인 무료 진단 또는 오프라인 상담(5만 원)을 신청할 수 있습니다. 상담 후 교육 과정과 신청 절차를 안내합니다.</p></details></div></div></section>
+    <section className={cx("faq section-light")}><div className={cx("wrap faq-grid")}><div><span className={cx("kicker")}>BEFORE WE START</span><h2>궁금한 이야기.</h2></div><div className={cx("faq-items")}><details><summary>기술만 배우는 강의인가요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>5주 동안 사업에 몰입하는 환경, 신념·사명·원칙, 브랜딩, 퍼널 마케팅, 바이브 코딩을 통한 사업 사이트 제작을 함께 배웁니다. 이 과정 내내 주 2회 현장 기술 수업을 진행합니다. 모든 기술은 실제 현장에서 직접 보고 배우며, 이론식 기술 강의는 진행하지 않습니다.</p></details><details><summary>언제 시작하고, 몇 명이 함께하나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>2026년 12월 1일 화요일 개강 예정이며, 5주 과정으로 진행합니다. 1기 모집 정원은 4명이며, 전 과정에 걸쳐 주 2회 실제 현장 기술 수업을 함께 진행합니다. 교육 장소와 세부 시간표는 추후 안내됩니다.</p></details><details><summary>5주가 끝나면 기술 교육도 끝나나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>아니요. 5주 사업 과정이 끝난 뒤에도 필요한 가구 수리·리폼 기술을 요청하면 계속 교육합니다. 배우고 싶은 항목을 요청하고 해당 작업 현장 일정을 조율해, 실제 현장에서 직접 보고 배웁니다. Premium 과정은 5주가 끝난 뒤에도 월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어를 이어갑니다.</p></details><details><summary>어떤 가구 수리·리폼 기술을 배울 수 있나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>상부장·하부장 수리, 싱크대 문짝 교체, 경첩·서랍 레일 교체, 슬라이딩 도어 수리, 의자·붙박이 소파 천갈이, 테이블 가죽 리폼, 소파 꺼짐·구조 복원, 생활 가구 수리와 주방 공간 리폼을 배울 수 있습니다. 필요한 기술에 맞는 실제 작업 현장에서 교육을 진행합니다.</p></details><details><summary>수강료와 신청 방법이 궁금해요.<span className={cx("expand")} aria-hidden="true"></span></summary><p>기본 과정의 정가는 1,000만 원이며 1기 특별 수강료는 490만 원입니다. Premium 과정은 990만 원으로, 기본 과정에 밀착 지원·케어를 더했습니다. 5주 과정이 끝나도 월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 지원합니다. ‘1:1 기술 창업 상담’ 버튼에서 온라인 무료 진단 또는 오프라인 상담(5만 원)을 신청할 수 있습니다. 상담 후 교육 과정과 신청 절차를 안내합니다.</p></details></div></div></section>
   </main>
   <footer><div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div></footer>
   <div className={cx("mobile-apply")}><div><small>1기 특별가</small><strong>490만 원</strong></div><EnrollButton className={cx("button button-green")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton></div>
