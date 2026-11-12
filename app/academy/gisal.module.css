@@ -229,3 +229,10 @@
 .page .premium-care .button{width:100%;font-size:14px;gap:20px}
 @media(max-width:1000px){.page .premium-care h3{font-size:28px}}
 @media(max-width:760px){.page .premium{padding-bottom:42px}.page .premium-card{max-width:480px;width:100%;margin:0 auto;padding:25px;box-shadow:5px 5px 0 #e0e5d7}.page .premium-label{font-size:10px;margin-bottom:17px}.page .premium-offer h2{font-size:27px;letter-spacing:-1.2px}.page .premium-offer h2 span{font-size:33px}.page .premium-price{font-size:72px}.page .premium-price span{font-size:22px}.page .premium-care h3{font-size:27px;letter-spacing:-1.2px;margin:14px 0 16px}.page .premium-care>p{font-size:12px}.page .premium-inclusions{gap:6px;margin:20px 0 23px}.page .premium-inclusions li{font-size:9px;padding:7px 8px}.page .premium-care .button{font-size:13px;padding:0 18px}}
+
+/* Make the five-week enrollment link a prominent call to action. */
+.page .roadmap .roadmap-link{box-sizing:border-box;width:100%;max-width:520px;min-height:76px;margin-top:44px;padding:20px 28px;gap:24px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#10160c;font-size:24px;font-weight:800;line-height:1.4;letter-spacing:-.6px;text-align:center;box-shadow:0 8px 28px #b0ef491f;transition:background .2s,box-shadow .2s}
+.page .roadmap .roadmap-link span{flex-shrink:0;font-size:32px;line-height:1}
+.page .roadmap .roadmap-link:hover{background:#d0ff88;color:#10160c;box-shadow:0 10px 32px #b0ef4933}
+.page .roadmap .roadmap-link:focus-visible{outline:3px solid #fff;outline-offset:5px}
+@media(max-width:760px){.page .roadmap .roadmap-link{min-height:64px;margin-top:32px;padding:18px 16px;gap:14px;font-size:clamp(17px,4.6vw,21px);letter-spacing:-.5px}.page .roadmap .roadmap-link span{font-size:28px}}
