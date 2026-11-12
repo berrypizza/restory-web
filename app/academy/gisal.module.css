@@ -236,3 +236,10 @@
 .page .roadmap .roadmap-link:hover{background:#d0ff88;color:#10160c;box-shadow:0 10px 32px #b0ef4933}
 .page .roadmap .roadmap-link:focus-visible{outline:3px solid #fff;outline-offset:5px}
 @media(max-width:760px){.page .roadmap .roadmap-link{min-height:64px;margin-top:32px;padding:18px 16px;gap:14px;font-size:clamp(17px,4.6vw,21px);letter-spacing:-.5px}.page .roadmap .roadmap-link span{font-size:28px}}
+/* Premium regular price and discounted tuition. */
+.page .premium-discount-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:22px}
+.page .premium-original-price{color:#bdc9b4;font-size:16px;line-height:1.5}
+.page .premium-original-price s{margin-left:5px;text-decoration-thickness:1px}
+.page .premium-discount-badge{display:inline-block;padding:6px 10px;border-radius:3px;background:var(--green);color:#10160c;font-size:12px;font-weight:800;line-height:1.4}
+.page .premium-sale-label{margin-top:8px;color:var(--green);font-size:12px;font-weight:700}
+@media(max-width:760px){.page .premium-discount-row{gap:8px 10px;margin-top:20px}.page .premium-original-price{font-size:14px}.page .premium-discount-badge{font-size:11px}}

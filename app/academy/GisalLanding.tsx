@@ -122,7 +122,9 @@ export default function GisalLanding() {
         <div className={cx("premium-card")}>
           <div className={cx("premium-price-block")}>
             <span className={cx("premium-price-label")}>PREMIUM · 기본 과정 + 밀착 지원</span>
-            <p className={cx("premium-price")} aria-label="프리미엄 수강료 990만 원">990<span>만 원</span></p>
+            <div className={cx("premium-discount-row")}><span className={cx("premium-original-price")}>정가 <s>2,000만 원</s></span><span className={cx("premium-discount-badge")}>1,010만 원 할인</span></div>
+            <p className={cx("premium-price")} aria-label="프리미엄 할인가 990만 원">990<span>만 원</span></p>
+            <p className={cx("premium-sale-label")}>프리미엄 할인가</p>
           </div>
           <div className={cx("premium-care")}>
             <span className={cx("premium-care-label")}>5주가 끝나도, 될 때까지 밀착 케어</span>
