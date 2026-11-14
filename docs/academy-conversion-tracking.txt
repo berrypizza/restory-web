@@ -1,0 +1,62 @@
+기살 아카데미 과정별 상담 전환 측정
+
+적용 대상: /academy → /academy/consult
+분석 도구: 기존 Google Analytics 4 및 Vercel Web Analytics
+
+분류 기준 (source_plan)
+- basic: 490만 원 기본 과정 가격 카드의 상담 버튼
+- setup: 990만 원 스타트 셋업 패키지의 상담 버튼
+- undecided: nav / hero / curriculum / mobile 공통 상담 버튼
+- direct: 출처가 없는 직접 방문, 기존 링크 또는 유효하지 않은 출처
+
+추가 속성 source_cta
+nav / hero / curriculum / basic / premium / mobile / direct
+premium은 기존 코드의 셋업 섹션 식별자다. 실제 과정명은 스타트 셋업 패키지이며,
+source_plan=setup으로 분석한다. 기존 plan=premium 클릭 속성은 과거 집계 호환을 위해 유지한다.
+
+이벤트 흐름
+1. academy_plan_cta_click (두 가격 카드)
+   공통 버튼은 기존 academy_hero_cta_click 또는 academy_cta_click
+2. academy_consult_start (상담 화면 진입)
+3. academy_consult_step_view (step=1, 2, 3)
+4. academy_consult_submit_attempt (유효성 검사 통과 후 접수 시도)
+5. academy_consult_submit_success (접수 RPC 성공 응답 이후에만)
+   실패 시 academy_consult_submit_error (reason=rate_limit / invalid_input / server / network)
+
+위 모든 이벤트에 동일한 source_plan, source_cta를 보낸다.
+상담 방식 consultation_type=online/offline은 관심 과정과 별개다.
+이름·전화번호·이메일·상담 내용·신청 ID는 이 이벤트 속성에 보내지 않는다.
+기존 상담 질문, 필수/선택 조건, 개인정보 동의, 접수 RPC 데이터는 변경하지 않았다.
+
+출처 유지
+- 상담 URL에 허용된 출처 값 두 개만 담는다. 새 탭과 새로고침에도 출처가 유지된다.
+- 브라우저 저장소에 이전 방문의 과정을 남기지 않는다. 공통 버튼은 undecided,
+  출처 없는 직접 방문은 direct로 새로 분류한다.
+- 잘못된 값, 중복 값, 서로 다른 과정/버튼의 조합은 direct로 처리한다.
+- 다른 과정의 링크로 다시 들어오면 새 상담 흐름을 시작한다.
+- 출처 링크를 복사·공유하면 해당 링크의 출처가 이어진다. 실제 구매나 과정 확정이 아니다.
+- 새로고침은 새 진입 이벤트이며, 이전 단계로 갔다가 돌아오면 단계 조회도 다시 발생한다.
+  단순 이벤트 수의 나눗셈을 고유 사용자 전환율로 해석하지 않는다.
+
+보고서 설정
+GA4: 관리자 → 데이터 표시 → 맞춤 정의에서 이벤트 범위 측정기준을 등록한다.
+- 과정 관심 출처: 이벤트 매개변수 source_plan
+- 상담 버튼 위치: 이벤트 매개변수 source_cta
+이후 탐색의 유입경로 탐색에서 basic와 setup을 각각 필터/세그먼트로 비교한다.
+단계는 가격 카드 클릭 → 상담 시작 → step=2 → step=3 → 접수 성공으로 구성한다.
+academy_consult_submit_success가 상담 신청 완료이며, 수강 등록/매출 전환이 아니다.
+보고서 설정 변경 여부와 실제 GA4 수신 여부는 관리자 화면에서 별도 확인해야 한다.
+공식 안내: https://support.google.com/analytics/answer/14239696
+
+Vercel: Web Analytics의 이벤트에서 위 이벤트와 source_plan 속성을 비교한다.
+사용 중인 플랜의 Custom Events 지원 여부 및 실제 수신 데이터는 대시보드에서 확인한다.
+공식 안내: https://vercel.com/docs/analytics/custom-events
+
+해석상 한계
+브라우저 차단기/동의 설정/네트워크 상태에 따라 클라이언트 분석 이벤트가 누락될 수 있다.
+링크 복사, 컨텍스트 메뉴의 새 탭 열기, 재방문에서는 클릭 이벤트 없이 상담 진입이 생길 수 있다.
+실제 접수 건수의 기준은 기존 접수 데이터이며, 분석 수치는 유입/이탈을 비교하기 위한 자료다.
+
+검증 명령
+node --test scripts/academy-attribution.test.mjs
+npm run build

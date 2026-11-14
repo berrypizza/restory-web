@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
-import ConsultationForm from "./ConsultationForm";
+import ConsultationEntry from "./ConsultationEntry";
 import styles from "./consult.module.css";
 
 export const metadata: Metadata = {
@@ -13,7 +14,9 @@ export const viewport: Viewport = { themeColor: "#0b0e0c" };
 export default function ConsultationPage() {
   return <div className={styles.page}>
     <header className={styles.header}><div className={styles.brand}><Link href="/academy" aria-label="기살 과정 소개">기살<span>.</span></Link><span className={styles.cross}>×</span><Link href="/" className={styles.restory}>Restory</Link></div><Link href="/academy" className={styles.backLink}>과정 소개로 돌아가기 ↗</Link></header>
-    <ConsultationForm />
+    <Suspense fallback={<main className={styles.layout}><div className={styles.formSection}><h1>1:1 창업 진단 신청</h1><p role="status">상담 안내를 불러오는 중입니다.</p></div></main>}>
+      <ConsultationEntry />
+    </Suspense>
     <footer className={styles.footer}>기술부터 사업까지, 행복하게 사업하는 법.<span>© GISAL × RESTORY</span></footer>
   </div>;
 }
