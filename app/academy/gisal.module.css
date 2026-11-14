@@ -243,3 +243,78 @@
 .page .premium-discount-badge{display:inline-block;padding:6px 10px;border-radius:3px;background:var(--green);color:#10160c;font-size:12px;font-weight:800;line-height:1.4}
 .page .premium-sale-label{margin-top:8px;color:var(--green);font-size:12px;font-weight:700}
 @media(max-width:760px){.page .premium-discount-row{gap:8px 10px;margin-top:20px}.page .premium-original-price{font-size:14px}.page .premium-discount-badge{font-size:11px}}
+/* Offer clarity: reuse the existing GISAL palette, type and cards. */
+.page .hero-copy>h1{font-size:clamp(38px,3.8vw,55px);line-height:1.3;letter-spacing:-2.8px;max-width:680px}
+.page .hero-desc{font-size:16px;line-height:1.9;max-width:560px}
+.page .hero-team{right:-95px;width:650px;bottom:170px}
+.page .hero-copy>.hero-actions{position:relative;z-index:2}
+.page .hero-footnote{font-size:12px;line-height:1.9}
+.page .practice-note{font-size:11px;line-height:1.8;color:#aebba3;max-width:510px;margin-top:10px}
+.page .field-method{padding:90px 0;background:#10180f;border-bottom:1px solid var(--line);scroll-margin-top:25px}
+.page .field-method h2{font-size:clamp(28px,3.8vw,46px);line-height:1.4;letter-spacing:-1.6px}
+.page .section-intro{margin-top:20px;color:#b4c0ae;font-size:15px;line-height:1.9}
+.page .method-grid{list-style:none;padding:0;margin:35px 0 22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.page .method-grid li{border:1px solid #3a4931;padding:24px 20px;background:#151f12;border-radius:4px}
+.page .method-grid li>span{font-size:12px;color:var(--green);letter-spacing:2px}
+.page .method-grid h3{font-size:22px;margin:15px 0 10px}
+.page .method-grid p{font-size:13px;line-height:1.9;color:#b4c0ae}
+.page .condition-box{border-left:3px solid var(--green);background:#b6fa4508;padding:18px 22px;font-size:13px;line-height:1.9;color:#cad5c3}
+.page .proof-heading{margin:55px 0 22px}.page .proof-heading h3{font-size:24px;line-height:1.5}.page .proof-heading p{font-size:12px;line-height:1.8;color:#b4c0ae;margin-top:10px}
+.page .proof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.page .proof-card{border:1px solid #35432e;border-radius:4px;overflow:hidden;background:#0b1109}
+.page .proof-card>a{display:block}.page .proof-card img{display:block;width:100%;height:280px;object-fit:cover}
+.page .proof-card>div{padding:23px}.page .proof-card span{color:var(--green);font-size:11px}.page .proof-card h4{margin:10px 0;font-size:18px;line-height:1.6}.page .proof-card p{font-size:13px;color:#b8c4b1;line-height:1.9}.page .proof-card .proof-prompt{border-top:1px solid #35432e;margin-top:15px;padding-top:15px;color:#d7e2ce}
+.page .dual-track{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:35px 0}
+.page .dual-track>div{border:1px solid #3a4931;background:#10180e;border-radius:4px;padding:26px}
+.page .dual-track>div:last-child{border-color:#789e42}.page .dual-track span{font-size:11px;color:var(--green);letter-spacing:.5px}.page .dual-track h3{font-size:21px;line-height:1.5;margin:15px 0}.page .dual-track p{font-size:14px;line-height:1.9;color:#b4c0ae}.page .dual-track a{display:inline-block;margin-top:14px;color:var(--green);font-size:12px;text-decoration:underline}
+.page .offer-inclusions{padding:0 0 0 18px;margin:22px 0;font-size:13px;line-height:1.9;color:#4d5947}
+.page .premium-care .premium-conditions{margin-top:18px;border-left:3px solid #6a892c;padding-left:16px;font-size:13px;line-height:1.9}
+.page .field-support-closing{max-width:760px;margin-inline:auto}
+@media(min-width:761px) and (max-width:1100px){.page .hero-copy>h1{font-size:40px;max-width:500px}.page .hero-team{right:-65px;bottom:165px;width:52%;opacity:.8}.page .hero-desc{font-size:14px}.page .practice-note{max-width:390px}.page .method-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .page .hero-copy>h1{font-size:clamp(28px,6.7vw,43px);letter-spacing:-1.5px;margin-top:20px;max-width:100%}
+ .page .hero-desc{font-size:13px;line-height:1.8}.page .hero-team{right:auto;bottom:auto;width:calc(100% + 40px)}
+ .page .hero-copy>.hero-footnote,.page .hero-copy>.practice-note{grid-column:1/-1}.page .practice-note{font-size:11px;margin-bottom:10px;max-width:100%}
+ .page .hero-price .price-label{font-size:11px}.page .hero-actions{flex-wrap:wrap;gap:16px}.page .hero-actions .button{font-size:14px}
+ .page .field-method{padding:55px 0}.page .field-method h2{font-size:28px;letter-spacing:-1px}.page .section-intro{font-size:13px}.page .section-intro br{display:none}
+ .page .method-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:25px}.page .method-grid li{padding:20px 15px}.page .method-grid h3{font-size:19px}.page .method-grid p{font-size:12px}
+ .page .condition-box{padding:15px;font-size:12px}.page .proof-heading{margin-top:35px}.page .proof-heading h3{font-size:22px}.page .proof-grid,.page .dual-track{grid-template-columns:1fr}.page .proof-card img{height:230px}.page .proof-card>div{padding:18px}.page .dual-track>div{padding:22px}.page .dual-track h3{font-size:19px}.page .dual-track p{font-size:13px}
+ .page .mobile-apply .button{font-size:12px;gap:10px;padding-inline:15px}.page .mobile-apply small{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.page .learning-goals{margin:35px 0;border:1px solid #3a4931;border-radius:4px;padding:26px;background:#10180e}.page .learning-goals h3{font-size:21px;line-height:1.6;color:var(--paper)}.page .learning-goals p{font-size:14px;color:#b4c0ae;line-height:1.9;margin-top:14px}
+@media(max-width:760px){.page .learning-goals{padding:22px}.page .learning-goals h3{font-size:19px}.page .learning-goals p{font-size:13px}}
+
+/* Business education leads the offer; retain GISAL's existing visual language. */
+.page .hero-consult-note{max-width:510px;margin-top:15px;color:#c1cdb8;font-size:12px;line-height:1.8}
+.page .audience-fit{margin-top:34px;padding-top:30px;border-top:1px solid #34432a;text-align:left}
+.page .audience-fit h3{font-size:25px;line-height:1.5;letter-spacing:-.8px}
+.page .audience-fit p{margin-top:15px;color:#b4c0ae;font-size:14px;line-height:1.9}
+.page .audience-fit .fit-expectation{font-size:12px;color:#a5b19a}
+.page .proof-details{margin-top:15px;border-top:1px solid #35432e}
+.page .proof-details summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 2px;font-size:12px;line-height:1.6;color:#c8d5bc}
+.page .proof-details summary .expand{flex-shrink:0}
+.page .proof-details p{margin-top:14px}
+.page .field-skills{margin-top:32px;padding:0 24px;border:1px solid #425434;border-radius:4px}
+.page .field-skills>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:23px 0;color:var(--green);font-size:17px;font-weight:700;line-height:1.6}
+.page .field-skills>summary .expand{flex-shrink:0}
+.page .field-skills[open]{padding-bottom:24px}
+.page .field-skills .skill-catalog-heading{margin-top:10px}
+.page .business-tools{padding:55px 0;text-align:left}
+.page .business-tools-inner{display:grid;grid-template-columns:1.25fr 1fr;gap:50px;align-items:center}
+.page .business-tools h2{font-size:36px;letter-spacing:-1.5px}
+.page .business-tools .ai-start-blog{justify-content:flex-start;margin-top:24px}
+.page .business-tools-visual{margin:0;min-width:0}
+.page .business-tools-visual img{display:block;width:100%;height:auto;border-radius:4px}
+@media(max-width:760px){
+ .page .hero-copy>.hero-consult-note{grid-column:1/-1;font-size:11px;margin-top:14px}
+ .page .hero-footnote{margin-top:10px}
+ .page .audience-fit{margin-top:26px;padding-top:24px}
+ .page .audience-fit h3{font-size:21px}.page .audience-fit p{font-size:13px}.page .audience-fit p br{display:none}.page .audience-fit .fit-expectation{font-size:11px}
+ .page .proof-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+ .page .proof-card img{height:140px}.page .proof-card>div{padding:14px 12px}.page .proof-card h4{font-size:16px;line-height:1.5}.page .proof-card p{font-size:12px}
+ .page .proof-details summary{font-size:11px;gap:7px}.page .proof-details summary .expand{width:14px}.page .proof-details .proof-prompt{padding-top:12px}
+ .page .field-skills{padding:0 17px}.page .field-skills>summary{font-size:15px;padding:19px 0}.page .field-skills[open]{padding-bottom:17px}
+ .page .business-tools{padding:42px 0}.page .business-tools-inner{grid-template-columns:1fr;gap:25px}.page .business-tools h2{font-size:27px;line-height:1.4;letter-spacing:-1px}
+ .page .business-tools .ai-start-intro{font-size:13px}.page .business-tools-visual img{max-height:180px;object-fit:cover;object-position:center 58%}
+}

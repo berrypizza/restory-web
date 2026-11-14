@@ -2,13 +2,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { EnrollButton, EnrollmentProvider } from "./EnrollmentDialog";
 import FieldVideo from "./FieldVideo";
+import AcademyTracking from "./AcademyTracking";
+import { ACADEMY_OFFER as offer } from "@/lib/academy/offer";
+import { cases } from "@/lib/case-data";
 import styles from "./gisal.module.css";
+
+const proofTopics: Record<string, { title: string; question: string }> = {
+  "case-128": { title: "상부장 보강·재설치", question: "처짐의 원인을 확인한 뒤, 어떤 부분을 보강해야 할까요?" },
+  "case-127": { title: "싱크대 문짝 교체", question: "기존 몸통을 살릴 수 있는지, 무엇을 확인해야 할까요?" },
+  "case-115": { title: "붙박이 소파 천갈이", question: "찢어진 좌방석을 다시 마감하려면, 어떤 작업이 필요할까요?" },
+  "case-101": { title: "소파 꺼짐 복원", question: "꺼짐의 원인에 따라 밴드와 쿠션을 어떻게 보강할까요?" },
+};
+const proofCases = cases.filter(item => Object.hasOwn(proofTopics, item.id));
 
 function cx(names: string) { return names.split(" ").map(name => styles[name]).join(" "); }
 
 export default function GisalLanding() {
   return <EnrollmentProvider>
 
+  <AcademyTracking />
   <a href="#main" className={cx("skip-link")}>본문으로 건너뛰기</a>
   <header className={cx("header")}>
     <div className={cx("wrap nav")}>
@@ -18,7 +30,7 @@ export default function GisalLanding() {
         <Link className={cx("restoryBrand")} href="/" aria-label="Restory 리스토리 메인으로 이동">Restory</Link>
       </div>
       <nav aria-label="메인 메뉴"><a href="#about">기살의 생각</a><a href="#people">현장 이야기</a><a href="#curriculum">커리큘럼</a><a href="#apply">모집 안내</a></nav>
-      <EnrollButton className={cx("nav-cta")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton>
+      <EnrollButton className={cx("nav-cta")} />
     </div>
   </header>
   <main id="main">
@@ -27,56 +39,46 @@ export default function GisalLanding() {
       <div className={cx("hero-shade")} aria-hidden="true"></div>
       <div className={cx("wrap hero-inner")}>
         <div className={cx("hero-copy")}>
-          <div className={cx("eyebrow")}><span className={cx("status-dot")}></span> 1기 모집 중 <span className={cx("divider")}>/</span> 단 4명, 소수 정예</div>
-          <h1 id="hero-title">손님 없는 기술자는<br />기술이 있어도<br /><span className={cx("highlight")}>무쓸모!</span><span className={cx("title-dot")} aria-hidden="true">↗</span></h1>
-          <p className={cx("hero-desc")}>기술부터 사업까지,<br /><strong>행복하게 사업하는 법.</strong></p>
+          <div className={cx("eyebrow")}><span className={cx("status-dot")}></span> 가구수리 출장 창업 {offer.cohort}기 <span className={cx("divider")}>/</span> 단 {offer.seats}명</div>
+          <h1 id="hero-title">기술로 먹고살려면,<br /><span className={cx("highlight")}>사업을 알아야 합니다.</span></h1>
+          <p className={cx("hero-desc")}>내 기술을 고객에게 알리고, 내 이름으로 사업할 준비.<br /><strong>사업자의 마인드·원칙, 브랜딩·마케팅·운영을 배웁니다.</strong><br />기술이 처음이어도 실제 시공 현장에서<br />강사 지도 아래 직접 실습하며 함께 배웁니다.</p>
           <figure className={cx("hero-team")} aria-label="기술로 살아남기를 함께하는 리스토리 형제"><Image className={cx("hero-team-first")} src="/gisal-assets/restory-hero-portrait.png" width="1000" height="1000" alt="리스토리 형제의 첫 번째 프로필 사진" fetchPriority="high" decoding="async" loading="eager" /><Image className={cx("hero-team-second")} src="/gisal-assets/restory-second-cutout-v2.png" alt="리스토리 형제의 두 번째 프로필 사진" fetchPriority="high" decoding="async" width="1060" height="1484" loading="eager" /></figure>
-          <div className={cx("hero-price")}><span className={cx("price-label")}>1기 특별 수강료</span><span className={cx("old-price")}>1,000만 원</span><span className={cx("hero-price-now")}>490<span>만 원</span></span></div>
-          <div className={cx("hero-actions")}><EnrollButton className={cx("button button-green")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton><a className={cx("text-link")} href="#curriculum">무엇을 배우나요? <span aria-hidden="true">↓</span></a></div>
-          <p className={cx("hero-footnote")}>2026. 12. 01 (화) 개강 <span>·</span> 기술 창업 &amp; 사업 교육</p>
+          <div className={cx("hero-price")}><span className={cx("price-label")}>{offer.cohort}기 기본 수강료</span><span className={cx("hero-price-now")}>{offer.basicPrice}<span>만 원</span></span></div>
+          <div className={cx("hero-actions")}><EnrollButton location="hero" className={cx("button button-green")} /><a className={cx("text-link")} href="#curriculum">사업·현장 교육 구성 보기 <span aria-hidden="true">↓</span></a></div>
+          <p className={cx("hero-consult-note")}>현재 상황과 창업 목표를 듣고, 과정 적합도와 시작 방향을 함께 확인합니다.</p>
+          <p className={cx("hero-footnote")}>{offer.weeks}주 사업 교육 · {offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육<br />{offer.startDate} 개강 예정</p><p className={cx("practice-note")}>{offer.practiceCondition}</p>
         </div>
-        <div className={cx("hero-aside")} aria-hidden="true"><div className={cx("vertical-note")}>BUILD YOUR SKILL. BUILD YOUR BUSINESS.</div><div className={cx("cohort-seal")}><span>FIRST CLASS</span><strong>04</strong><span>함께 시작할 네 사람</span></div><div className={cx("image-caption")}><span className={cx("portrait-label")}>RESTORY BROTHERS</span>리스토리 형제와 함께,<br /><b>기술부터 사업까지.</b></div></div>
+        <div className={cx("hero-aside")} aria-hidden="true"><div className={cx("vertical-note")}>BUILD YOUR SKILL. BUILD YOUR BUSINESS.</div><div className={cx("cohort-seal")}><span>FIRST CLASS</span><strong>{String(offer.seats).padStart(2, "0")}</strong><span>함께 시작할 네 사람</span></div><div className={cx("image-caption")}><span className={cx("portrait-label")}>RESTORY BROTHERS</span>리스토리 형제와 함께,<br /><b>기술부터 사업까지.</b></div></div>
       </div>
       <p className={cx("heroArtNote")}>배경은 교육 방향을 표현한 연출 이미지입니다.</p>
     </section>
-    <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>12.01 <small>화요일 개강</small></strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>4명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>490만 원 <small>1기 특별가</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
-
-    <section id="ai-start" className={cx("ai-start")} aria-labelledby="ai-start-title">
-      <div className={cx("wrap ai-start-inner")}>
-        <span className={cx("kicker")}>AI 시대, 나의 다음 시작</span>
-        <h2 id="ai-start-title">AI 시대, 기술로 창업.<br /><span>나도 가능할까요?</span></h2>
-        <p className={cx("ai-start-intro")}>변하는 시대, 내 손에 남는 기술.<br />나를 알리는 방법부터 사업의 시작까지 함께 배웁니다.</p>
-        <figure className={cx("ai-start-visual")}><Image src="/gisal-assets/ai-skill-business.webp" width="1536" height="1024" alt="기술 창업의 방향을 표현한 연출 이미지: 노트북, 전동 공구와 로봇 팔" loading="lazy" decoding="async" /></figure>
-        <p className={cx("artNote")}>교육 방향을 표현한 연출 이미지입니다.</p>
-        <div className={cx("ai-start-bottom")}><p>기술을 배우는 것에서,<br /><strong>내 이름으로 사업하는 것까지.</strong></p><a className={cx("text-link")} href="#curriculum">어떻게 시작하나요? <span aria-hidden="true">↓</span></a></div>
-        <div id="blog-read" className={cx("ai-start-blog")}><a className={cx("blog-read-link")} href="https://blog.naver.com/fixermans" target="_blank" rel="noopener noreferrer" aria-label="블로그 읽어보기 (새 탭)">블로그 읽어보기 <span aria-hidden="true">↗</span></a></div>
-      </div>
-    </section>
+    <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>{offer.startDateShort} <small>화요일 개강 예정</small></strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>{offer.seats}명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>{offer.basicPrice}만 원 <small>{offer.cohort}기 기본 수강료</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
 
     <section id="about" className={cx("about-focus")} aria-labelledby="about-title">
       <div className={cx("wrap about-focus-inner")}>
-        <span className={cx("about-focus-label")}>WHY GISAL</span>
-        <h2 id="about-title">잘하는 기술자에서,<br /><span>찾아오는 사업자로.</span></h2>
-        <p className={cx("about-focus-copy")}>내 기술을 알리고, 제대로 값을 받고,<br /><strong>내 삶을 지키며 사업하는 법을 배웁니다.</strong></p>
-        <div className={cx("about-focus-cards")} aria-label="함께 배우는 사업의 세 가지 방향">
-          <div className={cx("about-focus-card")}><strong>신념 + 사명 + 원칙</strong><span>지속 가능한 행복한 사업 만들기</span></div>
-          <div className={cx("about-focus-card about-focus-card-featured")}><strong>퍼널 마케팅 + 브랜딩</strong><span>지속 가능한 마케팅</span></div>
-          <div className={cx("about-focus-card")}><strong>바이브 코딩으로</strong><span>똑똑하게 기술 사업 하기</span></div>
+        <span className={cx("about-focus-label")}>WHY GISAL · 사업의 본질</span>
+        <h2 id="about-title">고객에게 필요한 일을 하고,<br /><span>그 가치를 알리는 것부터.</span></h2>
+        <p className={cx("about-focus-copy")}>기술을 익히는 일과 함께, 고객이 나를 찾고 선택하는 이유를 고민해야 합니다.<br /><strong>기살은 내 일의 기준을 세우고, 고객과 만나며, 사업을 운영하는 법을 다룹니다.</strong></p>
+        <div className={cx("about-focus-cards")} aria-label="사업 교육에서 함께 다루는 세 가지 질문">
+          <div className={cx("about-focus-card")}><strong>어떤 가치를 제공할까?</strong><span>사업자의 마인드 · 신념 · 사명 · 원칙</span></div>
+          <div className={cx("about-focus-card about-focus-card-featured")}><strong>고객은 왜 나를 찾을까?</strong><span>브랜딩 · 고객 확보 · 퍼널 마케팅</span></div>
+          <div className={cx("about-focus-card")}><strong>내 사업을 어떻게 운영할까?</strong><span>사업 사이트 · 고객과 일정 · 작업 사례</span></div>
         </div>
-      </div>
-    </section>
-
-    <section id="people" className={cx("people")} aria-labelledby="people-title">
-      <div className={cx("wrap people-grid")}>
-        <FieldVideo />
-        <div className={cx("people-copy")}><span className={cx("kicker")}>FROM THE FIELD — 현장의 경험을 교육으로</span><h2 id="people-title">기술을 아는 사람과,<br /><span className={cx("green")}>사업까지 함께.</span></h2><p>리스토리에서 가구 수리·리폼 서비스를 운영하며,<br />기술이 고객을 만나 사업이 되는 과정을 고민해 왔습니다.</p><p>기술로 살아남기에서는 그 경험을 바탕으로<br />일하는 기술, 나를 알리는 방법, 오래가는 사업을<br />함께 이야기합니다.</p><div className={cx("people-topics")}><span>가구 수리 · 리폼</span><span>고객과의 만남</span><span>나의 사업 운영</span></div><a href="#curriculum" className={cx("people-link")}>어떤 내용을 함께 배우나요? <span aria-hidden="true">↘</span></a></div>
+        <div className={cx("audience-fit")}>
+          <h3>쉽게 번다는 말에 지쳤다면,<br />이번에는 내 사업을 제대로 배워보세요.</h3>
+          <p>기술이 처음이어도 괜찮습니다. 고객에게 필요한 가치를 고민하고,<br />마케팅과 운영을 배우며 직접 실행해 볼 분과 함께하고 싶습니다.</p>
+          <p className={cx("fit-expectation")}>수업과 현장 참여, 배운 내용의 실행이 필요한 과정입니다. 수익이나 창업 성과를 보장하지 않습니다.</p>
+        </div>
       </div>
     </section>
 
     <section id="curriculum" className={cx("curriculum roadmap")} aria-labelledby="roadmap-title">
       <div className={cx("wrap roadmap-inner")}>
-        <header className={cx("roadmap-heading")}><span className={cx("roadmap-label")}>CURRICULUM</span><h2 id="roadmap-title">5주, <span className={cx("green")}>기술 창업 성장 로드맵</span></h2><p>사업에 몰입하는 환경부터 브랜딩·마케팅, 직접 운영하는 웹사이트까지.<br /> 5주 동안 내 사업의 기반을 하나씩 만듭니다.</p></header>
-        <aside className={cx("field-training")} aria-label="5주간 함께 진행하는 현장 기술 수업"><div><span>5주 내내, 함께</span><strong>주 2회 현장 기술 수업</strong></div><p>모든 기술은 <b>실제 현장에서 직접 보고 배웁니다.</b><br />이론식 기술 강의는 진행하지 않습니다.<br /><a className={cx("field-support-link")} href="#field-support">5주 이후에도 필요한 기술을 계속 배우세요 <span aria-hidden="true">↗</span></a></p></aside>
+        <header className={cx("roadmap-heading")}><span className={cx("roadmap-label")}>CURRICULUM</span><h2 id="roadmap-title">5주 동안 사업을 설계하고,<br /><span className={cx("green")}>주 2회 현장에서 기술을 배웁니다.</span></h2><p>교육의 중심은 사업자의 생각과 원칙, 고객을 만나는 마케팅, 사업 운영입니다.<br />현장 기술 교육을 병행하며 실제 고객의 문제와 연결해 배웁니다.</p></header>
+        <div className={cx("dual-track")}>
+          <div><span>TRACK A · 사업을 만드는 {offer.weeks}주</span><h3>사업의 본질부터 내 운영 기반까지</h3><p>집중할 환경과 사업 원칙을 세우고, 고객에게 알리는 방법과 직접 운영할 웹사이트를 배웁니다.</p></div>
+          <div><span>TRACK B · 현장에서 배우는 기술</span><h3>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 동행 + 지도 실습</h3><p>관찰 → 판단 → 직접 실습 → 피드백. 실제 고객 현장에서 병행하며, 참여 가능한 작업은 일정·안전·숙련도에 따라 달라집니다.</p><a href="#field-method">현장 교육 방식과 기술 분야 보기 ↗</a></div>
+        </div>
         <ol className={cx("roadmap-list")}>
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>1주차</span><div className={cx("week-content")}><h3>사업에 몰입하는 환경 만들기</h3><p><strong>부하율 · 잠재의식 · 사이버사이코네틱</strong>을 다루며,<br className={cx("roadmap-break")} /> 사업에 집중할 수 있는 환경을 만듭니다.</p></div></li>
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>2주차</span><div className={cx("week-content")}><h3>신념 · 사명 · 사업 원칙 세팅</h3><p>나를 알리는 <strong>브랜딩의 초석</strong>을 다지고,<br className={cx("roadmap-break")} /> 사업을 지속하는 힘이 될 나만의 원칙을 세웁니다.</p></div></li>
@@ -84,15 +86,35 @@ export default function GisalLanding() {
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>4주차</span><div className={cx("week-content")}><h3>꿈의 고객을 찾는 퍼널 마케팅</h3><p><strong>꿈의 고객을 찾고, 고객이 나를 발견해 문의하기까지</strong>의 흐름을 설계합니다.<br className={cx("roadmap-break")} /> 블로그 · 숨고 · 당근 · 플레이스부터<br className={cx("roadmap-break")} /> 인스타 릴스 · 유튜브 쇼츠 · 유튜브 롱폼 · 쓰레드까지, 채널별 마케팅을 배웁니다.</p></div></li>
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>5주차</span><div className={cx("week-content")}><h3>바이브 코딩으로 나만의 사업 사이트 만들기</h3><p>랜딩페이지부터 <strong>고객 스케줄 등록·관리, 작업 사례를 계속 올리는 기능</strong>까지 직접 만듭니다.</p><ul className={cx("site-outcomes")} aria-label="직접 만드는 사이트의 기능"><li>나만의 랜딩페이지</li><li>고객 · 스케줄 관리</li><li>작업 사례 업로드</li></ul><p className={cx("week-goal")}>교육 이후에도 <strong>스스로 사이트를 관리하고 유지보수할 수 있도록</strong> 배웁니다.</p></div></li>
         </ol>
+        <div className={cx("learning-goals")}><h3>내 사업의 기준과 고객을 만나는 흐름을 준비합니다.</h3><p>나만의 사업 원칙과 브랜드 방향을 정리하고, 고객이 나를 발견해 문의하기까지의 흐름을 설계합니다. 직접 만드는 사업 사이트에서는 고객·스케줄 관리와 작업 사례 업로드를 배웁니다.</p><p>현장에서는 판단과 작업 결과를 강사와 함께 점검합니다. 숙련도와 사업 준비의 진행 정도는 개인마다 달라집니다.</p></div>
         <a className={cx("roadmap-link")} href="#apply">5주 과정 모집 안내 보기 <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
-    <section id="field-support" className={cx("field-support")} aria-labelledby="field-support-title">
-      <div className={cx("wrap field-support-inner")}>
-        <header className={cx("field-support-heading")}><span className={cx("field-support-label")}>BEYOND 5 WEEKS</span><h2 id="field-support-title">5주가 끝나도,<br /><span className={cx("green")}>기술 교육은 계속됩니다.</span></h2><p>사업을 하다 필요한 기술이 생기면 요청하세요.<br />리스토리의 가구 수리·리폼 기술을 실제 현장에서 계속 알려드립니다.</p></header>
-        <ol className={cx("support-flow")} aria-label="수료 후 기술 교육 진행 방식"><li><span>01</span><strong>필요한 기술 요청</strong></li><li><span>02</span><strong>현장 일정 조율</strong></li><li><span>03</span><strong>현장에서 추가 교육</strong></li></ol>
-        <div className={cx("skill-catalog-heading")}><h3>이런 기술을 배웁니다.</h3><p>필요한 항목을 요청하면 해당 작업 현장 일정에 맞춰 교육을 이어갑니다.</p></div>
+    <section id="field-method" className={cx("field-method")} aria-labelledby="field-method-title">
+      <div className={cx("wrap")}>
+        <span className={cx("kicker")}>사업의 기반이 되는 현장 기술</span>
+        <h2 id="field-method-title">보는 교육에서 끝나지 않습니다.<br /><span className={cx("green")}>실제 현장에서, 직접 해봅니다.</span></h2>
+        <p className={cx("section-intro")}>실제 고객에게 필요한 일이 무엇인지 현장에서 살펴봅니다.<br />강사와 함께 문제를 판단하고, 가능한 작업을 직접 해보며 안전과 품질의 기준을 배웁니다.</p>
+        <ol className={cx("method-grid")}>
+          {[
+            ["관찰", "강사가 실제 고객 문제를 어떻게 진단하는지 봅니다."],
+            ["판단", "원인과 수리 방법을 스스로 생각하고 설명해 봅니다."],
+            ["직접 실습", "강사의 지도 아래 안전하고 허용된 공정을 직접 해봅니다."],
+            ["피드백", "작업 결과와 안전·품질 기준을 함께 점검합니다."],
+          ].map(([title, body], index) => <li key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{body}</p></li>)}
+        </ol>
+        <p className={cx("condition-box")}>{offer.practiceCondition} 위험도가 높은 작업을 무리하게 맡기거나 교육생이 단독 시공하는 과정이 아닙니다.</p>
+        <div className={cx("proof-heading")}><h3>강사가 실제로 하는 일부터 확인하세요.</h3><p>실제 리스토리 시공 사례 · 교육생 실습 장면이나 교육 성과가 아닙니다.</p></div>
+        <div className={cx("proof-grid")}>
+          {proofCases.map(item => <article key={item.id} className={cx("proof-card")}>
+            <Link href={`/cases/${item.id}`} data-academy-proof={item.id} aria-label={`${item.title} 시공 사례 보기`}><Image src={item.afterImg} alt={`실제 리스토리 시공 완료 사례: ${item.title} (교육생 실습 장면 아님)`} width={720} height={480} sizes="(max-width: 760px) 45vw, 560px" /></Link>
+            <div><span>{item.category}</span><h4><Link href={`/cases/${item.id}`} data-academy-proof={item.id} aria-label={`${item.title} 시공 사례 보기`}>{proofTopics[item.id].title} ↗</Link></h4><details className={cx("proof-details")}><summary>작업 내용과 판단 살펴보기 <span className={cx("expand")} aria-hidden="true"></span></summary><p>{item.summary}</p><p className={cx("proof-prompt")}>함께 생각할 질문: {proofTopics[item.id].question}</p></details></div>
+          </article>)}
+        </div>
+        <details id="field-skills" className={cx("field-skills")}>
+          <summary>소파·천갈이를 포함한 기술 분야 보기 <span className={cx("expand")} aria-hidden="true"></span></summary>
+        <div className={cx("skill-catalog-heading")}><h3>현장에서 다룰 수 있는 기술 분야 예시</h3><p>모든 분야를 5주 안에 경험하거나 직접 시공한다고 보장하지 않습니다. 현장 일정과 실습 조건에 따라 달라집니다.</p></div>
         <div className={cx("skill-catalog")}>
           <article className={cx("skill-card")}><span className={cx("skill-card-number")}>01</span><div><h4>상부장 · 하부장 수리</h4><ul><li>상부장 처짐·들뜸 보강 및 재설치</li><li>싱크대 하부장 밑판 교체</li></ul></div></article>
           <article className={cx("skill-card")}><span className={cx("skill-card-number")}>02</span><div><h4>싱크대 문짝 교체 · 리폼</h4><ul><li>상·하부장 문짝과 서랍 앞판 교체</li><li>UV·PET 문짝 실측, 발주, 설치</li></ul></div></article>
@@ -103,44 +125,85 @@ export default function GisalLanding() {
           <article className={cx("skill-card")}><span className={cx("skill-card-number")}>07</span><div><h4>소파 꺼짐 · 구조 복원</h4><ul><li>스펀지 교체, 밴드·스프링 보강</li><li>내부 목대, 하부 부직포, 다리 수리</li></ul></div></article>
           <article className={cx("skill-card")}><span className={cx("skill-card-number")}>08</span><div><h4>생활 가구 수리 · 공간 리폼</h4><ul><li>의자·식탁 다리, 침대 프레임 수리</li><li>냉장고장·로봇청소기장 리폼</li></ul></div></article>
         </div>
-        <p className={cx("field-support-closing")}>5주 동안 사업의 기반을 만들고,<br /><strong>현장에서 필요한 기술은 계속 채워갑니다.</strong></p>
+        </details>
+      </div>
+    </section>
+
+    <section id="people" className={cx("people")} aria-labelledby="people-title">
+      <div className={cx("wrap people-grid")}>
+        <FieldVideo />
+        <div className={cx("people-copy")}><span className={cx("kicker")}>RESTORY BROTHERS · 우리가 일하고 사업하는 방식</span><h2 id="people-title">현장에서 일하고,<br /><span className={cx("green")}>고객을 만나는 형제와 함께.</span></h2><p>리스토리에서 가구 수리·리폼 서비스를 운영하며,<br />작업을 알리고 고객을 만나며 사업을 운영해 왔습니다.</p><p>기술로 살아남기에서는 그 경험을 바탕으로<br />사업자의 기준, 나를 알리는 마케팅, 직접 운영하는 기반을<br />함께 배웁니다.</p><div className={cx("people-topics")}><span>가구 수리 · 리폼</span><span>고객과의 만남</span><span>나의 사업 운영</span></div><a href="#curriculum" className={cx("people-link")}>어떤 내용을 함께 배우나요? <span aria-hidden="true">↘</span></a></div>
+      </div>
+    </section>
+
+    <section id="ai-start" className={cx("ai-start business-tools")} aria-labelledby="ai-start-title">
+      <div className={cx("wrap business-tools-inner")}>
+        <div>
+          <span className={cx("kicker")}>도구는 사업을 돕기 위해</span>
+          <h2 id="ai-start-title">AI로 도구는 달라져도,<br /><span>사업의 중심은 고객입니다.</span></h2>
+          <p className={cx("ai-start-intro")}>바이브 코딩도 내 사업에 필요한 도구로 배웁니다.<br />작업 사례를 알리고, 고객과 일정을 관리하는 사이트를 직접 만듭니다.</p>
+          <div id="blog-read" className={cx("ai-start-blog")}><a className={cx("blog-read-link")} href="https://blog.naver.com/fixermans" target="_blank" rel="noopener noreferrer" aria-label="리스토리 블로그 읽어보기 (새 탭)">리스토리의 일과 생각 읽기 <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <figure className={cx("business-tools-visual")}><Image src="/gisal-assets/ai-skill-business.webp" width="1536" height="1024" alt="기술과 사업 도구를 표현한 연출 이미지: 노트북과 전동 공구, 로봇 팔" sizes="(max-width: 760px) 90vw, 420px" /><figcaption className={cx("artNote")}>교육 방향을 표현한 연출 이미지입니다.</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="field-support" className={cx("field-support")} aria-labelledby="field-support-title">
+      <div className={cx("wrap field-support-inner")}>
+        <header className={cx("field-support-heading")}><span className={cx("field-support-label")}>BEYOND 5 WEEKS</span><h2 id="field-support-title">수료 후 필요한 기술은,<br /><span className={cx("green")}>현장 일정에 맞춰 조율합니다.</span></h2><p>사업을 하다 필요한 기술이 생기면 요청하세요.<br />해당 작업 현장 일정에 맞춰 추가 기술 교육을 조율합니다.</p></header>
+        <ol className={cx("support-flow")} aria-label="수료 후 기술 교육 진행 방식"><li><span>01</span><strong>필요한 기술 요청</strong></li><li><span>02</span><strong>현장 일정 조율</strong></li><li><span>03</span><strong>현장에서 추가 교육</strong></li></ol>
+
+        <p className={cx("field-support-closing")}>5주 동안 사업의 기반을 만들고,<br /><strong>현장에서 필요한 기술은 요청하고 조율합니다.</strong><br />{offer.followUp}</p>
         <a className={cx("roadmap-link")} href="#apply">기술로 살아남기 1기 모집 안내 <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
     <section className={cx("belief")}><div className={cx("wrap belief-inner")}><div className={cx("belief-symbol")} aria-hidden="true">↗</div><div><span className={cx("kicker")}>OUR BELIEF</span><h2>기술은 먹고살기 위해.<br />사업은 <span>행복하게 살기 위해.</span></h2><p>혼자 고민하던 기술과 사업의 사이.<br />이번에는 같은 방향을 보는 네 사람이 함께 시작합니다.</p></div><span className={cx("belief-sign")}>기술로 살아남기.</span></div></section>
 
-    <section id="apply" className={cx("enrollment section-light")}><div className={cx("wrap enrollment-grid")}><div className={cx("enrollment-copy")}><span className={cx("kicker")}>03 — YOUR FIRST CHAPTER</span><h2>첫 시작은,<br />딱 <span className={cx("underline-green")}>네 사람</span>과.</h2><p>기술을 배우고, 나를 알리고,<br />내 이름으로 행복하게 사업하고 싶다면.<br />기술로 살아남기 1기에서 시작하세요.</p><div className={cx("seat-illustration")} aria-label="모집 정원 4명"><span>01</span><span>02</span><span>03</span><span>04</span></div><p className={cx("seats-caption")}>함께 시작할 1기 모집 정원 · 4명</p></div><div className={cx("enrollment-ticket")}><div className={cx("ticket-top")}><span><span className={cx("status-dot")}></span> 1기 모집 중</span><b>FIRST CLASS</b></div><div className={cx("ticket-body")}><p className={cx("ticket-label")}>5주 사업 과정 + 수료 후 요청형 기술 교육</p><h3>기술로 살아남기</h3><div className={cx("ticket-old")}>정가 <del>10,000,000원</del><span>510만 원 할인</span></div><div className={cx("ticket-price")}>490<span>만 원</span></div><p className={cx("ticket-price-caption")}>1기 특별 수강료</p><dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>2026년 12월 1일 (화)</dd></div><div><dt>모집 인원</dt><dd>4명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>5주</dd></div><div><dt>현장 기술 수업</dt><dd>5주간 주 2회</dd></div><div><dt>수료 후 기술 교육</dt><dd>요청에 따라 계속</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl><EnrollButton className={cx("button button-green")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton><p className={cx("ticket-note")}>교육 장소 · 세부 시간표는 추후 안내됩니다.</p></div></div></div></section>
+    <section id="apply" className={cx("enrollment section-light")}><div className={cx("wrap enrollment-grid")}><div className={cx("enrollment-copy")}><span className={cx("kicker")}>03 — YOUR FIRST CHAPTER</span><h2>첫 시작은,<br />딱 <span className={cx("underline-green")}>네 사람</span>과.</h2><p>내 일의 기준을 세우고, 고객에게 나를 알리며,<br />내 이름으로 사업하고 싶다면.<br />기술로 살아남기 {offer.cohort}기에서 시작하세요.</p><div className={cx("seat-illustration")} aria-label={`모집 정원 ${offer.seats}명`}>{Array.from({ length: offer.seats }, (_, index) => <span key={index}>{String(index + 1).padStart(2, "0")}</span>)}</div><p className={cx("seats-caption")}>함께 시작할 {offer.cohort}기 모집 정원 · {offer.seats}명</p></div><div className={cx("enrollment-ticket")}><div className={cx("ticket-top")}><span><span className={cx("status-dot")}></span> {offer.cohort}기 모집 중</span><b>FIRST CLASS</b></div><div className={cx("ticket-body")}><p className={cx("ticket-label")}>기본 과정 · 사업 교육 + 현장 기술 교육</p><h3>기술로 살아남기</h3><div className={cx("ticket-price")}>{offer.basicPrice}<span>만 원</span></div><p className={cx("ticket-price-caption")}>{offer.cohort}기 기본 수강료</p><dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>현장 일정 조율 · 조건 별도 안내</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl><ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>수료 후 요청형 추가 기술 교육 · 세부 조건 확인 필요</li></ul><EnrollButton location="basic" className={cx("button button-green")} /><p className={cx("ticket-note")}>현재 상황과 창업 목표를 듣고, 과정 적합도와 시작 방향을 함께 확인합니다. 교육 장소·세부 시간표·결제 및 환불 조건은 확인 후 안내합니다.</p></div></div></div></section>
 
     <section id="premium" className={cx("premium section-light")} aria-labelledby="premium-title">
       <div className={cx("wrap enrollment-grid")}>
         <div className={cx("premium-offer")}>
           <span className={cx("premium-label")}>PREMIUM</span>
           <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>Premium.</span></h2>
-          <p className={cx("premium-intro")}>5주 이후에도 목표 달성까지 함께하는 과정</p>
+          <p className={cx("premium-intro")}>기본 과정에 밀착 지원·케어를 더한 과정</p>
         </div>
         <div className={cx("premium-card")}>
           <div className={cx("premium-price-block")}>
             <span className={cx("premium-price-label")}>PREMIUM · 기본 과정 + 밀착 지원</span>
-            <div className={cx("premium-discount-row")}><span className={cx("premium-original-price")}>정가 <s>2,000만 원</s></span><span className={cx("premium-discount-badge")}>1,010만 원 할인</span></div>
-            <p className={cx("premium-price")} aria-label="프리미엄 할인가 990만 원">990<span>만 원</span></p>
-            <p className={cx("premium-sale-label")}>프리미엄 할인가</p>
+
+            <p className={cx("premium-price")} aria-label={`Premium 수강료 ${offer.premiumPrice}만 원`}>{offer.premiumPrice}<span>만 원</span></p>
+            <p className={cx("premium-sale-label")}>Premium 수강료</p>
           </div>
           <div className={cx("premium-care")}>
-            <span className={cx("premium-care-label")}>5주가 끝나도, 될 때까지 밀착 케어</span>
-            <h3>월 매출 <span>500만 원,</span><br /><span>2개월 안정화</span>까지.</h3>
-            <p><strong>5주 과정이 끝나도 지원은 계속됩니다.</strong><br />월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어합니다.</p>
-            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>매출 안정화 지원</li><li>5주 이후에도 밀착 케어</li></ul>
-            <EnrollButton className={cx("button button-green")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton>
+            <span className={cx("premium-care-label")}>지원 목표 · 세부 조건 확인 필요</span>
+            <h3>사업의 다음 단계도,<br /><span>밀착 지원·케어.</span></h3>
+            <p>{offer.premiumGoal}</p><p className={cx("premium-conditions")}>{offer.premiumCondition}</p>
+            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>밀착 지원·케어</li><li>지원 범위·기간·기준은 계약 전 확인</li></ul>
+            <EnrollButton location="premium" className={cx("button button-green")} />
           </div>
         </div>
       </div>
     </section>
 
-    <section className={cx("faq section-light")}><div className={cx("wrap faq-grid")}><div><span className={cx("kicker")}>BEFORE WE START</span><h2>궁금한 이야기.</h2></div><div className={cx("faq-items")}><details><summary>기술만 배우는 강의인가요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>5주 동안 사업에 몰입하는 환경, 신념·사명·원칙, 브랜딩, 퍼널 마케팅, 바이브 코딩을 통한 사업 사이트 제작을 함께 배웁니다. 이 과정 내내 주 2회 현장 기술 수업을 진행합니다. 모든 기술은 실제 현장에서 직접 보고 배우며, 이론식 기술 강의는 진행하지 않습니다.</p></details><details><summary>언제 시작하고, 몇 명이 함께하나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>2026년 12월 1일 화요일 개강 예정이며, 5주 과정으로 진행합니다. 1기 모집 정원은 4명이며, 전 과정에 걸쳐 주 2회 실제 현장 기술 수업을 함께 진행합니다. 교육 장소와 세부 시간표는 추후 안내됩니다.</p></details><details><summary>5주가 끝나면 기술 교육도 끝나나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>아니요. 5주 사업 과정이 끝난 뒤에도 필요한 가구 수리·리폼 기술을 요청하면 계속 교육합니다. 배우고 싶은 항목을 요청하고 해당 작업 현장 일정을 조율해, 실제 현장에서 직접 보고 배웁니다. Premium 과정은 5주가 끝난 뒤에도 월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어를 이어갑니다.</p></details><details><summary>어떤 가구 수리·리폼 기술을 배울 수 있나요?<span className={cx("expand")} aria-hidden="true"></span></summary><p>상부장·하부장 수리, 싱크대 문짝 교체, 경첩·서랍 레일 교체, 슬라이딩 도어 수리, 의자·붙박이 소파 천갈이, 테이블 가죽 리폼, 소파 꺼짐·구조 복원, 생활 가구 수리와 주방 공간 리폼을 배울 수 있습니다. 필요한 기술에 맞는 실제 작업 현장에서 교육을 진행합니다.</p></details><details><summary>수강료와 신청 방법이 궁금해요.<span className={cx("expand")} aria-hidden="true"></span></summary><p>기본 과정의 정가는 1,000만 원이며 1기 특별 수강료는 490만 원입니다. Premium 과정은 990만 원으로, 기본 과정에 밀착 지원·케어를 더했습니다. 5주 과정이 끝나도 월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 지원합니다. ‘1:1 기술 창업 상담’ 버튼에서 온라인 무료 진단 또는 오프라인 상담(5만 원)을 신청할 수 있습니다. 상담 후 교육 과정과 신청 절차를 안내합니다.</p></details></div></div></section>
+    <section className={cx("faq section-light")} aria-labelledby="faq-title"><div className={cx("wrap faq-grid")}><div><span className={cx("kicker")}>BEFORE WE START</span><h2 id="faq-title">처음이라서,<br />궁금한 이야기.</h2></div><div className={cx("faq-items")}>
+      {[
+        ["어떤 분에게 이 과정이 맞나요?", "기술을 바탕으로 자기 이름의 사업을 준비하며, 사업자의 마인드와 원칙부터 브랜딩·마케팅·운영까지 배우고 싶은 분을 위한 과정입니다. 기술이 처음인 분도 참여할 수 있습니다. 수업과 현장 참여, 배운 내용의 실행이 필요하며 특정 수익이나 창업 성과를 보장하지 않습니다."],
+        ["기술이 없는 완전 초보자도 참여할 수 있나요?", "네. 기술 창업을 준비하는 완전 초보자도 대상입니다. 처음부터 혼자 작업하는 것이 아니라 관찰과 판단부터 배우고, 강사 지도 아래 가능한 공정을 실습합니다. 무료 진단에서 현재 경험과 과정 적합도를 함께 살펴봅니다."],
+        ["현장에서는 구경만 하나요? 직접 작업도 해보나요?", `실제 고객 시공 현장에 동행해 관찰하고, 강사의 지도 아래 허용된 작업을 직접 실습한 뒤 피드백을 받습니다. ${offer.practiceCondition} 교육생에게 단독 시공을 맡기는 과정이 아닙니다.`],
+        ["5주 동안 모든 수리 기술을 배울 수 있나요?", "모든 기술의 습득이나 모든 공정의 직접 실습을 보장하지 않습니다. 상·하부장, 문짝, 경첩·레일, 슬라이딩 도어, 가죽 리폼, 소파·가구 복원 등은 다룰 수 있는 분야의 예시이며 실제 현장 일정과 안전 조건에 따라 달라집니다."],
+        ["사업 교육이 중심인가요? 기술 수업과 어떻게 병행하나요?", `네. 기술로 자기 사업을 준비하도록 사업자의 생각과 원칙, 브랜딩·마케팅·운영을 중심으로 배웁니다. ${offer.weeks}주 사업 교육과 ${offer.weeks}주간 주 ${offer.fieldSessionsPerWeek}회 현장 기술 교육을 병행합니다. 사업 교육은 몰입 환경 → 신념·사명·원칙 → 브랜딩 → 퍼널 마케팅 → 바이브 코딩 사업 사이트 순서입니다. 기술 교육은 실제 현장에서 진행하며 세부 요일·시간과 장소는 확인 후 안내합니다.`],
+        ["언제 시작하고, 몇 명이 함께하나요?", `${offer.startDate} 개강 예정이며 ${offer.cohort}기 정원은 ${offer.seats}명입니다. 사업 과정은 ${offer.weeks}주입니다.`],
+        ["수료 후 어떤 지원을 받나요?", `${offer.followUp} Premium은 기본 과정에 밀착 지원·케어를 더합니다. ${offer.premiumGoal} ${offer.premiumCondition}`],
+        ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, Premium은 ${offer.premiumPrice}만 원입니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·추가 비용·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
+        ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", "독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다. Premium의 지원 목표도 매출 보증을 뜻하지 않습니다."],
+        ["교육장 위치와 실제 방문 가능 지역은 어디인가요?", "교육장 주소와 현장 방문 가능 지역, 이동 방식 및 비용은 확인 후 안내합니다. 상담에서 거주 지역과 참여 가능한 시간을 알려주시면 일정 조율에 참고합니다."],
+      ].map(([question, answer]) => <details key={question}><summary>{question}<span className={cx("expand")} aria-hidden="true"></span></summary><p>{answer}</p></details>)}
+    </div></div></section>
   </main>
   <footer><div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div></footer>
-  <div className={cx("mobile-apply")}><div><small>1기 특별가</small><strong>490만 원</strong></div><EnrollButton className={cx("button button-green")}>1:1 기술 창업 상담 <span aria-hidden="true">↗</span></EnrollButton></div>
+  <div className={cx("mobile-apply")}><div><small>{offer.cohort}기 기본 수강료</small><strong>{offer.basicPrice}만 원</strong></div><EnrollButton location="mobile" className={cx("button button-green")} /></div>
 
 
   </EnrollmentProvider>;

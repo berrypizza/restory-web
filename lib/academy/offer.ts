@@ -1,0 +1,18 @@
+/** Confirmed offer facts. Unconfirmed policies are disclosed, never invented. */
+export const ACADEMY_OFFER = {
+  cohort: 1,
+  seats: 4,
+  startDate: "2026년 12월 1일 (화)",
+  startDateShort: "12.01",
+  weeks: 5,
+  fieldSessionsPerWeek: 2,
+  basicPrice: 490,
+  premiumPrice: 990,
+  consultHref: "/academy/consult",
+  ctaLabel: "무료 1:1 창업 진단받기",
+  practiceCondition: "고객의 사전 동의와 안전 조건을 충족하는 작업에 한해 실습하며, 현장·숙련도에 따라 참여 범위가 달라집니다.",
+  followUp: "수료 후 요청형 추가 기술 교육은 해당 작업 현장 일정에 맞춰 조율합니다. 횟수·기간·장소·비용·예약 조건은 확인 후 안내합니다.",
+  premiumGoal: "월 매출 500만 원을 2개월간 안정적으로 유지할 때까지 밀착 지원·케어한다는 기존 안내입니다.",
+  premiumCondition: "매출을 보장하는 상품이 아닙니다. 지원 기간·횟수·범위·매출 충족 기준·교육생 의무·계약 및 환불 조건은 확인 후 안내합니다.",
+  requiresOwnerConfirmation: ["세부 시간표·장소·방문 지역", "작업별 실습 범위·시간·안전 기준", "추가 교육의 횟수·기간·비용·예약 조건", "Premium 지원 및 계약 조건", "비교정가 적용 근거", "결제·취소·환불 규정", "사진 게시 동의 및 개인정보 마스킹"],
+} as const;

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { communityClient } from "@/lib/community/client";
 import { CALL_TIMES, CONSENT_VERSION, CONSULTATION_TYPES, SITUATIONS, REPAIR_EXPERIENCES, MARKETING_EXPERIENCES } from "@/lib/academy/consultation";
+import { trackAcademy } from "@/lib/academy/analytics";
 import styles from "./consult.module.css";
 
 const steps = ["상담 방식", "현재 상황", "연락받을 정보"];
@@ -23,6 +24,18 @@ export default function ConsultationForm() {
   const heading = useRef<HTMLHeadingElement>(null);
   const selection = CONSULTATION_TYPES.find(item => item.value === kind)!;
 
+  const started = useRef(false);
+  useEffect(() => {
+    if (!started.current) { trackAcademy("academy_consult_start"); started.current = true; }
+  }, []);
+  const trackedStep = useRef<number | null>(null);
+  useEffect(() => {
+    if (trackedStep.current !== step) {
+      trackAcademy("academy_consult_step_view", { step: step + 1 });
+      trackedStep.current = step;
+    }
+  }, [step]);
+
   function move(next: number) {
     setStep(next); setError("");
     requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); heading.current?.scrollIntoView({ behavior: "instant", block: "start" }); });
@@ -39,19 +52,22 @@ export default function ConsultationForm() {
     if (!REPAIR_EXPERIENCES.some(item => item.value === contact.repair_experience) || !MARKETING_EXPERIENCES.some(item => item.value === contact.marketing_experience)) { setError("수리·시공 경험과 마케팅 경험을 선택해주세요."); return; }
     submitting.current = true; setBusy(true); setError("");
     submissionId.current ??= crypto.randomUUID();
+    trackAcademy("academy_consult_submit_attempt", { consultation_type: kind === "offline" ? "offline" : "online" });
     try {
       const { error: resultError } = await communityClient().rpc("submit_academy_consultation", {
         p_id: submissionId.current, p_data: { ...contact, consultation_type: kind, situation, consent, consent_version: CONSENT_VERSION },
       });
       if (resultError) {
+        trackAcademy("academy_consult_submit_error", { reason: resultError.message.includes("rate_limit") ? "rate_limit" : resultError.message.includes("invalid_input") ? "invalid_input" : "server" });
         if (resultError.message.includes("rate_limit")) setError("신청이 여러 번 접수되었습니다. 잠시 후 다시 시도하거나 1688-2957로 문의해주세요.");
         else if (resultError.message.includes("invalid_input")) setError("입력 내용과 개인정보 수집 동의를 다시 확인해주세요.");
         else setError("신청을 접수하지 못했습니다. 입력 내용은 유지되니 잠시 후 다시 눌러주세요.");
         return;
       }
+      trackAcademy("academy_consult_submit_success", { consultation_type: kind === "offline" ? "offline" : "online" });
       setSubmitted(true); setContact(emptyContact);
       requestAnimationFrame(() => heading.current?.focus());
-    } catch { setError("연결이 원활하지 않습니다. 입력 내용은 유지되니 다시 시도해주세요."); }
+    } catch { trackAcademy("academy_consult_submit_error", { reason: "network" }); setError("연결이 원활하지 않습니다. 입력 내용은 유지되니 다시 시도해주세요."); }
     finally { submitting.current = false; setBusy(false); }
   }
 
@@ -68,8 +84,8 @@ export default function ConsultationForm() {
     <section className={styles.formSection} aria-label="상담 신청">
       <ol className={styles.progress} aria-label="신청 진행 단계">{steps.map((label, index) => <li key={label} aria-current={index === step ? "step" : undefined} data-active={index <= step}><span>{index < step ? "✓" : `0${index + 1}`}</span>{label}</li>)}</ol>
       <p className={styles.eyebrow}>{step + 1} / 3 · {steps[step]}</p>
-      <h1 ref={heading} tabIndex={-1}>{step === 0 ? <>기술로 시작하는 일,<br /><em>내 상황부터</em> 함께 살펴봐요.</> : step === 1 ? "지금 어떤 상황에 계신가요?" : "연락받으실 정보를 알려주세요."}</h1>
-      <p className={styles.intro}>{step === 0 ? "부담 없이 온라인 무료 진단부터. 원하시면 직접 만나는 상담도 선택할 수 있습니다." : step === 1 ? "가장 가까운 항목 하나를 선택해주세요." : "알려주신 통화 가능 시간에 맞춰 상담 일정을 안내해드립니다."}</p>
+      <h1 ref={heading} tabIndex={-1}>{step === 0 ? <>내 이름으로 사업하는 일,<br /><em>어디서 시작할지</em> 함께 살펴봐요.</> : step === 1 ? "지금 어떤 상황에 계신가요?" : "연락받으실 정보를 알려주세요."}</h1>
+      <p className={styles.intro}>{step === 0 ? "현재 상황과 창업 목표를 듣고 과정 적합도와 시작 방향을 함께 확인합니다. 온라인 진단은 무료이며, 원하시면 대면 상담도 선택할 수 있습니다." : step === 1 ? "가장 가까운 항목 하나를 선택해주세요." : "경험과 목표에 맞춰 상담을 준비하기 위한 정보입니다. 알려주신 통화 가능 시간에 맞춰 일정을 안내해드립니다."}</p>
       {step === 0 && <>
         <fieldset className={styles.options}><legend className={styles.srOnly}>상담 방식 선택</legend>{CONSULTATION_TYPES.map(item => <label className={styles.choice} key={item.value} data-selected={kind === item.value}>
           <input type="radio" name="consultation-type" value={item.value} checked={kind === item.value} onChange={() => setKind(item.value)} />
@@ -94,7 +110,7 @@ export default function ConsultationForm() {
           <fieldset className={styles.callTime}><legend>통화 가능 시간대 <span>*</span></legend><div className={styles.chips}>{CALL_TIMES.map(time => <button type="button" key={time} aria-pressed={contact.available_time === time} onClick={() => field("available_time", time)}>{time}</button>)}</div><input name="available_time" aria-label="통화 가능 시간대 직접 입력" required maxLength={150} value={contact.available_time} onChange={e => field("available_time", e.target.value)} placeholder="예) 평일 저녁 7시 이후 / 주말 오전이 편해요" /><p className={styles.hint}>버튼을 누르거나 편한 시간을 직접 적어주세요.</p></fieldset>
           <fieldset className={styles.experienceQuestion}><legend>집수리·가구수리 등 수리·시공 경험이 있으신가요? <span>*</span></legend><p className={styles.hint}>지금의 경험에 가장 가까운 항목을 골라주세요.</p><div className={styles.experienceOptions}>{REPAIR_EXPERIENCES.map(item => <label key={item.value} data-selected={contact.repair_experience === item.value}><input type="radio" name="repair_experience" required value={item.value} checked={contact.repair_experience === item.value} onChange={() => field("repair_experience", item.value)} />{item.label}</label>)}</div></fieldset>
           <fieldset className={styles.experienceQuestion}><legend>마케팅을 직접 해보신 적이 있으신가요? <span>*</span></legend><p className={styles.hint}>블로그에 일상글을 써본 경험도 포함해요.</p><div className={styles.experienceOptions}>{MARKETING_EXPERIENCES.map(item => <label key={item.value} data-selected={contact.marketing_experience === item.value}><input type="radio" name="marketing_experience" required value={item.value} checked={contact.marketing_experience === item.value} onChange={() => field("marketing_experience", item.value)} />{item.label}</label>)}</div></fieldset>
-          <label>미리 하고 싶은 말 <small>(선택)</small><textarea name="message" rows={5} maxLength={2000} value={contact.message} onChange={e => field("message", e.target.value)} placeholder="해보신 작업이나 마케팅 경험, 궁금한 점 등 상담 전에 알려주고 싶은 내용을 적어주세요." /></label>
+          <label>미리 하고 싶은 말 <small>(선택)</small><textarea name="message" rows={5} maxLength={2000} value={contact.message} onChange={e => field("message", e.target.value)} placeholder="어떤 일을 내 사업으로 만들고 싶은지, 지금 막막한 점이나 궁금한 점을 편하게 적어주세요." /></label>
           <div className={styles.honeypot} aria-hidden="true"><label>웹사이트<input name="website" tabIndex={-1} autoComplete="off" value={contact.website} onChange={e => field("website", e.target.value)} /></label></div>
           <div className={styles.consentBlock}><label className={styles.consent}><input name="consent" type="checkbox" required checked={consent} onChange={e => setConsent(e.target.checked)} /><span>개인정보 수집 및 이용에 동의합니다. <b>(필수)</b></span></label><details><summary>수집 및 이용 내용 보기</summary><div className={styles.consentDetails}><p>수집·이용 주체: 리스토리 스튜디오</p><p>필수 항목: 상담 방식, 현재 상황, 이름, 전화번호, 거주 지역, 나이, 수리·시공 경험, 마케팅 경험, 통화 가능 시간대, 동의 일시</p><p>선택 항목: 이메일, 미리 하고 싶은 말</p><p>이용 목적: 기살 1:1 기술 창업 상담 진행, 경험에 맞는 상담 준비 및 일정 안내</p><p>보유 기간: 접수일로부터 90일. 동의 철회 요청 시 지체 없이 삭제합니다.</p><p>동의를 거부하실 수 있으나, 동의하지 않으면 상담 신청이 어렵습니다. 선택 항목을 입력하지 않아도 신청할 수 있습니다.</p><p>동의 철회·삭제 문의: <a href="tel:16882957">1688-2957</a></p></div></details></div>
         </fieldset>
@@ -103,6 +119,6 @@ export default function ConsultationForm() {
         <p className={styles.hint}>신청은 교육 과정 등록이나 결제를 확정하지 않습니다.</p>
       </form>}
     </section>
-    <aside className={styles.summary} aria-label="선택한 상담 정보"><p className={styles.eyebrow}>YOUR NEXT CHAPTER</p><h2>기술에서<br /><span>내 사업으로.</span></h2><p>어디서 시작할지 막막하다면,<br />지금의 고민부터 들려주세요.</p><div className={styles.summarySelection}><span>선택한 상담</span><strong>{selection.label}</strong><div><span>{selection.format}</span><b>{selection.price}</b></div></div>{situation && <div className={styles.summarySituation}><span>현재 상황</span><strong>{SITUATIONS.find(item => item.value === situation)?.label}</strong></div>}<ul><li>지금의 상황과 고민을 먼저 듣습니다.</li><li>기술 창업과 사업의 방향을 살펴봅니다.</li><li>신청 후 연락드려 일정을 조율합니다.</li></ul><Link href="/academy#curriculum">과정이 궁금하다면 <span aria-hidden="true">↗</span></Link></aside>
+    <aside className={styles.summary} aria-label="선택한 상담 정보"><p className={styles.eyebrow}>YOUR NEXT CHAPTER</p><h2>기술에서<br /><span>내 사업으로.</span></h2><p>어디서 시작할지 막막하다면,<br />지금의 고민부터 들려주세요.</p><div className={styles.summarySelection}><span>선택한 상담</span><strong>{selection.label}</strong><div><span>{selection.format}</span><b>{selection.price}</b></div></div>{situation && <div className={styles.summarySituation}><span>현재 상황</span><strong>{SITUATIONS.find(item => item.value === situation)?.label}</strong></div>}<ul><li>지금의 상황과 고민을 먼저 듣습니다.</li><li>사업 교육과 현장 실습이 내 상황에 맞는지 살펴봅니다.</li><li>신청 후 연락드려 일정을 조율합니다.</li></ul><Link href="/academy#curriculum">과정이 궁금하다면 <span aria-hidden="true">↗</span></Link></aside>
   </main>;
 }
