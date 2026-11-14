@@ -3,10 +3,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ACADEMY_OFFER } from "@/lib/academy/offer";
-import { trackAcademy } from "@/lib/academy/analytics";
+import { trackAcademy, type AcademyCtaLocation } from "@/lib/academy/analytics";
 import styles from "./gisal.module.css";
 
-export function EnrollButton({ className, location = "nav" }: { className?: string; location?: "nav" | "hero" | "basic" | "premium" | "mobile" }) {
+export function EnrollButton({ className, location = "nav" }: { className?: string; location?: AcademyCtaLocation }) {
   function onClick() {
     if (location === "basic" || location === "premium") trackAcademy("academy_plan_cta_click", { location, plan: location });
     else trackAcademy(location === "hero" ? "academy_hero_cta_click" : "academy_cta_click", { location });

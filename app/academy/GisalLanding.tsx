@@ -65,10 +65,44 @@ export default function GisalLanding() {
           <div className={cx("about-focus-card")}><strong>내 사업을 어떻게 운영할까?</strong><span>사업 사이트 · 고객과 일정 · 작업 사례</span></div>
         </div>
         <div className={cx("audience-fit")}>
-          <h3>쉽게 번다는 말에 지쳤다면,<br />이번에는 내 사업을 제대로 배워보세요.</h3>
-          <p>기술이 처음이어도 괜찮습니다. 고객에게 필요한 가치를 고민하고,<br />마케팅과 운영을 배우며 직접 실행해 볼 분과 함께하고 싶습니다.</p>
+          <h3>{offer.applicantTitle}</h3>
+          <p>쉽게 번다는 말에 지쳤다면, 내 사업을 제대로 공부해 보세요.<br />기술이 처음이어도 괜찮습니다. {offer.applicantMindset}</p>
+          <ul className={cx("fit-list")}>
+            <li>고객이 왜 나를 선택하는지, 사업이 어떻게 이어지는지 깊이 공부할 분</li>
+            <li>배운 내용을 직접 적용하고, 잘되지 않는 이유도 스스로 돌아볼 분</li>
+            <li>익숙한 생각을 바꾸는 불편함을 받아들이고, 피드백을 바탕으로 다시 시도할 분</li>
+          </ul>
           <p className={cx("fit-expectation")}>수업과 현장 참여, 배운 내용의 실행이 필요한 과정입니다. 수익이나 창업 성과를 보장하지 않습니다.</p>
         </div>
+      </div>
+    </section>
+
+    <section id="business-proof" className={cx("business-proof")} aria-labelledby="business-proof-title">
+      <div className={cx("wrap")}>
+        <span className={cx("kicker")}>리스토리의 실제 사업 운영</span>
+        <h2 id="business-proof-title">작업을 알리고, 선택을 돕고,<br /><span className={cx("green")}>문의할 길을 만듭니다.</span></h2>
+        <p className={cx("section-intro")}>리스토리가 공개한 실제 사이트에서 고객을 만나는 방식을 확인해 보세요.<br />기살에서는 이런 운영 경험을 바탕으로 브랜딩·마케팅과 내 사업 사이트를 배웁니다.</p>
+        <ol className={cx("business-proof-grid")}>
+          <li>
+            <span className={cx("business-proof-number")}>01 · 기록</span>
+            <h3>작업을 고객의 언어로 남기기</h3>
+            <p>붙박이 소파 천갈이 사례에 손상 상태와 작업 내용을 사진·글로 정리했습니다. 고객이 무엇을 맡길 수 있는지 살펴볼 수 있습니다.</p>
+            <Link href="/cases/case-115" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="record">실제 사례 글 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+          </li>
+          <li>
+            <span className={cx("business-proof-number")}>02 · 탐색</span>
+            <h3>내 문제와 비슷한 작업 찾기</h3>
+            <p>시공 사례를 수리 분야별로 나눠 보여줍니다. 고객은 자기 가구의 문제와 비슷한 사례를 찾아 서비스의 범위를 확인할 수 있습니다.</p>
+            <Link href="/cases" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="browse">실제 사례 목록 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+          </li>
+          <li>
+            <span className={cx("business-proof-number")}>03 · 문의</span>
+            <h3>관심에서 문의로 이어가기</h3>
+            <p>서비스 소개와 사례 페이지에 전화·카카오 문의 버튼을 배치했습니다. 작업을 살펴본 고객이 다음 행동을 선택할 수 있도록 연결합니다.</p>
+            <Link href="/" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="inquiry">실제 서비스 페이지 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+          </li>
+        </ol>
+        <p className={cx("business-proof-note")}>강사의 실제 서비스 운영 사례입니다. 교육생 성과나 특정 문의·매출 증가를 의미하지 않습니다.</p>
       </div>
     </section>
 
@@ -87,9 +121,16 @@ export default function GisalLanding() {
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>5주차</span><div className={cx("week-content")}><h3>바이브 코딩으로 나만의 사업 사이트 만들기</h3><p>랜딩페이지부터 <strong>고객 스케줄 등록·관리, 작업 사례를 계속 올리는 기능</strong>까지 직접 만듭니다.</p><ul className={cx("site-outcomes")} aria-label="직접 만드는 사이트의 기능"><li>나만의 랜딩페이지</li><li>고객 · 스케줄 관리</li><li>작업 사례 업로드</li></ul><p className={cx("week-goal")}>교육 이후에도 <strong>스스로 사이트를 관리하고 유지보수할 수 있도록</strong> 배웁니다.</p></div></li>
         </ol>
         <div className={cx("learning-goals")}><h3>내 사업의 기준과 고객을 만나는 흐름을 준비합니다.</h3><p>나만의 사업 원칙과 브랜드 방향을 정리하고, 고객이 나를 발견해 문의하기까지의 흐름을 설계합니다. 직접 만드는 사업 사이트에서는 고객·스케줄 관리와 작업 사례 업로드를 배웁니다.</p><p>현장에서는 판단과 작업 결과를 강사와 함께 점검합니다. 숙련도와 사업 준비의 진행 정도는 개인마다 달라집니다.</p></div>
-        <a className={cx("roadmap-link")} href="#apply">5주 과정 모집 안내 보기 <span aria-hidden="true">↗</span></a>
+        <div className={cx("consult-bridge")}>
+          <h3>이 배움이 내 상황에 맞는지,<br />먼저 함께 살펴보세요.</h3>
+          <p>현재 경험과 창업 고민을 듣고, 사업 교육과 현장 실습의 적합도를 확인합니다.</p>
+          <EnrollButton location="curriculum" className={cx("button button-green")} />
+          <p className={cx("consult-bridge-note")}>온라인 진단은 무료입니다. 상담 신청만으로 수강 등록이나 결제가 확정되지 않습니다.</p>
+          <a className={cx("text-link")} href="#apply">수강료와 모집 조건 보기 <span aria-hidden="true">↓</span></a>
+        </div>
       </div>
     </section>
+
 
     <section id="field-method" className={cx("field-method")} aria-labelledby="field-method-title">
       <div className={cx("wrap")}>
@@ -189,7 +230,7 @@ export default function GisalLanding() {
 
     <section className={cx("faq section-light")} aria-labelledby="faq-title"><div className={cx("wrap faq-grid")}><div><span className={cx("kicker")}>BEFORE WE START</span><h2 id="faq-title">처음이라서,<br />궁금한 이야기.</h2></div><div className={cx("faq-items")}>
       {[
-        ["어떤 분에게 이 과정이 맞나요?", "기술을 바탕으로 자기 이름의 사업을 준비하며, 사업자의 마인드와 원칙부터 브랜딩·마케팅·운영까지 배우고 싶은 분을 위한 과정입니다. 기술이 처음인 분도 참여할 수 있습니다. 수업과 현장 참여, 배운 내용의 실행이 필요하며 특정 수익이나 창업 성과를 보장하지 않습니다."],
+        ["어떤 분에게 이 과정이 맞나요?", `${offer.applicantTitle} ${offer.applicantMindset} 고객에게 필요한 가치를 고민하고, 사업자의 원칙·브랜딩·마케팅·운영을 깊이 배우려는 분을 위한 과정입니다. 기술이 처음인 분도 참여할 수 있습니다. 수업과 현장 참여, 배운 내용의 실행이 필요하며 특정 수익이나 창업 성과를 보장하지 않습니다.`],
         ["기술이 없는 완전 초보자도 참여할 수 있나요?", "네. 기술 창업을 준비하는 완전 초보자도 대상입니다. 처음부터 혼자 작업하는 것이 아니라 관찰과 판단부터 배우고, 강사 지도 아래 가능한 공정을 실습합니다. 무료 진단에서 현재 경험과 과정 적합도를 함께 살펴봅니다."],
         ["현장에서는 구경만 하나요? 직접 작업도 해보나요?", `실제 고객 시공 현장에 동행해 관찰하고, 강사의 지도 아래 허용된 작업을 직접 실습한 뒤 피드백을 받습니다. ${offer.practiceCondition} 교육생에게 단독 시공을 맡기는 과정이 아닙니다.`],
         ["5주 동안 모든 수리 기술을 배울 수 있나요?", "모든 기술의 습득이나 모든 공정의 직접 실습을 보장하지 않습니다. 상·하부장, 문짝, 경첩·레일, 슬라이딩 도어, 가죽 리폼, 소파·가구 복원 등은 다룰 수 있는 분야의 예시이며 실제 현장 일정과 안전 조건에 따라 달라집니다."],

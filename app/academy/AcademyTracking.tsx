@@ -20,6 +20,9 @@ export default function AcademyTracking() {
     const onClick = (event: MouseEvent) => {
       const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-academy-proof]") : null;
       if (link) trackAcademy("academy_proof_click", { case_id: link.dataset.academyProof });
+      const businessLink = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-academy-business-proof]") : null;
+      const businessStep = businessLink?.dataset.academyBusinessProof;
+      if (businessStep === "record" || businessStep === "browse" || businessStep === "inquiry") trackAcademy("academy_business_proof_click", { business_step: businessStep });
     };
     document.addEventListener("click", onClick);
     return () => { observer?.disconnect(); document.removeEventListener("click", onClick); };
