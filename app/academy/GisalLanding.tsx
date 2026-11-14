@@ -216,7 +216,42 @@ export default function GisalLanding() {
 
     <section className={cx("belief")}><div className={cx("wrap belief-inner")}><div className={cx("belief-symbol")} aria-hidden="true">↗</div><div><span className={cx("kicker")}>OUR BELIEF</span><h2>기술은 먹고살기 위해.<br />사업은 <span>행복하게 살기 위해.</span></h2><p>혼자 고민하던 기술과 사업의 사이.<br />이번에는 같은 방향을 보는 네 사람이 함께 시작합니다.</p></div><span className={cx("belief-sign")}>기술로 살아남기.</span></div></section>
 
-    <section id="apply" className={cx("enrollment section-light")}><div className={cx("wrap enrollment-grid")}><div className={cx("enrollment-copy")}><span className={cx("kicker")}>03 — YOUR FIRST CHAPTER</span><h2>첫 시작은,<br />딱 <span className={cx("underline-green")}>네 사람</span>과.</h2><p>내 일의 기준을 세우고, 고객에게 나를 알리며,<br />내 이름으로 사업하고 싶다면.<br />기술로 살아남기 {offer.cohort}기에서 시작하세요.</p><div className={cx("seat-illustration")} aria-label={`모집 정원 ${offer.seats}명`}>{Array.from({ length: offer.seats }, (_, index) => <span key={index}>{String(index + 1).padStart(2, "0")}</span>)}</div><p className={cx("seats-caption")}>함께 시작할 {offer.cohort}기 모집 정원 · {offer.seats}명</p></div><div className={cx("enrollment-ticket")}><div className={cx("ticket-top")}><span><span className={cx("status-dot")}></span> {offer.cohort}기 모집 중</span><b>FIRST CLASS</b></div><div className={cx("ticket-body")}><p className={cx("ticket-label")}>기본 과정 · 사업 교육 + 현장 기술 교육</p><h3>기술로 살아남기</h3><div className={cx("ticket-price")}>{offer.basicPrice}<span>만 원</span></div><p className={cx("ticket-price-caption")}>{offer.cohort}기 기본 수강료</p><dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>현장 일정 조율 · 조건 별도 안내</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl><ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>수료 후 요청형 추가 기술 교육 · 세부 조건 확인 필요</li></ul><EnrollButton location="basic" className={cx("button button-green")} /><p className={cx("ticket-note")}>현재 상황과 창업 목표를 듣고, 과정 적합도와 시작 방향을 함께 확인합니다. 교육 장소·세부 시간표·결제 및 환불 조건은 확인 후 안내합니다.</p></div></div></div></section>
+    <section id="apply" className={cx("enrollment section-light")}>
+      <div className={cx("wrap enrollment-grid")}>
+        <div className={cx("enrollment-copy")}>
+          <span className={cx("kicker")}>03 — YOUR FIRST CHAPTER</span>
+          <h2>첫 시작은,<br />딱 <span className={cx("underline-green")}>네 사람</span>과.</h2>
+          <p>내 일의 기준을 세우고, 고객에게 나를 알리며,<br />내 이름으로 사업하고 싶다면.<br />기술로 살아남기 {offer.cohort}기에서 시작하세요.</p>
+          <div className={cx("seat-illustration")} aria-label={`모집 정원 ${offer.seats}명`}>{Array.from({ length: offer.seats }, (_, index) => <span key={index}>{String(index + 1).padStart(2, "0")}</span>)}</div>
+          <p className={cx("seats-caption")}>함께 시작할 {offer.cohort}기 모집 정원 · {offer.seats}명</p>
+          <div id="plan-comparison" className={cx("plan-comparison")}>
+            <table>
+              <caption>두 과정, 이렇게 다릅니다.</caption>
+              <thead><tr><th scope="col">구성</th><th scope="col">기본 과정<strong>{offer.basicPrice}만 원</strong></th><th scope="col">{offer.setupName}<strong>{offer.setupPrice}만 원</strong></th></tr></thead>
+              <tbody>
+                <tr><th scope="row">사업·현장 교육</th><td>{offer.weeks}주 사업 교육<br />{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</td><td>기본 과정의<br />교육 모두 포함</td></tr>
+                <tr><th scope="row">사이트·채널 준비</th><td>제작·운영 방법을 배우며<br /><strong>직접 구축</strong></td><td>제작·운영 학습에<br /><strong>초기 셋업 지원 추가</strong></td></tr>
+                <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>사이트를 포함한 8개 채널의 초기 구축 지원도 받고 싶은 분</td></tr>
+              </tbody>
+            </table>
+            <p>{offer.setupName}는 기본 과정을 포함한 {offer.setupPrice}만 원입니다.</p>
+            <a href="#premium">8개 채널 셋업 구성 보기 <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <div className={cx("enrollment-ticket")}>
+          <div className={cx("ticket-top")}><span><span className={cx("status-dot")}></span> {offer.cohort}기 모집 중</span><b>FIRST CLASS</b></div>
+          <div className={cx("ticket-body")}>
+            <p className={cx("ticket-label")}>기본 과정 · 사업 교육 + 현장 기술 교육</p><h3>기술로 살아남기</h3>
+            <div className={cx("ticket-price")}>{offer.basicPrice}<span>만 원</span></div><p className={cx("ticket-price-caption")}>{offer.cohort}기 기본 수강료</p>
+            <dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>현장 일정 조율 · 조건 별도 안내</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl>
+            <ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>수료 후 요청형 추가 기술 교육 · 세부 조건 확인 필요</li></ul>
+            <p className={cx("plan-consult-note")}>{offer.selectionGuidance}</p>
+            <EnrollButton location="basic" className={cx("button button-green")} />
+            <p className={cx("ticket-note")}>교육 장소·세부 시간표·결제 및 환불 조건은 확인 후 안내합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section id="premium" className={cx("premium section-light")} aria-labelledby="premium-title">
       <div className={cx("wrap enrollment-grid")}>
@@ -245,6 +280,7 @@ export default function GisalLanding() {
               {offer.setupChannels.map(channel => <div key={channel.name}><dt>{channel.name}</dt><dd>{channel.scope}</dd></div>)}
             </dl>
             <p className={cx("premium-conditions")}>{offer.setupNote}</p>
+            <p className={cx("plan-consult-note")}>{offer.selectionGuidance}</p>
             <EnrollButton location="premium" className={cx("button button-green")} />
           </div>
         </div>
@@ -268,7 +304,7 @@ export default function GisalLanding() {
     </div></div></section>
   </main>
   <footer><div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div></footer>
-  <div className={cx("mobile-apply")}><div><small>{offer.cohort}기 기본 수강료</small><strong>{offer.basicPrice}만 원</strong></div><EnrollButton location="mobile" className={cx("button button-green")} /></div>
+  <div className={cx("mobile-apply")}><EnrollButton location="mobile" label="나에게 맞는 과정 찾기" className={cx("button button-green")} /><p className={cx("mobile-consult-note")}>무료 1:1 창업 진단 · 과정 선택 전에도 신청할 수 있습니다.</p></div>
 
 
   </EnrollmentProvider>;

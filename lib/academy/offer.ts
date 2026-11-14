@@ -11,6 +11,7 @@ export const ACADEMY_OFFER = {
   setupPrice: 990,
   consultHref: "/academy/consult",
   ctaLabel: "무료 1:1 창업 진단받기",
+  selectionGuidance: "어떤 과정이 맞을지 아직 정하지 않아도 괜찮습니다. 현재 상황을 듣고, 기본 교육과 초기 셋업 지원 중 필요한 구성을 함께 살펴봅니다.",
   applicantTitle: "사업의 본질에 갈증이 있는 분을 찾습니다.",
   applicantMindset: "스스로 생각하고 직접 실행하며, 시행착오와 피드백을 감수할 준비가 된 분과 함께합니다.",
   consultationTopics: ["지금의 경험과 창업 준비 상태", "고객을 만나고 사업을 운영하며 막막한 부분", "사업 교육·현장 실습과 내 상황의 적합도"],

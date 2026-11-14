@@ -89,7 +89,7 @@ export default function ConsultationForm() {
       <ol className={styles.progress} aria-label="신청 진행 단계">{steps.map((label, index) => <li key={label} aria-current={index === step ? "step" : undefined} data-active={index <= step}><span>{index < step ? "✓" : `0${index + 1}`}</span>{label}</li>)}</ol>
       <p className={styles.eyebrow}>{step + 1} / 3 · {steps[step]}</p>
       <h1 ref={heading} tabIndex={-1}>{step === 0 ? <>내 이름으로 사업하는 일,<br /><em>어디서 시작할지</em> 함께 살펴봐요.</> : step === 1 ? "지금의 상황과 경험을 알려주세요." : "연락받으실 정보를 알려주세요."}</h1>
-      <p className={styles.intro}>{step === 0 ? "현재의 고민을 듣고, 이 과정이 내 사업 준비에 맞는지 함께 살펴보는 상담입니다." : step === 1 ? "각 질문에서 가장 가까운 항목을 하나씩 선택해주세요. 기술과 마케팅이 모두 처음이어도 괜찮습니다." : "알려주신 시간대에 연락드려 상담 일정을 조율합니다. 이름·전화번호·지역·나이·통화 시간과 동의는 필수이며, 이메일과 메시지는 선택입니다."}</p>
+      <p className={styles.intro}>{step === 0 ? offer.selectionGuidance : step === 1 ? "각 질문에서 가장 가까운 항목을 하나씩 선택해주세요. 기술과 마케팅이 모두 처음이어도 괜찮습니다." : "알려주신 시간대에 연락드려 상담 일정을 조율합니다. 이름·전화번호·지역·나이·통화 시간과 동의는 필수이며, 이메일과 메시지는 선택입니다."}</p>
       {step === 0 && <>
         <div className={styles.consultPurpose}>
           <h2>진단에서 함께 살펴볼 내용</h2>

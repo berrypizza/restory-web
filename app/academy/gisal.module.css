@@ -207,6 +207,35 @@
 @media(max-width:760px){.page .header{height:auto}.page .nav{height:auto;min-height:69px;padding-top:15px;padding-bottom:15px;flex-wrap:wrap}.page .nav-cta{margin-left:auto;font-size:12px;padding:12px 14px;gap:12px}.page .mobile-apply .button{font-size:12px;padding:13px 12px;gap:10px}}
 @media(max-width:430px){.page .nav-cta{width:100%;justify-content:space-between}.page .mobile-apply{gap:10px;padding-left:14px;padding-right:14px}.page .mobile-apply strong{font-size:16px}.page .mobile-apply .button{flex:1;justify-content:space-between}}
 
+/* Compare the confirmed courses next to the enrollment price. */
+.page .plan-comparison{margin-top:28px;min-width:0}
+.page .plan-comparison table{width:100%;border-collapse:collapse;table-layout:fixed;text-align:left;font-size:12px;line-height:1.8}
+.page .plan-comparison caption{text-align:left;font-size:19px;font-weight:800;line-height:1.5;margin-bottom:16px}
+.page .plan-comparison th,.page .plan-comparison td{padding:14px 11px;border-bottom:1px solid #d4d9c9;vertical-align:top;overflow-wrap:anywhere}
+.page .plan-comparison th:first-child{width:22%;padding-left:0}
+.page .plan-comparison thead th{font-size:12px;color:#4d5947;border-top:1px solid #9fae90}
+.page .plan-comparison thead strong{display:block;font-size:20px;color:var(--ink);margin-top:7px}
+.page .plan-comparison th:last-child,.page .plan-comparison td:last-child{background:#e9f2dc}
+.page .plan-comparison tbody th{font-weight:700;color:#4d5947}
+.page .plan-comparison td{color:#4d5947}
+.page .plan-comparison td strong{color:var(--ink)}
+.page .plan-comparison>p{margin:14px 0 0;font-size:11px;line-height:1.8;color:#69755e}
+.page .plan-comparison>a{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+.page .plan-consult-note{margin:22px 0 14px;font-size:13px;line-height:1.85;color:#4d5947}
+.page .premium-care .plan-consult-note{padding-top:20px;border-top:1px solid #35472b;color:#d4dfca}
+.page .plan-consult-note+.button{margin-top:8px}
+@media(max-width:760px){
+ .page .plan-comparison table{font-size:11px}
+ .page .plan-comparison th,.page .plan-comparison td{padding:12px 8px}
+ .page .plan-comparison th:first-child{width:23%}
+ .page .plan-comparison caption{font-size:18px}
+ .page .plan-comparison thead th{font-size:11px}
+ .page .plan-comparison thead strong{font-size:18px}
+ .page .mobile-apply{flex-direction:column;gap:7px}
+ .page .mobile-apply .button{width:100%;max-width:none;flex:none;justify-content:center;font-size:14px}
+ .page .mobile-consult-note{margin:0;color:#b6c4ab;font-size:10px;line-height:1.5;text-align:center}
+}
+
 /* Start setup package: keep the existing premium anchor and visual style. */
 .page .premium{padding:0 0 75px}
 .page .premium-card{min-width:0;padding:30px;background:#10180f;color:var(--paper);border:1px solid #34482a;box-shadow:7px 7px 0 #e0e5d7}
