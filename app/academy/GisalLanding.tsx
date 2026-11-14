@@ -221,22 +221,30 @@ export default function GisalLanding() {
     <section id="premium" className={cx("premium section-light")} aria-labelledby="premium-title">
       <div className={cx("wrap enrollment-grid")}>
         <div className={cx("premium-offer")}>
-          <span className={cx("premium-label")}>PREMIUM</span>
-          <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>Premium.</span></h2>
-          <p className={cx("premium-intro")}>{offer.premiumDescription}</p>
+          <span className={cx("premium-label")}>START SETUP PACKAGE</span>
+          <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>{offer.setupName}</span></h2>
+          <p className={cx("premium-intro")}>{offer.setupDescription}</p>
+          <ol className={cx("setup-steps")} aria-label="사업 교육에서 셋업으로 이어지는 과정">
+            <li><span>01</span><div><strong>내 사업의 방향을 정리하고</strong><p>누구의 어떤 문제를 해결할지, 내 서비스의 가치를 정리합니다.</p></div></li>
+            <li><span>02</span><div><strong>고객이 만날 접점을 만들고</strong><p>사이트와 채널에 소개·사례·문의 방법을 담습니다.</p></div></li>
+            <li><span>03</span><div><strong>내가 직접 운영할 수 있도록</strong><p>초기 설정과 함께 각 채널을 운영하는 방법을 익힙니다.</p></div></li>
+          </ol>
         </div>
         <div className={cx("premium-card")}>
           <div className={cx("premium-price-block")}>
-            <span className={cx("premium-price-label")}>PREMIUM · 기본 과정 + 밀착 지원</span>
-
-            <p className={cx("premium-price")} aria-label={`Premium 수강료 ${offer.premiumPrice}만 원`}>{offer.premiumPrice}<span>만 원</span></p>
-            <p className={cx("premium-sale-label")}>Premium 수강료</p>
+            <span className={cx("premium-price-label")}>기본 과정 포함 · 사이트 + 채널 초기 셋업</span>
+            <p className={cx("premium-price")} aria-label={`${offer.setupName} 수강료 ${offer.setupPrice}만 원`}>{offer.setupPrice}<span>만 원</span></p>
+            <p className={cx("premium-sale-label")}>{offer.setupName} 수강료</p>
           </div>
           <div className={cx("premium-care")}>
-            <span className={cx("premium-care-label")}>Premium 과정 구성</span>
-            <h3>기본 과정에 더하는<br /><span>밀착 지원·케어.</span></h3>
-            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>밀착 지원·케어</li></ul>
-            <p className={cx("premium-conditions")}>{offer.premiumCondition}</p>
+            <span className={cx("premium-care-label")}>사업 교육을 실제 시작으로 연결합니다</span>
+            <h3>내 서비스를 알리고,<br /><span>문의받을 준비까지.</span></h3>
+            <ul className={cx("premium-inclusions")} aria-label="포함된 기본 교육"><li>{offer.weeks}주 사업 교육</li><li>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</li></ul>
+            <p>{offer.setupApproach}</p>
+            <dl className={cx("setup-channels")} aria-label="초기 셋업하는 8개 채널">
+              {offer.setupChannels.map(channel => <div key={channel.name}><dt>{channel.name}</dt><dd>{channel.scope}</dd></div>)}
+            </dl>
+            <p className={cx("premium-conditions")}>{offer.setupNote}</p>
             <EnrollButton location="premium" className={cx("button button-green")} />
           </div>
         </div>
@@ -251,9 +259,10 @@ export default function GisalLanding() {
         ["5주 동안 모든 수리 기술을 배울 수 있나요?", "모든 기술의 습득이나 모든 공정의 직접 실습을 보장하지 않습니다. 상·하부장, 문짝, 경첩·레일, 슬라이딩 도어, 가죽 리폼, 소파·가구 복원 등은 다룰 수 있는 분야의 예시이며 실제 현장 일정과 안전 조건에 따라 달라집니다."],
         ["사업 교육이 중심인가요? 기술 수업과 어떻게 병행하나요?", `네. 기술로 자기 사업을 준비하도록 사업자의 생각과 원칙, 브랜딩·마케팅·운영을 중심으로 배웁니다. ${offer.weeks}주 사업 교육과 ${offer.weeks}주간 주 ${offer.fieldSessionsPerWeek}회 현장 기술 교육을 병행합니다. 사업 교육은 몰입 환경 → 신념·사명·원칙 → 브랜딩 → 퍼널 마케팅 → 바이브 코딩 사업 사이트 순서입니다. 기술 교육은 실제 현장에서 진행하며 세부 요일·시간과 장소는 확인 후 안내합니다.`],
         ["언제 시작하고, 몇 명이 함께하나요?", `${offer.startDate} 개강 예정이며 ${offer.cohort}기 정원은 ${offer.seats}명입니다. 사업 과정은 ${offer.weeks}주입니다.`],
-        ["수료 후 어떤 지원을 받나요?", `${offer.followUp} Premium은 ${offer.premiumDescription} ${offer.premiumCondition}`],
-        ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, Premium은 ${offer.premiumPrice}만 원입니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·추가 비용·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
-        ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", "기본 과정과 Premium 모두 독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다."],
+        [`${offer.setupName}는 기본 과정과 무엇이 다른가요?`, `${offer.setupDescription} ${offer.setupChannels.map(channel => channel.name).join("·")}의 초기 셋업이 포함됩니다. ${offer.setupApproach} ${offer.setupNote}`],
+        ["수료 후 어떤 지원을 받나요?", offer.followUp],
+        ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, ${offer.setupName}는 기본 과정을 포함해 ${offer.setupPrice}만 원입니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·추가 비용·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
+        ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", `기본 과정과 ${offer.setupName} 모두 독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다.`],
         ["교육장 위치와 실제 방문 가능 지역은 어디인가요?", "교육장 주소와 현장 방문 가능 지역, 이동 방식 및 비용은 확인 후 안내합니다. 상담에서 거주 지역과 참여 가능한 시간을 알려주시면 일정 조율에 참고합니다."],
       ].map(([question, answer]) => <details key={question}><summary>{question}<span className={cx("expand")} aria-hidden="true"></span></summary><p>{answer}</p></details>)}
     </div></div></section>
