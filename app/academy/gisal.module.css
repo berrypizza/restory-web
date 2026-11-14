@@ -269,6 +269,7 @@
 .page .dual-track>div:last-child{border-color:#789e42}.page .dual-track span{font-size:11px;color:var(--green);letter-spacing:.5px}.page .dual-track h3{font-size:21px;line-height:1.5;margin:15px 0}.page .dual-track p{font-size:14px;line-height:1.9;color:#b4c0ae}.page .dual-track a{display:inline-block;margin-top:14px;color:var(--green);font-size:12px;text-decoration:underline}
 .page .offer-inclusions{padding:0 0 0 18px;margin:22px 0;font-size:13px;line-height:1.9;color:#4d5947}
 .page .premium-care .premium-conditions{margin-top:18px;border-left:3px solid #6a892c;padding-left:16px;font-size:13px;line-height:1.9}
+.page .premium-care .premium-conditions+.button{margin-top:22px}
 .page .field-support-closing{max-width:760px;margin-inline:auto}
 @media(min-width:761px) and (max-width:1100px){.page .hero-copy>h1{font-size:40px;max-width:500px}.page .hero-team{right:-65px;bottom:165px;width:52%;opacity:.8}.page .hero-desc{font-size:14px}.page .practice-note{max-width:390px}.page .method-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){
@@ -305,11 +306,27 @@
 .page .business-proof-grid a{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:auto;padding-top:16px;border-top:1px solid #3b4c30;font-size:13px;color:var(--green);line-height:1.6}
 .page .business-proof-grid a:hover{text-decoration:underline;text-underline-offset:4px}
 .page .business-proof-note{font-size:12px;line-height:1.8;color:#a6b29b}
+.page .business-case{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;margin-top:32px;padding:24px;border:1px solid #3b4c30;border-radius:5px;background:#141e11}
+.page .business-case-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
+.page .business-case-photos figure{margin:0;min-width:0}
+.page .business-case-photos img{width:100%;height:auto;display:block;border-radius:3px}
+.page .business-case-photos figcaption{margin-top:8px;font-size:12px;color:#b9c6b0}
+.page .business-case-copy{min-width:0}
+.page .business-case-copy h3{font-size:24px;line-height:1.5;letter-spacing:-.6px;margin:12px 0}
+.page .business-case-copy p{color:#b9c6b0;font-size:13px;line-height:1.9}
+.page .business-case-copy a,.page .business-proof-links a{display:inline-flex;gap:14px;color:var(--green);font-size:13px;line-height:1.7;padding-block:10px;text-underline-offset:4px}
+.page .business-case-copy a{margin-top:8px}
+.page .business-case-copy a:hover,.page .business-proof-links a:hover{text-decoration:underline}
+.page .business-proof-grid .business-lesson-question{margin:auto 0 0;padding-top:16px;border-top:1px solid #3b4c30;color:#d7e2cc}
+.page .business-lesson-question strong{display:block;color:var(--green);font-size:12px;margin-bottom:8px}
+.page .business-lesson-summary{max-width:820px;color:#d0dac6;font-size:14px;line-height:1.9}
+.page .business-proof-links{display:flex;flex-wrap:wrap;gap:4px 28px;margin:14px 0}
 @media(max-width:760px){
  .page .fit-list{font-size:13px;line-height:1.8;padding-left:18px}
  .page .consult-bridge{padding:24px 20px}.page .consult-bridge h3{font-size:21px}.page .consult-bridge>p{font-size:13px}.page .consult-bridge .consult-bridge-note{font-size:11px}.page .consult-bridge .button{font-size:13px;padding-inline:18px}
  .page .business-proof{padding:50px 0}.page .business-proof h2{font-size:27px;letter-spacing:-1px}
  .page .business-proof-grid{grid-template-columns:1fr;gap:12px;margin-top:26px}.page .business-proof-grid>li{padding:22px}.page .business-proof-grid h3{font-size:20px;margin-top:12px}.page .business-proof-grid p{margin-bottom:18px}.page .business-proof-note{font-size:11px}
+ .page .business-case{grid-template-columns:1fr;gap:22px;padding:20px;margin-top:26px}.page .business-case-copy h3{font-size:21px}.page .business-case-photos figcaption{font-size:11px}.page .business-lesson-summary{font-size:13px}
 }
 .page .hero-consult-note{max-width:510px;margin-top:15px;color:#c1cdb8;font-size:12px;line-height:1.8}
 .page .audience-fit{margin-top:34px;padding-top:30px;border-top:1px solid #34432a;text-align:left}

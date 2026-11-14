@@ -14,6 +14,7 @@ const proofTopics: Record<string, { title: string; question: string }> = {
   "case-101": { title: "소파 꺼짐 복원", question: "꺼짐의 원인에 따라 밴드와 쿠션을 어떻게 보강할까요?" },
 };
 const proofCases = cases.filter(item => Object.hasOwn(proofTopics, item.id));
+const businessCase = cases.find(item => item.id === "case-115");
 
 function cx(names: string) { return names.split(" ").map(name => styles[name]).join(" "); }
 
@@ -81,28 +82,42 @@ export default function GisalLanding() {
       <div className={cx("wrap")}>
         <span className={cx("kicker")}>리스토리의 실제 사업 운영</span>
         <h2 id="business-proof-title">작업을 알리고, 선택을 돕고,<br /><span className={cx("green")}>문의할 길을 만듭니다.</span></h2>
-        <p className={cx("section-intro")}>리스토리가 공개한 실제 사이트에서 고객을 만나는 방식을 확인해 보세요.<br />기살에서는 이런 운영 경험을 바탕으로 브랜딩·마케팅과 내 사업 사이트를 배웁니다.</p>
+        <p className={cx("section-intro")}>시공 사례 한 편에도 고객의 문제, 작업을 선택한 이유, 문의 방법이 담겨 있습니다.<br />실제 붙박이 소파 천갈이 사례로 사업 교육의 관점을 살펴보세요.</p>
+        {businessCase && <div className={cx("business-case")}>
+          <div className={cx("business-case-photos")}>
+            <figure><Image src={businessCase.beforeImg} alt="천갈이 전, 앞쪽 인조가죽이 찢어진 매장 붙박이 소파" width={1800} height={1200} sizes="(max-width: 760px) 45vw, 260px" /><figcaption>실제 시공 전</figcaption></figure>
+            <figure><Image src={businessCase.afterImg} alt="천갈이 후, 기존 구조를 살려 새 인조가죽으로 마감한 붙박이 소파" width={1800} height={1200} sizes="(max-width: 760px) 45vw, 260px" /><figcaption>실제 시공 후</figcaption></figure>
+          </div>
+          <div className={cx("business-case-copy")}>
+            <span className={cx("business-proof-number")}>사업 교육 예시 · 인천 계양구 매장</span>
+            <h3>소파를 고친 일을,<br />고객이 이해할 수 있는 제안으로.</h3>
+            <p>{businessCase.summary}</p>
+            <Link href={`/cases/${businessCase.id}`} target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="record">실제 사례 전체 읽기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+          </div>
+        </div>}
         <ol className={cx("business-proof-grid")}>
           <li>
-            <span className={cx("business-proof-number")}>01 · 기록</span>
-            <h3>작업을 고객의 언어로 남기기</h3>
-            <p>붙박이 소파 천갈이 사례에 손상 상태와 작업 내용을 사진·글로 정리했습니다. 고객이 무엇을 맡길 수 있는지 살펴볼 수 있습니다.</p>
-            <Link href="/cases/case-115" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="record">실제 사례 글 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+            <span className={cx("business-proof-number")}>01 · 고객 이해</span>
+            <h3>어떤 고객의 문제를 해결하나요?</h3>
+            <p>이 사례는 매장 좌방석 앞쪽이 찢어져 내부 충전재가 보이는 상황에서 시작합니다. 기술의 이름을 나열하기 전에 고객이 겪는 구체적인 문제를 봅니다.</p>
+            <p className={cx("business-lesson-question")}><strong>직접 생각해 보기</strong>내가 만나려는 고객은 누구이고, 어떤 불편을 해결할 수 있을까요?</p>
           </li>
           <li>
-            <span className={cx("business-proof-number")}>02 · 탐색</span>
-            <h3>내 문제와 비슷한 작업 찾기</h3>
-            <p>시공 사례를 수리 분야별로 나눠 보여줍니다. 고객은 자기 가구의 문제와 비슷한 사례를 찾아 서비스의 범위를 확인할 수 있습니다.</p>
-            <Link href="/cases" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="browse">실제 사례 목록 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+            <span className={cx("business-proof-number")}>02 · 가치 설명</span>
+            <h3>왜 이 작업을 제안했을까요?</h3>
+            <p>좌방석과 하부 상태를 확인한 뒤, 기존 구조를 살려 새 인조가죽으로 마감했습니다. 무엇을 고치는지와 그 판단의 근거를 함께 설명합니다.</p>
+            <p className={cx("business-lesson-question")}><strong>직접 생각해 보기</strong>고객이 내 서비스를 선택할 이유를 어떤 근거로 설명할 수 있을까요?</p>
           </li>
           <li>
-            <span className={cx("business-proof-number")}>03 · 문의</span>
-            <h3>관심에서 문의로 이어가기</h3>
-            <p>서비스 소개와 사례 페이지에 전화·카카오 문의 버튼을 배치했습니다. 작업을 살펴본 고객이 다음 행동을 선택할 수 있도록 연결합니다.</p>
-            <Link href="/" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="inquiry">실제 서비스 페이지 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link>
+            <span className={cx("business-proof-number")}>03 · 문의 설계</span>
+            <h3>고객의 다음 행동은 무엇인가요?</h3>
+            <p>사례 글 끝에는 전체 사진 1장과 손상 부위 가까운 사진 1장을 보내 달라고 안내합니다. 관심을 가진 고객이 무엇을 준비해 문의하면 되는지 구체적으로 보여줍니다.</p>
+            <p className={cx("business-lesson-question")}><strong>직접 생각해 보기</strong>내 서비스에 문의하기 전, 고객에게 어떤 정보를 요청해야 할까요?</p>
           </li>
         </ol>
-        <p className={cx("business-proof-note")}>강사의 실제 서비스 운영 사례입니다. 교육생 성과나 특정 문의·매출 증가를 의미하지 않습니다.</p>
+        <p className={cx("business-lesson-summary")}>이처럼 고객을 이해하고, 서비스의 가치를 설명하고, 문의로 이어지는 흐름을 생각합니다. 브랜딩·퍼널 마케팅·사업 사이트 교육을 실제 운영과 연결하는 관점입니다.</p>
+        <div className={cx("business-proof-links")}><Link href="/cases" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="browse">다른 실제 사례 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link><Link href="/" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="inquiry">서비스의 문의 동선 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link></div>
+        <p className={cx("business-proof-note")}>공개된 강사의 시공 사례를 사업 관점으로 읽는 해설 예시입니다. 사진은 교육생 실습 장면이 아니며, 교육생 성과나 특정 문의·매출 증가를 의미하지 않습니다.</p>
       </div>
     </section>
 
@@ -208,7 +223,7 @@ export default function GisalLanding() {
         <div className={cx("premium-offer")}>
           <span className={cx("premium-label")}>PREMIUM</span>
           <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>Premium.</span></h2>
-          <p className={cx("premium-intro")}>기본 과정에 밀착 지원·케어를 더한 과정</p>
+          <p className={cx("premium-intro")}>{offer.premiumDescription}</p>
         </div>
         <div className={cx("premium-card")}>
           <div className={cx("premium-price-block")}>
@@ -218,10 +233,10 @@ export default function GisalLanding() {
             <p className={cx("premium-sale-label")}>Premium 수강료</p>
           </div>
           <div className={cx("premium-care")}>
-            <span className={cx("premium-care-label")}>지원 목표 · 세부 조건 확인 필요</span>
-            <h3>사업의 다음 단계도,<br /><span>밀착 지원·케어.</span></h3>
-            <p>{offer.premiumGoal}</p><p className={cx("premium-conditions")}>{offer.premiumCondition}</p>
-            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>밀착 지원·케어</li><li>지원 범위·기간·기준은 계약 전 확인</li></ul>
+            <span className={cx("premium-care-label")}>Premium 과정 구성</span>
+            <h3>기본 과정에 더하는<br /><span>밀착 지원·케어.</span></h3>
+            <ul className={cx("premium-inclusions")} aria-label="Premium 과정 구성"><li>기본 과정 포함</li><li>밀착 지원·케어</li></ul>
+            <p className={cx("premium-conditions")}>{offer.premiumCondition}</p>
             <EnrollButton location="premium" className={cx("button button-green")} />
           </div>
         </div>
@@ -236,9 +251,9 @@ export default function GisalLanding() {
         ["5주 동안 모든 수리 기술을 배울 수 있나요?", "모든 기술의 습득이나 모든 공정의 직접 실습을 보장하지 않습니다. 상·하부장, 문짝, 경첩·레일, 슬라이딩 도어, 가죽 리폼, 소파·가구 복원 등은 다룰 수 있는 분야의 예시이며 실제 현장 일정과 안전 조건에 따라 달라집니다."],
         ["사업 교육이 중심인가요? 기술 수업과 어떻게 병행하나요?", `네. 기술로 자기 사업을 준비하도록 사업자의 생각과 원칙, 브랜딩·마케팅·운영을 중심으로 배웁니다. ${offer.weeks}주 사업 교육과 ${offer.weeks}주간 주 ${offer.fieldSessionsPerWeek}회 현장 기술 교육을 병행합니다. 사업 교육은 몰입 환경 → 신념·사명·원칙 → 브랜딩 → 퍼널 마케팅 → 바이브 코딩 사업 사이트 순서입니다. 기술 교육은 실제 현장에서 진행하며 세부 요일·시간과 장소는 확인 후 안내합니다.`],
         ["언제 시작하고, 몇 명이 함께하나요?", `${offer.startDate} 개강 예정이며 ${offer.cohort}기 정원은 ${offer.seats}명입니다. 사업 과정은 ${offer.weeks}주입니다.`],
-        ["수료 후 어떤 지원을 받나요?", `${offer.followUp} Premium은 기본 과정에 밀착 지원·케어를 더합니다. ${offer.premiumGoal} ${offer.premiumCondition}`],
+        ["수료 후 어떤 지원을 받나요?", `${offer.followUp} Premium은 ${offer.premiumDescription} ${offer.premiumCondition}`],
         ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, Premium은 ${offer.premiumPrice}만 원입니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·추가 비용·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
-        ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", "독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다. Premium의 지원 목표도 매출 보증을 뜻하지 않습니다."],
+        ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", "기본 과정과 Premium 모두 독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다."],
         ["교육장 위치와 실제 방문 가능 지역은 어디인가요?", "교육장 주소와 현장 방문 가능 지역, 이동 방식 및 비용은 확인 후 안내합니다. 상담에서 거주 지역과 참여 가능한 시간을 알려주시면 일정 조율에 참고합니다."],
       ].map(([question, answer]) => <details key={question}><summary>{question}<span className={cx("expand")} aria-hidden="true"></span></summary><p>{answer}</p></details>)}
     </div></div></section>
