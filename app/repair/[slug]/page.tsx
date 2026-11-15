@@ -115,7 +115,7 @@ export async function generateMetadata({
       alt: `리스토리 ${kw}`,
     };
   } else if (type === "sangbujang") {
-    desc = `${kw} 전문 리스토리. 상부장 고정 상태를 확인하고 보강·재설치합니다. 실제 시공 사례와 비용·작업 범위, 시공 부위 3년 A/S를 확인하고 사진으로 상담하세요.`;
+    desc = `${kw} 전문 리스토리. 일반 처짐 수리 25만 원(부가세 별도). 추락 파손 추가금 사전 안내, 상담 후 금액 변경 없음, 수리 불가 시 비용 없음. 실제 시공 사례와 시공 부위 3년 A/S를 확인하세요.`;
     image = {
       url: "/images/hero-sangbujang.webp",
       width: 1080,

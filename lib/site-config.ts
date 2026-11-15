@@ -37,7 +37,7 @@ export const businessLines: BusinessLineConfig[] = [
         title: "싱크대 상부장 처짐 수리",
         shortTitle: "상부장 처짐",
         description:
-          "처진 상부장의 고정 상태를 확인하고 보강·재설치합니다. 사진으로 예상 수리 범위와 비용을 상담하세요.",
+          "처진 상부장을 보강·재설치합니다. 상담 후 금액 변경 없이 진행하며, 수리 불가 시 비용을 받지 않습니다.",
         hero: "처진 상부장,\n다시 단단하게.",
         painPoints: [
           "위에서 떨어질까봐 불안하다",

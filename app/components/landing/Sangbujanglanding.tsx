@@ -33,7 +33,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "상부장 수리 비용과 작업 시간은 어떻게 되나요?",
-    a: "상부장 처짐 수리는 현재 25만 원이며, 일반적인 현장 작업 시간은 약 2시간입니다.\n\n작업에는 상부장을 내린 뒤 고정 상태를 확인하고, 시공목과 약해진 부분을 보강한 후 재설치와 수평 조절을 진행하는 과정이 포함됩니다.\n\n다만 상부장이 전체 추락했거나 장 몸통의 파손이 심해 추가 보강 또는 새 제작이 필요한 경우에는 작업 범위와 비용이 달라질 수 있습니다.",
+    a: "일반적인 상부장 처짐 수리는 25만 원이며, 부가세는 별도입니다. 일반적인 현장 작업 시간은 약 2시간으로, 상태와 작업 범위에 따라 달라질 수 있습니다. 방문일은 상담 후 조율합니다.\n\n작업에는 상부장을 내린 뒤 고정 상태를 확인하고, 시공목과 약해진 부분을 보강한 후 재설치와 수평 조절을 진행하는 과정이 포함됩니다.\n\n추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있으며, 상담 시 미리 안내합니다. 상담에서 확정한 수리 금액은 이후 달라지지 않습니다.",
+  },
+  {
+    q: "상담 후 추가금이 생기거나, 수리가 불가능하면요?",
+    a: "상담에서 확정한 수리 금액은 이후 달라지지 않습니다. 추락으로 파손된 부위에 추가 작업이 필요하다면, 그에 따른 추가금도 상담 시 미리 안내합니다.\n\n수리 불가로 판단된 경우에는 비용을 받지 않습니다.",
   },
   {
     q: "작업 전에 고객이 준비할 것은 무엇인가요?",
@@ -149,20 +153,28 @@ function RegionalCaseItemListJsonLd({
   );
 }
 
-function ContactButtons({ dark = false }: { dark?: boolean }) {
+function ContactButtons({
+  dark = false,
+  compact = false,
+}: {
+  dark?: boolean;
+  compact?: boolean;
+}) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div
+      className={`flex flex-col lg:flex-row lg:gap-3 ${compact ? "gap-0" : "gap-3"}`}
+    >
       <a
         href={KAKAO_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="flex min-h-14 items-center justify-center rounded-2xl bg-[#FEE500] px-5 py-4 text-[15px] font-black text-neutral-900"
       >
-        카카오로 사진 보내기
+        카카오로 수리 범위·비용 확인
       </a>
       <a
         href={PHONE}
-        className={`flex min-h-14 items-center justify-center rounded-2xl border px-5 py-4 text-[15px] font-bold ${dark ? "border-white/20 bg-white/10 text-white" : "border-neutral-200 bg-white text-neutral-800"}`}
+        className={`flex items-center justify-center font-bold ${compact ? "min-h-11 px-4 py-2 text-[13px] underline underline-offset-4" : "min-h-14 rounded-2xl border px-5 py-4 text-[15px]"} ${dark ? (compact ? "text-white/80" : "border-white/20 bg-white/10 text-white") : "border-neutral-200 bg-white text-neutral-800"}`}
       >
         전화 문의
       </a>
@@ -202,7 +214,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
     >
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상부장 수리` : "싱크대 상부장 수리"}
-        description="처진 상부장의 고정 상태를 확인하고 필요한 부분을 보강해 재설치합니다. 사진으로 예상 수리 범위와 비용을 먼저 안내하며, 정확한 범위는 현장에서 확인합니다."
+        description="처진 상부장의 고정 상태를 확인하고 보강·재설치합니다. 일반 처짐 수리 25만 원, 부가세 별도. 추락 파손 추가금은 상담 시 사전 안내하며, 상담 후 금액 변경과 수리 불가 시 비용은 없습니다."
         url={`${SITE_URL}/repair/${keyword || "sangbujang"}`}
         includeAggregateRating={false}
       />
@@ -225,9 +237,9 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a1628]" />
         </div>
         <div className="relative mx-auto flex max-w-7xl flex-col md:min-h-[760px] md:flex-row">
-          <div className="relative z-10 flex flex-col justify-center px-6 pb-12 pt-16 md:w-[54%] md:px-14 md:py-24">
+          <div className="relative z-10 flex flex-col justify-center px-5 pb-8 pt-7 md:w-[54%] md:px-10 md:py-14 lg:px-14">
             <FadeIn>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5">
                 <Image
                   src="/images/logo.png"
                   alt="리스토리"
@@ -242,43 +254,74 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                 </span>
               </div>
               <h1
-                className="mb-5 whitespace-pre-line font-black leading-[1.18] tracking-tight text-white"
-                style={{ fontSize: "clamp(2.15rem, 4.5vw, 3.7rem)" }}
+                className="mb-3 whitespace-pre-line font-black leading-[1.18] tracking-tight text-white"
+                style={{ fontSize: "clamp(2.05rem, 4.5vw, 3.7rem)" }}
               >
                 {region
                   ? `${region} 상부장 ${symptom}\n다시 단단하게`
                   : "처진 상부장,\n다시 단단하게"}
               </h1>
-              <p className="max-w-md text-[16px] leading-[1.85] text-white/75">
-                장을 내리고, 약해진 고정부를 보강하고,
-                <br className="hidden sm:block" /> 수평과 문짝 닫힘까지 다시
-                맞춥니다.
-              </p>
-              <p className="mt-3 max-w-md text-[13px] leading-[1.8] text-white/55">
-                기존 장을 살릴 수 있는 상태인지 먼저 확인합니다.
+              <p className="max-w-md text-[14px] leading-[1.75] text-white/80 md:text-[16px]">
+                살릴 수 있는 상부장은 보강·재설치로,
                 <br />
-                몸통 파손이나 물먹음이 심하면 교체가 필요할 수 있습니다.
+                수평과 문짝 닫힘까지 맞춥니다.
               </p>
-              <div className="my-7 grid grid-cols-3 gap-3 border-y border-white/15 py-4">
-                {[
-                  { title: "고정 상태", sub: "처짐 원인 확인" },
-                  { title: "보강·재설치", sub: "필요한 부분 수리" },
-                  { title: "수평·문짝", sub: "마무리 상태 확인" },
-                ].map((item) => (
-                  <div key={item.title}>
-                    <p className="text-[14px] font-black text-white">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-[11px] text-white/60">{item.sub}</p>
-                  </div>
-                ))}
+              <div className="my-4 overflow-hidden rounded-2xl border border-white/20 bg-[#12213b]/90">
+                <dl className="grid grid-cols-3 divide-x divide-white/15 py-4 text-center">
+                  {[
+                    {
+                      label: "일반 처짐 수리",
+                      value: "25만 원",
+                      note: "부가세 별도",
+                    },
+                    { label: "현장 작업", value: "약 2시간", note: "" },
+                    { label: "보강·고정부 A/S", value: "3년 무상", note: "" },
+                  ].map((item) => (
+                    <div key={item.label} className="px-1">
+                      <dt className="text-[10px] leading-5 text-white/70 sm:text-[11px]">
+                        {item.label}
+                      </dt>
+                      <dd className="mt-1 whitespace-nowrap text-[21px] font-black leading-tight text-white lg:text-[25px]">
+                        {item.value}
+                        {item.note && (
+                          <span className="mt-1 block text-[11px] font-medium text-white/75">
+                            {item.note}
+                          </span>
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="border-t border-white/15 px-3 py-3">
+                  <p className="text-[12px] font-bold leading-[1.7] text-white/90">
+                    분리·고정부 보강·재설치·수평 조절 포함
+                  </p>
+                  <ul className="mt-2 space-y-1 text-[12px] font-bold leading-[1.7] text-blue-200">
+                    <li>
+                      <span aria-hidden="true">✓ </span>상담 후 금액 변경 없음
+                    </li>
+                    <li>
+                      <span aria-hidden="true">✓ </span>수리 불가 시 비용 없음
+                    </li>
+                  </ul>
+                  <p className="mt-2 text-[11px] leading-[1.7] text-white/65">
+                    추락 파손에 따른 추가금은 상담 시 미리 안내합니다.
+                  </p>
+                </div>
               </div>
-              <ContactButtons dark />
-              <p className="mt-4 text-xs leading-[1.8] text-white/60">
-                전체 사진 + 벌어진 부분 사진 + 작업 지역을 보내주세요.
-                <br />
-                예상 수리 범위·비용·방문 가능 일정을 먼저 안내합니다.
+              <p className="mb-3 text-center text-[13px] font-bold leading-[1.7] text-white lg:text-left">
+                사진으로 수리 범위 · 금액 · 방문일 확인
               </p>
+              <ContactButtons dark compact />
+              <p className="mt-2 text-center text-[12px] leading-[1.8] text-white/70 lg:text-left">
+                전체 사진 + 벌어진 부분 사진 + 작업 지역을 보내주세요.
+              </p>
+              <a
+                href="#upper-cost"
+                className="mt-1 inline-flex min-h-11 w-full items-center justify-center text-[12px] font-bold text-blue-200 underline underline-offset-4 lg:w-auto lg:justify-start"
+              >
+                수리 비용·A/S 적용 조건 자세히 보기 →
+              </a>
             </FadeIn>
           </div>
           <div className="relative hidden md:block md:w-[46%]">
@@ -481,8 +524,11 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                   일반적인 상부장 처짐 수리
                 </p>
                 <p className="mt-2 text-4xl font-black">25만 원</p>
-                <p className="mt-3 text-xs leading-[1.8] text-white/60">
-                  전체 추락·몸통 파손 등 추가 작업은 비용이 달라질 수 있습니다.
+                <p className="mt-2 text-sm font-bold text-white/85">
+                  부가세 별도
+                </p>
+                <p className="mt-3 text-xs leading-[1.8] text-white/70">
+                  상담에서 확정한 수리 금액은 이후 달라지지 않습니다.
                 </p>
               </div>
               <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
@@ -507,12 +553,15 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
             </div>
             <div>
               <h3 className="mb-3 text-base font-black">
-                별도 확인이 필요한 경우
+                추락 파손 추가금은 미리 안내합니다
               </h3>
               <p className="text-sm leading-[1.85] text-white/75">
-                전체 추락, 심한 몸통 파손, 물먹음으로 추가 보강이나 새 제작이
-                필요한 경우입니다. 사진으로 예상 범위를 안내하고, 현장 또는 분리
-                후 정확한 작업 범위를 확인합니다.
+                추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있습니다. 추가
+                작업과 금액은 상담 시 미리 안내하며, 상담 후 금액은 변경되지
+                않습니다.
+              </p>
+              <p className="mt-4 text-sm font-black text-blue-200">
+                수리 불가로 판단된 경우에는 비용을 받지 않습니다.
               </p>
             </div>
           </div>
@@ -528,6 +577,14 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               외부 충격·누수·물먹음·기존 판재의 추가 노후화·임의 분해나 변경처럼
               시공과 직접 관련 없는 문제는 제외될 수 있습니다.
             </p>
+            <a
+              href={KAKAO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex min-h-11 items-center text-[13px] font-bold text-[#1a5cff] underline underline-offset-4"
+            >
+              수리한 부위 사진으로 A/S 문의 →
+            </a>
           </div>
         </div>
       </section>
@@ -539,12 +596,45 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               PHOTO CONSULTATION
             </p>
             <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              사진 두 장으로, 수리 범위부터
+              사진을 보내면,
+              <br />세 가지를 안내합니다
             </h2>
-            <p className="mb-7 mt-4 text-sm leading-[1.85] text-neutral-600">
-              어디가 문제인지 정확히 설명하기 어려워도 괜찮습니다. 보이는 상태를
-              사진으로 보내주세요.
+            <dl className="mb-7 mt-6 grid gap-3 md:grid-cols-3">
+              {[
+                {
+                  title: "수리 가능 범위",
+                  desc: "기존 장을 보강할 수 있을지, 몸통 파손까지 확인해야 할지 예상 범위를 짚어드립니다.",
+                },
+                {
+                  title: "상담으로 확정하는 수리비",
+                  desc: "25만 원은 부가세 별도입니다. 추락 파손 추가금은 미리 안내하고, 상담에서 확정한 금액은 이후 달라지지 않습니다.",
+                },
+                {
+                  title: "방문 가능한 일정",
+                  desc: "작업 지역과 증상을 보고 방문 가능한 일정을 안내합니다. 약 2시간은 현장 작업 시간입니다.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-[#dce6fa] bg-[#eef4ff] p-5"
+                >
+                  <dt className="mb-2 text-[15px] font-black text-[#1a5cff]">
+                    {item.title}
+                  </dt>
+                  <dd className="text-[13px] leading-[1.85] text-neutral-700">
+                    {item.desc}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mb-7 text-[13px] leading-[1.85] text-neutral-600">
+              사진으로는 예상 범위를 안내합니다. 내부 파손과 정확한 작업 범위는
+              현장 점검 또는 상부장 분리 후 확인하며, 상담에서 확정한 금액은
+              변경하지 않습니다.
             </p>
+            <h3 className="mb-4 text-lg font-black">
+              사진은 이렇게 보내주세요
+            </h3>
             <ol className="mb-6 space-y-3">
               {[
                 [
@@ -586,8 +676,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
             </p>
             <ContactButtons />
             <p className="mt-4 text-xs leading-[1.8] text-neutral-500">
-              사진 상담 → 예상 범위·비용과 방문 일정 안내 → 현장 확인 →
-              보강·재설치
+              사진 상담 → 수리 금액·방문 일정 확정 → 현장 확인 → 보강·재설치
             </p>
           </FadeIn>
         </div>
@@ -683,13 +772,13 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
             <p className="mb-7 mt-5 text-sm leading-[1.85] text-white/70">
               전체 사진과 벌어진 부분 사진, 작업 지역을 보내주세요.
               <br />
-              예상 수리 범위와 비용, 방문 가능한 일정을 안내합니다.
+              수리 범위를 먼저 살피고, 금액과 방문일을 상담해 확정합니다.
             </p>
             <ContactButtons dark />
           </FadeIn>
         </div>
       </section>
-      <FloatingCTA compactMobile label="사진 보내고 수리 범위 확인" />
+      <FloatingCTA compactMobile label="사진으로 수리 범위·비용 확인" />
     </main>
   );
 }
