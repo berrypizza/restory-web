@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EnrollButton, EnrollmentProvider } from "./EnrollmentDialog";
 import FieldVideo from "./FieldVideo";
 import AcademyTracking from "./AcademyTracking";
+import MobileConsultBar from "./MobileConsultBar";
 import { ACADEMY_OFFER as offer } from "@/lib/academy/offer";
 import { cases } from "@/lib/case-data";
 import styles from "./gisal.module.css";
@@ -40,7 +41,7 @@ export default function GisalLanding() {
     </div>
   </header>
   <main id="main">
-    <section className={cx("hero")} aria-labelledby="hero-title">
+    <section id="academy-hero" className={cx("hero")} aria-labelledby="hero-title">
       <div className={cx("hero-photo")} aria-hidden="true"></div>
       <div className={cx("hero-shade")} aria-hidden="true"></div>
       <div className={cx("wrap hero-inner")}>
@@ -374,7 +375,7 @@ export default function GisalLanding() {
     </div></div></section>
   </main>
   <footer><div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div></footer>
-  <div className={cx("mobile-apply")}><EnrollButton location="mobile" label="나에게 맞는 과정 찾기" className={cx("button button-green")} /><p className={cx("mobile-consult-note")}>무료 1:1 창업 진단 · 과정 선택 전에도 신청할 수 있습니다.</p></div>
+  <MobileConsultBar />
 
 
   </EnrollmentProvider>;

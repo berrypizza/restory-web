@@ -27,6 +27,10 @@ function nodes(node, predicate) {
   if (!node || typeof node !== "object") return [];
   return [...(predicate(node) ? [node] : []), ...[node.props?.children].flat(Infinity).flatMap(child => nodes(child, predicate))];
 }
+function courseContext(tree) {
+  const note = nodes(tree, n => n.props?.role === "note" && n.props["aria-label"] === "관심 과정")[0];
+  return nodes(note, n => n.type === "strong")[0]?.props.children ?? null;
+}
 
 function cta(location, events) {
   return load("app/academy/EnrollmentDialog.tsx", {
@@ -104,14 +108,18 @@ for (const [location, plan] of sources) {
     const f = form(url.search, { events, rpc: (name, data) => {
       assert.equal(name, "submit_academy_consultation"); submittedPayload = data; return pending;
     } });
+    const expectedContext = plan === "basic" ? "기본 과정" : plan === "setup" ? offer.ACADEMY_OFFER.setupName : null;
+    assert.equal(courseContext(f.tree), expectedContext);
     f.replayEffects(); // React Strict Mode must not duplicate initial view events.
     f.ready();
+    assert.equal(courseContext(f.tree), expectedContext);
     const first = f.submit(); await f.submit();
     assert.equal(f.calls(), 1);
     assert.equal(events.filter(([event]) => event === "academy_consult_start").length, 1);
     assert.deepEqual(events.filter(([event]) => event === "academy_consult_step_view").map(([, props]) => props.step), [1, 2, 3]);
     assert.ok(!events.some(([event]) => event.endsWith("submit_success")));
     resolve({ error: null }); await first; f.render();
+    assert.equal(courseContext(f.tree), expectedContext);
     assert.equal(events.filter(([event]) => event.endsWith("submit_success")).length, 1);
     assert.ok(nodes(f.tree, n => n.type === "h1" && n.props.children === "상담 신청이 접수되었습니다.").length);
     for (const [, props] of events) {
@@ -138,6 +146,7 @@ test("reload/new tabs keep URL attribution; generic/direct visits never inherit 
 test("missing, mismatched, duplicate, unknown and arbitrary parameter values are not forwarded", () => {
   for (const query of ["", "source_plan=basic", "source_cta=basic", "source_plan=setup&source_cta=basic", "source_plan=basic&source_cta=unknown", "source_plan=basic&source_cta=basic&source_plan=setup", "source_plan=basic&source_cta=basic&source_cta=basic", "source_plan=person@example.test&source_cta=basic"]) {
     assert.deepEqual(plain(parse(query)), { source_plan: "direct", source_cta: "direct" });
+    assert.equal(courseContext(form(query).tree), null);
   }
   assert.deepEqual(plain(parse("source_plan=basic&source_cta=basic&email=person@example.test")), { source_plan: "basic", source_cta: "basic" });
 });

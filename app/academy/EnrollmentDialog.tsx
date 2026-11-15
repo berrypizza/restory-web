@@ -13,7 +13,7 @@ export function EnrollButton({ className, location = "nav", label = ACADEMY_OFFE
     if (location === "basic" || location === "premium") trackAcademy("academy_plan_cta_click", { location, plan: location, ...attribution });
     else trackAcademy(location === "hero" ? "academy_hero_cta_click" : "academy_cta_click", { location, ...attribution });
   }
-  return <Link href={consultationHref(location)} className={className} onClick={onClick} onAuxClick={event => { if (event.button === 1) onClick(); }}>{label} <span aria-hidden="true">↗</span></Link>;
+  return <Link href={consultationHref(location)} className={className} data-academy-cta={location} onClick={onClick} onAuxClick={event => { if (event.button === 1) onClick(); }}>{label} <span aria-hidden="true">↗</span></Link>;
 }
 
 export function EnrollmentProvider({ children }: { children: ReactNode }) {

@@ -1,4 +1,7 @@
 @font-face{font-family:GisalConsult;src:url('/gisal-assets/gisal-korean.woff') format('woff');font-display:swap}
+.courseContext{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 14px;margin:0 0 20px;border:1px solid #41552e;border-radius:8px;background:#141f10;line-height:1.7}
+.courseContext>span{color:#a7b29c;font-size:12px}.courseContext>strong{color:var(--green);font-size:14px;font-weight:700}
+.success .courseContext{justify-content:center;margin-top:20px}
 .consultPurpose{padding:22px 24px;margin:0 0 28px;border:1px solid #41552e;border-radius:12px;background:#141f10}
 .consultPurpose h2{font-size:18px;line-height:1.5;margin:0 0 14px}.consultPurpose ol{padding-left:22px;margin:0;color:#d1ddc6;font-size:14px;line-height:1.9}.consultPurpose li+li{margin-top:6px}.consultPurpose li::marker{color:#b1fa45}.consultPurpose p{font-size:12px;color:#a7b29c;line-height:1.8;margin:16px 0 0}
 .learningFit{border-left:3px solid #b1fa45;padding:12px 16px;background:#141f10;color:#bdcbb2;font-size:13px;line-height:1.9;margin:0 0 28px}

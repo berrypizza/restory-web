@@ -25,9 +25,21 @@ export default function ConsultationForm({ attribution: { source_plan, source_ct
   const submitting = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const selection = CONSULTATION_TYPES.find(item => item.value === kind)!;
+  // This is entry interest, not a selected enrollment or a new form field.
+  const courseName = source_plan === "basic" ? "기본 과정" : source_plan === "setup" ? offer.setupName : null;
+  const courseContext = courseName ? <div className={styles.courseContext} role="note" aria-label="관심 과정"><span>관심 과정</span><strong>{courseName}</strong></div> : null;
   const experienceReady = SITUATIONS.some(item => item.value === situation)
     && REPAIR_EXPERIENCES.some(item => item.value === contact.repair_experience)
     && MARKETING_EXPERIENCES.some(item => item.value === contact.marketing_experience);
+
+  useEffect(() => {
+    // A deep landing-page CTA must open at the consultation heading and course context.
+    const frame = requestAnimationFrame(() => {
+      heading.current?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const started = useRef(false);
   useEffect(() => {
@@ -79,6 +91,7 @@ export default function ConsultationForm({ attribution: { source_plan, source_ct
   if (submitted) return <main className={styles.success}>
     <span className={styles.successIcon} aria-hidden="true">✓</span><p className={styles.eyebrow}>APPLICATION RECEIVED</p>
     <h1 ref={heading} tabIndex={-1}>상담 신청이 접수되었습니다.</h1>
+    {courseContext}
     <p>남겨주신 상황을 살펴보고,<br />알려주신 시간대에 연락드려 일정을 안내하겠습니다.</p>
     <div className={styles.receipt}><span>{selection.format} · {selection.label}</span><strong>{selection.price}</strong></div>
     {kind === "offline" && <p className={styles.muted}>상담 장소와 결제 방법은 연락드려 안내합니다.</p>}
@@ -90,6 +103,7 @@ export default function ConsultationForm({ attribution: { source_plan, source_ct
       <ol className={styles.progress} aria-label="신청 진행 단계">{steps.map((label, index) => <li key={label} aria-current={index === step ? "step" : undefined} data-active={index <= step}><span>{index < step ? "✓" : `0${index + 1}`}</span>{label}</li>)}</ol>
       <p className={styles.eyebrow}>{step + 1} / 3 · {steps[step]}</p>
       <h1 ref={heading} tabIndex={-1}>{step === 0 ? <>내 이름으로 사업하는 일,<br /><em>어디서 시작할지</em> 함께 살펴봐요.</> : step === 1 ? "지금의 상황과 경험을 알려주세요." : "연락받으실 정보를 알려주세요."}</h1>
+      {courseContext}
       <p className={styles.intro}>{step === 0 ? offer.selectionGuidance : step === 1 ? "각 질문에서 가장 가까운 항목을 하나씩 선택해주세요. 기술과 마케팅이 모두 처음이어도 괜찮습니다." : "알려주신 시간대에 연락드려 상담 일정을 조율합니다. 이름·전화번호·지역·나이·통화 시간과 동의는 필수이며, 이메일과 메시지는 선택입니다."}</p>
       {step === 0 && <>
         <div className={styles.consultPurpose}>
