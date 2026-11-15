@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HabujangLanding from "@/app/components/landing/HabujangLanding";
+import { withLandingSeo } from "@/lib/landing-seo";
 import { makeRegionalKeywords } from "@/lib/seo-regions";
 
 const BASE_KEYWORDS = [
@@ -19,10 +20,10 @@ const BASE_KEYWORDS = [
   "싱크대 하부장 밑판 교체",
 ];
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withLandingSeo({
   title: "싱크대 하부장 수리 전문 | 파손·뒤틀림·물빠짐 | 리스토리",
   description:
-    "싱크대 하부장 뒤틀림·파손·물 빠짐 증상, 합판 시공목으로 튼튼하게 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S. 사진 한 장이면 수리 가능 여부 바로 안내.",
+    "물 먹고 부푼 하부장 밑판, 기존 장을 살릴 수 있는지 먼저 확인합니다. 비용은 현장별 상담 견적. 실제 전후 사례와 교체 범위, 작업 시간·A/S 안내를 확인하세요.",
   keywords: [
     ...BASE_KEYWORDS,
     ...makeRegionalKeywords("싱크대 하부장 수리", "하부장 파손 수리"),
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "싱크대 하부장 수리 | 리스토리",
     description:
-      "하부장 파손·물빠짐, 합판으로 튼튼하게. 교체 비용의 1/3. 3년 A/S.",
+      "하부장 내부 사진으로 밑판 교체 가능 범위·현장별 견적·방문 일정을 상담하세요. 실제 작업 전후 사진과 A/S 안내를 확인할 수 있습니다.",
     url: "https://www.restorystudio.co.kr/repair/habujang",
     images: [
       {
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.restorystudio.co.kr/repair/habujang",
   },
-};
+});
 
 export default function Page() {
   return <HabujangLanding />;

@@ -107,7 +107,7 @@ export async function generateMetadata({
     alt: `리스토리 ${kw}`,
   };
   if (type === "habujang") {
-    desc = `${kw} 전문 리스토리. 하부장 밑판 물먹음·부풀음 지판 교체. 교체 비용의 1/5. 당일 시공, 3년 무상 A/S.`;
+    desc = `${kw} 전문 리스토리. 물 먹고 부푼 하부장 밑판 교체. 비용은 현장별 상담 견적이며, 사진으로 교체 가능 범위·견적·방문 일정을 확인합니다. 실제 시공 사례와 A/S 안내를 살펴보세요.`;
     image = {
       url: "/images/hero-habujang.webp",
       width: 1080,
