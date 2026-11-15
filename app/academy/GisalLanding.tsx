@@ -59,7 +59,7 @@ export default function GisalLanding() {
       </div>
       <p className={cx("heroArtNote")}>배경은 교육 방향을 표현한 연출 이미지입니다.</p>
     </section>
-    <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>{offer.startDateShort} <small>화요일 개강 예정</small></strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>{offer.seats}명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>{offer.basicPrice}만 원 <small>{offer.cohort}기 기본 수강료</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
+    <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>{offer.startDateShort} <small>월요일 개강 예정</small></strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>{offer.seats}명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>{offer.basicPrice}만 원 <small>{offer.cohort}기 기본 수강료</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
 
     <section id="prepare" className={cx("offer-overview section-light")} aria-labelledby="prepare-title">
       <div className={cx("wrap offer-overview-grid")}>
