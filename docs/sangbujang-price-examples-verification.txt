@@ -1,0 +1,40 @@
+상부장 오퍼·상태별 비용 예시 개선 — 2026-11-15
+
+운영자 확인 및 요청
+일반적인 처짐 25만 원, 심한 처짐·손상 30만 원, 추락 35만 원을 상태별 비용 예시로 안내.
+첫 화면은 수리 결과와 신뢰 중심, 바로 아래에 비용 예시 배치.
+기존 확인 정책: 부가세 별도, 수리 불가 시 비용 없음, 추락 파손 추가금 상담 시 사전 안내, 상담에서 확정한 금액 이후 변경 없음.
+금액을 정액 상품이나 최대 금액으로 표시하지 않음.
+
+반영
+- 첫 화면의 25만 원 강조를 고정 보강·약 2시간·보강 및 고정부 3년 무상 A/S로 변경.
+- 수평·문짝 닫힘 회복, 포함 작업, 실제 전후 사진 및 과정으로 연결하는 링크로 결과와 신뢰 보강.
+- 첫 화면 바로 다음 section에 25·30·35만 원 상태별 예시와 부가세 별도 표시.
+- 상태·파손 범위에 따른 변동, 상담으로 최종 금액 확정, 확정 후 금액 변경 없음 안내.
+- 사진 상담 버튼 및 비용 예시 앵커 연결.
+- 기존 비용 상세 카드의 단일 25만 원을 상담으로 금액 확정 안내로 변경.
+- FAQ, Service JSON-LD, 대표·지역 페이지 검색 설명도 동일한 비용 정책으로 정리.
+- 기존 하부장 페이지 개선 작업 보존.
+
+검증
+ESLint, git diff --check 통과.
+Next production build 및 TypeScript 통과, 정적 페이지 6,850개 생성.
+별도 production 서버 127.0.0.1:5198에서 검증.
+320×740, 390×844, 768×1024, 1440×1000 가로 넘침 없음.
+320px와 390px: 첫 화면 상담 버튼 하단 약 722px, 요약 및 비용 예시 카드 내부 잘림 없음.
+비용 예시가 hero의 바로 다음 section임을 확인. 비용·사례 앵커 정상 이동.
+모바일 비용 FAQ 패널 높이와 scrollHeight 모두 426px. 금액 정책 FAQ 키보드 Enter 작동, 높이와 scrollHeight 모두 209px.
+잠실 390px 지역명·case-125 우선 표시, 가산 320px 지역명·case-128 참고 사례 및 지역 사례 없음 안내 확인.
+최종 production 브라우저 오류 없음.
+대표·잠실·가산 HTTP 200, canonical, 비용 예시 메타데이터, Service 및 FAQ 7개, 사례 ItemList 일치.
+본문·하단 × 카카오·전화 CTA 4종 307 정상, 카카오 UTM 유지 및 전화 목적지 확인.
+하부장 기존 현장별 상담 견적 안내도 HTTP 응답에 유지됨.
+브라우저 뷰포트 검증이며 물리 기기 검증은 아님.
+
+작업 상태
+commit/push/배포하지 않음.
+기존 localhost:3000 서버 유지. 검증용 5198 서버·빌드 디렉터리·자동 추가된 tsconfig include만 정리.
+미리보기: http://localhost:3000/repair/sangbujang
+증거: /Users/noah/.codex/visualizations/2026/11/14/01a1db07-08b9-74d1-9617-51655b4a5eb4/upper-price-examples/
+스크린샷: mobile-390-hero.jpg, mobile-390-prices.jpg, mobile-320-hero.jpg, mobile-320-prices.jpg, tablet-768.jpg, desktop-1440.jpg
+검증 기록: http-verification.json, browser-verification.json

@@ -115,7 +115,7 @@ export async function generateMetadata({
       alt: `리스토리 ${kw}`,
     };
   } else if (type === "sangbujang") {
-    desc = `${kw} 전문 리스토리. 일반 처짐 수리 25만 원(부가세 별도). 추락 파손 추가금 사전 안내, 상담 후 금액 변경 없음, 수리 불가 시 비용 없음. 실제 시공 사례와 시공 부위 3년 A/S를 확인하세요.`;
+    desc = `${kw} 전문 리스토리. 처진 상부장 보강·재설치와 수평 조절. 상태별 비용 예시 25·30·35만 원(부가세 별도), 최종 금액은 상담으로 확정합니다. 실제 시공 사례와 보강·고정부 3년 무상 A/S를 확인하세요.`;
     image = {
       url: "/images/hero-sangbujang.webp",
       width: 1080,

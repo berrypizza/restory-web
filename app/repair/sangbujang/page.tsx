@@ -30,7 +30,7 @@ const BASE_KEYWORDS = [
 export const metadata: Metadata = withLandingSeo({
   title: "싱크대 상부장 수리 전문 | 처짐·추락·뜸 | 리스토리",
   description:
-    "상부장 처짐 보강·재설치 25만 원(부가세 별도). 추락 파손 추가금 사전 안내, 상담 후 금액 변경 없음, 수리 불가 시 비용 없음. 실제 시공 사례와 시공 부위 3년 A/S를 확인하세요.",
+    "처진 상부장을 보강·재설치하고 수평과 문짝 닫힘까지 맞춥니다. 상태별 비용 예시 25·30·35만 원(부가세 별도), 최종 금액은 상담으로 확정합니다. 실제 시공 사례와 보강·고정부 3년 무상 A/S를 확인하세요.",
   keywords: [
     ...BASE_KEYWORDS,
     ...makeRegionalKeywords("싱크대 상부장 수리", "상부장 처짐 수리"),

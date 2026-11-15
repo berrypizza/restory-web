@@ -18,6 +18,12 @@ const KAKAO_URL = buildTrackedContactPath("kakao", "sangbujang");
 const SITE_URL = "https://www.restorystudio.co.kr";
 type SangbujangCase = (typeof cases)[number];
 
+const PRICE_EXAMPLES = [
+  { condition: "일반적인 처짐", price: "25만 원" },
+  { condition: "처짐·손상이 심한 경우", price: "30만 원" },
+  { condition: "추락한 상부장 수리", price: "35만 원" },
+];
+
 const FAQ_ITEMS = [
   {
     q: "상부장이 처졌는데 전체를 교체해야 하나요?",
@@ -33,7 +39,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "상부장 수리 비용과 작업 시간은 어떻게 되나요?",
-    a: "일반적인 상부장 처짐 수리는 25만 원이며, 부가세는 별도입니다. 일반적인 현장 작업 시간은 약 2시간으로, 상태와 작업 범위에 따라 달라질 수 있습니다. 방문일은 상담 후 조율합니다.\n\n작업에는 상부장을 내린 뒤 고정 상태를 확인하고, 시공목과 약해진 부분을 보강한 후 재설치와 수평 조절을 진행하는 과정이 포함됩니다.\n\n추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있으며, 상담 시 미리 안내합니다. 상담에서 확정한 수리 금액은 이후 달라지지 않습니다.",
+    a: "상태별 비용 예시는 일반적인 처짐 25만 원, 처짐·손상이 심한 경우 30만 원, 추락한 상부장 수리 35만 원이며, 모두 부가세 별도입니다. 정액이나 최대 금액이 아닌 예시로, 상태와 파손 범위에 따라 달라질 수 있습니다. 필요한 작업과 최종 금액은 상담에서 확정하며, 확정한 금액은 이후 달라지지 않습니다.\n\n작업에는 상부장을 내린 뒤 고정 상태를 확인하고, 시공목과 약해진 부분을 보강한 후 재설치와 수평 조절을 진행하는 과정이 포함됩니다.\n\n일반적인 현장 작업 시간은 약 2시간으로, 상태와 작업 범위에 따라 달라질 수 있습니다. 방문일은 상담 후 조율합니다.",
   },
   {
     q: "상담 후 추가금이 생기거나, 수리가 불가능하면요?",
@@ -156,9 +162,11 @@ function RegionalCaseItemListJsonLd({
 function ContactButtons({
   dark = false,
   compact = false,
+  label = "카카오로 수리 범위·비용 확인",
 }: {
   dark?: boolean;
   compact?: boolean;
+  label?: string;
 }) {
   return (
     <div
@@ -170,7 +178,7 @@ function ContactButtons({
         rel="noopener noreferrer"
         className="flex min-h-14 items-center justify-center rounded-2xl bg-[#FEE500] px-5 py-4 text-[15px] font-black text-neutral-900"
       >
-        카카오로 수리 범위·비용 확인
+        {label}
       </a>
       <a
         href={PHONE}
@@ -214,7 +222,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
     >
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상부장 수리` : "싱크대 상부장 수리"}
-        description="처진 상부장의 고정 상태를 확인하고 보강·재설치합니다. 일반 처짐 수리 25만 원, 부가세 별도. 추락 파손 추가금은 상담 시 사전 안내하며, 상담 후 금액 변경과 수리 불가 시 비용은 없습니다."
+        description="처진 상부장의 고정 상태를 확인하고 보강·재설치합니다. 상태별 비용 예시: 일반 처짐 25만 원, 심한 처짐·손상 30만 원, 추락 수리 35만 원. 모두 부가세 별도이며 상태와 파손 범위에 따라 달라질 수 있습니다. 상담에서 최종 금액을 확정하며 이후 금액 변경과 수리 불가 시 비용은 없습니다."
         url={`${SITE_URL}/repair/${keyword || "sangbujang"}`}
         includeAggregateRating={false}
       />
@@ -270,9 +278,9 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                 <dl className="grid grid-cols-3 divide-x divide-white/15 py-4 text-center">
                   {[
                     {
-                      label: "일반 처짐 수리",
-                      value: "25만 원",
-                      note: "부가세 별도",
+                      label: "약해진 부위",
+                      value: "고정 보강",
+                      note: "",
                     },
                     { label: "현장 작업", value: "약 2시간", note: "" },
                     { label: "보강·고정부 A/S", value: "3년 무상", note: "" },
@@ -298,15 +306,18 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                   </p>
                   <ul className="mt-2 space-y-1 text-[12px] font-bold leading-[1.7] text-blue-200">
                     <li>
-                      <span aria-hidden="true">✓ </span>상담 후 금액 변경 없음
+                      <span aria-hidden="true">✓ </span>상담에서 확정한 금액 그대로
                     </li>
                     <li>
                       <span aria-hidden="true">✓ </span>수리 불가 시 비용 없음
                     </li>
                   </ul>
-                  <p className="mt-2 text-[11px] leading-[1.7] text-white/65">
-                    추락 파손에 따른 추가금은 상담 시 미리 안내합니다.
-                  </p>
+                  <a
+                    href="#upper-cases"
+                    className="mt-1 inline-flex min-h-11 items-center text-[12px] font-bold text-white/85 underline underline-offset-4"
+                  >
+                    실제 수리 전후 사진과 과정 보기 →
+                  </a>
                 </div>
               </div>
               <p className="mb-3 text-center text-[13px] font-bold leading-[1.7] text-white lg:text-left">
@@ -317,10 +328,10 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                 전체 사진 + 벌어진 부분 사진 + 작업 지역을 보내주세요.
               </p>
               <a
-                href="#upper-cost"
+                href="#upper-price-examples"
                 className="mt-1 inline-flex min-h-11 w-full items-center justify-center text-[12px] font-bold text-blue-200 underline underline-offset-4 lg:w-auto lg:justify-start"
               >
-                수리 비용·A/S 적용 조건 자세히 보기 →
+                상태별 수리 비용 예시 보기 →
               </a>
             </FadeIn>
           </div>
@@ -335,6 +346,49 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628] via-transparent to-transparent" />
           </div>
+        </div>
+      </section>
+
+      <section
+        id="upper-price-examples"
+        aria-labelledby="upper-price-heading"
+        className="scroll-mt-24 bg-[#eef4ff] px-5 py-10 md:py-14"
+      >
+        <div className="mx-auto max-w-3xl">
+          <p className="mb-2 text-xs font-bold text-[#1a5cff]">
+            비용 예시 · 부가세 별도
+          </p>
+          <h2
+            id="upper-price-heading"
+            className="text-[26px] font-black leading-[1.35] tracking-tight md:text-4xl"
+          >
+            상태별 수리 비용 예시
+          </h2>
+          <dl className="my-5 grid gap-3 md:grid-cols-3">
+            {PRICE_EXAMPLES.map((item) => (
+              <div
+                key={item.condition}
+                className="flex items-center justify-between gap-3 rounded-2xl border border-[#dce6fa] bg-white px-4 py-5 md:block md:p-5"
+              >
+                <dt className="text-[13px] font-bold leading-[1.7] text-neutral-700">
+                  {item.condition}
+                </dt>
+                <dd className="shrink-0 text-[26px] font-black leading-tight text-[#0a1628] md:mt-3 md:text-3xl">
+                  {item.price}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="text-[13px] leading-[1.85] text-neutral-600">
+            상태와 파손 범위에 따라 예시 금액과 달라질 수 있습니다. 필요한 작업과
+            최종 금액은 사진 상담으로 먼저 안내합니다.
+          </p>
+          <p className="mb-5 mt-3 text-[13px] font-bold leading-[1.85] text-[#0a1628]">
+            상담에서 확정한 금액은 이후 변경하지 않습니다.
+            <br />
+            수리 불가로 판단되면 비용을 받지 않습니다.
+          </p>
+          <ContactButtons compact label="사진으로 우리 집 수리비 확인" />
         </div>
       </section>
 
@@ -516,20 +570,26 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               COST & AFTERCARE
             </p>
             <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              비용과 포함 범위부터 확인하세요
+              상담으로 확정하는 비용과 작업 범위
             </h2>
             <div className="my-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
                 <p className="text-sm text-white/70">
-                  일반적인 상부장 처짐 수리
+                  상태와 파손 범위 확인 후
                 </p>
-                <p className="mt-2 text-4xl font-black">25만 원</p>
+                <p className="mt-2 text-3xl font-black">상담으로 금액 확정</p>
                 <p className="mt-2 text-sm font-bold text-white/85">
                   부가세 별도
                 </p>
                 <p className="mt-3 text-xs leading-[1.8] text-white/70">
                   상담에서 확정한 수리 금액은 이후 달라지지 않습니다.
                 </p>
+                <a
+                  href="#upper-price-examples"
+                  className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-blue-200 underline underline-offset-4"
+                >
+                  상태별 비용 예시 다시 보기 →
+                </a>
               </div>
               <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
                 <p className="text-sm text-white/70">일반적인 현장 작업 시간</p>
@@ -607,7 +667,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                 },
                 {
                   title: "상담으로 확정하는 수리비",
-                  desc: "25만 원은 부가세 별도입니다. 추락 파손 추가금은 미리 안내하고, 상담에서 확정한 금액은 이후 달라지지 않습니다.",
+                  desc: "상태와 파손 범위에 맞춰 필요한 작업과 금액을 안내합니다. 부가세는 별도이며, 상담에서 확정한 금액은 이후 달라지지 않습니다.",
                 },
                 {
                   title: "방문 가능한 일정",
