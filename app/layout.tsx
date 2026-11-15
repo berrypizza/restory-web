@@ -5,8 +5,6 @@ import Footer from "./components/Footer";
 import { LocalBusinessJsonLd } from "@/app/components/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import Script from "next/script";
-import { aceCounterLoader } from "@/lib/analytics/acecounter";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -95,29 +93,6 @@ export default function RootLayout({
         <LocalBusinessJsonLd />
         <LayoutBody>{children}</LayoutBody>
         <Footer />
-        <Script
-          id="acecounter-mobile-vars"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-var m_id = '';
-var m_ag = 0;
-var m_mr = '';
-var m_gd = '';
-var m_skey = '';
-var m_jn = '';
-var m_jid = '';
-var m_ud1 = '';
-var m_ud2 = '';
-var m_ud3 = '';
-`,
-          }}
-        />
-        <Script
-          id="acecounter-gathering"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{ __html: aceCounterLoader }}
-        />
       </body>
     </html>
   );
