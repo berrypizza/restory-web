@@ -6,6 +6,7 @@ import { LocalBusinessJsonLd } from "@/app/components/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
+import { aceCounterLoader } from "@/lib/analytics/acecounter";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -115,12 +116,7 @@ var m_ud3 = '';
         <Script
           id="acecounter-gathering"
           strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-var _AceGID=(function(){var Inf=['restorystudio.co.kr','www.restorystudio.co.kr,restorystudio.co.kr,m.restorystudio.co.kr','AZ1A106207','1','NaPm,Ncisy','1']; var _CI=(!window._AceGID)?[]:window._AceGID.val;var _N=0;if(_CI.join('.').indexOf(Inf[2])<0){ _CI.push(Inf);  _N=_CI.length; } return {o: _N,val:_CI}; })();
-var _AceCounter=(function(){var G=_AceGID;var _sc=document.createElement('script');var _sm=document.getElementsByTagName('script')[0];if(G.o!=0){var _A=G.val[G.o-1];var _U=(_A[4]).replace(/\\,/g,'_');_sc.src='https:/'+'/cr.acecounter.com/ac.j'+'s?gc='+_A[2]+'&py='+_A[1]+'&up='+_U+'&rd='+(new Date().getTime());_sm.parentNode.insertBefore(_sc,_sm);return _sc.src;}})();
-`,
-          }}
+          dangerouslySetInnerHTML={{ __html: aceCounterLoader }}
         />
       </body>
     </html>
