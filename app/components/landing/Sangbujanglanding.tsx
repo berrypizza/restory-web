@@ -24,6 +24,19 @@ const PRICE_EXAMPLES = [
   { condition: "추락한 상부장 수리", price: "35만 원" },
 ];
 
+const CASE_COMPARISONS: Record<string, { before: string; after: string; summary: string }> = {
+  "case-128": {
+    before: "왼쪽 장이 처지고 상단이 벌어진 상태",
+    after: "보강·재설치 후 장 높이와 문짝 라인을 맞춘 상태",
+    summary: "뒤쪽 시공목의 상태를 확인하고, 문제 부위를 보강해 다시 설치했습니다.",
+  },
+  "case-125": {
+    before: "오른쪽 끝 상부장과 천장 사이에 생긴 틈",
+    after: "재고정 후 벌어진 상단과 문짝 라인을 맞춘 상태",
+    summary: "기존 장을 다시 사용할 수 있는지 확인한 뒤 고정 상태와 상단 라인을 정리했습니다.",
+  },
+};
+
 const FAQ_ITEMS = [
   {
     q: "상부장이 처졌는데 전체를 교체해야 하나요?",
@@ -35,7 +48,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "사진만 보내도 수리 가능 여부를 확인할 수 있나요?",
-    a: "상부장 전체가 보이는 사진 1장과 벽에서 벌어지거나 처진 부분이 가까이 보이는 사진 1장을 보내주시면 예상되는 문제 범위를 먼저 확인할 수 있습니다.\n\n사진과 함께 작업 지역, 문 걸림·틈 벌어짐·기울어짐 같은 현재 증상을 적어주세요.\n\n사진으로 문짝이나 경첩 문제인지, 시공목과 고정 상태까지 점검해야 하는지 먼저 안내할 수 있습니다. 다만 내부 파손 정도와 정확한 작업 범위는 현장 점검이나 상부장 분리 후 확정됩니다.",
+    a: "안전하게 찍을 수 있는 상부장 전체 사진부터 보내주세요. 가능하면 벌어지거나 처진 부분이 보이는 사진도 함께 보내주시면 예상 범위를 살피는 데 도움이 됩니다. 사진을 찍으려고 장을 움직이거나 무리하게 올라가지 마세요.\n\n사진과 함께 작업 지역, 문 걸림·틈 벌어짐·기울어짐 같은 현재 증상을 적어주세요.\n\n사진으로는 예상 범위를 먼저 안내합니다. 내부 파손 정도와 정확한 작업 범위는 현장 점검이나 상부장 분리 후 확인합니다.",
   },
   {
     q: "상부장 수리 비용과 작업 시간은 어떻게 되나요?",
@@ -170,6 +183,7 @@ function ContactButtons({
 }) {
   return (
     <div
+      data-upper-contact
       className={`flex flex-col lg:flex-row lg:gap-3 ${compact ? "gap-0" : "gap-3"}`}
     >
       <a
@@ -325,7 +339,8 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               </p>
               <ContactButtons dark compact />
               <p className="mt-2 text-center text-[12px] leading-[1.8] text-white/70 lg:text-left">
-                전체 사진 + 벌어진 부분 사진 + 작업 지역을 보내주세요.
+                전체 사진과 작업 지역부터 보내주세요.
+                <br />틈이 보이는 사진은 안전하게 찍을 수 있을 때 함께 보내주세요.
               </p>
               <a
                 href="#upper-price-examples"
@@ -434,31 +449,45 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               <FadeIn key={item.id} delay={index * 50}>
                 <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
                   <Link href={`/cases/${item.id}`} className="block">
-                    <div className="grid grid-cols-2 gap-px bg-neutral-200">
+                    <div className={`grid gap-px bg-neutral-200 ${index === 0 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-2"}`}>
                       {[
                         { label: "수리 전", src: item.beforeImg },
                         { label: "수리 후", src: item.afterImg },
                       ].map((photo) => (
-                        <div
+                        <figure
                           key={photo.label}
-                          className="relative aspect-[4/3] bg-neutral-100"
+                          className="bg-white"
                         >
+                          <div className={`relative overflow-hidden bg-neutral-100 ${index === 0 ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
                           <Image
                             src={photo.src}
                             alt={`${item.title} ${photo.label}`}
                             fill
                             className="object-cover"
-                            sizes="(min-width: 768px) 384px, 50vw"
+                            style={index === 0 && item.id === "case-128" ? { transform: "scale(1.25)", transformOrigin: "45% 40%" } : undefined}
+                            sizes={index === 0 ? "(min-width: 768px) 384px, (min-width: 640px) 50vw, 100vw" : "(min-width: 768px) 384px, 50vw"}
                           />
                           <span
                             className={`absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-black text-white ${photo.label === "수리 후" ? "bg-[#1a5cff]" : "bg-black/70"}`}
                           >
                             {photo.label}
                           </span>
-                        </div>
+                          </div>
+                          {index === 0 && CASE_COMPARISONS[item.id] && (
+                            <figcaption className="px-4 py-3 text-[13px] font-bold leading-[1.7] text-neutral-800">
+                              {photo.label === "수리 전" ? CASE_COMPARISONS[item.id].before : CASE_COMPARISONS[item.id].after}
+                            </figcaption>
+                          )}
+                        </figure>
                       ))}
                     </div>
                     <div className="p-5 md:p-7">
+                      {index === 0 && (
+                        <p className="mb-3 text-[11px] leading-[1.7] text-neutral-500">
+                          같은 현장의 실제 전후 사진입니다. 촬영 위치·각도는 서로 다릅니다.
+                          {item.id === "case-128" && " 왼쪽 장이 잘 보이도록 확대했습니다."}
+                        </p>
+                      )}
                       <p className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold text-[#1a5cff]">
                         <span>
                           {item.region} · {item.date.replaceAll("-", ".")}
@@ -473,7 +502,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
                         {item.title}
                       </h3>
                       <p className="mt-3 text-sm leading-[1.85] text-neutral-600">
-                        {item.summary}
+                        {CASE_COMPARISONS[item.id]?.summary ?? item.summary}
                       </p>
                       <p className="mt-4 text-sm font-bold text-[#1a5cff]">
                         원인과 수리 과정 보기 →
@@ -570,60 +599,25 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               COST & AFTERCARE
             </p>
             <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              상담으로 확정하는 비용과 작업 범위
+              확정 금액과 시공 후 A/S
             </h2>
-            <div className="my-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
-                <p className="text-sm text-white/70">
-                  상태와 파손 범위 확인 후
-                </p>
-                <p className="mt-2 text-3xl font-black">상담으로 금액 확정</p>
-                <p className="mt-2 text-sm font-bold text-white/85">
-                  부가세 별도
-                </p>
-                <p className="mt-3 text-xs leading-[1.8] text-white/70">
-                  상담에서 확정한 수리 금액은 이후 달라지지 않습니다.
-                </p>
-                <a
-                  href="#upper-price-examples"
-                  className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-blue-200 underline underline-offset-4"
-                >
-                  상태별 비용 예시 다시 보기 →
-                </a>
-              </div>
-              <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
-                <p className="text-sm text-white/70">일반적인 현장 작업 시간</p>
-                <p className="mt-2 text-4xl font-black">약 2시간</p>
-                <p className="mt-3 text-xs leading-[1.8] text-white/60">
-                  상태와 작업 범위에 따라 달라지며, 방문일은 상담 후 조율합니다.
-                </p>
-              </div>
-            </div>
+            <p className="mt-5 text-sm leading-[1.85] text-white/75">
+              일반적인 현장 작업은 약 2시간입니다. 상태와 작업 범위에 따라
+              달라지며, 방문일은 상담 후 조율합니다.
+            </p>
+            <a href="#upper-price-examples" className="mb-5 inline-flex min-h-11 items-center text-sm font-bold text-blue-200 underline underline-offset-4">
+              상태별 비용 예시 · 부가세 별도 →
+            </a>
           </FadeIn>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div>
-              <h3 className="mb-3 text-base font-black">
-                안내 금액에 포함되는 작업
-              </h3>
-              <ul className="list-disc space-y-2 pl-5 text-sm leading-[1.8] text-white/75">
-                <li>상부장 분리와 고정 상태 확인</li>
-                <li>시공목과 약해진 부분 보강</li>
-                <li>재설치·수평·문짝 닫힘 조절</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-3 text-base font-black">
-                추락 파손 추가금은 미리 안내합니다
-              </h3>
-              <p className="text-sm leading-[1.85] text-white/75">
-                추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있습니다. 추가
-                작업과 금액은 상담 시 미리 안내하며, 상담 후 금액은 변경되지
-                않습니다.
-              </p>
-              <p className="mt-4 text-sm font-black text-blue-200">
-                수리 불가로 판단된 경우에는 비용을 받지 않습니다.
-              </p>
-            </div>
+          <div className="rounded-2xl border border-white/15 bg-white/5 p-5">
+            <h3 className="mb-3 text-base font-black">추락 파손 추가금은 미리 안내합니다</h3>
+            <p className="text-sm leading-[1.85] text-white/75">
+              추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있습니다. 추가
+              작업과 금액은 상담 시 미리 안내하며, 상담 후 금액은 변경되지 않습니다.
+            </p>
+            <p className="mt-4 text-sm font-black text-blue-200">
+              수리 불가로 판단된 경우에는 비용을 받지 않습니다.
+            </p>
           </div>
           <div className="mt-8 rounded-2xl bg-white p-6 text-neutral-900">
             <p className="mb-2 text-lg font-black">
@@ -638,6 +632,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               시공과 직접 관련 없는 문제는 제외될 수 있습니다.
             </p>
             <a
+              data-upper-contact
               href={KAKAO_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -649,86 +644,43 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section className="bg-[#f8f9fb] px-5 py-14 md:py-20">
+      <section id="upper-photo-guide" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
               PHOTO CONSULTATION
             </p>
             <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              사진을 보내면,
-              <br />세 가지를 안내합니다
-            </h2>
-            <dl className="mb-7 mt-6 grid gap-3 md:grid-cols-3">
-              {[
-                {
-                  title: "수리 가능 범위",
-                  desc: "기존 장을 보강할 수 있을지, 몸통 파손까지 확인해야 할지 예상 범위를 짚어드립니다.",
-                },
-                {
-                  title: "상담으로 확정하는 수리비",
-                  desc: "상태와 파손 범위에 맞춰 필요한 작업과 금액을 안내합니다. 부가세는 별도이며, 상담에서 확정한 금액은 이후 달라지지 않습니다.",
-                },
-                {
-                  title: "방문 가능한 일정",
-                  desc: "작업 지역과 증상을 보고 방문 가능한 일정을 안내합니다. 약 2시간은 현장 작업 시간입니다.",
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-[#dce6fa] bg-[#eef4ff] p-5"
-                >
-                  <dt className="mb-2 text-[15px] font-black text-[#1a5cff]">
-                    {item.title}
-                  </dt>
-                  <dd className="text-[13px] leading-[1.85] text-neutral-700">
-                    {item.desc}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mb-7 text-[13px] leading-[1.85] text-neutral-600">
-              사진으로는 예상 범위를 안내합니다. 내부 파손과 정확한 작업 범위는
-              현장 점검 또는 상부장 분리 후 확인하며, 상담에서 확정한 금액은
-              변경하지 않습니다.
-            </p>
-            <h3 className="mb-4 text-lg font-black">
               사진은 이렇게 보내주세요
-            </h3>
-            <ol className="mb-6 space-y-3">
+            </h2>
+            <p className="mb-6 mt-4 text-sm leading-[1.85] text-neutral-600">
+              안전하게 찍을 수 있는 전체 사진부터 보내주세요.
+              가능하면 틈이 보이는 사진도 함께 보내주시면 상태를 살피는 데 도움이 됩니다.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
               {[
-                [
-                  "1",
-                  "상부장 전체 사진",
-                  "어느 쪽이 처졌는지, 주변 장과의 높이가 어떤지 보이게 찍어주세요.",
-                ],
-                [
-                  "2",
-                  "벌어지거나 처진 부분 사진",
-                  "벽·천장과의 틈이나 문 걸림이 보이는 부분을 찍어주세요.",
-                ],
-                [
-                  "3",
-                  "작업 지역과 현재 증상",
-                  "지역, 발견한 시점, 틈 벌어짐·기울어짐·문 걸림 등을 적어주세요.",
-                ],
-              ].map(([n, title, desc]) => (
-                <li
-                  key={n}
-                  className="flex gap-4 rounded-2xl border border-neutral-200 bg-white p-5"
-                >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-sm font-black text-[#1a5cff]">
-                    {n}
-                  </span>
-                  <div>
-                    <h3 className="mb-1 text-base font-black">{title}</h3>
-                    <p className="text-sm leading-[1.8] text-neutral-600">
-                      {desc}
-                    </p>
+                { src: "/images/cases/case-128-before.jpg", title: "1. 전체 모습", desc: "주변 장과 높이를 비교할 수 있게 찍어주세요.", source: "인천 부평 · 시공 전", href: "/cases/case-128" },
+                { src: "/images/cases/case-125-before.jpg", title: "2. 틈이 보이는 부분 · 가능할 때", desc: "벌어진 위치가 보이게 찍어주세요. 가까이 가기 어렵다면 전체 사진부터 보내주세요.", source: "서울 잠실 · 시공 전", href: "/cases/case-125" },
+              ].map((photo) => (
+                <figure key={photo.src} className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                  <div className="relative aspect-[16/10]">
+                    <Image src={photo.src} alt={`${photo.source} 사진으로 보여주는 ${photo.title} 촬영 예시`} fill sizes="(min-width: 768px) 384px, (min-width: 640px) 50vw, 100vw" className="object-cover" />
                   </div>
-                </li>
+                  <figcaption className="p-4">
+                    <h3 className="font-black">{photo.title}</h3>
+                    <p className="mt-2 text-[13px] leading-[1.8] text-neutral-600">{photo.desc}</p>
+                    <Link href={photo.href} className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-[#1a5cff]">{photo.source} 사례 보기 →</Link>
+                  </figcaption>
+                </figure>
               ))}
-            </ol>
+            </div>
+            <p className="mt-3 text-xs leading-[1.8] text-neutral-500">
+              서로 다른 실제 시공 전 사진을 촬영 구도 예시로 사용했습니다.
+            </p>
+            <div className="my-6 rounded-2xl border border-[#dce6fa] bg-[#eef4ff] p-5">
+              <h3 className="mb-2 text-sm font-black">사진과 함께 작업 지역·증상을 적어주세요</h3>
+              <p className="select-text text-sm leading-[1.85] text-neutral-700">예시: 인천 부평 / 왼쪽 장과 천장 사이에 틈이 있어요 / 어제 발견했어요.</p>
+            </div>
             <p className="mb-6 text-xs leading-[1.85] text-neutral-600">
               처짐이 심하다면 장을 당기거나 직접 분리하지 마세요. 아래 공간의
               사용을 피하고, 올라가거나 장을 움직이지 않아도 찍을 수 있는
@@ -736,7 +688,8 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
             </p>
             <ContactButtons />
             <p className="mt-4 text-xs leading-[1.8] text-neutral-500">
-              사진 상담 → 수리 금액·방문 일정 확정 → 현장 확인 → 보강·재설치
+              사진으로 예상 범위를 살핀 뒤 수리 금액·방문일을 상담합니다.
+              내부 파손과 정확한 작업 범위는 현장 점검 또는 장 분리 후 확인합니다.
             </p>
           </FadeIn>
         </div>
@@ -830,7 +783,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               살릴 수 있는 상태인지 확인하세요.
             </h2>
             <p className="mb-7 mt-5 text-sm leading-[1.85] text-white/70">
-              전체 사진과 벌어진 부분 사진, 작업 지역을 보내주세요.
+              전체 사진과 작업 지역부터 보내주세요.
               <br />
               수리 범위를 먼저 살피고, 금액과 방문일을 상담해 확정합니다.
             </p>
@@ -838,7 +791,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
           </FadeIn>
         </div>
       </section>
-      <FloatingCTA compactMobile label="사진으로 수리 범위·비용 확인" />
+      <FloatingCTA compactMobile avoidOverlapSelector="[data-upper-contact]" label="사진으로 수리 범위·비용 확인" />
     </main>
   );
 }

@@ -10,6 +10,7 @@ interface FloatingCTAProps {
   onReviewClick?: () => void;
   label?: string;
   compactMobile?: boolean;
+  avoidOverlapSelector?: string;
 }
 
 export default function FloatingCTA({
@@ -17,15 +18,36 @@ export default function FloatingCTA({
   kakaoUrl = buildTrackedContactPath("kakao", "floating_cta"),
   onReviewClick,
   compactMobile = false,
+  avoidOverlapSelector,
   label = "😊 카톡으로 무료 견적 받기 >",
 }: FloatingCTAProps) {
   const [showSticky, setShowSticky] = useState(false);
+  const [inlineContactVisible, setInlineContactVisible] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setShowSticky(window.scrollY > 500);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!avoidOverlapSelector || typeof IntersectionObserver === "undefined") return;
+
+    const visibleContacts = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visibleContacts.add(entry.target);
+        else visibleContacts.delete(entry.target);
+      }
+      setInlineContactVisible(visibleContacts.size > 0);
+    }, { rootMargin: "64px 0px", threshold: 0 });
+
+    document.querySelectorAll(avoidOverlapSelector).forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [avoidOverlapSelector]);
+
+  const visible = showSticky && !inlineContactVisible;
 
   return (
     <>
@@ -33,9 +55,10 @@ export default function FloatingCTA({
         className={`fixed right-4 z-50 flex-col items-end gap-3 transition-all duration-300 md:right-6 ${compactMobile ? "hidden md:flex" : "flex"}`}
         style={{
           bottom: showSticky ? 80 : 32,
-          opacity: showSticky ? 1 : 0,
-          transform: showSticky ? "translateY(0)" : "translateY(20px)",
-          pointerEvents: showSticky ? "auto" : "none",
+          visibility: visible ? "visible" : "hidden",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(20px)",
+          pointerEvents: visible ? "auto" : "none",
         }}>
         {onReviewClick && (
           <button
@@ -103,9 +126,10 @@ export default function FloatingCTA({
         className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4"
         style={{
           background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
-          opacity: showSticky ? 1 : 0,
-          transform: showSticky ? "translateY(0)" : "translateY(100%)",
-          pointerEvents: showSticky ? "auto" : "none",
+          visibility: visible ? "visible" : "hidden",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(100%)",
+          pointerEvents: visible ? "auto" : "none",
         }}>
         {label}
       </a>
