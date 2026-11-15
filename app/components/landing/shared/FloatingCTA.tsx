@@ -8,12 +8,16 @@ interface FloatingCTAProps {
   phone?: string;
   kakaoUrl?: string;
   onReviewClick?: () => void;
+  label?: string;
+  compactMobile?: boolean;
 }
 
 export default function FloatingCTA({
   phone = buildTrackedContactPath("phone", "floating_cta"),
   kakaoUrl = buildTrackedContactPath("kakao", "floating_cta"),
   onReviewClick,
+  compactMobile = false,
+  label = "😊 카톡으로 무료 견적 받기 >",
 }: FloatingCTAProps) {
   const [showSticky, setShowSticky] = useState(false);
 
@@ -26,7 +30,7 @@ export default function FloatingCTA({
   return (
     <>
       <div
-        className="fixed right-4 z-50 flex flex-col items-end gap-3 transition-all duration-300 md:right-6"
+        className={`fixed right-4 z-50 flex-col items-end gap-3 transition-all duration-300 md:right-6 ${compactMobile ? "hidden md:flex" : "flex"}`}
         style={{
           bottom: showSticky ? 80 : 32,
           opacity: showSticky ? 1 : 0,
@@ -103,7 +107,7 @@ export default function FloatingCTA({
           transform: showSticky ? "translateY(0)" : "translateY(100%)",
           pointerEvents: showSticky ? "auto" : "none",
         }}>
-        😊 카톡으로 무료 견적 받기 &gt;
+        {label}
       </a>
       <div className="h-20" />
     </>

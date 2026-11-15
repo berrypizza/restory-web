@@ -74,10 +74,10 @@ export default function Navbar() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 max-[360px]:gap-1 md:gap-3">
             <Link
               href="/philosophy"
-              className={`md:hidden rounded-xl border px-2.5 py-1.5 text-xs font-bold shadow-sm transition ${
+              className={`md:hidden whitespace-nowrap rounded-xl border px-2.5 py-1.5 text-xs max-[360px]:px-2 max-[360px]:text-[10px] font-bold shadow-sm transition ${
                 isDarkPage
                   ? "border-[#1f66ff] bg-[#1f66ff] text-white"
                   : "border-neutral-200 bg-white text-[#1f2631]"
@@ -87,7 +87,7 @@ export default function Navbar() {
 
             <Link
               href="/cases"
-              className="md:hidden transition text-[#1f2631] border border-[#f5c542] rounded-xl px-2.5 py-1.5 text-xs bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
+              className="md:hidden whitespace-nowrap max-[360px]:px-2 max-[360px]:text-[10px] transition text-[#1f2631] border border-[#f5c542] rounded-xl px-2.5 py-1.5 text-xs bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
               작업 사례
             </Link>
 

@@ -1,0 +1,85 @@
+리스토리 소파 오퍼 — Mac 실제 적용·검증 결과
+검증일: 2026-11-15 KST
+
+상태
+원본 Mac 저장소 /Users/noah/Documents/사이트/restory-web에 실제 적용 완료.
+시작 HEAD: ae3716c971af5d4d9cccabe0b31ba897965c6c04. 시작 작업 트리 깨끗함.
+인수인계 manifest의 7개 파일 크기/SHA-256 모두 일치. 패치 git apply --check 성공 후 적용.
+프로덕션 배포, commit, main push 없음. 고객 DB, GA4 설정, 문의 발신 없음.
+기존 실행 중 localhost:3000 개발 서버를 활용했고 종료하지 않음.
+별도 5195 production 검증 서버는 검증 후 종료. 임시 빌드 디렉터리와 자동 tsconfig 수정 정리.
+
+구현
+Hero → 실제 전후/사례 → 원인별 복원 → 상담·현장 확인·작업 → 비용 → 영상 → FAQ → 사진 상담.
+사진 상담에서 알 수 있는 범위와 현장 내부 확인이 필요한 범위를 구분.
+근거 미확인 평점, 절감률, 보장, 즉시 응답, 가격 약속 정리.
+case-080/081의 원인·작업·약 2시간은 실제 case-data 기록과 일치.
+일반 2~4시간 안내는 운영 확인 전이므로 이번 적용에서 제외. 실제 사례 시간만 유지.
+
+변경 파일 (코드 11개)
+app/components/landing/Sofacushionlanding.tsx: 오퍼 흐름·사례·비용·FAQ·영상 접근성.
+app/sofa/page.tsx: 대표 메타/OG 설명.
+app/sofa/[slug]/page.tsx: 지역 메타/구조화 데이터 설명.
+app/components/Businesslinecards.tsx: 홈의 소파 설명·가격 비교만 수정.
+app/components/JsonLd.tsx: 전역 LocalBusiness 미검증 평점 제거, 소파 Service 평점 제외 옵션.
+  전역 LocalBusiness 변경은 홈·아카데미에도 적용. 다른 Service 평점은 기존 유지.
+lib/site-config.ts: 소파 서비스 설명과 과장 절감 약속 정리.
+app/components/landing/shared/FloatingCTA.tsx: label·compactMobile 선택 옵션, 다른 페이지 기본 동작 유지.
+  소파 모바일은 우측 고정 아이콘을 숨겨 FAQ 겹침 해결. 하단 카카오와 본문 전화 유지.
+app/tips/[id]/TipDetailContent.tsx: 소파 배너의 미확인 AS 3년 문구 정리.
+lib/tips/contents/sofa-restoration-vs-buy-new.ts: 임의 비용 비교를 비교 기준 안내로 대체.
+lib/tips/contents/natuzzi-sofa-sagging-restoration-cost.ts: 실제 사례와 상태별 비용 설명.
+app/components/Navbar.tsx: 320px에서 사업 철학/작업 사례 글자 중간 줄바꿈 방지.
+문서: docs/sofa-offer-update.txt는 이전 방의 역사적 기록임을 표시, 이 보고서 추가.
+
+현재 Mac 실행 결과
+변경 코드 11개 ESLint: 통과. 저장소 전체 lint를 실행한 결과는 아님.
+git diff --check: 통과.
+최종 npm run build (RESTORY_BUILD_DIRECTORY=.next-sofa-qa): 성공.
+Next 16.2.12: Compiled successfully in 2.1s, TypeScript 3.8s.
+정적 생성: 6850/6850, 14.6s. 이전 방 수치를 재사용하지 않음.
+node --test scripts/academy-attribution.test.mjs: 18/18 pass, skip 0.
+production NEXT_PRIVATE_MINIMAL_MODE=1 서버 대상으로
+scripts/service-cache-regression.test.mjs: 13/13 pass, skip 0.
+/sofa, /sofa/서초-쇼파-탄성저하, 소파 팁 2개, case-080/081/101:
+  각각 HTTP 200 및 canonical 일치.
+/sofa와 지역 페이지: aggregateRating 없음, FAQ aria-controls 7개 확인.
+/go/kakao 및 /go/phone: sofa_cushion/floating_cta 각각 307 목적지 확인.
+기존 restory_attribution 쿠키를 보낸 카카오 리다이렉트에서
+utm_source/medium/campaign 유지 및 utm_content=CTA 식별자 확인.
+리다이렉트 외부 목적지는 따라가지 않았고 메시지/전화 발신 없음.
+
+실제 브라우저 검증
+지원 브라우저 도구로 실제 Next 앱 사용. 정적 HTML 시안 아님.
+1440x1000, 390x844, 320x740에서 document.scrollWidth와 viewport 폭 일치.
+Hero·사례·원인·절차·비용·FAQ 줄바꿈 및 이미지 표시 확인.
+320px 모바일 Hero CTA/전화 표시, 헤더 글자 중간 줄바꿈 수정 후 재확인.
+사례 선택 버튼을 44x44로 확대. 6번째 선택 후 마지막 카드 및 aria-current 확인.
+실제 case-080 링크 클릭 후 사례 상세 제목/URL 확인.
+FAQ 7개 각각 클릭 열기/닫기, aria-expanded true/false 확인. 320px 긴 답변 잘림 없음.
+모바일 FAQ 위를 가리던 우측 아이콘은 소파에서만 숨김. 하단 상담 버튼 유지.
+영상 facade 클릭 후 YouTube iframe·재생/일시중지 컨트롤 표시 확인.
+지역 페이지 Hero/canonical/390px 넘침 확인.
+최종 production 빌드에서도 1440/390/320 폭 및 모바일 FAQ 재확인. 수집된 error 로그 0.
+개발 서버에서는 HMR 작업 중 Uncaught (in promise), 이미지 sizes 및 smooth-scroll 경고 관찰.
+최종 production 검증에서 같은 error는 관찰하지 않음.
+물리 기기 터치 제스처/스와이프는 독립 검증하지 않음. 사례 버튼 이동으로 기능 확인.
+모든 6850개 URL을 개별 방문한 것은 아님. 실제 문의 성립·전환 개선 효과는 검증 대상 아님.
+
+유지
+지역 generateStaticParams/force-static/dynamicParams/revalidate=86400 보존.
+canonical, 실제 사례 데이터/사진, 형제 소개·브랜드·기살 상품/상담/추적 코드 보존.
+/go 라우트, attribution 코드, CTA 식별자 및 UTM 보존.
+별도 /repair/sofa-sag는 수정하지 않음.
+
+운영자 확인 필요
+1. 대표 가격 범위와 자재·공임·출장비 포함 여부, 수리 불가/견적 거절 비용.
+2. A/S 기간·대상·무상 범위·예외·꺼짐 재발 처리.
+3. 사진 견적과 현장 상태가 다를 때 최종 금액 설명·동의 절차.
+4. 일반 작업시간 안내의 유효성. 확인 전 일률적인 2~4시간 약속은 제외.
+
+스크린샷·빌드 로그
+/Users/noah/.codex/visualizations/2026/11/14/01a1db07-08b9-74d1-9617-51655b4a5eb4/sofa-qa/
+desktop-1440.jpg, mobile-390.jpg, mobile-320.jpg, faq-320.jpg,
+faq-390.jpg, process-390.jpg, proof-390.jpg, regional-390.jpg.
+faq-390.jpg는 보완 전 우측 아이콘 겹침 증거이며, 최종 모바일 FAQ는 faq-320.jpg.

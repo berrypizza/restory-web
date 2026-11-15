@@ -1,0 +1,123 @@
+이 문서는 이전 ChatGPT 작업 사본의 원본 인수인계 기록입니다.
+이번 Mac 실제 적용·검증 결과는 docs/sofa-local-verification.txt를 참조하세요.
+
+리스토리 소파 꺼짐 오퍼 개선 — 구현 및 검증 인수인계
+기준일: 2026-11-15 한국 시간
+
+상태
+- GitHub berrypizza/restory-web의 main ae3716c971af5d4d9cccabe0b31ba897965c6c04 기준.
+- 정확한 저장소 주소: https://github.com/berrypizza/restory-web
+- 별도 작업 사본: /workspace/scratch/5fbef317590f/restory-web
+- 작업 브랜치: codex/sofa-offer-20261115
+- 실제 코드 10개 파일 수정. 이 보고서는 새 문서 1개.
+- 원본 Mac /Users/noah/Documents/사이트/restory-web에는 이 방에서 직접 반영하지 않음.
+- commit, push, PR, 프로덕션 배포를 수행하지 않음. 이번 요청에는 새 배포 승인이 없음.
+
+적용한 오퍼 방향
+- 원하는 결과: 마음에 드는 소파를 다시 편하게 사용하기.
+- 신뢰: 미검증 평점·보장 대신 기존 실제 전후 사진과 case-080/081/101의 원인·작업 기록.
+- 시간: 사례의 작업시간, 일반 작업 안내, 예약부터 방문까지의 시간을 구분.
+- 수고: 전체 사진·꺼진 부분·지역·증상으로 상담 시작. 사진 판단과 현장 내부 확인의 범위를 구분.
+- 기살 교육생에게 요구한 학습·사업 태도를 수리 고객 카피로 옮기지 않음.
+- 전환 상승을 검증한 결과가 아니라 개선 가설의 구현임.
+
+새 본문 흐름
+Hero → 실제 전후와 관련 사례 → 쿠션·밴드·스프링별 원인과 작업
+→ 사진 상담/현장 확인/복원 절차 → 비용 결정 요소와 작업 전 확인 항목
+→ 실제 영상 → FAQ → 사진 상담.
+
+Hero 핵심
+마음에 드는 소파,
+다시 편안하게
+
+겉은 괜찮은데 앉는 자리만 푹 꺼지나요?
+내부 보강으로 다시 쓸 수 있는지 살펴봅니다.
+
+사진 상담은 가능한 작업의 1차 확인, 예상 비용 범위, 방문 일정 상담으로 설명.
+사진으로 보이지 않는 내부 손상은 현장 확인이 필요할 수 있음.
+
+변경 파일
+1. app/components/landing/Sofacushionlanding.tsx
+   결과 중심 Hero, 사례를 앞에 배치, 원인별 복원 설명, 비용 결정 요소, FAQ 7개.
+   근거 미확인 가격 비교, 1/10, 연간 500건, 4.9, 내구성 2배, 재발 없음,
+   100% 무상 A/S, 30초 응답, 방문 전 금액 확정, 무조건 재방문, 보험 100% 보상 삭제.
+   원출처 확인 전 후기 블록 대신 실제 작업 기록 사용.
+   FAQ aria-expanded/aria-controls 및 숨김 속성 적용. 답변 고정 높이 제거.
+   사례 제목 줄임표 제거, 사례 선택 버튼 접근성 라벨, 영상 재생 버튼의 키보드 접근성 개선.
+   좁은 화면에서 진행 카드 제목/배지가 줄바꿈되도록 처리.
+2. app/sofa/page.tsx
+   메타/OG 설명을 새 본문과 맞춤. URL/canonical 유지.
+3. app/sofa/[slug]/page.tsx
+   지역 메타/OG/WebPage 구조화 데이터 정리.
+   generateStaticParams, force-static, dynamicParams, revalidate=86400 유지.
+4. app/components/Businesslinecards.tsx
+   홈 소파 카드와 소파 가격 비교만 수정. 다른 서비스 카피·가격 유지.
+   소파 비교는 제품별 확인/상태별 견적, 비용 결정 요소 링크로 변경.
+5. lib/site-config.ts
+   소파 설명과 Hero의 근거 미확인 절감 약속을 정리.
+6. app/components/landing/shared/FloatingCTA.tsx
+   label 선택 prop 추가. 소파에서만 '사진 보내고 복원 가능성 확인' 사용.
+   다른 페이지 기본 문구와 링크·data-cta 유지.
+7. app/components/JsonLd.tsx
+   소파 서비스 설명 정리. ServiceJsonLd는 소파에서만 aggregateRating 제외.
+   전역 LocalBusiness의 출처 미확인 평점 4.9/519도 제거.
+   이 전역 구조화 데이터 변경은 홈·아카데미를 포함한 모든 경로에 적용됨.
+   다른 서비스의 개별 ServiceJsonLd 평점까지 전체 검증/정리했다는 뜻은 아님.
+8. app/tips/[id]/TipDetailContent.tsx
+   소파 카테고리 배너의 AS 3년 보장 문구만 정리. 다른 서비스 배너 유지.
+9. lib/tips/contents/sofa-restoration-vs-buy-new.ts
+   임의 가격·절감률 표를 실제 견적과 새 제품 총비용의 비교 기준으로 변경.
+10. lib/tips/contents/natuzzi-sofa-sagging-restoration-cost.ts
+   브랜드 전체에 대한 일반화를 반포 실제 사례로 한정.
+   비용 결정 요소와 사진 상담 범위 설명, case-080 연결.
+
+보존 범위
+- /sofa와 공용 지역 상세가 대상. 별도 /repair/sofa-sag 엔트리는 수정하지 않음.
+- 기존 브랜드, 이미지, 실제 사례, 내비게이션/철학/형제 소개 페이지 유지.
+- /go/kakao, /go/phone, lib/attribution.ts, AttributionTracker.tsx 수정 없음.
+- 기존 소파 CTA 식별자 sofa_cushion, floating_cta와 UTM 전달 유지.
+- 아카데미 상품/상담/접수/계측 코드 및 app/layout.tsx 수정 없음.
+- Next 16.2.12, React 19.2.4, package.json, lockfile 유지.
+- DB, 환경변수, 실제 상담 접수와 GA4 설정을 수정하지 않음.
+
+검증 결과
+- 변경 코드 파일 ESLint 통과. 전체 저장소 lint가 모두 해결됐다는 뜻은 아님.
+- git diff --check 통과.
+- 최종 npm run build 및 TypeScript 통과, 정적 6,850페이지 생성 성공.
+- 기존 academy-attribution 테스트: 18/18 통과, skip 0.
+- 기존 service-cache-regression 테스트: 헤더 4 + HTTP 9 = 13/13 통과, skip 0.
+  서버와 검사를 같은 실행에서 돌리고 NEXT_PRIVATE_MINIMAL_MODE=1을 사용함.
+  첫 시도는 실행 환경의 프로세스/네트워크 격리로 ECONNREFUSED 발생.
+  서버와 검사를 같은 실행 안에 두어 해결했으며 사이트 코드 오류는 아니었음.
+- 추가 HTTP 확인: /sofa, 한글 소파 대표 상세, 소파 팁 2개, 실제 사례 3개 200/canonical 정상.
+- /sofa와 한글 상세의 모든 JSON-LD에서 미검증 aggregateRating 비노출 확인.
+- 7개 FAQ 질문의 구조화 데이터와 답변 ID/aria 연결, 사례/CTA 목적지 확인.
+- sofa_cushion/floating_cta의 카카오 307, 기존 UTM 보존, 전화 tel:1688-2957 307 확인.
+  리다이렉트를 따라 외부 카카오·전화를 실행하거나 실제 메시지를 보내지 않음.
+- 6,850개 모든 URL을 개별 방문하지 않음. 실제 고객 DB에 가짜 신청을 만들지 않음.
+
+실제 브라우저 검증 제한
+- 이 환경의 브라우저는 별도 실행의 localhost 서버에 접근하지 못함.
+- 공유 파일로 준비한 미리보기도 file: URL 보안 정책에 의해 차단됨.
+- 이 제한을 우회하지 않았음. 실제 데스크톱/모바일 렌더링, 클릭, 스와이프,
+  영상 재생, 브라우저 콘솔 상태를 확인했다고 보고할 수 없음.
+- 제공한 HTML은 빌드에서 만든 정적 내용 검토본이며 실제 사이트 실행본이 아님.
+  상담/영상/탐색 동작을 차단하고 FAQ 답변은 내용 검토를 위해 모두 표시함.
+
+원본 방에서 이어갈 작업
+1. 최신 origin/main과 작업 트리를 다시 확인. 동시 변경을 덮어쓰지 않음.
+2. 첨부 패치에 git apply --check를 먼저 실행. 충돌이 없을 때 적용.
+3. 운영 사실 3개를 확인해 공개 오퍼를 확정.
+   A) 가격 기준/범위와 출장·자재·공임 포함 여부, 수리 불가/견적 거절 시 비용.
+   B) 소파 A/S 기간·대상 부위·무상 처리 범위·예외 및 재발 시 처리.
+   C) 사진 안내→현장 내부 확인→작업 범위/최종 금액 동의 절차.
+      기존 일반 작업 안내 2~4시간을 계속 사용할 수 있는지도 함께 확인.
+4. 로컬 dev에서 1440/390/320 화면을 확인.
+   Hero/단계 카드 줄바꿈, 실제 사례 카드/스와이프, 긴 FAQ 열기/닫기,
+   고정 CTA 겹침, 카카오/전화 연결, 영상 facade, 홈 비교 박스와 팁 표/목록 확인.
+5. npm run build와 필요한 회귀 검사. 배포는 별도 사용자 승인 범위 확인 후 수행.
+
+계측 해석
+- contact_click은 기존 Vercel 클릭 측정. GA4에 새로운 접수 완료 전환을 연결하지 않음.
+- 카카오 클릭 ≠ 사진 전송 ≠ 상담 성립 ≠ 예약 ≠ 시공/매출.
+- 실제 상담 품질과 견적→예약 데이터를 확보한 뒤 개선 가설을 검증해야 함.

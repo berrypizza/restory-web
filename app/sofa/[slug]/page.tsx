@@ -23,7 +23,7 @@ export async function generateMetadata({
   const slug = decodeURIComponent(rawSlug);
   const kw = slug.replace(/-/g, " ");
 
-  const desc = `${kw} 전문 리스토리. 새 소파 구매 비용의 1/10 수준. HR계열 고탄성 스펀지 + 이태리 엘라스틱 밴드. 당일 시공, 무상 A/S.`;
+  const desc = `${kw} 복원 상담. 사진으로 복원 가능성과 예상 비용 범위를 먼저 살펴보고, 내부 스펀지·밴드·스프링 상태에 맞는 작업을 안내합니다. 실제 시공 사례와 방문 일정을 확인하세요.`;
 
   return withLandingSeo({
     title: `${kw} | 리스토리 스튜디오`,
@@ -62,7 +62,7 @@ export default async function Page({
     <>
       <WebPageJsonLd
         name={kw}
-        description={`${kw} 상태를 사진으로 먼저 확인하고 소파 쿠션 복원 가능 여부를 안내합니다.`}
+        description={`${kw} 상태를 사진으로 먼저 살펴보고 복원 가능성과 예상 비용 범위를 안내합니다. 내부 손상 등 추가 확인이 필요한 부분은 현장에서 확인합니다.`}
         url={`${BASE}/sofa/${slug}`}
         image="/images/sofa/hero-sofa-2.webp"
       />

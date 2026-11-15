@@ -18,24 +18,47 @@ const KAKAO_URL = buildTrackedContactPath("kakao", "sofa_cushion");
 
 const FAQ_ITEMS = [
   {
-    q: "소파 새로 사는 것보다 정말 저렴한가요?",
-    a: "대부분의 경우 새 소파 구매 비용의 1/5~1/10 수준으로 복원 가능합니다. 사진 보내주시면 정확한 비용 범위를 먼저 안내드립니다.",
+    q: "우리 집 소파도 복원할 수 있나요?",
+    a: "쿠션의 탄성 저하, 밴드 늘어짐, 스프링 이탈 등 원인과 내부 구조에 따라 가능한 작업이 달라집니다. 전체 모습과 꺼진 부분 사진으로 먼저 살펴보고, 사진에 드러나지 않는 손상은 현장 확인이 필요할 수 있습니다.",
   },
   {
-    q: "어떤 소파든 복원 가능한가요?",
-    a: "대부분 가능합니다. 스프링, 밴드, 스펀지 구조의 소파라면 복원 가능하며, 사진 보내주시면 가능 여부를 바로 안내드립니다.",
+    q: "사진을 보내면 무엇을 알 수 있나요?",
+    a: "복원 가능성을 1차로 살펴보고 예상 비용 범위와 방문 가능 일정을 상담합니다. 전체 모습과 꺼진 부분 사진에 지역·증상을 함께 적어주세요. 추가 사진이나 내부 확인이 필요한 부분도 안내합니다.",
   },
   {
-    q: "복원 시간은 얼마나 걸리나요?",
-    a: "소파 1개 기준 약 2~4시간 소요됩니다. 현장 상태에 따라 달라질 수 있으며, 사전에 안내드립니다.",
+    q: "복원 비용은 어떻게 정해지나요?",
+    a: "좌석 수와 꺼진 범위, 내부 구조의 상태, 필요한 자재와 작업에 따라 달라집니다. 사진으로 예상 범위를 상담하고, 자재·공임·출장비 등 포함 항목과 추가 확인이 필요한 부분을 작업 전에 함께 확인해 주세요.",
   },
   {
-    q: "가죽 교체나 의자 천갈이도 같이 가능한가요?",
-    a: "네. 소파 가죽이 찢어졌거나 프레임이 삐걱거리는 경우, 식탁·사무용 의자 천갈이까지 방문 시 함께 작업 가능합니다. 추가 출장비 없이 진행됩니다.",
+    q: "언제 방문하고, 작업은 얼마나 걸리나요?",
+    a: "방문 일정은 지역과 예약 상황에 맞춰 상담합니다. 작업 소요시간은 내부 상태와 필요한 작업 범위를 확인한 뒤 상담합니다. 작업시간은 문의부터 방문까지의 대기 시간을 뜻하지 않습니다.",
   },
   {
-    q: "A/S는 어떻게 되나요?",
-    a: "수리 부위의 처짐 재발 등에 대해 무상으로 재시공해드립니다.",
+    q: "직접 소파를 옮겨야 하나요?",
+    a: "사진 상담 때 소파가 놓인 공간과 지역을 알려주세요. 현장에서 작업할 수 있는지, 작업 공간 확보나 별도 이동이 필요한지 소파 구조와 상태에 맞춰 상담합니다.",
+  },
+  {
+    q: "수리 후 다시 꺼지면 어떻게 하나요?",
+    a: "시공한 부위에 문제가 생기면 해당 부분의 사진과 증상을 보내주세요. A/S 대상 부위·기간·처리 방식은 작업 내용에 따라 상담에서 확인해 주세요.",
+  },
+  {
+    q: "가죽 교체나 의자 천갈이도 함께 문의할 수 있나요?",
+    a: "함께 작업하고 싶은 가구의 전체 사진과 손상 부위를 보내주세요. 작업 가능 여부, 필요한 준비와 추가 비용을 각각 확인해 안내합니다.",
+  },
+];
+
+const FEATURED_CASES = [
+  {
+    id: "case-080",
+    title: "가운데가 푹 꺼진 나뚜찌 소파",
+    cause: "밴드 늘어짐 · 스펀지 노후",
+    work: "고탄성 스펀지 충진과 하부 밴드 보강",
+  },
+  {
+    id: "case-081",
+    title: "앉을 때 지지력이 약해진 소파",
+    cause: "S자 스프링 이탈",
+    work: "이탈한 스프링을 잡고 엘라스틱 밴드로 보강",
   },
 ];
 
@@ -146,7 +169,7 @@ function CaseStrip({ region }: { region?: string }) {
                 </div>
               </div>
               <div className="p-3 bg-white">
-                <p className="text-[13px] font-extrabold text-neutral-900 truncate">
+                <p className="text-[13px] font-extrabold leading-relaxed text-neutral-900">
                   {item.title}
                 </p>
                 <p className="text-[11px] text-neutral-400 mt-0.5">
@@ -157,21 +180,18 @@ function CaseStrip({ region }: { region?: string }) {
           </div>
         ))}
       </div>
-      <div className="flex justify-center gap-1.5 mt-4">
+      <div className="flex justify-center mt-4">
         {CASE_ITEMS.map((_, i) => (
           <button
             key={i}
+            type="button"
+            aria-label={`${i + 1}번째 복원 사례 보기`}
+            aria-current={i === activeIdx ? "true" : undefined}
             onClick={() => scrollTo(i)}
-            className="rounded-full transition-all"
-            style={{
-              width: i === activeIdx ? 20 : 6,
-              height: 6,
-              background: i === activeIdx ? "#1a5cff" : "#d1d5db",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
-          />
+            className="flex h-11 w-11 items-center justify-center rounded-full"
+          >
+            <span aria-hidden="true" className="h-1.5 rounded-full transition-all" style={{ width: i === activeIdx ? 20 : 6, background: i === activeIdx ? "#1a5cff" : "#d1d5db" }} />
+          </button>
         ))}
       </div>
     </div>
@@ -184,10 +204,7 @@ function CaseStrip({ region }: { region?: string }) {
 function YouTubeFacade({ videoId }: { videoId: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div
-      className="relative aspect-video overflow-hidden rounded-2xl cursor-pointer"
-      style={{ background: "#000" }}
-      onClick={() => setLoaded(true)}>
+    <div className="relative aspect-video overflow-hidden rounded-2xl bg-black">
       {loaded ? (
         <iframe
           className="h-full w-full"
@@ -197,33 +214,28 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
           allowFullScreen
         />
       ) : (
-        <>
-          <img
+        <button
+          type="button"
+          onClick={() => setLoaded(true)}
+          className="absolute inset-0 h-full w-full cursor-pointer"
+          aria-label="리스토리 소파 꺼짐 복원 수리 현장 영상 재생">
+          <Image
             src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
-            alt="시공 영상 썸네일"
-            className="h-full w-full object-cover"
-            style={{ opacity: 0.75 }}
+            alt="소파 꺼짐 복원 수리 현장"
+            fill
+            unoptimized
+            sizes="(min-width: 768px) 512px, 100vw"
+            className="object-cover opacity-75"
           />
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-            <div
-              className="flex h-16 w-16 items-center justify-center rounded-full"
-              style={{ background: "rgba(255,0,0,0.92)" }}>
-              <div
-                style={{
-                  width: 0,
-                  height: 0,
-                  marginLeft: 4,
-                  borderTop: "11px solid transparent",
-                  borderBottom: "11px solid transparent",
-                  borderLeft: "18px solid white",
-                }}
-              />
-            </div>
-            <p className="text-[13px] font-bold text-white/80">
-              탭해서 실제 시공 영상 보기
-            </p>
-          </div>
-        </>
+          <span className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </span>
+            <span className="text-[13px] font-bold text-white">실제 시공 영상 보기</span>
+          </span>
+        </button>
       )}
     </div>
   );
@@ -247,14 +259,14 @@ export default function SofaCushionLanding({ keyword }: Props) {
     : { region: "", symptom: "", sofaWord: "소파" };
 
   const heroTitle = region
-    ? `${region} ${sofaWord} ${symptom} 복원 수리`
-    : "소파 쿠션 복원\n새로 살 필요 없습니다";
+    ? `${region} ${sofaWord} ${symptom}\n교체 전에 복원부터`
+    : "마음에 드는 소파,\n다시 편안하게";
   const heroSub = region
-    ? `${region} 당일 출장 가능 · 고탄성 스펀지로 더 오래가게`
-    : "내부 구조만 복원하면 새것처럼, 더 저렴하게";
+    ? `${region} ${sofaWord} ${symptom}, 사진으로 먼저 살펴보고 내부 상태에 맞는 복원 방법을 상담합니다.`
+    : "겉은 괜찮은데 앉는 자리만 푹 꺼지나요? 내부 보강으로 다시 쓸 수 있는지 살펴봅니다.";
   const heroBadge = region
-    ? `${region} 출장 · 새 ${sofaWord} 비용의 1/10~`
-    : "새 소파 구매 비용의 1/10~";
+    ? `${region} 방문 일정 상담`
+    : "사진으로 복원 가능성 확인";
 
   // 지역 케이스 수 (thin content 방지용 동적 데이터)
   const regionCaseCount = region
@@ -276,7 +288,8 @@ export default function SofaCushionLanding({ keyword }: Props) {
             ? `${region} ${sofaWord} ${symptom} 복원 수리`
             : "소파 쿠션 복원"
         }
-        description="소파 쿠션 꺼짐·주저앉음 증상을 HR계열 고탄성 스펀지와 이태리 엘라스틱 밴드로 복원. 새 소파 구매 비용의 1/10 수준. 무상 A/S."
+        description="소파 꺼짐·주저앉음의 원인과 내부 상태를 확인하고 스펀지·밴드·스프링에 필요한 복원 작업을 상담합니다. 사진으로 복원 가능성과 예상 비용 범위를 먼저 살펴보세요."
+        includeAggregateRating={false}
         url={
           keyword
             ? `https://www.restorystudio.co.kr/sofa/${keyword}`
@@ -345,7 +358,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
               </p>
 
               <div
-                className="inline-flex items-baseline gap-2 rounded-2xl px-4 py-2.5 mb-8"
+                className="inline-flex flex-col gap-1 rounded-2xl px-4 py-3 mb-6"
                 style={{
                   background: "rgba(26,92,255,0.25)",
                   border: "1px solid rgba(26,92,255,0.4)",
@@ -354,7 +367,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
                   {heroBadge}
                 </span>
                 <span className="text-[13px] font-medium text-white/50">
-                  고탄성 스펀지 + 이태리 밴드
+                  쿠션과 하부 지지 구조를 함께 살펴봅니다
                 </span>
               </div>
 
@@ -390,11 +403,15 @@ export default function SofaCushionLanding({ keyword }: Props) {
                 </a>
               </div>
 
-              <div className="mt-8 flex items-center gap-6">
+              <p className="mt-4 text-[12px] leading-relaxed text-white/65">
+                전체 모습 · 꺼진 부분 사진과 지역·증상을 보내주세요.
+                <br />사진으로 알기 어려운 내부 손상은 현장 확인이 필요할 수 있습니다.
+              </p>
+              <div className="mt-6 grid grid-cols-3 gap-4">
                 {[
-                  { n: "500건+", l: "연간 복원" },
-                  { n: "4.9★", l: "고객 평점" },
-                  { n: "100%", l: "무상 A/S" },
+                  { n: "가능한 작업", l: "사진으로 1차 확인" },
+                  { n: "예상 비용", l: "작업 범위 상담" },
+                  { n: "방문 일정", l: "지역·예약 확인" },
                 ].map((s, i) => (
                   <div key={i}>
                     <p className="text-[15px] font-black text-white">{s.n}</p>
@@ -438,7 +455,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
         <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
           <div className="mx-auto max-w-lg text-center">
             <p className="text-[14px] font-black text-white">
-              📍 {region} 지역 당일 출장 가능 · 사진 한 장으로 무료 견적
+              📍 {region} 출장 가능 여부와 일정을 사진으로 문의하세요
             </p>
           </div>
         </section>
@@ -454,21 +471,20 @@ export default function SofaCushionLanding({ keyword }: Props) {
               {region} {sofaWord} {symptom} 복원 수리
             </h2>
             <p className="text-[14px] leading-[1.8] text-neutral-600">
-              {region} 지역 {sofaWord} {symptom} 증상은 리스토리가 당일 출장으로
-              해결합니다. 오래 사용한 소파일수록 내부 스펀지 탄성이 떨어져{" "}
-              {symptom} 증상이 흔하게 나타납니다.
+              {region} 지역 {sofaWord} {symptom} 증상은 내부 쿠션과 지지 구조의
+              상태에 따라 필요한 작업이 달라집니다. 사진으로 먼저 살펴보고,
+              내부 확인이 필요한 부분과 방문 가능한 일정을 상담합니다.
               {regionCaseCount > 0 && (
                 <>
                   {" "}
-                  리스토리의 {region} 지역 복원 완료 건수는{" "}
+                  현재 공개된 {region} 지역 소파 복원 사례는{" "}
                   <strong className="text-neutral-900">
                     {regionCaseCount}건
                   </strong>
                   입니다.
                 </>
               )}{" "}
-              사진 한 장 보내주시면 {region} 출장 가능 여부와 비용을 바로
-              안내드립니다.
+              소파의 전체 모습과 꺼진 부분, 지역과 증상을 함께 보내주세요.
             </p>
           </div>
         </section>
@@ -486,7 +502,8 @@ export default function SofaCushionLanding({ keyword }: Props) {
             <h2
               className="font-black leading-[1.2] mb-8"
               style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-              말보다 사진이 빠릅니다
+              먼저, 비슷한 소파의
+              <br />복원 과정을 보세요
             </h2>
           </FadeIn>
           <FadeIn delay={80}>
@@ -540,284 +557,67 @@ export default function SofaCushionLanding({ keyword }: Props) {
             </div>
           </FadeIn>
 
-          <FadeIn delay={150}>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <div
-                className="rounded-2xl p-4 text-center"
-                style={{ background: "#fff", border: "1px solid #e5e7eb" }}>
-                <p className="text-[11px] font-semibold text-neutral-400 mb-1">
-                  소파 새로 구매
-                </p>
-                <p
-                  className="text-[22px] font-black"
-                  style={{ color: "#ef4444" }}>
-                  300~1000만원
-                </p>
-                <p className="text-[11px] text-neutral-400 mt-1">
-                  + 배송, 조립 대기
-                </p>
-              </div>
-              <div
-                className="rounded-2xl p-4 text-center"
-                style={{ background: "#eef4ff", border: "1px solid #c7d7ff" }}>
-                <p className="text-[11px] font-semibold text-[#1a5cff] mb-1">
-                  리스토리 쿠션 복원
-                </p>
-                <p
-                  className="text-[22px] font-black"
-                  style={{ color: "#1a5cff" }}>
-                  30~100만원~
-                </p>
-                <p className="text-[11px] text-[#1a5cff]/60 mt-1">
-                  + 당일 완료
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={180}>
-            <div
-              className="mt-4 overflow-hidden rounded-2xl"
-              style={{ border: "1px solid #e5e7eb" }}>
-              <div className="p-5" style={{ background: "#fff" }}>
-                <p className="text-[11px] font-bold tracking-widest text-neutral-400 mb-3">
-                  QUALITY PROOF
-                </p>
-                <h3 className="text-[18px] font-black text-neutral-900 leading-[1.3] mb-1">
-                  복원했는데 왜 더 오래가나요?
-                </h3>
-                <p className="text-[13px] leading-[1.7] text-neutral-500 mb-5">
-                  대부분의 소파 복원은 일반 화학 스펀지를 써요.
-                  <br />
-                  리스토리는{" "}
-                  <strong className="text-neutral-800">
-                    HR계열 고탄성 스펀지 + 이태리 엘라스틱 밴드
-                  </strong>
-                  만 사용합니다.
-                </p>
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[12px] font-semibold text-neutral-400">
-                        일반 화학 스펀지
-                      </span>
-                      <span className="text-[13px] font-black text-neutral-400">
-                        탄성 쉽게 꺼짐
-                      </span>
-                    </div>
-                    <div
-                      className="h-3 rounded-full overflow-hidden"
-                      style={{ background: "#f3f4f6" }}>
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: "30%", background: "#d1d5db" }}
-                      />
-                    </div>
+          <p className="mt-4 text-[13px] leading-relaxed text-neutral-500">
+            복원 전후의 모습입니다. 가능한 개선 범위는 소파의 구조와 손상 상태에 따라 달라집니다.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {FEATURED_CASES.map((proof) => {
+              const item = cases.find((entry) => entry.id === proof.id);
+              if (!item) return null;
+              return (
+                <Link
+                  key={proof.id}
+                  href={`/cases/${proof.id}`}
+                  className="overflow-hidden rounded-2xl border border-neutral-200 bg-white no-underline transition-shadow hover:shadow-md">
+                  <div className="relative aspect-[4/3]">
+                    <Image src={item.afterImg} alt={`${item.region} 소파 복원 후`} fill sizes="(min-width: 640px) 250px, 100vw" className="object-cover" />
                   </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span
-                        className="text-[12px] font-bold"
-                        style={{ color: "#1a5cff" }}>
-                        리스토리 HR 고탄성 스펀지
-                      </span>
-                      <span
-                        className="text-[13px] font-black"
-                        style={{ color: "#1a5cff" }}>
-                        내구성 2배+
-                      </span>
-                    </div>
-                    <div
-                      className="h-3 rounded-full overflow-hidden"
-                      style={{ background: "#eef4ff" }}>
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: "90%", background: "#1a5cff" }}
-                      />
-                    </div>
+                  <div className="p-4">
+                    <p className="mb-2 text-[11px] font-bold text-[#1a5cff]">{item.region} · 해당 현장 약 2시간</p>
+                    <h3 className="mb-3 text-[16px] font-black leading-snug text-neutral-900">{proof.title}</h3>
+                    <dl className="space-y-2 text-[12px] leading-relaxed text-neutral-600">
+                      <div><dt className="font-bold text-neutral-900">확인한 원인</dt><dd>{proof.cause}</dd></div>
+                      <div><dt className="font-bold text-neutral-900">진행한 작업</dt><dd>{proof.work}</dd></div>
+                    </dl>
+                    <p className="mt-4 text-[12px] font-bold text-[#1a5cff]">전후 사진과 작업 기록 보기 →</p>
                   </div>
-                </div>
-                <div
-                  className="mt-4 flex items-center justify-center gap-2 rounded-xl py-3"
-                  style={{ background: "#eef4ff" }}>
-                  <span
-                    className="text-[16px] font-black"
-                    style={{ color: "#1a5cff" }}>
-                    꺼짐 재발 없음
-                  </span>
-                  <span
-                    className="text-[13px]"
-                    style={{ color: "rgba(26,92,255,0.5)" }}>
-                    → 무상 A/S 보증
-                  </span>
-                </div>
-              </div>
-              <div
-                className="grid grid-cols-2 border-t"
-                style={{ borderColor: "#f3f4f6" }}>
-                {[
-                  {
-                    img: "/images/sofa/symptom-3.jpg",
-                    alt: "기존 화학 스펀지 삭은 상태",
-                    sub: "기존 화학 스펀지",
-                    label: "탄성 삭아 꺼짐",
-                    dark: true,
-                  },
-                  {
-                    img: "/images/sofa/before-after-2.jpg",
-                    alt: "리스토리 고탄성 복원",
-                    sub: "리스토리 복원 후",
-                    label: "탄성 그대로 복원",
-                    dark: false,
-                  },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="relative overflow-hidden"
-                    style={{ aspectRatio: "4/3" }}>
-                    <Image
-                      src={item.img}
-                      alt={item.alt}
-                      fill
-                      className="object-cover"
-                      sizes="50vw"
-                    />
-                    <div
-                      className="absolute inset-0 flex flex-col justify-end p-3"
-                      style={{
-                        background: item.dark
-                          ? "linear-gradient(to top, rgba(0,0,0,0.65), transparent)"
-                          : "linear-gradient(to top, rgba(26,92,255,0.7), transparent)",
-                      }}>
-                      <p className="text-[10px] font-semibold text-white/70">
-                        {item.sub}
-                      </p>
-                      <p className="text-[13px] font-black text-white">
-                        {item.label}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
+                </Link>
+              );
+            })}
+          </div>
+          <CaseStrip region={region} />
         </div>
       </section>
 
-      {/* 3. REVIEWS */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
-        <div className="mx-auto max-w-2xl">
+      {/* 3. METHOD */}
+      <section className="px-5 py-14 md:py-20 bg-white">
+        <div className="mx-auto max-w-lg">
           <FadeIn>
-            <div className="flex items-end gap-3 mb-8">
-              <div>
-                <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-1">
-                  REVIEWS
-                </p>
-                <h2
-                  className="font-black leading-[1.2]"
-                  style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-                  직접 겪은 고객님들
-                </h2>
-              </div>
-              <div className="ml-auto text-right pb-1 flex-shrink-0">
-                <p
-                  className="text-[28px] font-black"
-                  style={{ color: "#1a5cff" }}>
-                  4.9★
-                </p>
-                <p className="text-[11px] text-neutral-400">고객 평점</p>
-              </div>
-            </div>
+            <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">HOW WE REPAIR</p>
+            <h2 className="mb-4 font-black leading-[1.2]" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              같은 꺼짐이어도,<br />손봐야 할 곳은 다릅니다
+            </h2>
+            <p className="mb-7 text-[14px] leading-relaxed text-neutral-500">
+              쿠션뿐 아니라 아래에서 몸을 받쳐주는 구조도 살펴봅니다.
+              필요한 자재와 보강 방법은 상태를 확인한 뒤 정합니다.
+            </p>
           </FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3">
             {[
-              {
-                img: "/images/sofa/review-1.jpg",
-                keyword: "처음 샀을 때처럼",
-                unit: "소파 쿠션 복원",
-                area: "서울 강서구",
-                name: "신** 고객님",
-                quote:
-                  "이태리 소파라 버리기 아까웠는데, 쿠션 복원하니 처음 샀을 때처럼 됐어요. 새로 사는 것보다 훨씬 저렴했습니다.",
-              },
-              {
-                img: "/images/sofa/review-3.jpg",
-                keyword: "당일 작업 완료",
-                unit: "소파 쿠션 복원",
-                area: "인천시",
-                name: "고** 고객님",
-                quote:
-                  "직장인이라 반차 내고 받았는데 당일에 바로 끝나서 너무 편했어요. 작업도 깔끔하게 잘 해주셨습니다.",
-              },
-            ].map((r, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div
-                  className="overflow-hidden rounded-2xl h-full"
-                  style={{ border: "1px solid #e5e7eb" }}>
-                  <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
-                    <Image
-                      src={r.img}
-                      alt={r.name}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                    />
-                    <div
-                      className="absolute inset-0 flex flex-col justify-end p-4"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)",
-                      }}>
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="text-[11px] font-semibold text-white/60">
-                            {r.unit}
-                          </p>
-                          <p
-                            className="font-black text-white leading-none"
-                            style={{ fontSize: "clamp(1.2rem, 4vw, 1.6rem)" }}>
-                            {r.keyword}
-                          </p>
-                        </div>
-                        <span
-                          className="rounded-full px-3 py-1.5 text-[11px] font-black"
-                          style={{ background: "#eef4ff", color: "#1a5cff" }}>
-                          당일 완료
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-[12px] text-neutral-400 mb-2">
-                      {r.name} · {r.area}
-                    </p>
-                    <p className="text-[14px] leading-[1.7] text-neutral-700">
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                      {r.quote}
-                      <span
-                        style={{
-                          color: "#1a5cff",
-                          fontWeight: 900,
-                          fontSize: 16,
-                        }}>
-                        "
-                      </span>
-                    </p>
-                  </div>
+              { n: "01", title: "쿠션의 탄성이 줄었을 때", desc: "압착되거나 노후된 스펀지 상태를 확인합니다. 필요한 부분에 스펀지를 보강한 작업 사례를 확인해 보세요.", id: "case-080" },
+              { n: "02", title: "밴드가 늘어나거나 빠졌을 때", desc: "좌방석을 받치는 밴드의 연결 부위와 늘어짐을 확인합니다. 하부 지지 구조를 보강한 사례가 있습니다.", id: "case-101" },
+              { n: "03", title: "스프링이 이탈했을 때", desc: "안쪽 스프링과 고정 부위를 살펴봅니다. 이탈한 스프링을 다시 잡고 밴드로 보강한 과정을 볼 수 있습니다.", id: "case-081" },
+            ].map((item) => (
+              <div key={item.n} className="flex gap-4 rounded-2xl border border-neutral-200 bg-[#f8f9fb] p-5">
+                <span className="text-[22px] font-black text-[#1a5cff]">{item.n}</span>
+                <div>
+                  <h3 className="mb-2 text-[15px] font-black text-neutral-900">{item.title}</h3>
+                  <p className="text-[13px] leading-relaxed text-neutral-600">{item.desc}</p>
+                  <Link href={`/cases/${item.id}`} className="mt-3 inline-block text-[12px] font-bold text-[#1a5cff]">해당 작업 사례 보기 →</Link>
                 </div>
-              </FadeIn>
+              </div>
             ))}
           </div>
-          <FadeIn delay={100}>
-            <CaseStrip region={region} />
-          </FadeIn>
         </div>
       </section>
 
@@ -833,36 +633,27 @@ export default function SofaCushionLanding({ keyword }: Props) {
             <h2
               className="font-black leading-[1.2] mb-2"
               style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-              사진 한 장이면
+              사진 상담부터
               <br />
-              나머지는 저희가 합니다
+              필요한 복원 작업까지
             </h2>
             <p className="text-[14px] text-neutral-400 mb-10">
-              소파 복원은 빠를수록 좋습니다
+              가능한 작업과 준비할 내용을 순서대로 살펴봅니다
             </p>
           </FadeIn>
           <div className="flex flex-col gap-3">
             {[
               {
-                step: "01",
-                icon: "📸",
-                title: "사진 보내기",
-                desc: "소파 사진만 카카오로 보내주세요. 30초 안에 복원 가능 여부 확인해드립니다.",
-                time: "30초",
+                step: "01", icon: "📸", title: "사진으로 1차 상담", time: "사진 · 지역",
+                desc: "전체 모습과 꺼진 부분 사진, 지역·증상을 보내주세요. 복원 가능성과 예상 비용 범위, 방문 일정을 상담합니다.",
               },
               {
-                step: "02",
-                icon: "🔍",
-                title: "상태 확인 + 견적",
-                desc: "사진으로 1차 확인 후 정확한 금액 범위를 먼저 안내드립니다. 방문 전 금액 확정.",
-                time: "무료",
+                step: "02", icon: "🔍", title: "현장에서 상태 확인", time: "내부 확인",
+                desc: "사진에 보이지 않는 쿠션과 하부 구조를 살펴봅니다. 필요한 작업과 비용에 영향을 주는 부분을 함께 확인합니다.",
               },
               {
-                step: "03",
-                icon: "✅",
-                title: "방문 시공 완료",
-                desc: `스프링·밴드·스펀지 복원 후 바로 사용 가능.${region ? ` ${region} 당일 작업 마무리.` : " 당일 작업 마무리."}`,
-                time: "당일 완료",
+                step: "03", icon: "✅", title: "필요한 부위 복원", time: "상태별 작업",
+                desc: "확인한 원인에 맞춰 쿠션과 지지 구조를 보강하고, 작업한 부위의 지지 상태와 착석감을 확인합니다.",
               },
             ].map((s, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -883,7 +674,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
                       <span className="text-[11px] font-black text-neutral-300">
                         {s.step}
                       </span>
@@ -904,6 +695,10 @@ export default function SofaCushionLanding({ keyword }: Props) {
               </FadeIn>
             ))}
           </div>
+          <p className="mt-5 text-[13px] leading-relaxed text-neutral-500">
+            작업 소요시간은 내부 상태와 필요한 작업 범위를 확인한 뒤 상담합니다.
+            방문 날짜는 지역과 예약 상황에 맞춰 별도로 상담합니다.
+          </p>
           <FadeIn delay={200}>
             <a
               href={KAKAO_URL}
@@ -928,83 +723,41 @@ export default function SofaCushionLanding({ keyword }: Props) {
         </div>
       </section>
 
-      {/* 5. TRUST */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+      {/* 5. COST & AFTERCARE */}
+      <section className="px-5 py-14 md:py-20 bg-white">
         <div className="mx-auto max-w-lg">
           <FadeIn>
-            <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
-              TRUST
-            </p>
-            <h2
-              className="font-black leading-[1.2] mb-8"
-              style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-              걱정하시는 거<br />다 알고 있어요
+            <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">COST & AFTERCARE</p>
+            <h2 className="mb-4 font-black leading-[1.2]" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
+              가격을 비교할 때,<br />작업 범위도 같이 보세요
             </h2>
+            <p className="mb-7 text-[14px] leading-relaxed text-neutral-500">
+              소파마다 구조와 손상 정도가 다릅니다. 전체를 바꿀지, 필요한 부분을 복원할지 판단할 수 있도록 사진으로 예상 비용 범위를 먼저 상담합니다.
+            </p>
           </FadeIn>
-          <div className="flex flex-col gap-3 mb-10">
+          <div className="space-y-3">
             {[
-              {
-                icon: "🛡",
-                title: "AS 걱정 없는 책임 시공",
-                desc: "시공 후 미흡한 부분이나 꺼짐 재발 시 무조건 다시 와서 고쳐드립니다.",
-              },
-              {
-                icon: "📋",
-                title: "생산물 배상책임보험 가입",
-                desc: "시공 중 예상치 못한 문제가 생겨도 보험으로 100% 보상됩니다.",
-              },
-              {
-                icon: "🪡",
-                title: "고탄성 스펀지 · 이태리 밴드",
-                desc: "HR계열 고탄성 스펀지와 이태리 엘라스틱 밴드만 사용해 일반 복원보다 오래갑니다.",
-              },
-            ].map((t, i) => (
-              <FadeIn key={i} delay={i * 60}>
-                <div
-                  className="flex gap-4 rounded-2xl p-5"
-                  style={{
-                    background: "#f8f9fb",
-                    border: "1px solid #e5e7eb",
-                  }}>
-                  <span className="text-[24px] flex-shrink-0">{t.icon}</span>
-                  <div>
-                    <p className="text-[15px] font-black text-neutral-900 mb-1">
-                      {t.title}
-                    </p>
-                    <p className="text-[13px] leading-[1.6] text-neutral-500">
-                      {t.desc}
-                    </p>
-                  </div>
-                </div>
-              </FadeIn>
+              { title: "좌석 수와 꺼진 범위", desc: "한 자리만 꺼졌는지, 여러 자리의 지지력이 함께 약해졌는지 확인합니다." },
+              { title: "쿠션과 내부 지지 구조", desc: "스펀지·밴드·스프링·프레임 중 어떤 부분에 작업이 필요한지 살펴봅니다." },
+              { title: "작업 내용과 방문 조건", desc: "필요한 자재와 작업, 현장 공간과 지역을 함께 확인합니다." },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-neutral-200 bg-[#f8f9fb] p-5">
+                <h3 className="mb-1 text-[15px] font-black text-neutral-900">{item.title}</h3>
+                <p className="text-[13px] leading-relaxed text-neutral-600">{item.desc}</p>
+              </div>
             ))}
           </div>
-          <FadeIn delay={150}>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { src: "/images/cert-5.png", alt: "생산물배상책임보험증서" },
-                { src: "/images/cert-4.png", alt: "리스토리 A/S 보증서" },
-              ].map((c, i) => (
-                <div
-                  key={i}
-                  className="overflow-hidden rounded-2xl"
-                  style={{ border: "1px solid #e5e7eb" }}>
-                  <div className="aspect-[3/4] bg-neutral-50 p-3">
-                    <Image
-                      src={c.src}
-                      alt={c.alt}
-                      width={300}
-                      height={400}
-                      className="h-full w-full object-contain"
-                    />
-                  </div>
-                  <p className="text-center py-3 text-[12px] font-bold text-neutral-500 bg-neutral-50">
-                    {c.alt}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
+          <div className="mt-5 rounded-2xl border border-[#c7d7ff] bg-[#eef4ff] p-5">
+            <h3 className="mb-3 text-[16px] font-black text-neutral-900">작업을 결정하기 전, 함께 확인하세요</h3>
+            <ul className="list-disc space-y-2 pl-5 text-[13px] leading-relaxed text-neutral-700">
+              <li>안내받은 금액의 자재·공임·출장비 포함 여부</li>
+              <li>현장 확인 후 작업 범위가 달라질 수 있는 부분</li>
+              <li>A/S 대상 부위·기간·처리 방법</li>
+            </ul>
+            <p className="mt-4 text-[12px] leading-relaxed text-neutral-600">
+              시공한 부위에 문제가 생기면 사진과 증상을 보내주세요. 작업 내용을 기준으로 상담합니다.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -1026,7 +779,6 @@ export default function SofaCushionLanding({ keyword }: Props) {
             </h2>
           </FadeIn>
           <FadeIn delay={80}>
-            {/* TODO: 실제 유튜브 영상 ID로 교체해주세요 */}
             <YouTubeFacade videoId="WkxTbZnYz6c" />
           </FadeIn>
         </div>
@@ -1054,6 +806,9 @@ export default function SofaCushionLanding({ keyword }: Props) {
                   className="overflow-hidden rounded-2xl bg-white"
                   style={{ border: "1px solid #e5e7eb" }}>
                   <button
+                    type="button"
+                    aria-expanded={openFaq === i}
+                    aria-controls={`sofa-faq-${i}`}
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="flex w-full items-center justify-between px-5 py-4 text-left"
                     style={{
@@ -1074,9 +829,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
                       ▾
                     </span>
                   </button>
-                  <div
-                    className="overflow-hidden transition-all duration-300"
-                    style={{ maxHeight: openFaq === i ? 160 : 0 }}>
+                  <div id={`sofa-faq-${i}`} hidden={openFaq !== i}>
                     <p className="px-5 pb-4 pt-1 text-[13px] leading-[1.75] text-neutral-500 border-t border-neutral-100">
                       {f.a}
                     </p>
@@ -1097,19 +850,19 @@ export default function SofaCushionLanding({ keyword }: Props) {
             <p
               className="text-[13px] font-bold tracking-widest mb-4"
               style={{ color: "rgba(255,255,255,0.3)" }}>
-              지금 바로 시작하세요
+              교체를 결정하기 전에
             </p>
             <h2
               className="font-black text-white leading-[1.2] mb-3 whitespace-pre-line"
               style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)" }}>
               {region
-                ? `${region} ${sofaWord} ${symptom} 복원 수리\n사진 한 장이면 충분합니다`
-                : "소파 쿠션도\n사진 한 장이면 충분합니다"}
+                ? `${region} ${sofaWord} ${symptom},\n우리 집 소파부터 확인하세요`
+                : "우리 집 소파도\n다시 편하게 쓸 수 있을까요?"}
             </h2>
             <p
               className="text-[14px] mb-8"
               style={{ color: "rgba(255,255,255,0.4)" }}>
-              복원 가능 여부를 먼저 확인해드립니다
+              사진으로 가능한 작업과 예상 비용 범위, 방문 일정을 상담하세요.
             </p>
             <div className="flex flex-col gap-3 max-w-sm mx-auto">
               <a
@@ -1144,10 +897,10 @@ export default function SofaCushionLanding({ keyword }: Props) {
             </div>
             <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
               {[
-                "새 소파 비용의 1/10~",
-                "고탄성 스펀지",
-                "이태리 밴드",
-                "무상 A/S",
+                "전체 모습",
+                "꺼진 부분",
+                "지역",
+                "증상",
               ].map((b, i) => (
                 <span
                   key={i}
@@ -1168,7 +921,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
         </div>
       </section>
 
-      <FloatingCTA />
+      <FloatingCTA compactMobile label="사진 보내고 복원 가능성 확인" />
     </main>
   );
 }

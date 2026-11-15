@@ -275,19 +275,19 @@ export const businessLines: BusinessLineConfig[] = [
     subtitle: "소파 꺼짐 · 쿠션 복원",
     href: "/sofa",
     description:
-      "소파가 꺼진 경우\n새로 살 필요 없이 내부 보강으로 해결합니다.",
-    hero: "버리지 마세요.\n5배는 아낍니다.",
+      "소파가 꺼졌다면\n상태에 맞는 내부 보강이 가능한지 확인합니다.",
+    hero: "마음에 드는 소파,\n교체 전에 복원부터 살펴보세요.",
     services: [
       {
         slug: "sofa-sagging",
         title: "소파 꺼짐 복원",
         shortTitle: "소파 꺼짐 복원",
-        description: "소파가 꺼진 경우 내부 보강으로 해결합니다.",
-        hero: "버리지 마세요.\n5배는 아낍니다.",
+        description: "소파 꺼짐의 원인과 내부 상태에 맞는 복원 작업을 상담합니다.",
+        hero: "마음에 드는 소파,\n교체 전에 복원부터 살펴보세요.",
         painPoints: [
           "한쪽만 꺼진다",
           "앉으면 바닥이 느껴진다",
-          "새 소파가 수백만원이다",
+          "교체와 복원 중 어떤 선택이 나을지 모르겠다",
         ],
         process: [
           "사진으로 꺼짐 정도 확인",

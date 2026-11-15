@@ -25,7 +25,7 @@ const BASE_KEYWORDS = [
 export const metadata: Metadata = {
   title: "소파 쿠션 복원 전문 | 꺼짐·주저앉음 | 리스토리",
   description:
-    "소파 쿠션 꺼짐·주저앉음 복원. 새 소파 구매 비용의 1/10. HR계열 고탄성 스펀지 + 이태리 엘라스틱 밴드. 당일 시공 완료. 100% 무상 A/S.",
+    "꺼진 소파를 바꾸기 전, 내부 보강으로 다시 사용할 수 있는지 확인하세요. 사진으로 복원 가능성과 예상 비용 범위를 먼저 안내하고, 스펀지·밴드·스프링 상태에 맞는 작업을 살펴봅니다.",
   keywords: [
     ...BASE_KEYWORDS,
     ...makeRegionalKeywords("소파 쿠션 복원", "소파 수리"),
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "소파 쿠션 복원 | 리스토리",
     description:
-      "소파를 새로 살 필요 없습니다. 쿠션 복원만 하면 새것처럼. 1/10 비용.",
+      "마음에 드는 소파, 꺼진 자리부터 확인하세요. 실제 복원 사례와 작업 방식을 살펴보고 내 소파의 복원 가능성·예상 비용을 사진으로 문의하세요.",
     url: "https://www.restorystudio.co.kr/sofa",
     images: [
       {

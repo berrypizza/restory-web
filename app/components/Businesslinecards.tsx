@@ -29,17 +29,17 @@ const cardData: Record<
     badge: "개당 3만원~",
   },
   sofa: {
-    desc: "꺼진 소파 버리지 말고\n내부 보강으로 복원",
-    cta: "복원 확인",
-    badge: "새 소파 1/10",
+    desc: "마음에 드는 소파\n꺼진 자리부터 복원 확인",
+    cta: "가능 범위 확인",
+    badge: "교체 전 확인",
   },
 };
 
 const compareData = [
   { label: "싱크대 전체 교체", price: "200~400만원", isExpensive: true },
   { label: "리스토리 리폼", price: "40~80만원", isExpensive: false },
-  { label: "소파 새 구매", price: "100~300만원", isExpensive: true },
-  { label: "리스토리 복원", price: "15~30만원", isExpensive: false },
+  { label: "소파 새 구매", price: "제품별 확인", isExpensive: true },
+  { label: "리스토리 복원", price: "상태별 견적", isExpensive: false },
 ];
 
 export default function BusinessLineCards() {
@@ -143,7 +143,7 @@ export default function BusinessLineCards() {
             {compareData.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center justify-between gap-2">
+                className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
                 <span className="shrink-0 text-[12px] text-gray-500">
                   {item.label}
                 </span>
@@ -159,6 +159,14 @@ export default function BusinessLineCards() {
               </div>
             ))}
           </div>
+          <p className="mt-4 text-[12px] leading-relaxed text-gray-500">
+            소파는 좌석 수와 꺼짐 범위, 필요한 작업을 확인해 예상 비용을 안내합니다.{" "}
+            <Link
+              href="/sofa"
+              className="font-bold text-[#1f66ff] underline underline-offset-2">
+              복원 기준 보기
+            </Link>
+          </p>
         </div>
       </div>
     </section>

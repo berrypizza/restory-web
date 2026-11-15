@@ -33,12 +33,6 @@ export function LocalBusinessJsonLd() {
       addressRegion: "인천광역시",
       addressCountry: "KR",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "519",
-      bestRating: "5",
-    },
     priceRange: "₩₩",
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
@@ -89,7 +83,7 @@ export function LocalBusinessJsonLd() {
             "@type": "Service",
             name: "소파 쿠션 복원",
             description:
-              "소파 쿠션 꺼짐 복원. HR 고탄성 스펀지 사용. 당일 시공.",
+              "소파 꺼짐 상태와 내부 구조에 맞는 복원 작업. 사진으로 복원 가능성과 예상 비용 범위, 방문 일정 상담.",
           },
         },
       ],
@@ -108,10 +102,12 @@ export function ServiceJsonLd({
   name,
   description,
   url,
+  includeAggregateRating = true,
 }: {
   name: string;
   description: string;
   url: string;
+  includeAggregateRating?: boolean;
 }) {
   const data = {
     "@context": "https://schema.org",
@@ -126,12 +122,16 @@ export function ServiceJsonLd({
       url: "https://www.restorystudio.co.kr",
     },
     areaServed: ["서울특별시", "경기도", "인천광역시"],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "519",
-      bestRating: "5",
-    },
+    ...(includeAggregateRating
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.9",
+            reviewCount: "519",
+            bestRating: "5",
+          },
+        }
+      : {}),
   };
 
   return (
