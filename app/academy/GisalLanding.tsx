@@ -15,6 +15,11 @@ const proofTopics: Record<string, { title: string; question: string }> = {
 };
 const proofCases = cases.filter(item => Object.hasOwn(proofTopics, item.id));
 const businessCase = cases.find(item => item.id === "case-115");
+const setupChannelGroups = [
+  { title: "필요한 고객에게 발견되기", purpose: "지역과 서비스 정보를 고객이 찾을 수 있게 준비합니다.", channels: ["네이버 플레이스", "당근", "숨고"] },
+  { title: "내 서비스를 이해하고 선택하기", purpose: "소개와 작업 사례를 보고, 문의할 방법을 알 수 있게 준비합니다.", channels: ["사이트", "블로그"] },
+  { title: "작업 소식과 생각을 이어서 전하기", purpose: "내 사업의 이야기를 꾸준히 올릴 채널의 기본을 준비합니다.", channels: ["인스타그램", "쓰레드", "유튜브"] },
+] as const;
 
 function cx(names: string) { return names.split(" ").map(name => styles[name]).join(" "); }
 
@@ -61,15 +66,15 @@ export default function GisalLanding() {
           <span className={cx("kicker")}>LEARNING GOALS · 사업을 준비하는 교육</span>
           <h2 id="prepare-title">내 사업을 준비하는<br /><span className={cx("underline-green")}>세 가지 학습 목표.</span></h2>
           <ol className={cx("overview-goals-list")}>
-            <li><span aria-hidden="true">01</span><div><h3>사업의 기준과 브랜드 방향</h3><p>내가 지킬 원칙과 고객에게 전할 가치를 정리합니다.</p></div></li>
-            <li><span aria-hidden="true">02</span><div><h3>고객을 만나는 마케팅 흐름</h3><p>고객이 나를 발견하고 문의하기까지의 흐름을 설계합니다.</p></div></li>
-            <li><span aria-hidden="true">03</span><div><h3>직접 운영할 사업 사이트</h3><p>사이트를 만들고, 작업 사례·고객·일정을 관리하는 법을 배웁니다.</p></div></li>
+            <li><span aria-hidden="true">01</span><div><p className={cx("goal-question")}>어떤 기준으로 내 사업을 시작할까요?</p><h3>사업의 기준과 브랜드 방향</h3><p>내가 지킬 원칙과 고객에게 전할 가치를 정리합니다.</p></div></li>
+            <li><span aria-hidden="true">02</span><div><p className={cx("goal-question")}>내 기술이 필요한 고객은 어떻게 만날까요?</p><h3>고객을 만나는 마케팅 흐름</h3><p>고객이 나를 발견하고 문의하기까지의 흐름을 설계합니다.</p></div></li>
+            <li><span aria-hidden="true">03</span><div><p className={cx("goal-question")}>사이트를 만든 뒤에도 관리할 수 있을까요?</p><h3>직접 운영할 사업 사이트</h3><p>사이트를 만들고, 작업 사례·고객·일정을 관리하는 법을 배웁니다.</p></div></li>
           </ol>
           <a className={cx("overview-link")} href="#curriculum">5주 사업 교육·현장 교육 구성 보기 <span aria-hidden="true">↓</span></a>
         </div>
         <div id="plan-comparison" className={cx("plan-comparison")}>
           <table>
-            <caption>두 과정, 이렇게 다릅니다.</caption>
+            <caption>교육은 같고,<br />초기 준비 방식이 다릅니다.</caption>
             <thead><tr><th scope="col">구성</th><th scope="col">기본 과정<strong>{offer.basicPrice}만 원</strong></th><th scope="col">{offer.setupName}<strong>{offer.setupPrice}만 원</strong></th></tr></thead>
             <tbody>
               <tr><th scope="row">사업·현장 교육</th><td>{offer.weeks}주 사업 교육<br />{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</td><td>기본 과정의<br />교육 모두 포함</td></tr>
@@ -77,7 +82,7 @@ export default function GisalLanding() {
               <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>사이트를 포함한 8개 채널의 초기 구축 지원도 받고 싶은 분</td></tr>
             </tbody>
           </table>
-          <p>{offer.setupName}는 기본 과정을 포함한 {offer.setupPrice}만 원입니다.</p>
+          <p>{offer.setupName}는 기본 과정을 포함한 총 {offer.setupPrice}만 원입니다.<br /><strong>기본 과정에 {offer.setupPrice - offer.basicPrice}만 원을 더해 초기 셋업 지원을 받는 구성입니다.</strong></p>
           <div className={cx("overview-plan-links")}><a href="#apply">기본 과정 상세 보기 <span aria-hidden="true">↓</span></a><a href="#premium">8개 채널 셋업 보기 <span aria-hidden="true">↓</span></a></div>
         </div>
       </div>
@@ -141,6 +146,10 @@ export default function GisalLanding() {
             <li>배운 내용을 직접 적용하고, 잘되지 않는 이유도 스스로 돌아볼 분</li>
             <li>익숙한 생각을 바꾸는 불편함을 받아들이고, 피드백을 바탕으로 다시 시도할 분</li>
           </ul>
+          <div className={cx("fit-guidance")}>
+            <h4>직접 실행하되, 배우는 과정에는 길잡이가 있습니다.</h4>
+            <p>강사의 실제 사업 운영 사례로 고객과 일을 바라보는 관점을 배우고, 현장에서는 강사의 지도 아래 실습한 뒤 피드백을 받습니다.</p>
+          </div>
           <p className={cx("fit-expectation")}>수업과 현장 참여, 배운 내용의 실행이 필요한 과정입니다. 수익이나 창업 성과를 보장하지 않습니다.</p>
         </div>
       </div>
@@ -299,8 +308,9 @@ export default function GisalLanding() {
             <div className={cx("ticket-price")}>{offer.basicPrice}<span>만 원</span></div><p className={cx("ticket-price-caption")}>{offer.cohort}기 기본 수강료</p>
             <dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>현장 일정 조율 · 조건 별도 안내</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl>
             <ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>수료 후 요청형 추가 기술 교육 · 세부 조건 확인 필요</li></ul>
-            <p className={cx("plan-consult-note")}>{offer.selectionGuidance}</p>
-            <EnrollButton location="basic" className={cx("button button-green")} />
+            <p className={cx("plan-consult-note")}>사업을 배우고 직접 구축하며 시작하고 싶다면, 지금의 경험과 준비 상태부터 함께 살펴보세요. 어떤 과정이 맞는지 아직 정하지 않아도 괜찮습니다.</p>
+            <EnrollButton location="basic" label="기본 과정 무료 상담" className={cx("button button-green")} />
+            <p className={cx("consult-action-note")}>온라인 1:1 진단은 무료이며, 신청만으로 수강 등록이나 결제가 확정되지 않습니다.</p>
             <p className={cx("ticket-note")}>교육 장소·세부 시간표·결제 및 환불 조건은 확인 후 안내합니다.</p>
           </div>
         </div>
@@ -329,12 +339,19 @@ export default function GisalLanding() {
             <span className={cx("premium-care-label")}>사업 교육을 실제 시작으로 연결합니다</span>
             <h3>내 서비스를 알리고,<br /><span>문의받을 준비까지.</span></h3>
             <ul className={cx("premium-inclusions")} aria-label="포함된 기본 교육"><li>{offer.weeks}주 사업 교육</li><li>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</li></ul>
-            <dl className={cx("setup-channels")} aria-label="초기 셋업하는 8개 채널">
-              {offer.setupChannels.map(channel => <div key={channel.name}><dt>{channel.name}</dt><dd>{channel.scope}</dd></div>)}
-            </dl>
+            <ul className={cx("setup-channel-groups")} aria-label="고객이 만나는 흐름에 따른 8개 채널 초기 셋업">
+              {setupChannelGroups.map(group => <li key={group.title}>
+                <h4>{group.title}</h4>
+                <p>{group.purpose}</p>
+                <dl className={cx("setup-channels")}>
+                  {offer.setupChannels.filter(channel => group.channels.some(name => name === channel.name)).map(channel => <div key={channel.name}><dt>{channel.name}</dt><dd>{channel.scope}</dd></div>)}
+                </dl>
+              </li>)}
+            </ul>
             <p className={cx("premium-conditions")}>{offer.setupNote}</p>
-            <p className={cx("plan-consult-note")}>{offer.selectionGuidance}</p>
-            <EnrollButton location="premium" className={cx("button button-green")} />
+            <p className={cx("plan-consult-note")}>사업 교육과 함께 사이트·채널의 초기 준비에도 도움이 필요하다면, 현재 준비된 내용과 막막한 부분을 알려주세요. 내 상황에 셋업 지원이 필요한지 함께 살펴봅니다.</p>
+            <EnrollButton location="premium" label="셋업 패키지 무료 상담" className={cx("button button-green")} />
+            <p className={cx("consult-action-note")}>온라인 1:1 진단은 무료이며, 신청만으로 수강 등록이나 결제가 확정되지 않습니다.</p>
           </div>
         </div>
       </div>

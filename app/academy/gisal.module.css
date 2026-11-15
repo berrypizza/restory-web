@@ -219,6 +219,7 @@
 .page .overview-goals-list li>span{flex-shrink:0;padding-top:4px;color:#526c35;font-size:11px;font-weight:800}
 .page .overview-goals-list h3{font-size:18px;line-height:1.6;letter-spacing:-.4px}
 .page .overview-goals-list p{margin-top:5px;color:#59654e;font-size:13px;line-height:1.8}
+.page .overview-goals-list .goal-question{margin:0 0 5px;color:#526c35;font-size:12px;line-height:1.7}
 .page .overview-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;margin-top:14px;color:#354b21;font-size:12px;font-weight:700;line-height:1.8;text-decoration:underline;text-underline-offset:4px}
 .page .offer-overview .plan-comparison{margin-top:0;scroll-margin-top:24px}
 .page .offer-overview .plan-comparison caption{font-size:22px}
@@ -250,6 +251,7 @@
 .page .plan-comparison td{color:#4d5947}
 .page .plan-comparison td strong{color:var(--ink)}
 .page .plan-comparison>p{margin:14px 0 0;font-size:11px;line-height:1.8;color:#69755e}
+.page .plan-comparison>p strong{color:#354b21;font-weight:600}
 .page .plan-comparison>a{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
 .page .plan-consult-note{margin:22px 0 14px;font-size:13px;line-height:1.85;color:#4d5947}
 .page .premium-care .plan-consult-note{padding-top:20px;border-top:1px solid #35472b;color:#d4dfca}
@@ -283,6 +285,11 @@
 .page .setup-channels>div{min-width:0;padding:13px 0;border-top:1px solid #35472b}
 .page .setup-channels dt{color:var(--green);font-size:13px;font-weight:700;line-height:1.6}
 .page .setup-channels dd{margin:5px 0 0;color:#bdc9b4;font-size:11px;line-height:1.8}
+.page .setup-channel-groups{list-style:none;margin:24px 0;padding:0}
+.page .setup-channel-groups>li+li{margin-top:22px}
+.page .setup-channel-groups h4{font-size:15px;line-height:1.6;color:var(--paper)}
+.page .setup-channel-groups>li>p{margin:6px 0 12px;font-size:12px;line-height:1.8;color:#bdc9b4}
+.page .setup-channel-groups .setup-channels{margin:0;gap:0 16px}
 @media(max-width:760px){.page .premium-offer{padding-top:0}}
 .page .premium-price-block{border-bottom:1px solid #35472b;padding-bottom:25px;margin-bottom:26px}
 .page .premium-price-label{font-size:11px;letter-spacing:.5px;color:#bdc9b4}
@@ -404,6 +411,11 @@
 .page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .page .fit-list{padding-left:20px;margin-top:18px;color:#d0dac6;font-size:14px;line-height:1.9;text-align:left}
 .page .fit-list li+li{margin-top:9px}.page .fit-list li::marker{color:var(--green)}
+.page .fit-guidance{margin-top:24px;padding:20px;border-left:2px solid var(--green);background:#b6fa4508;text-align:left}
+.page .fit-guidance h4{font-size:15px;line-height:1.7;color:var(--paper)}
+.page .fit-guidance p{margin-top:8px;font-size:13px;line-height:1.9;color:#c2cfb6}
+.page .consult-action-note{margin-top:12px;font-size:11px;line-height:1.8;color:#69755e}
+.page .premium-care .consult-action-note{font-size:11px;color:#b6c4ab}
 .page .consult-bridge{margin-top:38px;padding:30px;border:1px solid #6d8d41;border-radius:6px;background:#151f10;text-align:center}
 .page .consult-bridge h3{font-size:25px;line-height:1.5;letter-spacing:-.8px}
 .page .consult-bridge>p{font-size:14px;line-height:1.9;color:#c2cfb6;margin-top:14px}
