@@ -123,7 +123,7 @@ export async function generateMetadata({
       alt: `리스토리 ${kw}`,
     };
   } else if (type === "sink-top-crack") {
-    desc = `${kw} 전문 리스토리. 싱크대 상판 크랙·갈라짐·깨짐 상태를 사진으로 먼저 확인하고 수리 가능 여부를 안내합니다.`;
+    desc = `${kw} 전문 리스토리. 수리 비용 범위는 30~50만 원, 부가세 별도이며 최종 금액은 상태를 보고 상담 후 안내합니다. 실제 전후 사례와 예상 마감, 시공 부위 3년 A/S 적용 조건을 확인하세요.`;
     image = {
       url: "/images/sink-top-crack/main.png",
       width: 590,

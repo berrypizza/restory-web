@@ -68,8 +68,8 @@ export const businessLines: BusinessLineConfig[] = [
         title: "싱크대 상판 크랙 수리",
         shortTitle: "상판 크랙 수리",
         description:
-          "갈라진 싱크대 상판 상태를 확인하고 수리 가능 여부를 안내합니다.",
-        hero: "상판 크랙,\n교체 전에 확인하세요.",
+          "갈라진 상판의 보수 가능 범위와 예상 마감을 살피고, 재질·손상에 맞는 견적을 상담합니다.",
+        hero: "갈라진 상판,\n다시 쓰는 주방.",
         painPoints: [
           "상판이 갈라졌다",
           "물이 들어갈까봐 불안하다",
