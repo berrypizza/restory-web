@@ -1,0 +1,50 @@
+상부장 처짐 오퍼 개선·로컬 검증
+검증일: 2026-11-15 KST
+
+배포 전 로컬 검증 당시 상태
+대표 /repair/sangbujang 및 SangbujangLanding을 공유하는 지역 페이지에 적용.
+이 로컬 검증 단계에서는 commit, push, 프로덕션 배포를 하지 않음.
+기존 localhost:3000 개발 서버 유지. 별도 5197 검증 서버와 .next-upper-qa 빌드는 정리.
+빌드가 추가한 tsconfig include 두 항목만 제거.
+동시에 진행된 academy 변경/커밋 2e6051b는 수정하지 않음.
+
+개선 내용
+결과 중심 제목 → 실제 전후 사례 → 원인·보강·재설치 범위 → 비용·A/S → 사진 상담 → 영상 → FAQ.
+기존 브랜드·히어로 이미지·시공 영상·실제 사례 데이터를 활용.
+지역별 실제 사례를 우선하고, 다른 지역 참고 사례는 명시. 전체 사례 목록 링크 유지.
+순서로 매칭하던 별도 후기 배열을 제거하고 각 case-data에 연결된 후기만 표시.
+미확인 평점·절감률·내구성 배수·즉시 응답·당일 확정 문구 정리.
+가격·시간·A/S는 기존 FAQ 정책(7c9ca32)을 기준으로 유지:
+  일반 처짐 수리 25만 원, 일반 작업 약 2시간, 보강·재고정 시공 부위에 작업일 기준 3년 A/S.
+  전체 추락·몸통 파손·추가 보강·새 제작에 따른 변동, 시공과 무관한 손상의 A/S 제외 조건 명시.
+사진의 예비 판단과 현장/분리 후 확정 범위를 구분. 불안정한 장을 직접 다루지 않는 사진·준비 안내.
+대표/지역 메타 설명, 서비스 소개, 수리 팁 배너를 동일한 방향으로 정리.
+FAQ aria-expanded/controls 및 키보드 조작, 영상 재생 버튼 접근성 개선.
+모바일 고정 버튼은 하단 상담만 표시. 본문 전화 문의 유지.
+
+검증 결과
+변경한 코드/회귀 검사 파일 ESLint 통과, git diff --check 통과.
+최종 Next.js production build 및 TypeScript 통과, 6,850개 정적 페이지 생성.
+기존 academy attribution 검사 18/18 통과.
+상부장 대표/잠실 경로를 추가한 service-cache-regression 검사 16/16 통과(skip 0).
+대표·잠실·가산 페이지 HTTP 200, canonical, FAQ 6개, 실제 사례 ItemList 3개, Service 미검증 평점 제거 확인.
+잠실은 case-125 우선, 사례 없는 가산은 다른 지역임을 안내하고 case-128 우선.
+카카오/전화의 sangbujang 및 floating_cta 4개 리다이렉트 307, 목적지와 UTM 유지 확인.
+외부 문의 메시지와 전화 발신은 하지 않음.
+
+브라우저
+실제 Next 앱을 1440×1000, 390×844, 320×740에서 검사. 가로 넘침 없음.
+모바일 히어로·사례·가격·하단 상담 버튼·FAQ를 시각적으로 확인.
+FAQ 6개 펼침 및 Enter 접기, 긴 A/S 답변의 clientHeight=scrollHeight 확인.
+영상 버튼 Enter → YouTube 실제 재생/일시중지 컨트롤 확인.
+case-125 및 case-123 링크로 이동해 URL과 상세 제목 확인.
+최종 일반 production 실행에서 히어로와 사례 사진 6개 로딩 정상, 수집된 error 로그 없음.
+cache-header 테스트용 MINIMAL_MODE에서는 이미지 최적화 요청이 400이므로,
+이미지/UI 검증은 해당 모드를 해제한 일반 next start로 수행함.
+실제 휴대전화 기기에서 검사한 것은 아니며 브라우저 viewport로 확인.
+
+스크린샷
+/Users/noah/.codex/visualizations/2026/11/14/01a1db07-08b9-74d1-9617-51655b4a5eb4/upper-qa/
+mobile-390-final.jpg: 최종 production 빌드 모바일 첫 화면.
+mobile-320-faq-final.jpg: 최종 production 빌드 긴 FAQ와 하단 상담.
+desktop-hero.jpg, mobile-320-hero.jpg, mobile-390-cost.jpg, regional-390-cases.jpg: 개발 서버 검증 화면.

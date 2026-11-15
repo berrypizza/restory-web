@@ -115,7 +115,7 @@ export async function generateMetadata({
       alt: `리스토리 ${kw}`,
     };
   } else if (type === "sangbujang") {
-    desc = `${kw} 전문 리스토리. 합판 시공목으로 더 튼튼하게. 교체 비용의 1/3~. 당일 시공, 3년 무상 A/S.`;
+    desc = `${kw} 전문 리스토리. 상부장 고정 상태를 확인하고 보강·재설치합니다. 실제 시공 사례와 비용·작업 범위, 시공 부위 3년 A/S를 확인하고 사진으로 상담하세요.`;
     image = {
       url: "/images/hero-sangbujang.webp",
       width: 1080,

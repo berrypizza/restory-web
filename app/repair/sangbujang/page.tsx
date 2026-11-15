@@ -30,7 +30,7 @@ const BASE_KEYWORDS = [
 export const metadata: Metadata = withLandingSeo({
   title: "싱크대 상부장 수리 전문 | 처짐·추락·뜸 | 리스토리",
   description:
-    "싱크대 상부장 처짐·추락·뜸 증상, 합판 시공목으로 튼튼하게 수리. 교체 비용의 1/3~1/5. 3년 무상 A/S. 사진 한 장이면 수리 가능 여부 바로 안내.",
+    "처진 싱크대 상부장, 고정 상태를 확인하고 보강·재설치합니다. 실제 시공 전후 사진, 25만 원 수리의 포함 범위와 비용이 달라지는 조건, 시공 부위 3년 A/S를 확인하세요.",
   keywords: [
     ...BASE_KEYWORDS,
     ...makeRegionalKeywords("싱크대 상부장 수리", "상부장 처짐 수리"),
@@ -38,7 +38,7 @@ export const metadata: Metadata = withLandingSeo({
   openGraph: {
     title: "싱크대 상부장 수리 | 리스토리",
     description:
-      "상부장 처짐·추락, 합판으로 튼튼하게. 교체 비용의 1/3. 3년 A/S.",
+      "처진 상부장, 다시 단단하게. 실제 시공 사례와 보강·재설치 범위를 확인하고 사진으로 예상 비용과 방문 일정을 상담하세요.",
     url: "https://www.restorystudio.co.kr/repair/sangbujang",
     images: [
       {

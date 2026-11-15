@@ -16,8 +16,8 @@ const CATEGORY_BANNER: Record<
   { text: string; sub: string; href: string; emoji: string }
 > = {
   "싱크대 수리": {
-    text: "싱크대 수리 해도 또 떨어지면 어쩌지....?",
-    sub: "본사 책임 AS 3년 보장으로 안심!",
+    text: "처진 상부장, 기존 장을 살릴 수 있을까요?",
+    sub: "보강·재설치 범위와 시공 부위 3년 A/S 조건을 확인하세요.",
     href: "/repair/sangbujang",
     emoji: "🔧",
   },

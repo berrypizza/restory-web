@@ -11,6 +11,7 @@ const servicePaths = [
   "/sofa/서초-쇼파-탄성저하",
   "/leather/서초-회의테이블-상판-인조가죽-교체",
   "/repair/부천-씽크대-하부장-수리",
+  "/repair/잠실-싱크대-상부장-처짐",
   "/kitchen/가산-냉장고장-리폼",
 ];
 
@@ -31,6 +32,7 @@ const base = process.env.SERVICE_TEST_BASE_URL;
 const smokePaths = [
   ...servicePaths,
   "/leather/meeting-table",
+  "/repair/sangbujang",
   "/",
   "/cases/case-115",
   "/academy",
