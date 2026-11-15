@@ -207,7 +207,37 @@
 @media(max-width:760px){.page .header{height:auto}.page .nav{height:auto;min-height:69px;padding-top:15px;padding-bottom:15px;flex-wrap:wrap}.page .nav-cta{margin-left:auto;font-size:12px;padding:12px 14px;gap:12px}.page .mobile-apply .button{font-size:12px;padding:13px 12px;gap:10px}}
 @media(max-width:430px){.page .nav-cta{width:100%;justify-content:space-between}.page .mobile-apply{gap:10px;padding-left:14px;padding-right:14px}.page .mobile-apply strong{font-size:16px}.page .mobile-apply .button{flex:1;justify-content:space-between}}
 
-/* Compare the confirmed courses next to the enrollment price. */
+/* Summarize learning goals and confirmed course choices before the story. */
+.page .offer-overview{padding:60px 0;border-bottom:1px solid #d4d9c9}
+.page .offer-overview-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:start}
+.page .overview-goals{min-width:0}
+.page .overview-goals>.kicker{color:#526c35}
+.page .overview-goals h2{font-size:34px;line-height:1.45;letter-spacing:-1.3px;margin:18px 0 0}
+.page .overview-goals-list{display:grid;list-style:none;padding:0;margin:26px 0 0}
+.page .overview-goals-list li{display:flex;gap:14px;padding:17px 0;border-bottom:1px solid #d4d9c9}
+.page .overview-goals-list li:first-child{padding-top:0}
+.page .overview-goals-list li>span{flex-shrink:0;padding-top:4px;color:#526c35;font-size:11px;font-weight:800}
+.page .overview-goals-list h3{font-size:18px;line-height:1.6;letter-spacing:-.4px}
+.page .overview-goals-list p{margin-top:5px;color:#59654e;font-size:13px;line-height:1.8}
+.page .overview-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;margin-top:14px;color:#354b21;font-size:12px;font-weight:700;line-height:1.8;text-decoration:underline;text-underline-offset:4px}
+.page .offer-overview .plan-comparison{margin-top:0;scroll-margin-top:24px}
+.page .offer-overview .plan-comparison caption{font-size:22px}
+.page .overview-plan-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.page .overview-plan-links a{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:10px 12px;border:1px solid #9fae90;border-radius:4px;color:#354b21;font-size:12px;font-weight:700;line-height:1.7}
+.page .overview-plan-links a:hover{background:#e9f2dc}
+@media(min-width:761px) and (max-width:1100px){.page .offer-overview-grid{gap:28px}.page .overview-goals h2{font-size:29px}}
+@media(max-width:760px){
+ .page .offer-overview{padding:36px 0}
+ .page .offer-overview-grid{grid-template-columns:1fr;gap:30px}
+ .page .overview-goals h2{font-size:27px;letter-spacing:-1px;margin-top:14px}
+ .page .overview-goals-list{margin-top:20px}
+ .page .overview-goals-list li{padding:14px 0;gap:12px}
+ .page .overview-goals-list h3{font-size:16px}
+ .page .overview-goals-list p{font-size:12px}
+ .page .offer-overview .plan-comparison caption{font-size:20px}
+ .page .overview-plan-links a{padding:10px;font-size:11px}
+}
+
 .page .plan-comparison{margin-top:28px;min-width:0}
 .page .plan-comparison table{width:100%;border-collapse:collapse;table-layout:fixed;text-align:left;font-size:12px;line-height:1.8}
 .page .plan-comparison caption{text-align:left;font-size:19px;font-weight:800;line-height:1.5;margin-bottom:16px}
@@ -322,8 +352,14 @@
  .page .mobile-apply .button{font-size:12px;gap:10px;padding-inline:15px}.page .mobile-apply small{font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){.page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-.page .learning-goals{margin:35px 0;border:1px solid #3a4931;border-radius:4px;padding:26px;background:#10180e}.page .learning-goals h3{font-size:21px;line-height:1.6;color:var(--paper)}.page .learning-goals p{font-size:14px;color:#b4c0ae;line-height:1.9;margin-top:14px}
-@media(max-width:760px){.page .learning-goals{padding:22px}.page .learning-goals h3{font-size:19px}.page .learning-goals p{font-size:13px}}
+.page .learning-progress-note{margin:24px 0;color:#b4c0ae;font-size:13px;line-height:1.9}
+.page .business-tools-note{padding:36px 0;background:#121c10;border-block:1px solid #303d29}
+.page .business-tools-note-inner{display:flex;justify-content:space-between;align-items:center;gap:36px}
+.page .business-tools-note h2{font-size:26px;line-height:1.5;letter-spacing:-.6px;margin-top:12px}
+.page .business-tools-note h2 span{color:var(--green)}
+.page .business-tools-note p{font-size:13px;line-height:1.8;color:#b4c0ae;margin-top:12px}
+.page .business-tools-note .text-link{display:inline-flex;align-items:center;gap:14px;min-height:44px;color:var(--green);font-size:13px;line-height:1.8}
+@media(max-width:760px){.page .business-tools-note{padding:30px 0}.page .business-tools-note-inner{flex-direction:column;align-items:flex-start;gap:14px}.page .business-tools-note h2{font-size:23px}.page .business-tools-note p{font-size:12px}}
 
 /* Business education leads the offer; retain GISAL's existing visual language. */
 .page .business-reality{margin-top:38px;text-align:left}

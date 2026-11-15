@@ -45,7 +45,7 @@ export default function GisalLanding() {
           <p className={cx("hero-desc")}>내 기술을 고객에게 알리고, 내 이름으로 사업할 준비.<br /><strong>사업자의 마인드·원칙, 브랜딩·마케팅·운영을 배웁니다.</strong><br />기술이 처음이어도 실제 시공 현장에서<br />강사 지도 아래 직접 실습하며 함께 배웁니다.</p>
           <figure className={cx("hero-team")} aria-label="기술로 살아남기를 함께하는 리스토리 형제"><Image className={cx("hero-team-first")} src="/gisal-assets/restory-hero-portrait.png" width="1000" height="1000" alt="리스토리 형제의 첫 번째 프로필 사진" fetchPriority="high" decoding="async" loading="eager" /><Image className={cx("hero-team-second")} src="/gisal-assets/restory-second-cutout-v2.png" alt="리스토리 형제의 두 번째 프로필 사진" fetchPriority="high" decoding="async" width="1060" height="1484" loading="eager" /></figure>
           <div className={cx("hero-price")}><span className={cx("price-label")}>{offer.cohort}기 기본 수강료</span><span className={cx("hero-price-now")}>{offer.basicPrice}<span>만 원</span></span></div>
-          <div className={cx("hero-actions")}><EnrollButton location="hero" className={cx("button button-green")} /><a className={cx("text-link")} href="#curriculum">사업·현장 교육 구성 보기 <span aria-hidden="true">↓</span></a></div>
+          <div className={cx("hero-actions")}><EnrollButton location="hero" className={cx("button button-green")} /><a className={cx("text-link")} href="#plan-comparison">{offer.basicPrice}·{offer.setupPrice}만 원 과정 비교 <span aria-hidden="true">↓</span></a></div>
           <p className={cx("hero-consult-note")}>현재 상황과 창업 목표를 듣고, 과정 적합도와 시작 방향을 함께 확인합니다.</p>
           <p className={cx("hero-footnote")}>{offer.weeks}주 사업 교육 · {offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육<br />{offer.startDate} 개강 예정</p><p className={cx("practice-note")}>{offer.practiceCondition}</p>
         </div>
@@ -54,6 +54,34 @@ export default function GisalLanding() {
       <p className={cx("heroArtNote")}>배경은 교육 방향을 표현한 연출 이미지입니다.</p>
     </section>
     <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>{offer.startDateShort} <small>화요일 개강 예정</small></strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>{offer.seats}명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>{offer.basicPrice}만 원 <small>{offer.cohort}기 기본 수강료</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
+
+    <section id="prepare" className={cx("offer-overview section-light")} aria-labelledby="prepare-title">
+      <div className={cx("wrap offer-overview-grid")}>
+        <div className={cx("overview-goals")}>
+          <span className={cx("kicker")}>LEARNING GOALS · 사업을 준비하는 교육</span>
+          <h2 id="prepare-title">내 사업을 준비하는<br /><span className={cx("underline-green")}>세 가지 학습 목표.</span></h2>
+          <ol className={cx("overview-goals-list")}>
+            <li><span aria-hidden="true">01</span><div><h3>사업의 기준과 브랜드 방향</h3><p>내가 지킬 원칙과 고객에게 전할 가치를 정리합니다.</p></div></li>
+            <li><span aria-hidden="true">02</span><div><h3>고객을 만나는 마케팅 흐름</h3><p>고객이 나를 발견하고 문의하기까지의 흐름을 설계합니다.</p></div></li>
+            <li><span aria-hidden="true">03</span><div><h3>직접 운영할 사업 사이트</h3><p>사이트를 만들고, 작업 사례·고객·일정을 관리하는 법을 배웁니다.</p></div></li>
+          </ol>
+          <a className={cx("overview-link")} href="#curriculum">5주 사업 교육·현장 교육 구성 보기 <span aria-hidden="true">↓</span></a>
+        </div>
+        <div id="plan-comparison" className={cx("plan-comparison")}>
+          <table>
+            <caption>두 과정, 이렇게 다릅니다.</caption>
+            <thead><tr><th scope="col">구성</th><th scope="col">기본 과정<strong>{offer.basicPrice}만 원</strong></th><th scope="col">{offer.setupName}<strong>{offer.setupPrice}만 원</strong></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">사업·현장 교육</th><td>{offer.weeks}주 사업 교육<br />{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</td><td>기본 과정의<br />교육 모두 포함</td></tr>
+              <tr><th scope="row">사이트·채널 준비</th><td>제작·운영 방법을 배우며<br /><strong>직접 구축</strong></td><td>제작·운영 학습에<br /><strong>초기 셋업 지원 추가</strong></td></tr>
+              <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>사이트를 포함한 8개 채널의 초기 구축 지원도 받고 싶은 분</td></tr>
+            </tbody>
+          </table>
+          <p>{offer.setupName}는 기본 과정을 포함한 {offer.setupPrice}만 원입니다.</p>
+          <div className={cx("overview-plan-links")}><a href="#apply">기본 과정 상세 보기 <span aria-hidden="true">↓</span></a><a href="#premium">8개 채널 셋업 보기 <span aria-hidden="true">↓</span></a></div>
+        </div>
+      </div>
+    </section>
 
     <section id="about" className={cx("about-focus")} aria-labelledby="about-title">
       <div className={cx("wrap about-focus-inner")}>
@@ -105,11 +133,6 @@ export default function GisalLanding() {
             <a className={cx("text-link")} href="#business-proof">실제 사례로 사업 교육 방식 보기 <span aria-hidden="true">↓</span></a>
           </div>
         </section>
-        <div className={cx("about-focus-cards")} aria-label="사업 교육에서 함께 다루는 세 가지 질문">
-          <div className={cx("about-focus-card")}><strong>어떤 가치를 제공할까?</strong><span>사업자의 마인드 · 신념 · 사명 · 원칙</span></div>
-          <div className={cx("about-focus-card about-focus-card-featured")}><strong>고객은 왜 나를 찾을까?</strong><span>브랜딩 · 고객 확보 · 퍼널 마케팅</span></div>
-          <div className={cx("about-focus-card")}><strong>내 사업을 어떻게 운영할까?</strong><span>사업 사이트 · 고객과 일정 · 작업 사례</span></div>
-        </div>
         <div className={cx("audience-fit")}>
           <h3>{offer.applicantTitle}</h3>
           <p>쉽게 번다는 말에 지쳤다면, 내 사업을 제대로 공부해 보세요.<br />기술이 처음이어도 괜찮습니다. {offer.applicantMindset}</p>
@@ -160,7 +183,6 @@ export default function GisalLanding() {
             <p className={cx("business-lesson-question")}><strong>직접 생각해 보기</strong>내 서비스에 문의하기 전, 고객에게 어떤 정보를 요청해야 할까요?</p>
           </li>
         </ol>
-        <p className={cx("business-lesson-summary")}>이처럼 고객을 이해하고, 서비스의 가치를 설명하고, 문의로 이어지는 흐름을 생각합니다. 브랜딩·퍼널 마케팅·사업 사이트 교육을 실제 운영과 연결하는 관점입니다.</p>
         <div className={cx("business-proof-links")}><Link href="/cases" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="browse">다른 실제 사례 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link><Link href="/" target="_blank" rel="noopener noreferrer" prefetch={false} data-academy-business-proof="inquiry">서비스의 문의 동선 보기 <span className={cx("sr-only")}>(새 탭)</span><span aria-hidden="true">↗</span></Link></div>
         <p className={cx("business-proof-note")}>공개된 강사의 시공 사례를 사업 관점으로 읽는 해설 예시입니다. 사진은 교육생 실습 장면이 아니며, 교육생 성과나 특정 문의·매출 증가를 의미하지 않습니다.</p>
       </div>
@@ -168,7 +190,7 @@ export default function GisalLanding() {
 
     <section id="curriculum" className={cx("curriculum roadmap")} aria-labelledby="roadmap-title">
       <div className={cx("wrap roadmap-inner")}>
-        <header className={cx("roadmap-heading")}><span className={cx("roadmap-label")}>CURRICULUM</span><h2 id="roadmap-title">5주 동안 사업을 설계하고,<br /><span className={cx("green")}>주 2회 현장에서 기술을 배웁니다.</span></h2><p>교육의 중심은 사업자의 생각과 원칙, 고객을 만나는 마케팅, 사업 운영입니다.<br />현장 기술 교육을 병행하며 실제 고객의 문제와 연결해 배웁니다.</p></header>
+        <header className={cx("roadmap-heading")}><span className={cx("roadmap-label")}>CURRICULUM</span><h2 id="roadmap-title">5주 동안 사업을 설계하고,<br /><span className={cx("green")}>주 2회 현장에서 기술을 배웁니다.</span></h2></header>
         <div className={cx("dual-track")}>
           <div><span>TRACK A · 사업을 만드는 {offer.weeks}주</span><h3>사업의 본질부터 내 운영 기반까지</h3><p>집중할 환경과 사업 원칙을 세우고, 고객에게 알리는 방법과 직접 운영할 웹사이트를 배웁니다.</p></div>
           <div><span>TRACK B · 현장에서 배우는 기술</span><h3>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 동행 + 지도 실습</h3><p>관찰 → 판단 → 직접 실습 → 피드백. 실제 고객 현장에서 병행하며, 참여 가능한 작업은 일정·안전·숙련도에 따라 달라집니다.</p><a href="#field-method">현장 교육 방식과 기술 분야 보기 ↗</a></div>
@@ -180,7 +202,7 @@ export default function GisalLanding() {
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>4주차</span><div className={cx("week-content")}><h3>꿈의 고객을 찾는 퍼널 마케팅</h3><p><strong>꿈의 고객을 찾고, 고객이 나를 발견해 문의하기까지</strong>의 흐름을 설계합니다.<br className={cx("roadmap-break")} /> 블로그 · 숨고 · 당근 · 플레이스부터<br className={cx("roadmap-break")} /> 인스타 릴스 · 유튜브 쇼츠 · 유튜브 롱폼 · 쓰레드까지, 채널별 마케팅을 배웁니다.</p></div></li>
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>5주차</span><div className={cx("week-content")}><h3>바이브 코딩으로 나만의 사업 사이트 만들기</h3><p>랜딩페이지부터 <strong>고객 스케줄 등록·관리, 작업 사례를 계속 올리는 기능</strong>까지 직접 만듭니다.</p><ul className={cx("site-outcomes")} aria-label="직접 만드는 사이트의 기능"><li>나만의 랜딩페이지</li><li>고객 · 스케줄 관리</li><li>작업 사례 업로드</li></ul><p className={cx("week-goal")}>교육 이후에도 <strong>스스로 사이트를 관리하고 유지보수할 수 있도록</strong> 배웁니다.</p></div></li>
         </ol>
-        <div className={cx("learning-goals")}><h3>내 사업의 기준과 고객을 만나는 흐름을 준비합니다.</h3><p>나만의 사업 원칙과 브랜드 방향을 정리하고, 고객이 나를 발견해 문의하기까지의 흐름을 설계합니다. 직접 만드는 사업 사이트에서는 고객·스케줄 관리와 작업 사례 업로드를 배웁니다.</p><p>현장에서는 판단과 작업 결과를 강사와 함께 점검합니다. 숙련도와 사업 준비의 진행 정도는 개인마다 달라집니다.</p></div>
+        <p className={cx("learning-progress-note")}>현장에서는 판단과 작업 결과를 강사와 함께 점검합니다. 숙련도와 사업 준비의 진행 정도는 개인마다 달라집니다.</p>
         <div className={cx("consult-bridge")}>
           <h3>이 배움이 내 상황에 맞는지,<br />먼저 함께 살펴보세요.</h3>
           <p>현재 경험과 창업 고민을 듣고, 사업 교육과 현장 실습의 적합도를 확인합니다.</p>
@@ -237,15 +259,14 @@ export default function GisalLanding() {
       </div>
     </section>
 
-    <section id="ai-start" className={cx("ai-start business-tools")} aria-labelledby="ai-start-title">
-      <div className={cx("wrap business-tools-inner")}>
+    <section id="ai-start" className={cx("business-tools-note")} aria-labelledby="ai-start-title">
+      <div className={cx("wrap business-tools-note-inner")}>
         <div>
           <span className={cx("kicker")}>도구는 사업을 돕기 위해</span>
           <h2 id="ai-start-title">AI로 도구는 달라져도,<br /><span>사업의 중심은 고객입니다.</span></h2>
-          <p className={cx("ai-start-intro")}>바이브 코딩도 내 사업에 필요한 도구로 배웁니다.<br />작업 사례를 알리고, 고객과 일정을 관리하는 사이트를 직접 만듭니다.</p>
-          <div id="blog-read" className={cx("ai-start-blog")}><a className={cx("blog-read-link")} href="https://blog.naver.com/fixermans" target="_blank" rel="noopener noreferrer" aria-label="리스토리 블로그 읽어보기 (새 탭)">리스토리의 일과 생각 읽기 <span aria-hidden="true">↗</span></a></div>
+          <p>바이브 코딩도 내 사업에 필요한 도구로 배웁니다.</p>
         </div>
-        <figure className={cx("business-tools-visual")}><Image src="/gisal-assets/ai-skill-business.webp" width="1536" height="1024" alt="기술과 사업 도구를 표현한 연출 이미지: 노트북과 전동 공구, 로봇 팔" sizes="(max-width: 760px) 90vw, 420px" /><figcaption className={cx("artNote")}>교육 방향을 표현한 연출 이미지입니다.</figcaption></figure>
+        <a id="blog-read" className={cx("text-link")} href="https://blog.naver.com/fixermans" target="_blank" rel="noopener noreferrer" aria-label="리스토리 블로그 읽어보기 (새 탭)">리스토리의 일과 생각 읽기 <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
@@ -254,7 +275,7 @@ export default function GisalLanding() {
         <header className={cx("field-support-heading")}><span className={cx("field-support-label")}>BEYOND 5 WEEKS</span><h2 id="field-support-title">수료 후 필요한 기술은,<br /><span className={cx("green")}>현장 일정에 맞춰 조율합니다.</span></h2><p>사업을 하다 필요한 기술이 생기면 요청하세요.<br />해당 작업 현장 일정에 맞춰 추가 기술 교육을 조율합니다.</p></header>
         <ol className={cx("support-flow")} aria-label="수료 후 기술 교육 진행 방식"><li><span>01</span><strong>필요한 기술 요청</strong></li><li><span>02</span><strong>현장 일정 조율</strong></li><li><span>03</span><strong>현장에서 추가 교육</strong></li></ol>
 
-        <p className={cx("field-support-closing")}>5주 동안 사업의 기반을 만들고,<br /><strong>현장에서 필요한 기술은 요청하고 조율합니다.</strong><br />{offer.followUp}</p>
+        <p className={cx("field-support-closing")}>{offer.followUp}</p>
         <a className={cx("roadmap-link")} href="#apply">기술로 살아남기 1기 모집 안내 <span aria-hidden="true">↗</span></a>
       </div>
     </section>
@@ -269,19 +290,7 @@ export default function GisalLanding() {
           <p>내 일의 기준을 세우고, 고객에게 나를 알리며,<br />내 이름으로 사업하고 싶다면.<br />기술로 살아남기 {offer.cohort}기에서 시작하세요.</p>
           <div className={cx("seat-illustration")} aria-label={`모집 정원 ${offer.seats}명`}>{Array.from({ length: offer.seats }, (_, index) => <span key={index}>{String(index + 1).padStart(2, "0")}</span>)}</div>
           <p className={cx("seats-caption")}>함께 시작할 {offer.cohort}기 모집 정원 · {offer.seats}명</p>
-          <div id="plan-comparison" className={cx("plan-comparison")}>
-            <table>
-              <caption>두 과정, 이렇게 다릅니다.</caption>
-              <thead><tr><th scope="col">구성</th><th scope="col">기본 과정<strong>{offer.basicPrice}만 원</strong></th><th scope="col">{offer.setupName}<strong>{offer.setupPrice}만 원</strong></th></tr></thead>
-              <tbody>
-                <tr><th scope="row">사업·현장 교육</th><td>{offer.weeks}주 사업 교육<br />{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</td><td>기본 과정의<br />교육 모두 포함</td></tr>
-                <tr><th scope="row">사이트·채널 준비</th><td>제작·운영 방법을 배우며<br /><strong>직접 구축</strong></td><td>제작·운영 학습에<br /><strong>초기 셋업 지원 추가</strong></td></tr>
-                <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>사이트를 포함한 8개 채널의 초기 구축 지원도 받고 싶은 분</td></tr>
-              </tbody>
-            </table>
-            <p>{offer.setupName}는 기본 과정을 포함한 {offer.setupPrice}만 원입니다.</p>
-            <a href="#premium">8개 채널 셋업 구성 보기 <span aria-hidden="true">↓</span></a>
-          </div>
+          <a className={cx("overview-link")} href="#plan-comparison">기본·셋업 과정 다시 비교하기 <span aria-hidden="true">↑</span></a>
         </div>
         <div className={cx("enrollment-ticket")}>
           <div className={cx("ticket-top")}><span><span className={cx("status-dot")}></span> {offer.cohort}기 모집 중</span><b>FIRST CLASS</b></div>
@@ -320,7 +329,6 @@ export default function GisalLanding() {
             <span className={cx("premium-care-label")}>사업 교육을 실제 시작으로 연결합니다</span>
             <h3>내 서비스를 알리고,<br /><span>문의받을 준비까지.</span></h3>
             <ul className={cx("premium-inclusions")} aria-label="포함된 기본 교육"><li>{offer.weeks}주 사업 교육</li><li>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</li></ul>
-            <p>{offer.setupApproach}</p>
             <dl className={cx("setup-channels")} aria-label="초기 셋업하는 8개 채널">
               {offer.setupChannels.map(channel => <div key={channel.name}><dt>{channel.name}</dt><dd>{channel.scope}</dd></div>)}
             </dl>
