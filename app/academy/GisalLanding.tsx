@@ -67,6 +67,20 @@ export default function GisalLanding() {
               <span className={cx("business-reality-label")}>대표 개인 경험</span>
               <h4 id="founder-experience-title">함께 가구수리를 하던<br /><strong>10명 중 3명</strong></h4>
               <p className={cx("business-reality-context")}>3년 뒤에도 가구수리를 본업으로 이어갔습니다.</p>
+              <figure className={cx("reality-chart")} role="img" aria-label="대표 개인 경험: 10명 중 본업 유지 3명, 다른 일 또는 부업으로 전환 7명">
+                <div className={cx("reality-people")} aria-hidden="true">
+                  {Array.from({ length: 10 }, (_, index) => (
+                    <svg key={index} className={cx(index < 3 ? "reality-person reality-person-active" : "reality-person")} viewBox="0 0 24 40" focusable="false">
+                      <circle cx="12" cy="6" r="4" />
+                      <path d="M9 13h6a4 4 0 0 1 4 4v10h-4v11H9V27H5V17a4 4 0 0 1 4-4Z" />
+                    </svg>
+                  ))}
+                </div>
+                <figcaption className={cx("reality-chart-legend")}>
+                  <span><span><i className={cx("reality-key reality-key-active")} aria-hidden="true" />본업 유지</span><strong>3명</strong></span>
+                  <span><span><i className={cx("reality-key")} aria-hidden="true" />다른 일·부업 전환</span><strong>7명</strong></span>
+                </figcaption>
+              </figure>
               <p>나머지 7명은 다른 일을 시작하거나, 가구수리를 부업으로 전환했습니다. 이 경험은 기술을 익히는 것과 그 기술로 생계를 이어가는 일을 함께 고민하게 했습니다.</p>
               <p className={cx("business-reality-note")}>2026년 11월 대표의 회고입니다. 함께했던 10명에 대한 개인 경험이며, 업계 전체의 폐업 통계가 아닙니다.</p>
             </article>
@@ -74,6 +88,13 @@ export default function GisalLanding() {
               <span className={cx("business-reality-label")}>공식 통계 · 전국, 전 업종</span>
               <h4 id="sole-business-stat-title">종사자 1인 기업의 3년 생존율<strong>45.1<span>%</span></strong></h4>
               <p className={cx("business-reality-context")}>2021년 신생기업이 2024년까지 지속한 비율입니다.</p>
+              <figure className={cx("reality-chart")} role="img" aria-label="전국 전 업종 종사자 1인 기업: 2021년 신생기업 전체 100% 중 2024년까지 생존한 기업 45.1%">
+                <div className={cx("reality-bar-scale")} aria-hidden="true"><span>0%</span><span>전체 100%</span></div>
+                <div className={cx("reality-bar")} aria-hidden="true"><span style={{ width: "45.1%" }} /></div>
+                <figcaption className={cx("reality-chart-legend")}>
+                  <span><span><i className={cx("reality-key reality-key-active")} aria-hidden="true" />3년 뒤 생존</span><strong>45.1%</strong></span>
+                </figcaption>
+              </figure>
               <p>국가데이터처 「2025년 기업생멸행정통계(잠정)」의 종사자 1인 기업 기준입니다.</p>
               <p className={cx("business-reality-note")}>2024년 기준 잠정치 · 2026년 10월 22일 발표.<br />가구수리만의 통계나 본업 유지율은 아니며, 생존이 충분한 소득을 뜻하지는 않습니다.</p>
               <a className={cx("business-reality-source")} href="https://mods.go.kr/boardDownload.es?bid=11469&list_no=447531&seq=1#page=64" target="_blank" rel="noopener noreferrer">공식 통계 원문 · 본문 58쪽 <span className={cx("sr-only")}>(PDF, 새 탭)</span><span aria-hidden="true">↗</span></a>

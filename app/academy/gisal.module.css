@@ -337,6 +337,19 @@
 .page .business-reality-card h4 strong span{font-size:26px;margin-left:3px}
 .page .business-reality-card p{margin-top:16px;color:#bac6b1;font-size:13px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere}
 .page .business-reality-card .business-reality-context{color:#e0e8d9;font-weight:600}
+.page .reality-chart{margin:22px 0;padding:20px 0;border-block:1px solid #3b4c30}
+.page .reality-people{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;align-items:end}
+.page .reality-person{display:block;width:100%;max-height:52px;fill:#283324;stroke:#91a082;stroke-width:1.25}
+.page .reality-person-active{fill:var(--green);stroke:var(--green)}
+.page .reality-chart-legend{display:grid;gap:10px;margin-top:18px;color:#c6d1be;font-size:12px;line-height:1.6}
+.page .reality-chart-legend>span,.page .reality-chart-legend>span>span{display:flex;align-items:center;gap:8px;min-width:0}
+.page .reality-chart-legend>span{justify-content:space-between}
+.page .reality-chart-legend strong{flex-shrink:0;color:var(--paper);font-size:14px;font-variant-numeric:tabular-nums}
+.page .reality-key{display:inline-block;flex-shrink:0;width:10px;height:10px;border:1px solid #91a082;border-radius:2px;background:#283324}
+.page .reality-key-active{border-color:var(--green);background:var(--green)}
+.page .reality-bar-scale{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;color:#acb9a4;font-size:11px;line-height:1.6;font-variant-numeric:tabular-nums}
+.page .reality-bar{height:28px;overflow:hidden;border-radius:4px;background:#283324;box-shadow:inset 0 0 0 1px #637457}
+.page .reality-bar>span{display:block;height:100%;background:var(--green);border-radius:4px 0 0 4px}
 .page .business-reality-card .business-reality-note{padding-top:16px;border-top:1px solid #3b4c30;color:#acb9a4;font-size:12px;line-height:1.8}
 .page .business-reality-source{display:inline-flex;align-items:center;gap:10px;min-height:44px;margin-top:10px;color:var(--green);font-size:12px;line-height:1.7;text-decoration:underline;text-underline-offset:4px}
 .page .business-reality-bridge{margin-top:22px;padding-left:20px;border-left:2px solid var(--green)}
