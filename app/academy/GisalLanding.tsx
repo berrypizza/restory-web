@@ -78,11 +78,11 @@ export default function GisalLanding() {
             <thead><tr><th scope="col">구성</th><th scope="col">기본 과정<strong>{offer.basicPrice}만 원</strong></th><th scope="col">{offer.setupName}<strong>{offer.setupPrice}만 원</strong></th></tr></thead>
             <tbody>
               <tr><th scope="row">사업·현장 교육</th><td>{offer.weeks}주 사업 교육<br />{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</td><td>기본 과정의<br />교육 모두 포함</td></tr>
-              <tr><th scope="row">사이트·채널 준비</th><td>제작·운영 방법을 배우며<br /><strong>직접 구축</strong></td><td>제작·운영 학습에<br /><strong>초기 셋업 지원 추가</strong></td></tr>
-              <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>사이트를 포함한 8개 채널의 초기 구축 지원도 받고 싶은 분</td></tr>
+              <tr><th scope="row">사이트·채널 준비</th><td>제작·운영 방법을 배우며<br /><strong>직접 구축</strong></td><td><strong>기살이 초기 구축</strong><br />수강생은 직접<br />운영법 학습</td></tr>
+              <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>초기 구축은 맡기고, 이후 직접 운영할 준비를 하고 싶은 분</td></tr>
             </tbody>
           </table>
-          <p>{offer.setupName}는 기본 과정을 포함한 총 {offer.setupPrice}만 원입니다.<br /><strong>기본 과정에 {offer.setupPrice - offer.basicPrice}만 원을 더해 초기 셋업 지원을 받는 구성입니다.</strong></p>
+          <p>{offer.setupName}는 기본 과정을 포함한 총 {offer.setupPrice}만 원입니다.<br /><strong>기본 과정에 {offer.setupPrice - offer.basicPrice}만 원을 더해 기살의 초기 구축과 운영 인계를 받는 구성입니다.</strong></p>
           <div className={cx("overview-plan-links")}><a href="#apply">기본 과정 상세 보기 <span aria-hidden="true">↓</span></a><a href="#premium">8개 채널 셋업 보기 <span aria-hidden="true">↓</span></a></div>
         </div>
       </div>
@@ -324,14 +324,14 @@ export default function GisalLanding() {
           <h2 id="premium-title">기술로 살아남기<br /><span className={cx("underline-green")}>{offer.setupName}</span></h2>
           <p className={cx("premium-intro")}>{offer.setupDescription}</p>
           <ol className={cx("setup-steps")} aria-label="사업 교육에서 셋업으로 이어지는 과정">
-            <li><span>01</span><div><strong>내 사업의 방향을 정리하고</strong><p>누구의 어떤 문제를 해결할지, 내 서비스의 가치를 정리합니다.</p></div></li>
-            <li><span>02</span><div><strong>고객이 만날 접점을 만들고</strong><p>사이트와 채널에 소개·사례·문의 방법을 담습니다.</p></div></li>
-            <li><span>03</span><div><strong>내가 직접 운영할 수 있도록</strong><p>초기 설정과 함께 각 채널을 운영하는 방법을 익힙니다.</p></div></li>
+            <li><span>01</span><div><strong>내 사업의 방향은 내가 정합니다</strong><p>고객·서비스·활동 지역을 정하고, 사용할 사진과 정보를 준비합니다.</p></div></li>
+            <li><span>02</span><div><strong>초기 구축은 기살이 맡습니다</strong><p>정리한 내용을 바탕으로 사이트와 채널에 소개·사례·문의 방법을 담아 초기 셋업을 진행합니다.</p></div></li>
+            <li><span>03</span><div><strong>운영은 내 손으로 익힙니다</strong><p>소개 수정·사례 등록·문의 확인을 직접 해보며, 구축된 사이트와 채널을 운영하는 법을 익힙니다.</p></div></li>
           </ol>
         </div>
         <div className={cx("premium-card")}>
           <div className={cx("premium-price-block")}>
-            <span className={cx("premium-price-label")}>기본 과정 포함 · 사이트 + 채널 초기 셋업</span>
+            <span className={cx("premium-price-label")}>기본 과정 포함 · 기살의 초기 구축 + 운영 인계</span>
             <p className={cx("premium-price")} aria-label={`${offer.setupName} 수강료 ${offer.setupPrice}만 원`}>{offer.setupPrice}<span>만 원</span></p>
             <p className={cx("premium-sale-label")}>{offer.setupName} 수강료</p>
           </div>
@@ -349,7 +349,7 @@ export default function GisalLanding() {
               </li>)}
             </ul>
             <p className={cx("premium-conditions")}>{offer.setupNote}</p>
-            <p className={cx("plan-consult-note")}>사업 교육과 함께 사이트·채널의 초기 준비에도 도움이 필요하다면, 현재 준비된 내용과 막막한 부분을 알려주세요. 내 상황에 셋업 지원이 필요한지 함께 살펴봅니다.</p>
+            <p className={cx("plan-consult-note")}>초기 구축은 맡기고, 이후 직접 운영할 준비를 하고 싶다면 현재 준비된 내용과 막막한 부분을 알려주세요. 내 상황에 셋업 패키지가 필요한지 함께 살펴봅니다.</p>
             <EnrollButton location="premium" label="셋업 패키지 무료 상담" className={cx("button button-green")} />
             <p className={cx("consult-action-note")}>온라인 1:1 진단은 무료이며, 신청만으로 수강 등록이나 결제가 확정되지 않습니다.</p>
           </div>
