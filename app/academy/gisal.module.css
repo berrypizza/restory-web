@@ -326,6 +326,32 @@
 @media(max-width:760px){.page .learning-goals{padding:22px}.page .learning-goals h3{font-size:19px}.page .learning-goals p{font-size:13px}}
 
 /* Business education leads the offer; retain GISAL's existing visual language. */
+.page .business-reality{margin-top:38px;text-align:left}
+.page .business-reality>h3{font-size:26px;line-height:1.5;letter-spacing:-.8px}
+.page .business-reality-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}
+.page .business-reality-card{min-width:0;padding:26px;border:1px solid #3b4c30;border-radius:6px;background:#141e11}
+.page .business-reality-stat{background:#0e170c}
+.page .business-reality-label{display:inline-block;font-size:12px;font-weight:700;color:var(--green);line-height:1.6}
+.page .business-reality-card h4{font-size:16px;font-weight:600;line-height:1.7;margin-top:18px;word-break:keep-all;overflow-wrap:anywhere}
+.page .business-reality-card h4 strong{display:block;margin-top:8px;font-size:42px;font-weight:900;line-height:1.2;letter-spacing:-1.5px;color:var(--paper)}
+.page .business-reality-card h4 strong span{font-size:26px;margin-left:3px}
+.page .business-reality-card p{margin-top:16px;color:#bac6b1;font-size:13px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere}
+.page .business-reality-card .business-reality-context{color:#e0e8d9;font-weight:600}
+.page .business-reality-card .business-reality-note{padding-top:16px;border-top:1px solid #3b4c30;color:#acb9a4;font-size:12px;line-height:1.8}
+.page .business-reality-source{display:inline-flex;align-items:center;gap:10px;min-height:44px;margin-top:10px;color:var(--green);font-size:12px;line-height:1.7;text-decoration:underline;text-underline-offset:4px}
+.page .business-reality-bridge{margin-top:22px;padding-left:20px;border-left:2px solid var(--green)}
+.page .business-reality-bridge p{color:#bac6b1;font-size:14px;line-height:1.9}
+.page .business-reality-bridge strong{color:var(--paper);font-weight:700}
+.page .business-reality-bridge .text-link{display:inline-flex;align-items:center;gap:14px;min-height:44px;margin-top:12px;color:var(--green);font-size:13px;line-height:1.7}
+@media(max-width:760px){
+ .page .business-reality{margin-top:30px}
+ .page .business-reality>h3{font-size:22px;letter-spacing:-.6px}
+ .page .business-reality-grid{grid-template-columns:1fr;gap:14px;margin-top:20px}
+ .page .business-reality-card{padding:22px}
+ .page .business-reality-card h4 strong{font-size:38px}
+ .page .business-reality-bridge{padding-left:16px}
+ .page .business-reality-bridge p{font-size:13px}
+}
 .page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .page .fit-list{padding-left:20px;margin-top:18px;color:#d0dac6;font-size:14px;line-height:1.9;text-align:left}
 .page .fit-list li+li{margin-top:9px}.page .fit-list li::marker{color:var(--green)}

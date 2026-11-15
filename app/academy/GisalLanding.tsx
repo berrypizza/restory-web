@@ -60,6 +60,30 @@ export default function GisalLanding() {
         <span className={cx("about-focus-label")}>WHY GISAL · 사업의 본질</span>
         <h2 id="about-title">고객에게 필요한 일을 하고,<br /><span>그 가치를 알리는 것부터.</span></h2>
         <p className={cx("about-focus-copy")}>기술을 익히는 일과 함께, 고객이 나를 찾고 선택하는 이유를 고민해야 합니다.<br /><strong>기살은 내 일의 기준을 세우고, 고객과 만나며, 사업을 운영하는 법을 다룹니다.</strong></p>
+        <section className={cx("business-reality")} aria-labelledby="business-reality-title">
+          <h3 id="business-reality-title">시작하는 것과,<br />본업으로 이어가는 것은 다릅니다.</h3>
+          <div className={cx("business-reality-grid")}>
+            <article className={cx("business-reality-card")} aria-labelledby="founder-experience-title">
+              <span className={cx("business-reality-label")}>대표 개인 경험</span>
+              <h4 id="founder-experience-title">함께 가구수리를 하던<br /><strong>10명 중 3명</strong></h4>
+              <p className={cx("business-reality-context")}>3년 뒤에도 가구수리를 본업으로 이어갔습니다.</p>
+              <p>나머지 7명은 다른 일을 시작하거나, 가구수리를 부업으로 전환했습니다. 이 경험은 기술을 익히는 것과 그 기술로 생계를 이어가는 일을 함께 고민하게 했습니다.</p>
+              <p className={cx("business-reality-note")}>2026년 11월 대표의 회고입니다. 함께했던 10명에 대한 개인 경험이며, 업계 전체의 폐업 통계가 아닙니다.</p>
+            </article>
+            <article className={cx("business-reality-card business-reality-stat")} aria-labelledby="sole-business-stat-title">
+              <span className={cx("business-reality-label")}>공식 통계 · 전국, 전 업종</span>
+              <h4 id="sole-business-stat-title">종사자 1인 기업의 3년 생존율<strong>45.1<span>%</span></strong></h4>
+              <p className={cx("business-reality-context")}>2021년 신생기업이 2024년까지 지속한 비율입니다.</p>
+              <p>국가데이터처 「2025년 기업생멸행정통계(잠정)」의 종사자 1인 기업 기준입니다.</p>
+              <p className={cx("business-reality-note")}>2024년 기준 잠정치 · 2026년 10월 22일 발표.<br />가구수리만의 통계나 본업 유지율은 아니며, 생존이 충분한 소득을 뜻하지는 않습니다.</p>
+              <a className={cx("business-reality-source")} href="https://mods.go.kr/boardDownload.es?bid=11469&list_no=447531&seq=1#page=64" target="_blank" rel="noopener noreferrer">공식 통계 원문 · 본문 58쪽 <span className={cx("sr-only")}>(PDF, 새 탭)</span><span aria-hidden="true">↗</span></a>
+            </article>
+          </div>
+          <div className={cx("business-reality-bridge")}>
+            <p><strong>기술과 함께, 고객을 만나고 사업을 운영할 준비가 필요합니다.</strong><br />기살에서는 강사의 실제 운영 사례를 살펴보고, 내 사업의 원칙과 고객을 만나는 방법을 배웁니다.</p>
+            <a className={cx("text-link")} href="#business-proof">실제 사례로 사업 교육 방식 보기 <span aria-hidden="true">↓</span></a>
+          </div>
+        </section>
         <div className={cx("about-focus-cards")} aria-label="사업 교육에서 함께 다루는 세 가지 질문">
           <div className={cx("about-focus-card")}><strong>어떤 가치를 제공할까?</strong><span>사업자의 마인드 · 신념 · 사명 · 원칙</span></div>
           <div className={cx("about-focus-card about-focus-card-featured")}><strong>고객은 왜 나를 찾을까?</strong><span>브랜딩 · 고객 확보 · 퍼널 마케팅</span></div>
