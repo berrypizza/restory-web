@@ -4,10 +4,17 @@ import Image from "next/image";
 import { useState } from "react";
 import styles from "./field-video.module.css";
 
-const videoId = "TcMbB4Skd90";
-const videoTitle = "형제끼리 사업하면 매일 싸울까요?";
+type FieldVideoProps = {
+  videoId?: string;
+  videoTitle?: string;
+  playLabel?: string;
+};
 
-export default function FieldVideo() {
+export default function FieldVideo({
+  videoId = "TcMbB4Skd90",
+  videoTitle = "형제끼리 사업하면 매일 싸울까요?",
+  playLabel = "영상 보기",
+}: FieldVideoProps) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -40,7 +47,7 @@ export default function FieldVideo() {
             <span className={styles.play} aria-hidden="true">
               <svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
             </span>
-            <span className={styles.hint}>영상 보기</span>
+            <span className={styles.hint}>{playLabel}</span>
           </button>
         )}
       </div>

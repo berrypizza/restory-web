@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { EnrollButton, EnrollmentProvider } from "./EnrollmentDialog";
 import FieldVideo from "./FieldVideo";
+import AcademyIntroVideo from "./AcademyIntroVideo";
 import AcademyTracking from "./AcademyTracking";
 import MobileConsultBar from "./MobileConsultBar";
 import { ACADEMY_OFFER as offer } from "@/lib/academy/offer";
@@ -88,6 +89,8 @@ export default function GisalLanding() {
         </div>
       </div>
     </section>
+
+    <AcademyIntroVideo />
 
     <section id="about" className={cx("about-focus")} aria-labelledby="about-title">
       <div className={cx("wrap about-focus-inner")}>

@@ -1,0 +1,197 @@
+.section {
+  padding: 76px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--night);
+}
+
+.inner {
+  width: min(1000px, calc(100% - 96px));
+  margin: 0 auto;
+}
+
+.heading {
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.heading h2 {
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: -1.8px;
+}
+
+.heading h2 span {
+  color: var(--green);
+}
+
+.heading p {
+  margin-top: 20px;
+  color: #bbc4b6;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.guide {
+  margin-top: 34px;
+}
+
+.guide h3 {
+  margin-bottom: 18px;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: -.6px;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.plans article {
+  padding: 23px;
+  border: 1px solid #45513b;
+  background: #b6fa4506;
+}
+
+.plans h4 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.plans h4 strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--green);
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.plans p {
+  margin-top: 12px;
+  color: #bbc4b6;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.plans p strong {
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.planNote {
+  margin-top: 14px;
+  color: #aeb9a7;
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+.conditions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 26px;
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.conditions dt {
+  margin-bottom: 9px;
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.conditions dd {
+  margin: 0;
+  color: #b5c0ae;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.consult {
+  display: grid;
+  justify-items: center;
+  gap: 17px;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.consult > p {
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.consult .consultNote {
+  color: #aeb9a7;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+@media (max-width: 760px) {
+  .section {
+    padding: 48px 0;
+  }
+
+  .inner {
+    width: calc(100% - 40px);
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: .3px;
+  }
+
+  .heading h2 {
+    font-size: clamp(26px, 7vw, 34px);
+    letter-spacing: -1.2px;
+  }
+
+  .heading p {
+    font-size: 12px;
+  }
+
+  .heading p br {
+    display: none;
+  }
+
+  .guide h3 {
+    font-size: 18px;
+  }
+
+  .plans,
+  .conditions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans {
+    gap: 12px;
+  }
+
+  .plans article {
+    padding: 19px;
+  }
+
+  .conditions {
+    gap: 20px;
+  }
+
+  .consult > a {
+    width: 100%;
+    min-height: 52px;
+    text-align: center;
+  }
+}

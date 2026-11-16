@@ -21,6 +21,7 @@ const consultation = load("lib/academy/consultation.ts");
 const sources = [
   ["basic", "basic"], ["premium", "setup"], ["hero", "undecided"],
   ["nav", "undecided"], ["curriculum", "undecided"], ["mobile", "undecided"],
+  ["video", "undecided"],
 ];
 const parse = query => attribution.readAcademyAttribution(new URLSearchParams(query));
 function nodes(node, predicate) {
