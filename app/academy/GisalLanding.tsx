@@ -377,7 +377,21 @@ export default function GisalLanding() {
       ].map(([question, answer]) => <details key={question}><summary>{question}<span className={cx("expand")} aria-hidden="true"></span></summary><p>{answer}</p></details>)}
     </div></div></section>
   </main>
-  <footer><div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div></footer>
+  <footer>
+    <div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div>
+    <div className={cx("wrap")}>
+      <div className={cx("footer-business")} role="group" aria-label="운영 사업자 정보">
+        <p className={cx("footer-business-title")}>운영 사업자 정보</p>
+        <dl>
+          <div><dt>상호</dt><dd>리스토리 스튜디오</dd></div>
+          <div><dt>대표자</dt><dd>고현호</dd></div>
+          <div><dt>사업자등록번호</dt><dd>692-55-00721</dd></div>
+          <div className={cx("footer-business-address")}><dt>사업장 주소</dt><dd>인천광역시 서구 염곡로498번안길 5-13. 302호(가정동)</dd></div>
+          <div><dt>연락처</dt><dd><a href="tel:1688-2957">1688-2957</a></dd></div>
+        </dl>
+      </div>
+    </div>
+  </footer>
   <MobileConsultBar />
 
 
