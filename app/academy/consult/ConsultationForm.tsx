@@ -6,13 +6,16 @@ import { communityClient } from "@/lib/community/client";
 import { CALL_TIMES, CONSENT_VERSION, CONSULTATION_TYPES, SITUATIONS, REPAIR_EXPERIENCES, MARKETING_EXPERIENCES } from "@/lib/academy/consultation";
 import { trackAcademy } from "@/lib/academy/analytics";
 import type { AcademyAttribution } from "@/lib/academy/attribution";
+import { videoProperties, type VideoRecord } from "@/lib/academy/video-attribution";
 import { ACADEMY_OFFER as offer } from "@/lib/academy/offer";
 import styles from "./consult.module.css";
 
 const steps = ["상담 안내", "상황과 경험", "연락처"];
 const emptyContact = { name: "", phone: "", email: "", region: "", age_range: "", repair_experience: "", marketing_experience: "", available_time: "", message: "", website: "" };
 
-export default function ConsultationForm({ attribution: { source_plan, source_cta } }: { attribution: AcademyAttribution }) {
+export default function ConsultationForm({ attribution: { source_plan, source_cta }, videoContext = null }: { attribution: AcademyAttribution; videoContext?: VideoRecord | null }) {
+  // Freeze entry-time viewing history across steps, retries and a long form session.
+  const videoAtEntry = useRef(videoProperties(videoContext));
   const [step, setStep] = useState(0);
   const [kind, setKind] = useState("online");
   const [situation, setSituation] = useState("");
@@ -43,12 +46,12 @@ export default function ConsultationForm({ attribution: { source_plan, source_ct
 
   const started = useRef(false);
   useEffect(() => {
-    if (!started.current) { trackAcademy("academy_consult_start", { source_plan, source_cta }); started.current = true; }
+    if (!started.current) { trackAcademy("academy_consult_start", { source_plan, source_cta, ...videoAtEntry.current }); started.current = true; }
   }, [source_plan, source_cta]);
   const trackedStep = useRef<number | null>(null);
   useEffect(() => {
     if (trackedStep.current !== step) {
-      trackAcademy("academy_consult_step_view", { source_plan, source_cta, step: step + 1 });
+      trackAcademy("academy_consult_step_view", { source_plan, source_cta, ...videoAtEntry.current, step: step + 1 });
       trackedStep.current = step;
     }
   }, [step, source_plan, source_cta]);
@@ -69,22 +72,22 @@ export default function ConsultationForm({ attribution: { source_plan, source_ct
     if (!REPAIR_EXPERIENCES.some(item => item.value === contact.repair_experience) || !MARKETING_EXPERIENCES.some(item => item.value === contact.marketing_experience)) { setError("수리·시공 경험과 마케팅 경험을 선택해주세요."); return; }
     submitting.current = true; setBusy(true); setError("");
     submissionId.current ??= crypto.randomUUID();
-    trackAcademy("academy_consult_submit_attempt", { source_plan, source_cta, consultation_type: kind === "offline" ? "offline" : "online" });
+    trackAcademy("academy_consult_submit_attempt", { source_plan, source_cta, ...videoAtEntry.current, consultation_type: kind === "offline" ? "offline" : "online" });
     try {
       const { error: resultError } = await communityClient().rpc("submit_academy_consultation", {
         p_id: submissionId.current, p_data: { ...contact, consultation_type: kind, situation, consent, consent_version: CONSENT_VERSION },
       });
       if (resultError) {
-        trackAcademy("academy_consult_submit_error", { source_plan, source_cta, reason: resultError.message.includes("rate_limit") ? "rate_limit" : resultError.message.includes("invalid_input") ? "invalid_input" : "server" });
+        trackAcademy("academy_consult_submit_error", { source_plan, source_cta, ...videoAtEntry.current, reason: resultError.message.includes("rate_limit") ? "rate_limit" : resultError.message.includes("invalid_input") ? "invalid_input" : "server" });
         if (resultError.message.includes("rate_limit")) setError("신청이 여러 번 접수되었습니다. 잠시 후 다시 시도하거나 1688-2957로 문의해주세요.");
         else if (resultError.message.includes("invalid_input")) setError("입력 내용과 개인정보 수집 동의를 다시 확인해주세요.");
         else setError("신청을 접수하지 못했습니다. 입력 내용은 유지되니 잠시 후 다시 눌러주세요.");
         return;
       }
-      trackAcademy("academy_consult_submit_success", { source_plan, source_cta, consultation_type: kind === "offline" ? "offline" : "online" });
+      trackAcademy("academy_consult_submit_success", { source_plan, source_cta, ...videoAtEntry.current, consultation_type: kind === "offline" ? "offline" : "online" });
       setSubmitted(true); setContact(emptyContact);
       requestAnimationFrame(() => heading.current?.focus());
-    } catch { trackAcademy("academy_consult_submit_error", { source_plan, source_cta, reason: "network" }); setError("연결이 원활하지 않습니다. 입력 내용은 유지되니 다시 시도해주세요."); }
+    } catch { trackAcademy("academy_consult_submit_error", { source_plan, source_cta, ...videoAtEntry.current, reason: "network" }); setError("연결이 원활하지 않습니다. 입력 내용은 유지되니 다시 시도해주세요."); }
     finally { submitting.current = false; setBusy(false); }
   }
 

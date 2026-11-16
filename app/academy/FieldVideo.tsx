@@ -1,7 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { trackAcademy } from "@/lib/academy/analytics";
+import { ACADEMY_VIDEOS, videoProperties, type AcademyVideo } from "@/lib/academy/video-attribution";
+import { recordVideoState } from "@/lib/academy/video-store";
+import { createPlaybackObserver, loadYouTubeAPI, type YouTubePlayer } from "@/lib/academy/youtube-player";
 import styles from "./field-video.module.css";
 
 type FieldVideoProps = {
@@ -16,19 +20,47 @@ export default function FieldVideo({
   playLabel = "영상 보기",
 }: FieldVideoProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const playerHost = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isPlaying || !playerHost.current) return;
+    const container = playerHost.current;
+    let disposed = false;
+    let player: YouTubePlayer | undefined;
+    // This subtree belongs to the SDK, so destroy() cannot remove a React-owned iframe.
+    const iframe = document.createElement("iframe");
+    const params = new URLSearchParams({ autoplay: "1", rel: "0", playsinline: "1", enablejsapi: "1", origin: window.location.origin });
+    iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?${params}`;
+    iframe.title = videoTitle;
+    iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    iframe.onload = () => iframe.focus();
+    container.appendChild(iframe);
+    const video = (Object.keys(ACADEMY_VIDEOS) as AcademyVideo[]).find(key => ACADEMY_VIDEOS[key].id === videoId);
+    const observe = createPlaybackObserver(stage => {
+      if (disposed || !video) return;
+      const record = recordVideoState(video, stage);
+      trackAcademy(stage === "started" ? "academy_video_start" : "academy_video_complete", {
+        academy_video: video, video_id: ACADEMY_VIDEOS[video].id, video_title: ACADEMY_VIDEOS[video].title,
+        video_provider: "youtube", ...videoProperties(record),
+      });
+    });
+    void loadYouTubeAPI().then(api => {
+      if (disposed) return;
+      player = new api.Player(iframe, { events: {
+        onReady: event => observe(event.target.getPlayerState()),
+        onStateChange: event => observe(event.data),
+      } });
+    }).catch(() => { /* The ordinary iframe still works when measurement SDKs are blocked. */ });
+    return () => { disposed = true; iframe.onload = null; player?.destroy(); container.replaceChildren(); };
+  }, [isPlaying, videoId, videoTitle]);
 
   return (
     <figure className={styles.video}>
       <div className={styles.frame}>
         {isPlaying ? (
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`}
-            title={videoTitle}
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
-            onLoad={(event) => event.currentTarget.focus()}
-          />
+          <div ref={playerHost} />
         ) : (
           <button
             type="button"
