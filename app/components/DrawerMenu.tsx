@@ -95,7 +95,7 @@ const PHONE = "tel:1688-2957";
 const KAKAO_URL = "http://pf.kakao.com/_hQExjX/chat";
 const PHOTO_URL = "https://blog.naver.com/sofaresq/224129090889";
 
-export default function DrawerMenu() {
+export default function DrawerMenu({ photoGuide }: { photoGuide?: string }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -539,7 +539,7 @@ export default function DrawerMenu() {
                 📷 사진 보내고 무료 견적 받기
               </a>
               <p className="mt-2 text-center text-[11px] text-neutral-400">
-                사진 한 장이면 수리·리폼 가능 여부 바로 안내
+                {photoGuide ?? "사진 한 장이면 수리·리폼 가능 여부 바로 안내"}
               </p>
             </div>
           </div>

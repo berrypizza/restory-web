@@ -20,6 +20,20 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const isDarkPage = pathname === "/philosophy" || pathname.startsWith("/academy");
+  let decodedPath = pathname;
+  try {
+    decodedPath = decodeURIComponent(pathname);
+  } catch {
+    // Keep malformed paths on the standard navigation copy.
+  }
+  const isSinkDoorPage = pathname === "/kitchen/sink-door" ||
+    pathname.startsWith("/kitchen/sink-door/") ||
+    (decodedPath.startsWith("/kitchen/") &&
+      !/냉장고장|냉장고-수납장/.test(decodedPath) &&
+      /문짝|도어|문-교체|주방-문-리폼|리폼-vs-교체/.test(decodedPath));
+  const photoGuide = isSinkDoorPage
+    ? "문짝 가까이 1장 + 주방 전체 1장으로 예상 견적 확인"
+    : undefined;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -40,7 +54,7 @@ export default function Navbar() {
               : "bg-[#1f66ff] text-white"
           }>
           <div className="mx-auto flex h-9 max-w-6xl items-center justify-center px-4 text-xs font-bold md:text-sm">
-            사진 한 장으로 수리·리폼 가능 여부 먼저 확인
+            {photoGuide ?? "사진 한 장으로 수리·리폼 가능 여부 먼저 확인"}
           </div>
         </div>
 
@@ -92,7 +106,7 @@ export default function Navbar() {
             </Link>
 
             <div className="md:hidden">
-              <DrawerMenu />
+              <DrawerMenu photoGuide={photoGuide} />
             </div>
 
             <a
@@ -105,7 +119,8 @@ export default function Navbar() {
               전화문의
             </a>
             <a
-              href="https://blog.naver.com/sofaresq/224129090889"
+              href={isSinkDoorPage ? "/go/kakao?cta=sink_door" : "https://blog.naver.com/sofaresq/224129090889"}
+              data-cta={isSinkDoorPage ? "sink_door_nav_kakao" : undefined}
               className="hidden md:inline-flex rounded-xl bg-[#1f66ff] px-4 py-2 text-xs font-black text-white">
               사진접수
             </a>
@@ -214,7 +229,7 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3">
-            <DrawerMenu />
+            <DrawerMenu photoGuide={photoGuide} />
           </div>
         </div>
       </header>
