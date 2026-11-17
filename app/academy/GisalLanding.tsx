@@ -80,6 +80,7 @@ export default function GisalLanding() {
             <thead><tr><th scope="col">구성</th><th scope="col">기본 과정<strong>{offer.basicPrice}만 원</strong></th><th scope="col">{offer.setupName}<strong>{offer.setupPrice}만 원</strong></th></tr></thead>
             <tbody>
               <tr><th scope="row">사업·현장 교육</th><td>{offer.weeks}주 사업 교육<br />{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육</td><td>기본 과정의<br />교육 모두 포함</td></tr>
+              <tr><th scope="row">추가 기술 교육</th><td>주 {offer.fieldSessionsPerWeek}회 외·수료 후에도<br /><strong>추가 비용 없이 신청</strong><br />현장 일정에 맞춰 조율</td><td>기본 과정과<br />동일하게 신청 가능</td></tr>
               <tr><th scope="row">사이트·채널 준비</th><td>제작·운영 방법을 배우며<br /><strong>직접 구축</strong></td><td><strong>기살이 초기 구축</strong><br />수강생은 직접<br />운영법 학습</td></tr>
               <tr><th scope="row">이런 분께</th><td>배운 내용을 직접 구축하며 시작하고 싶은 분</td><td>초기 구축은 맡기고, 이후 직접 운영할 준비를 하고 싶은 분</td></tr>
             </tbody>
@@ -206,7 +207,7 @@ export default function GisalLanding() {
         <header className={cx("roadmap-heading")}><span className={cx("roadmap-label")}>CURRICULUM</span><h2 id="roadmap-title">5주 동안 사업을 설계하고,<br /><span className={cx("green")}>주 2회 현장에서 기술을 배웁니다.</span></h2></header>
         <div className={cx("dual-track")}>
           <div><span>TRACK A · 사업을 만드는 {offer.weeks}주</span><h3>사업의 본질부터 내 운영 기반까지</h3><p>집중할 환경과 사업 원칙을 세우고, 고객에게 알리는 방법과 직접 운영할 웹사이트를 배웁니다.</p></div>
-          <div><span>TRACK B · 현장에서 배우는 기술</span><h3>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 동행 + 지도 실습</h3><p>관찰 → 판단 → 직접 실습 → 피드백. 실제 고객 현장에서 병행하며, 참여 가능한 작업은 일정·안전·숙련도에 따라 달라집니다.</p><a href="#field-method">현장 교육 방식과 기술 분야 보기 ↗</a></div>
+          <div><span>TRACK B · 현장에서 배우는 기술</span><h3>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 동행 + 지도 실습</h3><p>관찰 → 판단 → 직접 실습 → 피드백. 실제 고객 현장에서 병행하며, 참여 가능한 작업은 일정·안전·숙련도에 따라 달라집니다.</p><p><strong>주 {offer.fieldSessionsPerWeek}회보다 더 배우고 싶다면, 추가 비용 없이 신청할 수 있습니다.</strong> 현장 일정에 맞춰 참여를 조율합니다.</p><a href="#field-method">현장 교육 방식과 기술 분야 보기 ↗</a></div>
         </div>
         <ol className={cx("roadmap-list")}>
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>1주차</span><div className={cx("week-content")}><h3>사업에 몰입하는 환경 만들기</h3><p><strong>부하율 · 잠재의식 · 사이버사이코네틱</strong>을 다루며,<br className={cx("roadmap-break")} /> 사업에 집중할 수 있는 환경을 만듭니다.</p></div></li>
@@ -285,8 +286,8 @@ export default function GisalLanding() {
 
     <section id="field-support" className={cx("field-support")} aria-labelledby="field-support-title">
       <div className={cx("wrap field-support-inner")}>
-        <header className={cx("field-support-heading")}><span className={cx("field-support-label")}>BEYOND 5 WEEKS</span><h2 id="field-support-title">수료 후 필요한 기술은,<br /><span className={cx("green")}>현장 일정에 맞춰 조율합니다.</span></h2><p>사업을 하다 필요한 기술이 생기면 요청하세요.<br />해당 작업 현장 일정에 맞춰 추가 기술 교육을 조율합니다.</p></header>
-        <ol className={cx("support-flow")} aria-label="수료 후 기술 교육 진행 방식"><li><span>01</span><strong>필요한 기술 요청</strong></li><li><span>02</span><strong>현장 일정 조율</strong></li><li><span>03</span><strong>현장에서 추가 교육</strong></li></ol>
+        <header className={cx("field-support-heading")}><span className={cx("field-support-label")}>EXTRA LEARNING · 과정 중부터 수료 후까지</span><h2 id="field-support-title">주 {offer.fieldSessionsPerWeek}회보다 더 배우고 싶다면,<br /><span className={cx("green")}>추가 비용 없이 신청하세요.</span></h2><p>{offer.weeks}주 교육 기간 중은 물론, 수료 후에도<br />필요한 기술 교육을 추가 비용 없이 신청할 수 있습니다.</p></header>
+        <ol className={cx("support-flow")} aria-label="추가 기술 교육 신청 및 참여 방식"><li><span>01</span><strong>필요한 기술 요청</strong></li><li><span>02</span><strong>현장 일정 조율</strong></li><li><span>03</span><strong>추가 비용 없이 교육</strong></li></ol>
 
         <p className={cx("field-support-closing")}>{offer.followUp}</p>
         <a className={cx("roadmap-link")} href="#apply">기술로 살아남기 1기 모집 안내 <span aria-hidden="true">↗</span></a>
@@ -310,8 +311,8 @@ export default function GisalLanding() {
           <div className={cx("ticket-body")}>
             <p className={cx("ticket-label")}>기본 과정 · 사업 교육 + 현장 기술 교육</p><h3>기술로 살아남기</h3>
             <div className={cx("ticket-price")}>{offer.basicPrice}<span>만 원</span></div><p className={cx("ticket-price-caption")}>{offer.cohort}기 기본 수강료</p>
-            <dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>현장 일정 조율 · 조건 별도 안내</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl>
-            <ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>수료 후 요청형 추가 기술 교육 · 세부 조건 확인 필요</li></ul>
+            <dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>추가 비용 없이 신청 · 현장 일정 조율</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl>
+            <ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>과정 중·수료 후 추가 기술 교육 신청 가능 · 추가 비용 없음</li></ul>
             <p className={cx("plan-consult-note")}>사업을 배우고 직접 구축하며 시작하고 싶다면, 지금의 경험과 준비 상태부터 함께 살펴보세요. 어떤 과정이 맞는지 아직 정하지 않아도 괜찮습니다.</p>
             <EnrollButton location="basic" label="기본 과정 무료 상담" className={cx("button button-green")} />
             <p className={cx("consult-action-note")}>온라인 1:1 진단은 무료이며, 신청만으로 수강 등록이나 결제가 확정되지 않습니다.</p>
@@ -370,8 +371,9 @@ export default function GisalLanding() {
         ["사업 교육이 중심인가요? 기술 수업과 어떻게 병행하나요?", `네. 기술로 자기 사업을 준비하도록 사업자의 생각과 원칙, 브랜딩·마케팅·운영을 중심으로 배웁니다. ${offer.weeks}주 사업 교육과 ${offer.weeks}주간 주 ${offer.fieldSessionsPerWeek}회 현장 기술 교육을 병행합니다. 사업 교육은 몰입 환경 → 신념·사명·원칙 → 브랜딩 → 퍼널 마케팅 → 바이브 코딩 사업 사이트 순서입니다. 기술 교육은 실제 현장에서 진행하며 세부 요일·시간과 장소는 확인 후 안내합니다.`],
         ["언제 시작하고, 몇 명이 함께하나요?", `${offer.startDate} 개강 예정이며 ${offer.cohort}기 정원은 ${offer.seats}명입니다. 사업 과정은 ${offer.weeks}주입니다.`],
         [`${offer.setupName}는 기본 과정과 무엇이 다른가요?`, `${offer.setupDescription} ${offer.setupChannels.map(channel => channel.name).join("·")}의 초기 셋업이 포함됩니다. ${offer.setupApproach} ${offer.setupNote}`],
+        [`주 ${offer.fieldSessionsPerWeek}회보다 더 교육받고 싶으면 신청할 수 있나요?`, offer.additionalFieldEducation],
         ["수료 후 어떤 지원을 받나요?", offer.followUp],
-        ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, ${offer.setupName}는 기본 과정을 포함해 ${offer.setupPrice}만 원입니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·추가 비용·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
+        ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, ${offer.setupName}는 기본 과정을 포함해 ${offer.setupPrice}만 원입니다. 과정 중·수료 후 신청하는 추가 기술 교육에는 추가 비용이 없습니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
         ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", `기본 과정과 ${offer.setupName} 모두 독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다.`],
         ["교육장 위치와 실제 방문 가능 지역은 어디인가요?", "교육장 주소와 현장 방문 가능 지역, 이동 방식 및 비용은 확인 후 안내합니다. 상담에서 거주 지역과 참여 가능한 시간을 알려주시면 일정 조율에 참고합니다."],
       ].map(([question, answer]) => <details key={question}><summary>{question}<span className={cx("expand")} aria-hidden="true"></span></summary><p>{answer}</p></details>)}

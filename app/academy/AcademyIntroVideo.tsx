@@ -37,7 +37,7 @@ export default function AcademyIntroVideo() {
           <dl className={styles.conditions} aria-label="현장 실습과 수료 후 추가 교육 조건">
             <div>
               <dt>현장 실습</dt>
-              <dd>관찰 → 판단 → 강사 지도 아래 직접 실습 → 피드백.<br />{offer.practiceCondition}</dd>
+              <dd>관찰 → 판단 → 강사 지도 아래 직접 실습 → 피드백.<br />{offer.additionalFieldEducation}</dd>
             </div>
             <div>
               <dt>수료 후 추가 기술 교육</dt>
