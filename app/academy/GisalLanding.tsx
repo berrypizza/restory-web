@@ -373,11 +373,27 @@ export default function GisalLanding() {
         [`${offer.setupName}는 기본 과정과 무엇이 다른가요?`, `${offer.setupDescription} ${offer.setupChannels.map(channel => channel.name).join("·")}의 초기 셋업이 포함됩니다. ${offer.setupApproach} ${offer.setupNote}`],
         [`주 ${offer.fieldSessionsPerWeek}회보다 더 교육받고 싶으면 신청할 수 있나요?`, offer.additionalFieldEducation],
         ["수료 후 어떤 지원을 받나요?", offer.followUp],
-        ["수강료와 결제·취소·환불은 어떻게 되나요?", `기본 과정은 ${offer.basicPrice}만 원, ${offer.setupName}는 기본 과정을 포함해 ${offer.setupPrice}만 원입니다. 과정 중·수료 후 신청하는 추가 기술 교육에는 추가 비용이 없습니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
+        ["수강료와 결제·취소·환불은 어떻게 되나요?", `${offer.cohort}기 수강료는 기본 과정 ${offer.basicPrice}만 원, ${offer.setupName}는 기본 과정을 포함해 ${offer.setupPrice}만 원입니다. 과정 중·수료 후 신청하는 추가 기술 교육에는 추가 비용이 없습니다. 온라인 1:1 진단은 무료, 선택 가능한 오프라인 상담은 5만 원입니다. 결제 방법·취소·환불 규정은 확인 후 안내하며 등록·결제 전 해당 조건을 확인해주세요. 상담 신청만으로 교육 등록이나 결제가 확정되지 않습니다.`],
         ["교육 후 바로 독립 시공하거나 일정 매출을 낼 수 있나요?", `기본 과정과 ${offer.setupName} 모두 독립 시공이나 특정 매출을 보장하지 않습니다. 작업별 숙련도와 안전 판단, 개인의 실행과 시장 상황에 따라 달라집니다.`],
         ["교육장 위치와 실제 방문 가능 지역은 어디인가요?", "교육장 주소와 현장 방문 가능 지역, 이동 방식 및 비용은 확인 후 안내합니다. 상담에서 거주 지역과 참여 가능한 시간을 알려주시면 일정 조율에 참고합니다."],
       ].map(([question, answer]) => <details key={question}><summary>{question}<span className={cx("expand")} aria-hidden="true"></span></summary><p>{answer}</p></details>)}
     </div></div></section>
+    <section id="cohort-pricing" className={cx("cohort-pricing")} aria-labelledby="cohort-pricing-title">
+      <div className={cx("wrap cohort-pricing-inner")}>
+        <div>
+          <span className={cx("kicker")}>다음 기수 수강료 안내</span>
+          <h2 id="cohort-pricing-title">{offer.nextCohortPricing.fromCohort}기부터 수강료가<br />인상됩니다.</h2>
+          <p>기본 과정과 {offer.setupName} 모두<br />{offer.nextCohortPricing.basicPrice - offer.basicPrice}만 원씩 인상됩니다.</p>
+        </div>
+        <table aria-label="1기와 2기 이후 수강료 비교">
+          <thead><tr><th scope="col">과정</th><th scope="col">{offer.cohort}기</th><th scope="col">{offer.nextCohortPricing.fromCohort}기부터</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">기본 과정</th><td>{offer.basicPrice}<span>만 원</span></td><td><strong>{offer.nextCohortPricing.basicPrice}<span>만 원</span></strong></td></tr>
+            <tr><th scope="row">{offer.setupName}<small>기본 과정 포함 총액</small></th><td>{offer.setupPrice}<span>만 원</span></td><td><strong>{offer.nextCohortPricing.setupPrice}<span>만 원</span></strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
   <footer>
     <div className={cx("wrap footer-inner")}><a className={cx("brand")} href="#main"><span className={cx("brand-mark")}>기살<span>.</span></span><span className={cx("brand-name")}>기술로<br />살아남기</span></a><p>기술부터 사업까지, 행복하게 사업하는 법.</p><Link className={cx("restoryHome")} href="/">리스토리 스튜디오 ↗</Link><span>© 2026 GISAL.</span></div>

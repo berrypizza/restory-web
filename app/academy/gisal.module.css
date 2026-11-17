@@ -178,6 +178,21 @@
 .page .artNote { font-size:9px; line-height:1.6; color:#a2aaa3; margin-top:10px; }
 .page .heroArtNote { position:absolute; bottom:9px; right:24px; font-size:8px; color:#a2aaa3; }
 .page .restoryHome { color:#b6fa45; text-decoration:underline; text-underline-offset:4px; white-space:nowrap; font-size:11px; }
+.page .cohort-pricing{padding:64px 0;background:var(--night);color:var(--paper);border-top:1px solid var(--line)}
+.page .cohort-pricing-inner{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center}
+.page .cohort-pricing .kicker{color:var(--green)}
+.page .cohort-pricing h2{font-size:32px;line-height:1.4;letter-spacing:-1px;margin:16px 0}
+.page .cohort-pricing p{font-size:14px;line-height:1.9;color:#b8c5ad}
+.page .cohort-pricing table{width:100%;border-collapse:collapse;table-layout:fixed;text-align:left}
+.page .cohort-pricing th,.page .cohort-pricing td{padding:20px 12px;border-bottom:1px solid #35472b;vertical-align:middle}
+.page .cohort-pricing thead th{font-size:12px;color:#bdc9b4}
+.page .cohort-pricing th:first-child{width:42%}
+.page .cohort-pricing tbody th{font-size:14px;line-height:1.6;word-break:keep-all}
+.page .cohort-pricing small{display:block;font-size:11px;font-weight:400;color:#a2aaa3;margin-top:5px}
+.page .cohort-pricing td{font-size:27px;font-weight:700;white-space:nowrap;letter-spacing:-.7px}
+.page .cohort-pricing td span{font-size:13px;margin-left:3px;letter-spacing:0}
+.page .cohort-pricing td strong{color:var(--green)}
+@media(max-width:760px){.page .cohort-pricing{padding:42px 0}.page .cohort-pricing-inner{grid-template-columns:1fr;gap:22px}.page .cohort-pricing h2{font-size:27px}.page .cohort-pricing p{font-size:12px}.page .cohort-pricing th,.page .cohort-pricing td{padding:16px 6px}.page .cohort-pricing tbody th{font-size:12px}.page .cohort-pricing td{font-size:23px}.page .cohort-pricing td span{font-size:11px}.page .cohort-pricing small{font-size:10px}}
 .page .footer-business { margin-top:24px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; line-height:1.9; }
 .page .footer-business-title { margin:0 0 10px; color:var(--paper); font-size:12px; font-weight:600; }
 .page .footer-business dl { display:flex; flex-wrap:wrap; gap:6px 24px; margin:0; }
