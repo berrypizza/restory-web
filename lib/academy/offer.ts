@@ -8,7 +8,7 @@ export const ACADEMY_OFFER = {
   fieldSessionsPerWeek: 2,
   basicPrice: 490,
   setupName: "스타트 셋업 패키지",
-  setupPrice: 990,
+  setupPrice: 790,
   consultHref: "/academy/consult",
   ctaLabel: "무료 1:1 창업 진단받기",
   selectionGuidance: "어떤 과정이 맞을지 아직 정하지 않아도 괜찮습니다. 현재 상황을 듣고, 기본 교육과 초기 셋업 지원 중 필요한 구성을 함께 살펴봅니다.",
