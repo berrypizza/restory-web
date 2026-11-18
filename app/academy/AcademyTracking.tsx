@@ -17,7 +17,16 @@ export default function AcademyTracking() {
       }
     }, { threshold: 0.15 }) : null;
     if (section) observer?.observe(section);
+    const onCommunityClick = (event: MouseEvent) => {
+      if (event.type === "auxclick" && event.button !== 1) return;
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-academy-community]") : null;
+      const content = link?.dataset.academyCommunity;
+      if (content === "home" || content === "business_column" || content === "writing_column") {
+        trackAcademy("academy_community_click", { location: "curriculum", community_content: content });
+      }
+    };
     const onClick = (event: MouseEvent) => {
+      onCommunityClick(event);
       const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-academy-proof]") : null;
       if (link) trackAcademy("academy_proof_click", { case_id: link.dataset.academyProof });
       const businessLink = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[data-academy-business-proof]") : null;
@@ -25,7 +34,8 @@ export default function AcademyTracking() {
       if (businessStep === "record" || businessStep === "browse" || businessStep === "inquiry") trackAcademy("academy_business_proof_click", { business_step: businessStep });
     };
     document.addEventListener("click", onClick);
-    return () => { observer?.disconnect(); document.removeEventListener("click", onClick); };
+    document.addEventListener("auxclick", onCommunityClick);
+    return () => { observer?.disconnect(); document.removeEventListener("click", onClick); document.removeEventListener("auxclick", onCommunityClick); };
   }, []);
   return null;
 }

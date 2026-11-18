@@ -229,6 +229,35 @@ test("both analytics providers receive the same attribution; adapter failures ar
   assert.equal(calls.length, 2); assert.deepEqual(calls[0].slice(1), calls[1]); assert.deepEqual(calls[1][1], props);
 });
 
+test("community reading is separate from consultation conversion and sends only known content IDs", () => {
+  const events = [], handlers = new Map();
+  let cleanup;
+  class LinkChild {
+    constructor(content) { this.content = content; }
+    closest(selector) { return selector === "a[data-academy-community]" ? { dataset: { academyCommunity: this.content } } : null; }
+  }
+  load("app/academy/AcademyTracking.tsx", {
+    react: { useRef: current => ({ current }), useEffect: effect => { cleanup = effect(); } },
+    "@/lib/academy/analytics": { trackAcademy: (...args) => events.push(args) },
+  }, { Element: LinkChild, document: {
+    getElementById: () => null,
+    addEventListener: (type, handler) => handlers.set(type, handler),
+    removeEventListener: (type, handler) => { assert.equal(handlers.get(type), handler); handlers.delete(type); },
+  } }).default();
+  events.length = 0;
+  for (const content of ["home", "business_column", "writing_column"]) {
+    handlers.get("click")({ type: "click", button: 0, target: new LinkChild(content) });
+  }
+  handlers.get("auxclick")({ type: "auxclick", button: 1, target: new LinkChild("home") });
+  handlers.get("auxclick")({ type: "auxclick", button: 2, target: new LinkChild("home") });
+  handlers.get("click")({ type: "click", button: 0, target: new LinkChild("unknown@example.test") });
+  handlers.get("click")({ type: "click", button: 0, target: {} });
+  assert.deepEqual(plain(events), ["home", "business_column", "writing_column", "home"].map(community_content => [
+    "academy_community_click", { location: "curriculum", community_content },
+  ]));
+  cleanup(); assert.equal(handlers.size, 0);
+});
+
 for (const location of ["basic", "premium", "video", "mobile"]) {
   test(`${location}: both video histories survive CTA, all steps, failure and success`, async () => {
     const history = { version: 1, at: Date.now(), intro: "completed", brothers: "started" };

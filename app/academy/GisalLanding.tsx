@@ -217,6 +217,21 @@ export default function GisalLanding() {
           <li className={cx("roadmap-step")}><span className={cx("week-badge")}>5주차</span><div className={cx("week-content")}><h3>바이브 코딩으로 나만의 사업 사이트 만들기</h3><p>랜딩페이지부터 <strong>고객 스케줄 등록·관리, 작업 사례를 계속 올리는 기능</strong>까지 직접 만듭니다.</p><ul className={cx("site-outcomes")} aria-label="직접 만드는 사이트의 기능"><li>나만의 랜딩페이지</li><li>고객 · 스케줄 관리</li><li>작업 사례 업로드</li></ul><p className={cx("week-goal")}>교육 이후에도 <strong>스스로 사이트를 관리하고 유지보수할 수 있도록</strong> 배웁니다.</p></div></li>
         </ol>
         <p className={cx("learning-progress-note")}>현장에서는 판단과 작업 결과를 강사와 함께 점검합니다. 숙련도와 사업 준비의 진행 정도는 개인마다 달라집니다.</p>
+        <section id="community" className={cx("learning-community")} aria-labelledby="community-title">
+          <span className={cx("kicker")}>기살 커뮤니티 · 기술로 살아남기</span>
+          <h3 id="community-title">배움을 내 사업으로<br /><span className={cx("green")}>옮기는 공간.</span></h3>
+          <p className={cx("community-intro")}>강의·자료·칼럼을 한곳에 모아갑니다. 배운 내용을 다시 꺼내보고, 내 사업에 적용할 질문을 정리하는 공간입니다.</p>
+          <ul className={cx("community-formats")} aria-label="커뮤니티 콘텐츠"><li>강의</li><li>자료</li><li>칼럼</li></ul>
+          <p className={cx("community-reading-intro")}>먼저 공개된 칼럼에서, 기살이 사업을 바라보는 관점을 살펴보세요.</p>
+          <ul className={cx("community-reading")}>
+            <li><a href="https://baebae.kr/c/gisal/post/2b71c246-870d-466d-a96f-c1ee30d6b19d" target="_blank" rel="noopener noreferrer" data-academy-community="business_column"><span className={cx("community-topic")}>기술에서 사업으로</span><h4>기술을 배운 뒤, 고객은 어떻게 만날까요?</h4><p>기술만 배우면 수입이 따라올 거라는 생각에서, 고객이 선택할 이유를 만드는 일로.</p><span className={cx("community-read-link")}>칼럼 읽기 <span aria-hidden="true">↗</span><span className={cx("sr-only")}> (새 탭)</span></span></a></li>
+            <li><a href="https://baebae.kr/c/gisal/post/13df2eb6-ef7f-457c-a23e-8556bc195866" target="_blank" rel="noopener noreferrer" data-academy-community="writing_column"><span className={cx("community-topic")}>고객에게 전하는 말</span><h4>고객이 이해하기 쉬운 글은 어떻게 쓸까요?</h4><p>어려운 말로 실력을 보여주기보다, 고객이 이해하고 판단할 수 있도록 쉽게 쓰는 법.</p><span className={cx("community-read-link")}>칼럼 읽기 <span aria-hidden="true">↗</span><span className={cx("sr-only")}> (새 탭)</span></span></a></li>
+          </ul>
+          <div className={cx("community-footer")}>
+            <p>강의와 자료는 순차적으로 정리하고 있습니다.</p>
+            <a href="https://baebae.kr/c/gisal" target="_blank" rel="noopener noreferrer" data-academy-community="home" className={cx("community-link")}>기살 커뮤니티 둘러보기 <span aria-hidden="true">↗</span><span className={cx("sr-only")}> (새 탭)</span></a>
+          </div>
+        </section>
         <div className={cx("consult-bridge")}>
           <h3>이 배움이 내 상황에 맞는지,<br />먼저 함께 살펴보세요.</h3>
           <p>현재 경험과 창업 고민을 듣고, 사업 교육과 현장 실습의 적합도를 확인합니다.</p>

@@ -437,6 +437,33 @@
  .page .business-reality-bridge p{font-size:13px}
 }
 .page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.page .learning-community{margin-top:38px;padding:30px;border:1px solid #3b4c30;border-radius:6px;background:#10180e;scroll-margin-top:24px}
+.page .learning-community h3{margin-top:16px;font-size:30px;line-height:1.4;letter-spacing:-1px}
+.page .community-intro{max-width:620px;margin-top:16px;color:#c2cfb6;font-size:14px;line-height:1.9}
+.page .community-formats{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;list-style:none}
+.page .community-formats li{padding:5px 13px;border:1px solid #465a37;border-radius:999px;color:#d0dac6;font-size:12px;line-height:1.6}
+.page .community-reading-intro{margin-top:26px;color:#c2cfb6;font-size:13px;line-height:1.8}
+.page .community-reading{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0 0;padding:0;list-style:none}
+.page .community-reading li{min-width:0}
+.page .community-reading a{display:flex;flex-direction:column;align-items:flex-start;height:100%;padding:22px;border:1px solid #34442b;border-radius:4px;background:#0b1109;transition:border-color .15s ease}
+.page .community-topic{color:#a6b99a;font-size:11px;line-height:1.6}
+.page .community-reading h4{margin-top:12px;font-size:20px;line-height:1.55;letter-spacing:-.5px}
+.page .community-reading p{margin:12px 0 18px;color:#b9c6b0;font-size:13px;line-height:1.8}
+.page .community-read-link{display:flex;justify-content:space-between;gap:14px;width:100%;margin-top:auto;padding-top:14px;border-top:1px solid #34442b;color:var(--green);font-size:13px;line-height:1.7}
+.page .community-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 20px;margin-top:18px}
+.page .community-footer p{color:#a6b29b;font-size:12px;line-height:1.8}
+.page .community-link{display:inline-flex;align-items:center;gap:14px;min-height:44px;padding-block:10px;color:var(--green);font-size:13px;line-height:1.7;text-decoration:underline;text-underline-offset:4px}
+.page .community-reading a:hover{border-color:#8da76f}
+.page .community-reading a:focus-visible,.page .community-link:focus-visible{outline:2px solid var(--green);outline-offset:5px}
+@media(max-width:760px){
+ .page .learning-community{padding:24px 20px}
+ .page .learning-community h3{font-size:25px;letter-spacing:-.7px}
+ .page .community-intro{font-size:13px}
+ .page .community-reading{grid-template-columns:1fr;gap:12px}
+ .page .community-reading a{padding:20px}
+ .page .community-reading h4{font-size:19px}
+ .page .community-footer{align-items:flex-start;flex-direction:column}
+}
 .page .fit-list{padding-left:20px;margin-top:18px;color:#d0dac6;font-size:14px;line-height:1.9;text-align:left}
 .page .fit-list li+li{margin-top:9px}.page .fit-list li::marker{color:var(--green)}
 .page .fit-guidance{margin-top:24px;padding:20px;border-left:2px solid var(--green);background:#b6fa4508;text-align:left}
