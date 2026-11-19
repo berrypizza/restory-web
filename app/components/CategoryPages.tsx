@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { serviceForSlug } from "@/lib/service-analytics";
 import Image from "next/image";
 import {
   BusinessLineConfig,
@@ -48,9 +49,9 @@ function nl(text: string) {
    ════════════════════════════════════════ */
 export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
   return (
-    <main className="bg-white">
+    <main data-service-id={line.id} className="bg-white">
       {/* 히어로 */}
-      <section className="px-4 py-8 md:px-6 md:py-12">
+      <section data-service-section="hero" className="px-4 py-8 md:px-6 md:py-12">
         <div
           className="relative mx-auto max-w-6xl overflow-hidden rounded-2xl md:rounded-3xl"
           style={{
@@ -98,7 +99,7 @@ export function BusinessLinePage({ line }: { line: BusinessLineConfig }) {
       </section>
 
       {/* 서비스 라인업 그리드 */}
-      <section className="px-4 pb-20 md:px-6">
+      <section data-service-section="services" className="px-4 pb-20 md:px-6">
         <div className="mx-auto max-w-5xl">
           <h2
             className="text-xl font-black mb-2 md:text-2xl"
@@ -162,9 +163,9 @@ export function ServiceLandingPage({
   service: ServicePageConfig;
 }) {
   return (
-    <main className="bg-white">
+    <main data-service-id={serviceForSlug(service.slug)} className="bg-white">
       {/* 히어로 */}
-      <section className="px-6 py-14 md:py-20">
+      <section data-service-section="hero" className="px-6 py-14 md:py-20">
         <div className="mx-auto max-w-5xl">
           <p
             className="mb-3 text-sm font-bold tracking-widest"
@@ -207,7 +208,7 @@ export function ServiceLandingPage({
       </section>
 
       {/* 고객 고민 */}
-      <section
+      <section data-service-section="problems"
         className="px-4 py-14 md:px-6"
         style={{ backgroundColor: "#f8f9fc" }}>
         <div className="mx-auto grid max-w-5xl gap-3 md:grid-cols-3">
@@ -233,7 +234,7 @@ export function ServiceLandingPage({
       </section>
 
       {/* 작업 흐름 */}
-      <section className="px-4 py-16 md:px-6 md:py-20">
+      <section data-service-section="process" className="px-4 py-16 md:px-6 md:py-20">
         <div className="mx-auto max-w-5xl">
           <h2
             className="text-xl md:text-2xl font-black mb-8"

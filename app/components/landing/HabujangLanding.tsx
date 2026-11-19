@@ -135,7 +135,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
   const regionalCases = region ? latestHabujangCases.filter((item) => item.region.includes(region)) : [];
   const featuredCases = [...regionalCases, ...latestHabujangCases.filter((item) => !regionalCases.includes(item))].slice(0, 3);
   return (
-    <main className="bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
+    <main data-service-id="habujang" className="bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
       <ServiceJsonLd
         name={region ? `${region} 싱크대 하부장 밑판 교체` : "싱크대 하부장 밑판 교체"}
         description="기존 장의 상태를 확인해 손상된 하부장 밑판을 교체합니다. 비용은 현장별 상담 견적으로 안내하며, 사진으로 교체 가능 범위·견적·방문 일정을 확인합니다."
@@ -144,7 +144,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalCaseItemListJsonLd name={region ? `${region} 하부장 밑판 교체 참고 사례` : "하부장 밑판 교체 실제 사례"} items={featuredCases} />
-      <section className="relative overflow-hidden bg-[#0a1628]">
+      <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
         <div className="absolute inset-0 md:hidden">
           <Image src="/images/hero-habujang.webp" alt="" fill priority sizes="100vw" className="object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a1628]" />
@@ -202,7 +202,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           <a href="#lower-faq" className="px-2 py-5 hover:text-[#1a5cff]">자주 묻는 질문</a>
         </div>
       </nav>
-      <section
+      <section data-service-section="cases"
         id="lower-cases"
         className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
       >
@@ -296,7 +296,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section className="px-5 py-14 md:py-20">
+      <section data-service-section="scope" className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">REPAIR SCOPE</p>
@@ -322,7 +322,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           </div>
         </div>
       </section>
-      <section id="lower-cost" className="scroll-mt-24 bg-[#0a1628] px-5 py-14 text-white md:py-20">
+      <section data-service-section="budget" id="lower-cost" className="scroll-mt-24 bg-[#0a1628] px-5 py-14 text-white md:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="mb-3 text-xs font-bold tracking-widest text-blue-300">COST & AFTERCARE</p>
           <h2 className="mb-7 text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">하부장은 상태가 달라,<br />견적도 상담으로 정합니다</h2>
@@ -359,7 +359,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           </div>
         </div>
       </section>
-      <section id="lower-consult" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
+      <section data-service-section="photo_guide" id="lower-consult" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">PHOTO CONSULTATION</p>
@@ -396,7 +396,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           </FadeIn>
         </div>
       </section>
-      <section
+      <section data-service-section="faq"
         id="lower-faq"
         className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
       >
@@ -443,7 +443,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           </div>
         </div>
       </section>
-      <section className="bg-[#0a1628] px-5 py-16 text-white md:py-24">
+      <section data-service-section="contact" className="bg-[#0a1628] px-5 py-16 text-white md:py-24">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-4 text-xs font-bold tracking-widest text-blue-300">하부장 밑판 교체 상담</p>

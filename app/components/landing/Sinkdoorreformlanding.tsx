@@ -330,7 +330,7 @@ export default function SinkdoorReformLanding({
   };
 
   return (
-    <main
+    <main data-service-id="sink-door"
       className="bg-white"
       style={{
         fontFamily:
@@ -357,7 +357,7 @@ export default function SinkdoorReformLanding({
       />
 
       {/* Desired outcome and a clear first step */}
-      <section id="sink-door-outcome" className="bg-white px-5 py-8 md:py-12">
+      <section data-service-section="hero" id="sink-door-outcome" className="bg-white px-5 py-8 md:py-12">
         <div className="mx-auto grid max-w-[1100px] items-center gap-7 md:grid-cols-2 md:gap-10">
           <div>
             <p className="mb-3 text-[13px] font-black text-[#1a5cff]">
@@ -474,7 +474,7 @@ export default function SinkdoorReformLanding({
 
       <div className={activeTab === "detail" ? "block" : "hidden"}>
         {featuredRegionalDoorCases.length > 0 && (
-          <section
+          <section data-service-section="cases"
             id="sink-door-cases"
             className="scroll-mt-32 px-5 py-12"
             style={{ background: "#f8f9fb" }}
@@ -592,7 +592,7 @@ export default function SinkdoorReformLanding({
         )}
 
         {/* Budget and scope: keep confirmed terms, without publishing new prices */}
-        <section
+        <section data-service-section="budget"
           id="sink-door-budget"
           className="px-5 py-12 md:py-16"
           style={{ background: "#fff" }}
@@ -665,7 +665,7 @@ export default function SinkdoorReformLanding({
         </section>
 
         {/* Time to completion */}
-        <section
+        <section data-service-section="timeline"
           id="sink-door-timeline"
           className="bg-[#f8f9fb] px-5 py-12 md:py-16"
         >
@@ -843,7 +843,7 @@ export default function SinkdoorReformLanding({
         </section>
 
         {/* 3. COLORS */}
-        <section
+        <section data-service-section="colors"
           id="sink-door-colors"
           className="px-5 py-14 md:py-20"
           style={{ background: "#fff" }}
@@ -960,7 +960,7 @@ export default function SinkdoorReformLanding({
           </div>
         </section>
 
-        <section
+        <section data-service-section="materials"
           id="sink-door-materials"
           className="bg-white px-5 pb-12 md:pb-16"
         >
@@ -1209,7 +1209,7 @@ export default function SinkdoorReformLanding({
         </section>
 
         {/* Photo consultation */}
-        <section
+        <section data-service-section="photo_guide"
           id="sink-door-photos"
           className="bg-[#f8f9fb] px-5 py-12 md:py-16"
         >
@@ -1296,7 +1296,7 @@ export default function SinkdoorReformLanding({
         </section>
 
         {/* 6. TRUST */}
-        <section
+        <section data-service-section="warranty"
           id="sink-door-trust"
           className="px-5 py-14 md:py-20"
           style={{ background: "#fff" }}
@@ -1383,7 +1383,7 @@ export default function SinkdoorReformLanding({
         </section>
 
         {/* 8. FAQ */}
-        <section
+        <section data-service-section="faq"
           id="sink-door-faq"
           className="px-5 py-14 md:py-20"
           style={{ background: "#f8f9fb" }}
@@ -1446,7 +1446,7 @@ export default function SinkdoorReformLanding({
         </section>
 
         {/* 9. FINAL CTA */}
-        <section
+        <section data-service-section="contact"
           className="px-5 py-16 md:py-24"
           style={{ background: "#0a1628" }}
         >
@@ -1540,7 +1540,7 @@ export default function SinkdoorReformLanding({
       </div>
 
       {/* 4. REVIEWS */}
-      <section
+      <section data-service-section="reviews"
         id="restory-reviews"
         className={`scroll-mt-32 border-t border-neutral-200 px-4 py-4 md:py-6 ${
           activeTab === "reviews" ? "block" : "hidden"

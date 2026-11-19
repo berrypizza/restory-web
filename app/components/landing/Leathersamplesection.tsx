@@ -146,7 +146,7 @@ export default function LeatherSampleSection() {
 
   return (
     <>
-      <section
+      <section data-service-section="colors"
         className="px-5 py-10 md:py-14"
         style={{ background: "#f7f9fd" }}>
         <div className="mx-auto max-w-3xl">

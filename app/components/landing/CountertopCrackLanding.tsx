@@ -135,7 +135,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
   const featuredCases = [...regionalCases, ...latestCrackCases.filter((item) => !regionalIds.has(item.id))].slice(0, 3);
 
   return (
-    <main className="break-keep bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
+    <main data-service-id="sink-top-crack" className="break-keep bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상판 크랙 수리` : "싱크대 상판 크랙 수리"}
         description="보수 가능한 상판의 크랙을 정리하고 마감합니다. 비용 범위는 30~50만 원이며 부가세 별도입니다. 최종 금액은 상태를 보고 상담 후 안내합니다. 예상 마감과 방문 일정, 시공 부위 3년 무상 A/S 적용 조건도 확인하세요."
@@ -145,7 +145,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalCaseItemListJsonLd name={`${region ? `${region} 지역·` : ""}상판 크랙 수리 전후 사례`} items={featuredCases} />
 
-      <section className="relative overflow-hidden bg-[#0a1628]">
+      <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
         <div className="absolute inset-0 md:hidden">
           <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a1628]" />
@@ -210,7 +210,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </nav>
 
-      <section id="crack-cost" className="scroll-mt-24 border-b border-neutral-200 px-5 py-10 md:py-14">
+      <section data-service-section="budget" id="crack-cost" className="scroll-mt-24 border-b border-neutral-200 px-5 py-10 md:py-14">
         <div className="mx-auto max-w-3xl rounded-2xl border border-[#dce6fa] bg-[#eef4ff] p-6 md:p-8">
           <h2 className="text-sm font-bold text-[#1a5cff]">상판 크랙 수리 비용 범위</h2>
           <p className="mt-3 text-[34px] font-black leading-tight tracking-tight text-neutral-950 md:text-4xl">30~50만 원</p>
@@ -220,7 +220,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </section>
 
-      <section id="crack-cases" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
+      <section data-service-section="cases" id="crack-cases" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">BEFORE / AFTER</p>
@@ -308,7 +308,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </section>
 
-      <section className="px-5 py-14 md:py-20">
+      <section data-service-section="scope" className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">REPAIR SCOPE</p>
@@ -335,7 +335,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </section>
 
-      <section id="crack-details" className="scroll-mt-24 bg-[#0a1628] px-5 py-14 text-white md:py-20">
+      <section data-service-section="warranty" id="crack-details" className="scroll-mt-24 bg-[#0a1628] px-5 py-14 text-white md:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="mb-3 text-xs font-bold tracking-widest text-blue-300">COST & AFTERCARE</p>
           <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">우리 집 상판 상태에 맞춰,<br />작업 범위와 견적을 안내합니다</h2>
@@ -374,7 +374,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </section>
 
-      <section id="crack-consult" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
+      <section data-service-section="photo_guide" id="crack-consult" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">PHOTO CONSULTATION</p>
@@ -411,7 +411,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </section>
 
-      <section
+      <section data-service-section="faq"
         id="crack-faq"
         className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
       >
@@ -458,7 +458,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
           </div>
         </div>
       </section>
-      <section className="bg-[#0a1628] px-5 py-16 text-white md:py-24">
+      <section data-service-section="contact" className="bg-[#0a1628] px-5 py-16 text-white md:py-24">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-4 text-xs font-bold tracking-widest text-blue-300">싱크대 상판 크랙 수리 상담</p>

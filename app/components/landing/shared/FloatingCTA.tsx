@@ -88,7 +88,7 @@ export default function FloatingCTA({
           aria-label="맨 위로">
           <span className="text-[18px] text-neutral-500 md:text-[20px]">↑</span>
         </button>
-        <a
+        <a data-service-cta-location="fixed"
           href={phone}
           data-cta="floating_phone"
           className="order-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.35)] transition-all duration-200 hover:scale-105 active:scale-95 md:h-14 md:w-14"
@@ -101,7 +101,7 @@ export default function FloatingCTA({
             className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
           />
         </a>
-        <a
+        <a data-service-cta-location="fixed"
           href={kakaoUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -118,7 +118,7 @@ export default function FloatingCTA({
           />
         </a>
       </div>
-      <a
+      <a data-service-cta-location="fixed"
         href={kakaoUrl}
         target="_blank"
         rel="noopener noreferrer"

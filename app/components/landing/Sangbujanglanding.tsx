@@ -227,7 +227,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
     : latestSangbujangCases.slice(0, 3);
 
   return (
-    <main
+    <main data-service-id="sangbujang"
       className="break-keep bg-white"
       style={{
         fontFamily:
@@ -246,7 +246,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         items={featuredCases}
       />
 
-      <section className="relative overflow-hidden bg-[#0a1628]">
+      <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
         <div className="absolute inset-0 md:hidden">
           <Image
             src="/images/upper/hero-im.png"
@@ -364,7 +364,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section
+      <section data-service-section="budget"
         id="upper-price-examples"
         aria-labelledby="upper-price-heading"
         className="scroll-mt-24 bg-[#eef4ff] px-5 py-10 md:py-14"
@@ -424,7 +424,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </nav>
 
-      <section
+      <section data-service-section="cases"
         id="upper-cases"
         className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
       >
@@ -532,7 +532,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section className="px-5 py-14 md:py-20">
+      <section data-service-section="scope" className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
@@ -589,7 +589,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section
+      <section data-service-section="warranty"
         id="upper-cost"
         className="scroll-mt-24 bg-[#0a1628] px-5 py-14 text-white md:py-20"
       >
@@ -644,7 +644,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section id="upper-photo-guide" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
+      <section data-service-section="photo_guide" id="upper-photo-guide" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
@@ -695,7 +695,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section className="px-5 py-14 md:py-20">
+      <section data-service-section="video" className="px-5 py-14 md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
@@ -713,7 +713,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section
+      <section data-service-section="faq"
         id="upper-faq"
         className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
       >
@@ -771,7 +771,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <section className="bg-[#0a1628] px-5 py-14 text-white md:py-20">
+      <section data-service-section="contact" className="bg-[#0a1628] px-5 py-14 text-white md:py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
             <p className="mb-3 text-xs font-bold tracking-widest text-blue-300">

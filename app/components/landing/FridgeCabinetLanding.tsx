@@ -263,7 +263,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
   };
 
   return (
-    <main
+    <main data-service-id="fridge-cabinet"
       className="bg-white"
       style={{
         fontFamily:
@@ -278,7 +278,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
-      <section className="bg-white px-0 pb-8 pt-0 md:pb-12">
+      <section data-service-section="hero" className="bg-white px-0 pb-8 pt-0 md:pb-12">
         <div className="mx-auto max-w-[900px]">
           <div className="relative min-h-[560px] overflow-hidden bg-neutral-950 px-6 py-7 md:min-h-[620px] md:px-12 md:py-10">
             <Image
@@ -379,7 +379,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
 
       <div className={activeTab === "detail" ? "block" : "hidden"}>
         {/* 2. MAIN IMAGE INTRO */}
-        <section
+        <section data-service-section="service_overview"
           id="service-detail"
           className="scroll-mt-20 border-b border-neutral-200 bg-white px-4 py-14 md:py-18"
         >
@@ -581,7 +581,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
 
         {/* ★ 지역 설명 블록 (케이스 수 포함) */}
         {region && (
-          <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+          <section data-service-section="regional_intro" className="px-5 py-10" style={{ background: "#ffffff" }}>
             <div className="mx-auto max-w-lg">
               <h2
                 className="text-[20px] font-black mb-3"
@@ -611,7 +611,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         )}
 
         {/* 2. PROOF */}
-        <section
+        <section data-service-section="cases"
           className="px-5 py-14 md:py-20"
           style={{ background: "#f8f9fb" }}
         >
@@ -1208,7 +1208,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </section>
 
         {/* 3. COLORS */}
-        <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <section data-service-section="colors" className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
           <div className="mx-auto max-w-lg">
             <FadeIn>
               <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
@@ -1316,7 +1316,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
       </div>
 
       {/* 4. REVIEWS */}
-      <section
+      <section data-service-section="reviews"
         id="restory-reviews"
         className={`scroll-mt-20 border-t border-neutral-200 px-4 py-4 md:py-6 ${
           activeTab === "reviews" ? "block" : "hidden"
@@ -1447,7 +1447,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
 
       <div className={activeTab === "detail" ? "block" : "hidden"}>
         {/* 5. HOW */}
-        <section
+        <section data-service-section="process"
           className="px-5 py-14 md:py-20"
           style={{ background: "#f8f9fb" }}
         >
@@ -1673,7 +1673,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </section>
 
         {/* 6. TRUST */}
-        <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+        <section data-service-section="warranty" className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
           <div className="mx-auto max-w-lg">
             <FadeIn>
               <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
@@ -1756,7 +1756,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </section>
 
         {/* 7. VIDEO */}
-        <section
+        <section data-service-section="video"
           className="px-5 py-14 md:py-20"
           style={{ background: "#0a1628" }}
         >
@@ -1782,7 +1782,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </section>
 
         {/* 8. FAQ */}
-        <section
+        <section data-service-section="faq"
           className="px-5 py-14 md:py-20"
           style={{ background: "#f8f9fb" }}
         >
@@ -1844,7 +1844,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </section>
 
         {/* 9. FINAL CTA */}
-        <section
+        <section data-service-section="contact"
           className="px-5 py-16 md:py-24"
           style={{ background: "#0a1628" }}
         >

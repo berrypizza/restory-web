@@ -276,7 +276,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
     : 0;
 
   return (
-    <main
+    <main data-service-id="sofa-sag"
       className="bg-white"
       style={{
         fontFamily:
@@ -299,7 +299,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
-      <section
+      <section data-service-section="hero"
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
         <div className="absolute inset-0 md:hidden">
@@ -463,7 +463,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
 
       {/* ★ 지역 설명 블록 (케이스 수 포함 → thin content 방지) */}
       {region && (
-        <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+        <section data-service-section="regional_intro" className="px-5 py-10" style={{ background: "#ffffff" }}>
           <div className="mx-auto max-w-lg">
             <h2
               className="text-[20px] font-black mb-3"
@@ -491,7 +491,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       )}
 
       {/* 2. PROOF */}
-      <section
+      <section data-service-section="cases"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -590,7 +590,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 3. METHOD */}
-      <section className="px-5 py-14 md:py-20 bg-white">
+      <section data-service-section="scope" className="px-5 py-14 md:py-20 bg-white">
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">HOW WE REPAIR</p>
@@ -622,7 +622,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 4. HOW */}
-      <section
+      <section data-service-section="process"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -724,7 +724,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 5. COST & AFTERCARE */}
-      <section className="px-5 py-14 md:py-20 bg-white">
+      <section data-service-section="budget" className="px-5 py-14 md:py-20 bg-white">
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">COST & AFTERCARE</p>
@@ -762,7 +762,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 6. VIDEO */}
-      <section
+      <section data-service-section="video"
         className="px-5 py-14 md:py-20"
         style={{ background: "#0a1628" }}>
         <div className="mx-auto max-w-lg">
@@ -785,7 +785,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 7. FAQ */}
-      <section
+      <section data-service-section="faq"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -842,7 +842,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 8. FINAL CTA */}
-      <section
+      <section data-service-section="contact"
         className="px-5 py-16 md:py-24"
         style={{ background: "#0a1628" }}>
         <div className="mx-auto max-w-lg text-center">

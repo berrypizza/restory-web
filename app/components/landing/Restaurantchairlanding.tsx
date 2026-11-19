@@ -288,7 +288,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
   }, []);
 
   return (
-    <main
+    <main data-service-id={isSofa ? "restaurant-sofa" : "restaurant-chair"}
       className="bg-white"
       style={{
         fontFamily:
@@ -312,7 +312,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
-      <section
+      <section data-service-section="hero"
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
         <div className="absolute inset-0 md:hidden">
@@ -468,7 +468,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
 
       {/* ★ 지역 설명 블록 (케이스 수 포함) */}
       {region && (
-        <section className="px-5 py-10" style={{ background: "#ffffff" }}>
+        <section data-service-section="regional_intro" className="px-5 py-10" style={{ background: "#ffffff" }}>
           <div className="mx-auto max-w-lg">
             <h2
               className="text-[20px] font-black mb-3"
@@ -503,7 +503,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       )}
 
       {/* 2. PROOF */}
-      <section
+      <section data-service-section="cases"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -793,7 +793,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       <LeatherSampleSection />
 
       {/* 4. REVIEWS */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+      <section data-service-section="reviews" className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">
           <FadeIn>
             <div className="flex items-end gap-3 mb-8">
@@ -888,7 +888,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                           fontWeight: 900,
                           fontSize: 16,
                         }}>
-                        "
+                        &quot;
                       </span>
                       {r.quote}
                       <span
@@ -897,7 +897,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
                           fontWeight: 900,
                           fontSize: 16,
                         }}>
-                        "
+                        &quot;
                       </span>
                     </p>
                   </div>
@@ -912,7 +912,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 5. HOW */}
-      <section
+      <section data-service-section="process"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -1019,7 +1019,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 6. TRUST */}
-      <section className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
+      <section data-service-section="warranty" className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
@@ -1099,7 +1099,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 7. VIDEO */}
-      <section
+      <section data-service-section="video"
         className="px-5 py-14 md:py-20"
         style={{ background: "#0a1628" }}>
         <div className="mx-auto max-w-lg">
@@ -1122,7 +1122,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 8. FAQ */}
-      <section
+      <section data-service-section="faq"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -1178,7 +1178,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 9. FINAL CTA */}
-      <section
+      <section data-service-section="contact"
         className="px-5 py-16 md:py-24"
         style={{ background: "#0a1628" }}>
         <div className="mx-auto max-w-lg text-center">

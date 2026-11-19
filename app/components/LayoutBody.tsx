@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import AttributionTracker from "@/app/components/AttributionTracker";
+import ServiceAnalytics from "@/app/components/ServiceAnalytics";
 import Navbar from "@/app/components/Navbar";
 import YoutubeProblemFinder from "@/app/components/YoutubeProblemFinder";
 
@@ -20,6 +21,7 @@ export default function LayoutBody({
       {!isAdmin && (
         <Suspense fallback={null}>
           <AttributionTracker />
+          <ServiceAnalytics />
         </Suspense>
       )}
       {!isAdmin && !isAcademy && <Navbar />}
