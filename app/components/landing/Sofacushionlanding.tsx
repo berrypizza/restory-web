@@ -301,7 +301,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       {/* 1. HERO */}
       <section data-service-section="hero"
         className="relative overflow-hidden"
-        style={{ background: "#0a1628", minHeight: "100svh" }}>
+        style={{ background: "#0a1628" }}>
         <div className="absolute inset-0 md:hidden">
           <Image
             src="/images/sofa/hero-sofa-2.webp"
@@ -321,10 +321,8 @@ export default function SofaCushionLanding({ keyword }: Props) {
           />
         </div>
 
-        <div
-          className="relative z-10 mx-auto max-w-7xl flex flex-col md:flex-row"
-          style={{ minHeight: "100svh" }}>
-          <div className="flex-1 flex flex-col justify-end pb-10 pt-20 px-6 md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
+        <div className="relative z-10 mx-auto flex min-h-[calc(100svh-2.25rem)] max-w-7xl flex-col md:min-h-svh md:flex-row">
+          <div className="flex-1 flex flex-col justify-end pb-10 pt-4 px-6 md:flex-none md:w-[54%] md:justify-center md:px-16 md:py-24 md:flex-shrink-0">
             <FadeIn>
               <div
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-5"
@@ -371,6 +369,9 @@ export default function SofaCushionLanding({ keyword }: Props) {
                 </span>
               </div>
 
+              <p className="mb-2 text-[12px] leading-relaxed text-white/65">
+                전체 모습 · 꺼진 부분 사진과 지역·증상을 보내주세요.
+              </p>
               <div className="flex flex-col gap-3 md:flex-row">
                 <a
                   href={KAKAO_URL}
@@ -404,8 +405,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
               </div>
 
               <p className="mt-4 text-[12px] leading-relaxed text-white/65">
-                전체 모습 · 꺼진 부분 사진과 지역·증상을 보내주세요.
-                <br />사진으로 알기 어려운 내부 손상은 현장 확인이 필요할 수 있습니다.
+                사진으로 알기 어려운 내부 손상은 현장 확인이 필요할 수 있습니다.
               </p>
               <div className="mt-6 grid grid-cols-3 gap-4">
                 {[
