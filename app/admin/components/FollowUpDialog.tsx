@@ -71,7 +71,7 @@ export default function FollowUpDialog({ kind, job, onClose, onSave }: Props) {
         <section className={s.followUpContext} aria-label="기존 작업">
           <strong>{job.name} 고객님 · {job.symptom}</strong>
           <span>{job.region}{!install && job.phone && ` · ${job.phone}`}</span>
-          <span>{formatFullDate(install ? job.visit_date : job.install_date || job.visit_date)} {install ? "실측 방문" : "기존 작업"}</span>
+          <span>{formatFullDate(install ? job.visit_date : job.install_completed_on || job.install_date || job.visit_date)} {install ? "실측 방문" : "기존 작업"}</span>
         </section>
         <div className={s.section}>
           <div className={s.pair}>

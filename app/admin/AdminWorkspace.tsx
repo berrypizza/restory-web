@@ -12,6 +12,7 @@ import AdminNavigation, { destinations } from "./components/AdminNavigation";
 import AdminIcon from "./components/AdminIcon";
 import JobForm from "./components/JobForm";
 import FollowUpDialog from "./components/FollowUpDialog";
+import JobRemovalDialog, { type RemovalRequest } from "./components/JobRemovalDialog";
 import HomeTab from "./tabs/HomeTab";
 import CalendarTab from "./tabs/CalendarTab";
 import loadComponent from "next/dynamic";
@@ -65,6 +66,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const [original, setOriginal] = useState<Job | null>(null);
   const newJobId = useRef<string | null>(null);
   const [followUp, setFollowUp] = useState<{ job: Job; kind: FollowUpKind } | null>(null);
+  const [removal, setRemoval] = useState<RemovalRequest | null>(null);
   const [editPhase, setEditPhase] = useState<VisitPhase>("visit");
   const [initialField, setInitialField] = useState<QueueField>();
   const [saveError, setSaveError] = useState("");
@@ -77,7 +79,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const heading = useRef<HTMLHeadingElement>(null);
   const pageKey = queue ?? tab;
   const previousTab = useRef<string>(pageKey);
-  const { jobs, hasData, loadError, refreshing, load, update, remove, save, scheduleInstall, createAftercare, reviewPending } = useJobs();
+  const { jobs, hasData, loadError, refreshing, load, update, deleteJob, save, setInstallSchedule, createAftercare, reviewPending } = useJobs();
   const visibleJobs = useMemo(() => isAdmin ? jobs : jobs.filter(j => jobHasTech(j, user)), [isAdmin, jobs, user]);
 
   useEffect(() => {
@@ -165,11 +167,25 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
         onError("실측 일정이나 완료 상태가 바뀌었어요. 작업을 다시 확인해 주세요.");
         return;
       }
-      if (!(await scheduleInstall(job, draft, onError))) return;
+      if (!(await setInstallSchedule(job, draft.date, draft.time, onError))) return;
       showInCalendar(job.id, draft.date, "install");
       setSaveNotice("시공 일정을 저장했어요.");
     }
     setFollowUp(null);
+  }
+  async function confirmRemoval(onError: (message: string) => void) {
+    if (!isAdmin || !removal) return;
+    const { job, scope } = removal;
+    if (scope === "install") {
+      if (!(await setInstallSchedule(job, null, null, onError))) return;
+      showInCalendar(job.id, job.visit_date);
+      setSaveNotice("시공 일정을 삭제했어요.");
+    } else {
+      await deleteJob(job.id);
+      setSaveNotice("접수 전체를 삭제했어요.");
+      window.requestAnimationFrame(() => document.getElementById("day-agenda")?.focus());
+    }
+    setRemoval(null);
   }
   function showSource(id: string) {
     const source = visibleJobs.find(job => job.id === id);
@@ -209,13 +225,14 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
       ...getJobTechs(job),
       job.visit_date,
       job.install_date,
+      job.install_completed_on,
       job.is_aftercare ? "A/S AS 에이에스" : "",
     ].some((value) => normalize(value).includes(query));
 
   const visibleReviews = isAdmin ? reviewPending : reviewPending.filter((j) => jobHasTech(j, user));
   const filtered = tab === "jobs" ? visibleJobs.filter(j => {
     if (queue) return inQueue(j, queue) && matchSearch(j);
-    return (query || j.visit_date?.startsWith(listMonth) || j.install_date?.startsWith(listMonth)) &&
+    return (query || j.visit_date?.startsWith(listMonth) || j.install_date?.startsWith(listMonth) || j.install_completed_on?.startsWith(listMonth)) &&
       (statusFilter === "전체" || workStatus(j) === statusFilter) && jobHasTech(j, techFilter) && matchSearch(j);
   }) : [];
   function resetList() {
@@ -328,7 +345,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
                   onEdit={startEdit}
                   onFollowUp={openFollowUp}
                   onShowSource={showSource}
-                  onDelete={remove}
+                  onRemoveInstall={job => setRemoval({ job, scope: "install" })}
+                  onDeleteJob={job => setRemoval({ job, scope: "job" })}
                 />
               )}
               {tab === "jobs" && (
@@ -374,6 +392,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
         />
       )}
       {followUp && <FollowUpDialog job={followUp.job} kind={followUp.kind} onClose={() => setFollowUp(null)} onSave={saveFollowUp} />}
+      {removal && <JobRemovalDialog request={removal} onClose={() => setRemoval(null)} onConfirm={confirmRemoval} />}
     </div>
   );
 }

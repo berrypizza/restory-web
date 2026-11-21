@@ -36,6 +36,7 @@ export interface Job {
   install_date?: string | null;
   install_time?: string | null;
   install_completed?: boolean;
+  install_completed_on?: string | null;
   is_aftercare?: boolean;
   aftercare_source_id?: string | null;
 }

@@ -13,6 +13,7 @@ import {
   finishedInMonth,
   isFinishedJob,
   jobAmount,
+  revenueDate,
   won,
   type ExpenseGroup,
   type ExpenseRow,
@@ -42,7 +43,7 @@ function Reviews({ jobs, onUpdate }: { jobs: Job[]; onUpdate: StatsTabProps["onU
   const [limit, setLimit] = useState(20);
   const [message, setMessage] = useState("");
   const sorted = [...jobs].sort((a, b) =>
-    (b.install_date || b.visit_date || "").localeCompare(a.install_date || a.visit_date || ""),
+    (revenueDate(b) || "").localeCompare(revenueDate(a) || ""),
   );
   async function finish(job: Job) {
     if (busy) return;
@@ -70,7 +71,7 @@ function Reviews({ jobs, onUpdate }: { jobs: Job[]; onUpdate: StatsTabProps["onU
                 <div>
                   <strong>{job.name}</strong>
                   <p className={s.muted}>
-                    {formatDate(job.visit_date)} 방문 · {job.region}
+                    {formatDate(revenueDate(job) || job.visit_date)} {job.is_measurement ? "시공" : "방문"} · {job.region}
                   </p>
                 </div>
                 <div className={s.reviewActions}>

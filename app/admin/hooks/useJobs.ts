@@ -111,16 +111,12 @@ export function useJobs() {
     }
   };
 
-  const remove = async (id: string) => {
-    const name = rows?.find((job) => job.id === id)?.name;
-    if (!confirm(`${name ? name + " 고객님의 " : ""}접수를 삭제할까요? 삭제한 접수는 복구할 수 없어요.`))
-      return;
-    try {
-      const { data, error } = await getSupabase().from("jobs").delete().eq("id", id).select("id");
-      if (error || data?.length !== 1) throw new Error();
-    } catch {
-      alert("삭제하지 못했어요. 연결 상태와 작업 내역을 확인한 뒤 다시 시도해 주세요.");
-      return;
+  const deleteJob = async (id: string) => {
+    const table = getSupabase().from("jobs");
+    const { data, error } = await table.delete().eq("id", id).select("id");
+    if (error || data?.length !== 1) {
+      const current = await table.select("id").eq("id", id).maybeSingle();
+      if (current.error || current.data) throw new Error("접수 삭제 결과를 확인할 수 없어요.");
     }
     await load();
   };
@@ -145,16 +141,16 @@ export function useJobs() {
   }
   const createAftercare = (source: Job, draft: FollowUpDraft) => insertOnce(aftercareVisit(source, draft));
 
-  async function scheduleInstall(source: Job, draft: FollowUpDraft, onError: (message: string) => void) {
+  async function setInstallSchedule(source: Job, date: string | null, time: string | null, onError: (message: string) => void) {
     let message = "";
-    const saved = await update(source.id, { install_date: draft.date, install_time: draft.time || null }, {
+    const saved = await update(source.id, { install_date: date, install_time: time || null }, {
       status: source.status, is_measurement: source.is_measurement, install_completed: source.install_completed,
       visit_date: source.visit_date, install_date: source.install_date, install_time: source.install_time,
     }, value => { message = value; });
     if (saved) return true;
     // A dropped response or a simultaneous save of the same schedule is already a success.
     const { data } = await getSupabase().from("jobs").select("*").eq("id", source.id).maybeSingle();
-    if (data && canScheduleInstall(data) && data.install_date === draft.date && (data.install_time || "").slice(0, 5) === draft.time) {
+    if (data && (!date || canScheduleInstall(data)) && data.install_date === date && (data.install_time || "").slice(0, 5) === (time || "").slice(0, 5)) {
       await load();
       return true;
     }
@@ -205,7 +201,7 @@ export function useJobs() {
   const jobs = rows ?? [];
   const reviewPending = jobs.filter((j) => !j.is_aftercare && isFinishedJob(j) && !j.review_requested && j.phone);
 
-  return { jobs, hasData: rows !== null, loadError, refreshing, load, update, remove, save, scheduleInstall, createAftercare, reviewPending };
+  return { jobs, hasData: rows !== null, loadError, refreshing, load, update, deleteJob, save, setInstallSchedule, createAftercare, reviewPending };
 }
 
 // ── 폼 초기값 ─────────────────────────────────────────────────

@@ -360,6 +360,17 @@
 .deleteButton {
   color: #a33742;
 }
+.primary.destructive {
+  background: #b12e40;
+}
+.primary.destructive:hover {
+  background: #952537;
+}
+.removalDescription {
+  margin: 14px 0 0;
+  color: #374b61;
+  line-height: 1.6;
+}
 .linkButton:hover,
 .deleteButton:hover,
 .mapLink:hover,

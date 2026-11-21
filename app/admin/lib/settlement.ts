@@ -38,7 +38,7 @@ export const expenseAmount = (rows: ExpenseRow[]) =>
 
 export function revenueDate(job: Job) {
   if (job.is_aftercare || !isFinishedJob(job)) return null;
-  return job.is_measurement ? job.install_date || job.visit_date : job.visit_date;
+  return job.is_measurement ? job.install_completed_on || job.install_date || job.visit_date : job.visit_date;
 }
 
 export function finishedInMonth(jobs: Job[], month: string) {

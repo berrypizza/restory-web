@@ -26,7 +26,8 @@ interface JobCardProps {
   job: Job;
   onUpdate: (id: string, patch: Partial<Job>, expected?: Partial<Job>) => Promise<boolean>;
   onEdit: (job: Job) => void;
-  onDelete: (id: string) => void;
+  onRemoveInstall: (job: Job) => void;
+  onDeleteJob: (job: Job) => void;
   onFollowUp: (job: Job, kind: FollowUpKind) => void;
   onShowSource: (id: string) => void;
   isAdmin?: boolean;
@@ -39,7 +40,8 @@ export default function JobCard({
   job,
   onUpdate,
   onEdit,
-  onDelete,
+  onRemoveInstall,
+  onDeleteJob,
   onFollowUp,
   onShowSource,
   isAdmin = true,
@@ -184,7 +186,7 @@ export default function JobCard({
           <p className={s.detailNote}>
             시공{" "}
             {job.install_completed
-              ? "완료"
+              ? `완료${job.install_completed_on ? ` · ${formatDate(job.install_completed_on)}` : ""}`
               : job.install_date
                 ? `${formatDate(job.install_date)} ${formatTime(job.install_time || "")}`
                 : "일정 미정"}
@@ -341,9 +343,11 @@ export default function JobCard({
                 onClick={() => onShowSource(job.aftercare_source_id!)}>원작업 보기</button>}
               {!finished && job.status !== "취소" && <button type="button" className={s.neutral}
                 onClick={() => onFollowUp(job, "aftercare")}>A/S 접수</button>}
-              <button type="button" className={s.deleteButton} onClick={() => onDelete(job.id)}>
-                삭제
-              </button>
+              {installVisit ? (
+                <button type="button" className={s.deleteButton} onClick={() => onRemoveInstall(job)}>시공 일정 삭제</button>
+              ) : (
+                <button type="button" className={s.deleteButton} onClick={() => onDeleteJob(job)}>접수 전체 삭제</button>
+              )}
             </div>
           )}
         </div>

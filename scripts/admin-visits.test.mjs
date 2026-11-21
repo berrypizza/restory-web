@@ -55,6 +55,28 @@ test("A/S 방문은 완료 일정에 남고 기존 견적이 있어도 매출·�
   assert.equal(crew.find(person => person.name === "동행").revenue, 0);
 });
 
+test("시공 일정을 지우면 같은 날 실측도 달력에 남고 실측을 마친 작업만 시공일 미정에 들어간다", () => {
+  for (const date of [measured.visit_date, "2026-12-02"]) {
+    const planned = { ...measured, visit_time: "09:00", install_date: date, install_time: "14:00" };
+    assert.deepEqual(visitsForJob(planned).map(visit => visit.phase), ["visit", "install"]);
+    const cleared = { ...planned, install_date: null, install_time: null };
+    assert.deepEqual(visitsForJob(cleared), [{ job: cleared, phase: "visit", date: measured.visit_date, time: "09:00" }]);
+    assert(inQueue(cleared, "unscheduled"));
+    assert.equal(inQueue({ ...cleared, status: "배정" }, "unscheduled"), false);
+    assert.equal(finishedInMonth([cleared], date.slice(0, 7)).length, 0);
+  }
+});
+
+test("완료된 시공 일정을 지워도 원래 시공월 매출에 한 번만 남는다", () => {
+  const completed = { ...measured, install_date: null, install_completed: true, install_completed_on: "2026-12-02" };
+  assert.deepEqual(visitsForJob(completed).map(visit => visit.phase), ["visit"]);
+  assert.equal(inQueue(completed, "unscheduled"), false);
+  assert.equal(finishedInMonth([completed], "2026-11").length, 0);
+  assert.deepEqual(finishedInMonth([completed], "2026-12"), [completed]);
+  assert.equal(jobAmount(finishedInMonth([completed], "2026-12")), measured.price);
+  assert.equal(finishedInMonth([{ ...completed, install_completed: false }], "2026-12").length, 0);
+});
+
 test("복사한 A/S는 독립된 방문이며 재방문도 최초 작업에 연결된다", () => {
   const source = { ...measured, as_until: "2027-12-02", completion_photo: "before", install_completed: true, install_date: "2026-12-02" };
   const draft = { id: "two", date: "2026-12-16", time: "", tech: source.tech, memo: "요청 내용" };

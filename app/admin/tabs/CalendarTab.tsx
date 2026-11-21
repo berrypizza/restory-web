@@ -24,7 +24,8 @@ interface Props {
   onEdit: (job: Job, phase: "visit" | "install") => void;
   onFollowUp: (job: Job, kind: FollowUpKind) => void;
   onShowSource: (id: string) => void;
-  onDelete: (id: string) => void;
+  onRemoveInstall: (job: Job) => void;
+  onDeleteJob: (job: Job) => void;
 }
 
 const compactQuery = "(max-width: 1099px)";
@@ -36,7 +37,7 @@ function subscribeViewport(callback: () => void) {
 const compactViewport = () => window.matchMedia(compactQuery).matches;
 const desktopViewport = () => false;
 
-export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilter, setCalTechFilter, isAdmin, loggedUser, onUpdate, onEdit, onDelete, onFollowUp, onShowSource}: Props) {
+export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilter, setCalTechFilter, isAdmin, loggedUser, onUpdate, onEdit, onRemoveInstall, onDeleteJob, onFollowUp, onShowSource}: Props) {
   const compact = useSyncExternalStore(subscribeViewport, compactViewport, desktopViewport);
   const [fullMonth, setFullMonth] = useState(false);
   const week = compact && !fullMonth;
@@ -100,7 +101,8 @@ export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilt
       </header>
       {visits.length ? <div className={s.jobList}>
         {visits.map(({job,phase})=><div className={schedule.visit} key={job.id + phase} id={`schedule-${job.id}-${phase}`} tabIndex={-1}>
-          <JobCard job={job} scheduleDate={selectedDay} schedulePhase={phase} isAdmin={isAdmin} onUpdate={onUpdate} onEdit={edited => onEdit(edited, phase)} onDelete={onDelete}
+          <JobCard job={job} scheduleDate={selectedDay} schedulePhase={phase} isAdmin={isAdmin} onUpdate={onUpdate} onEdit={edited => onEdit(edited, phase)}
+            onRemoveInstall={onRemoveInstall} onDeleteJob={onDeleteJob}
             onFollowUp={onFollowUp} onShowSource={onShowSource} />
         </div>)}
       </div> : <div className={s.empty}><strong>이날 예정된 현장이 없어요</strong>

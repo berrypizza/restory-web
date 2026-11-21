@@ -126,7 +126,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
     symptom: !form.symptom.trim() ? "작업 품목을 선택하거나 직접 입력해 주세요." : "",
     visit_date: !form.visit_date ? "방문일을 선택해 주세요." : "",
     install_date: form.is_measurement && (
-      (form.install_date && form.install_date < form.visit_date) || (!form.install_date && (form.install_completed || form.install_time))
+      (form.install_date && form.install_date < form.visit_date) || (!form.install_date && form.install_time)
     ) ? "실측일과 같거나 이후인 시공일을 선택해 주세요." : "",
   };
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -321,7 +321,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
           {form.is_aftercare && <p className={s.hint}>A/S 방문은 매출과 기사 실적에서 제외돼요.</p>}
           {form.is_measurement && (
             <div className={s.install}>
-              <p>시공 일정은 실측 후에도 입력할 수 있어요.</p>
+              <p>{form.install_completed ? "시공 일정을 비워도 완료 기록과 매출은 기존 시공일에 남아요." : "시공 일정은 실측 후에도 입력할 수 있어요."}</p>
               <div className={s.pair}>
                 <label className={common.field}>
                   <span>시공일</span>
@@ -346,7 +346,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
                   onChange={(time) => set("install_time", time || null)}
                 />
               </div>
-              {!form.install_completed && (form.install_date || form.install_time) && (
+              {(form.install_date || form.install_time) && (
                 <button
                   type="button"
                   className={s.textButton}

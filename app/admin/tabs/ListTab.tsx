@@ -55,7 +55,7 @@ export default function ListTab({
   const queueInfo = queue && workQueues[queue];
   const editLabel = queueInfo?.action ?? "일정 수정";
   function latestDate(job: Job) {
-    return [job.visit_date, job.install_date].filter(
+    return [job.visit_date, job.install_date, job.install_completed_on].filter(
       (date): date is string => Boolean(date && (queue || hasSearchQuery || date.startsWith(monthFilter)))
     ).sort().at(-1) || "";
   }
@@ -126,6 +126,7 @@ export default function ListTab({
                   <div className={list.meta}><span className={s.status} data-status={status}>{status}</span><span>{crew}</span></div>
                   <h3>{job.name || "이름 미입력"}</h3>
                   <p>{[job.symptom, job.region].filter(Boolean).join(" · ")}</p>
+                  {job.install_completed_on && !job.install_date && <p>시공 완료 · {formatDate(job.install_completed_on)}</p>}
                 </div>
                 <div className={list.actions}>
                   {schedule.map(visit => <button key={visit.phase} type="button"
