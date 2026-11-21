@@ -5,7 +5,6 @@ import type { JobFormState } from "../lib/types";
 import type { QueueField } from "../lib/schedule";
 import {
   PRODUCT_OPTIONS,
-  QUICK_TIMES,
   STATUSES,
   TECHS,
   isProductOption,
@@ -16,6 +15,7 @@ import { addOneYear, today } from "../lib/utils";
 import { getExtraTechsFromMemo, getVisibleMemo, setExtraTechsInMemo } from "../lib/jobTechs";
 import { photoList } from "../lib/photoList";
 import JobDialog from "./JobDialog";
+import ArrivalTime from "./ArrivalTime";
 import JobPhotoEditor from "./JobPhotoEditor";
 import common from "../operations.module.css";
 import s from "./intake.module.css";
@@ -43,64 +43,6 @@ function Section({ title, summary, children }: { title: string; summary?: string
   );
 }
 
-const quickTimes = QUICK_TIMES.map((time) => ({
-  label: time.label,
-  value:
-    String((time.h % 12) + (time.ampm === "PM" ? 12 : 0)).padStart(2, "0") +
-    ":" +
-    String(time.m).padStart(2, "0"),
-}));
-
-function ArrivalTime({
-  value,
-  name,
-  label,
-  onChange,
-}: {
-  value: string;
-  name: string;
-  label: string;
-  onChange: (value: string) => void;
-}) {
-  const id = useId();
-  const [custom, setCustom] = useState(() =>
-    Boolean(value && !quickTimes.some((item) => item.value === value.slice(0, 5))),
-  );
-  const selectValue = custom ? "custom" : value.slice(0, 5);
-  return (
-    <div className={common.field}>
-      <label htmlFor={id}>{label}</label>
-      <select
-        id={id}
-        name={custom ? undefined : name}
-        value={selectValue}
-        onChange={(event) => {
-          const choice = event.target.value;
-          setCustom(choice === "custom");
-          if (choice !== "custom") onChange(choice);
-        }}
-      >
-        <option value="">시간 미정</option>
-        {quickTimes.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-        <option value="custom">직접 입력</option>
-      </select>
-      {custom && (
-        <input
-          type="time"
-          name={name}
-          aria-label={label + " 직접 입력"}
-          value={value.slice(0, 5)}
-          onChange={(event) => onChange(event.target.value)}
-        />
-      )}
-    </div>
-  );
-}
-
 export default function JobForm({ form, setForm, editId, initialField, saveError, saving, onSave, onClose }: JobFormProps) {
   const titleId = useId();
   const dismissId = useId();
@@ -113,6 +55,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
   }, [initialField]);
   const [original] = useState(form);
   const autoWarranty = useRef(!editId);
+  const paidTerms = useRef({ price: form.price, as_until: form.as_until });
   const [customProduct, setCustomProduct] = useState(() =>
     Boolean(form.symptom && !isProductOption(form.symptom)),
   );
@@ -142,13 +85,13 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
   }
 
   function setVisitDate(date: string) {
-    const nextWarranty = date && autoWarranty.current ? addOneYear(date) : undefined;
+    const nextWarranty = date && autoWarranty.current && !form.is_aftercare ? addOneYear(date) : undefined;
     setForm((prev) => ({ ...prev, visit_date: date, as_until: nextWarranty ?? prev.as_until }));
   }
 
   function setVisitType(isMeasurement: boolean) {
-    if (isMeasurement === form.is_measurement) return;
-    if (!isMeasurement)
+    if (isMeasurement === form.is_measurement && !form.is_aftercare) return;
+    if (!isMeasurement && form.is_measurement)
       installDraft.current = {
         date: form.install_date,
         time: form.install_time,
@@ -156,10 +99,24 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
       };
     setForm((prev) => ({
       ...prev,
+      ...(prev.is_aftercare ? {
+        price: paidTerms.current.price,
+        as_until: autoWarranty.current && prev.visit_date ? addOneYear(prev.visit_date) : paidTerms.current.as_until,
+      } : {}),
+      is_aftercare: false,
       is_measurement: isMeasurement,
       install_date: isMeasurement ? installDraft.current.date : null,
       install_time: isMeasurement ? installDraft.current.time : null,
       install_completed: isMeasurement && prev.status === "완료" && installDraft.current.completed,
+    }));
+  }
+  function setAftercare() {
+    if (editId || form.is_aftercare) return;
+    paidTerms.current = { price: form.price, as_until: form.as_until };
+    if (form.is_measurement) installDraft.current = { date: form.install_date, time: form.install_time, completed: false };
+    setForm(previous => ({
+      ...previous, is_aftercare: true, is_measurement: false, install_date: null, install_time: null,
+      install_completed: false, price: 0, as_until: "",
     }));
   }
 
@@ -168,6 +125,9 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
     region: !form.region.trim() ? "방문할 주소나 지역을 입력해 주세요." : "",
     symptom: !form.symptom.trim() ? "작업 품목을 선택하거나 직접 입력해 주세요." : "",
     visit_date: !form.visit_date ? "방문일을 선택해 주세요." : "",
+    install_date: form.is_measurement && (
+      (form.install_date && form.install_date < form.visit_date) || (!form.install_date && (form.install_completed || form.install_time))
+    ) ? "실측일과 같거나 이후인 시공일을 선택해 주세요." : "",
   };
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -349,14 +309,16 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
               onChange={(time) => set("visit_time", time)}
             />
           </div>
-          <div className={s.typePicker} role="group" aria-label="방문 유형">
-            <button type="button" aria-pressed={!form.is_measurement} onClick={() => setVisitType(false)}>
+          {(!editId || (!original.is_aftercare && original.status !== "완료")) && <div className={s.typePicker} role="group" aria-label="방문 유형">
+            <button type="button" aria-pressed={!form.is_measurement && !form.is_aftercare} onClick={() => setVisitType(false)}>
               일반 작업
             </button>
             <button type="button" aria-pressed={form.is_measurement} onClick={() => setVisitType(true)}>
               실측 후 시공
             </button>
-          </div>
+            {!editId && <button type="button" aria-pressed={form.is_aftercare} onClick={setAftercare}>A/S 방문</button>}
+          </div>}
+          {form.is_aftercare && <p className={s.hint}>A/S 방문은 매출과 기사 실적에서 제외돼요.</p>}
           {form.is_measurement && (
             <div className={s.install}>
               <p>시공 일정은 실측 후에도 입력할 수 있어요.</p>
@@ -366,9 +328,16 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
                   <input
                     type="date"
                     name="install_date"
+                    min={form.visit_date}
+                    aria-invalid={invalid("install_date")}
+                    aria-describedby={errorId("install_date")}
                     value={form.install_date || ""}
-                    onChange={(event) => set("install_date", event.target.value || null)}
+                    onChange={(event) => {
+                      const date = event.target.value || null;
+                      setForm(prev => ({ ...prev, install_date: date, install_time: date ? prev.install_time : null }));
+                    }}
                   />
+                  {errorLine("install_date")}
                 </label>
                 <ArrivalTime
                   name="install_time"
@@ -377,7 +346,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
                   onChange={(time) => set("install_time", time || null)}
                 />
               </div>
-              {(form.install_date || form.install_time) && (
+              {!form.install_completed && (form.install_date || form.install_time) && (
                 <button
                   type="button"
                   className={s.textButton}
@@ -392,7 +361,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
           )}
         </fieldset>
         <div className={s.additional}>
-          <Section
+          {!form.is_aftercare && <Section
             title="견적·A/S"
             summary={form.price ? form.price.toLocaleString("ko-KR") + "원" : undefined}
           >
@@ -427,7 +396,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
             >
               방문일 기준 1년 적용
             </button>
-          </Section>
+          </Section>}
           <Section
             title="동행 기사·진행 상태"
             summary={[extra.length ? extra.length + "명" : "", form.status].filter(Boolean).join(" · ")}

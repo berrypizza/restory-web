@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import type { Job } from "../lib/types";
+import type { FollowUpKind } from "../lib/followUp";
 import type { Tech } from "../lib/constants";
 import { formatDate, formatTime, formatYearMonth, thisYearMonth, pad } from "../lib/utils";
 import { getJobTechs } from "../lib/jobTechs";
-import { visitLabel, visitsForJob, workQueues, workStatus, type QueueField, type VisitPhase, type WorkQueue, type WorkStatus } from "../lib/schedule";
+import { canScheduleInstall, visitLabel, visitsForJob, workQueues, workStatus, type QueueField, type VisitPhase, type WorkQueue, type WorkStatus } from "../lib/schedule";
 import AdminIcon from "../components/AdminIcon";
 import list from "./workList.module.css";
 
@@ -30,6 +31,7 @@ interface ListTabProps {
   onReset: () => void;
   onEdit: (job: Job, phase?: VisitPhase, field?: QueueField) => void;
   onShowSchedule: (id: string, date: string, phase: VisitPhase) => void;
+  onFollowUp: (job: Job, kind: FollowUpKind) => void;
 }
 
 export default function ListTab({
@@ -47,6 +49,7 @@ export default function ListTab({
   onReset,
   onEdit,
   onShowSchedule,
+  onFollowUp,
 }: ListTabProps) {
   const [limit, setLimit] = useState(20);
   const queueInfo = queue && workQueues[queue];
@@ -135,6 +138,10 @@ export default function ListTab({
                     onClick={() => onEdit(job, queueInfo?.phase, queueInfo?.field)}>
                     {editLabel}
                   </button>}
+                  {isAdmin && !queue && canScheduleInstall(job) && <button type="button" className={list.queueAction}
+                    onClick={() => onFollowUp(job, "install")}>{job.install_date ? "시공 일정 변경" : "시공일 정하기"}</button>}
+                  {isAdmin && !queue && job.status !== "취소" && <button type="button" className={list.edit}
+                    aria-label={`${job.name} A/S 접수`} onClick={() => onFollowUp(job, "aftercare")}>A/S 접수</button>}
                 </div>
               </li>;
             })}

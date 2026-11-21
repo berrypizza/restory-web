@@ -9,8 +9,10 @@ import { mergePhotoChanges, photoList } from "../lib/photoList";
 import JobPhotoViewer from "./JobPhotoViewer";
 import photoStyle from "./jobPhotos.module.css";
 import type { Job } from "../lib/types";
+import type { FollowUpKind } from "../lib/followUp";
+import { isFinishedJob } from "../lib/settlement";
 import { STATUSES, TECH_COLOR, TECHS, type Status, type Tech } from "../lib/constants";
-import { visitStatus } from "../lib/schedule";
+import { canScheduleInstall, visitStatus } from "../lib/schedule";
 import { addOneYear, formatDate, formatFullDate, formatTime, naverMapUrl, today } from "../lib/utils";
 import {
   getExtraTechsFromMemo,
@@ -25,6 +27,8 @@ interface JobCardProps {
   onUpdate: (id: string, patch: Partial<Job>, expected?: Partial<Job>) => Promise<boolean>;
   onEdit: (job: Job) => void;
   onDelete: (id: string) => void;
+  onFollowUp: (job: Job, kind: FollowUpKind) => void;
+  onShowSource: (id: string) => void;
   isAdmin?: boolean;
   defaultExpanded?: boolean;
   scheduleDate?: string | null;
@@ -36,6 +40,8 @@ export default function JobCard({
   onUpdate,
   onEdit,
   onDelete,
+  onFollowUp,
+  onShowSource,
   isAdmin = true,
   defaultExpanded = false,
   scheduleDate,
@@ -68,13 +74,13 @@ export default function JobCard({
     ...intake.map((url, i) => ({ url, label: `접수 사진 ${i + 1}`, group: "접수" })),
     ...photos.map((url, i) => ({ url, label: `완료 사진 ${i + 1}`, group: "완료" })),
   ];
-  const finished = job.status === "완료" && (!job.is_measurement || job.install_completed);
-  const measured = job.is_measurement && job.status === "완료" && !job.install_completed;
+  const finished = isFinishedJob(job);
+  const measured = canScheduleInstall(job);
   const statusText = visitStatus(job, installVisit ? "install" : measurementVisit ? "visit" : undefined);
   const canCompleteThisVisit =
     !finished &&
     job.status !== "취소" &&
-    !(measurementVisit && measured) &&
+    !(measured && (measurementVisit || !job.install_date)) &&
     !(installVisit && !measured);
   const stateGuard = {
     status: job.status,
@@ -84,13 +90,13 @@ export default function JobCard({
   async function changeStatus(next: Status) {
     if (changingStatus || next === job.status) return;
     if (next === "완료" && !job.is_measurement) {
-      setPhotoAction("complete");
+      setPhotoAction(job.is_aftercare ? "aftercare" : "complete");
       return;
     }
     if (
       job.status === "완료" &&
       !confirm(
-        finished
+        job.is_aftercare ? "A/S 방문 완료를 해제할까요?" : finished
           ? "완료 처리를 해제할까요? 이 작업은 완료 매출에서 빠집니다."
           : "실측 완료를 해제할까요?",
       )
@@ -101,10 +107,13 @@ export default function JobCard({
     try {
       const patch: Partial<Job> = { status: next };
       if (job.is_measurement) patch.install_completed = false;
-      if (await onUpdate(job.id, patch, stateGuard))
+      if (await onUpdate(job.id, patch, stateGuard)) {
         setNotice(
           next === "완료" ? "실측을 마쳤어요. 시공 대기로 이동합니다." : "진행 상태를 변경했어요.",
         );
+        if (isAdmin && job.is_measurement && next === "완료" && !job.install_date)
+          onFollowUp({ ...job, ...patch }, "install");
+      }
     } finally {
       setChangingStatus(false);
     }
@@ -120,13 +129,14 @@ export default function JobCard({
           {job.is_measurement && (
             <span className={s.measure}>{installVisit ? "시공 방문" : "실측 방문"}</span>
           )}
+          {job.is_aftercare && <span className={s.measure}>A/S · 매출 제외</span>}
           <span className={s.status} data-status={statusText}>{statusText}</span>
         </div>
         <div className={s.jobName}>
           <h4>
             {job.name || "이름 미입력"} <small>고객님</small>
           </h4>
-          {job.price > 0 && (
+          {!job.is_aftercare && job.price > 0 && (
             <span aria-label={`견적 금액 ${job.price.toLocaleString("ko-KR")}원`}>
               {job.price.toLocaleString("ko-KR")}원
             </span>
@@ -180,7 +190,7 @@ export default function JobCard({
                 : "일정 미정"}
           </p>
         )}
-        {finished && job.as_until && (
+        {finished && !job.is_aftercare && job.as_until && (
           <p className={s.detailNote}>
             A/S {daysLeft !== null && daysLeft < 0 ? "만료" : "기한"} · {job.as_until}
             {daysLeft !== null && daysLeft >= 0 && daysLeft <= 30 && ` (${daysLeft}일 남음)`}
@@ -205,7 +215,7 @@ export default function JobCard({
             disabled={changingStatus}
             onClick={() => {
               if (job.is_measurement && !measured) void changeStatus("완료");
-              else setPhotoAction(measured ? "install" : "complete");
+              else setPhotoAction(measured ? "install" : job.is_aftercare ? "aftercare" : "complete");
             }}
           >
             {changingStatus
@@ -214,9 +224,15 @@ export default function JobCard({
                 ? "시공 완료 처리"
                 : job.is_measurement
                   ? "실측 완료 처리"
-                  : "작업 완료 처리"}
+                  : job.is_aftercare ? "A/S 완료 처리" : "작업 완료 처리"}
           </button>
         )}
+        {isAdmin && measured && (
+          <button type="button" className={job.install_date ? photoStyle.secondary : photoStyle.primary}
+            onClick={() => onFollowUp(job, "install")}>{job.install_date ? "시공 일정 변경" : "시공일 정하기"}</button>
+        )}
+        {isAdmin && finished && <button type="button" className={photoStyle.secondary}
+          onClick={() => onFollowUp(job, "aftercare")}>A/S 접수</button>}
       </div>
       {notice && (
         <p className={photoStyle.notice} role="status">
@@ -321,6 +337,10 @@ export default function JobCard({
               <button type="button" className={s.neutral} onClick={() => onEdit(job)}>
                 접수 수정
               </button>
+              {job.aftercare_source_id && <button type="button" className={s.neutral}
+                onClick={() => onShowSource(job.aftercare_source_id!)}>원작업 보기</button>}
+              {!finished && job.status !== "취소" && <button type="button" className={s.neutral}
+                onClick={() => onFollowUp(job, "aftercare")}>A/S 접수</button>}
               <button type="button" className={s.deleteButton} onClick={() => onDelete(job.id)}>
                 삭제
               </button>
@@ -344,7 +364,7 @@ export default function JobCard({
           photos={photos}
           mode={photoAction}
           customer={job.name || "미입력"}
-          price={job.price || 0}
+          price={job.is_aftercare ? 0 : job.price || 0}
           onCancel={() => setPhotoAction(null)}
           onDone={async (draft, original, finish) => {
             const urls = mergePhotoChanges(original, draft, photos);
@@ -353,17 +373,16 @@ export default function JobCard({
             if (finish) {
               if (
                 job.status === "취소" ||
-                (photoAction === "install" ? !measured : job.is_measurement || !urls.length)
+                (photoAction === "install" ? !measured || !job.install_date : job.is_measurement || (photoAction === "complete" && !urls.length))
               )
                 return false;
               Object.assign(expected, stateGuard);
               if (!finished) {
                 patch.status = "완료";
-                patch.as_until = addOneYear(today());
+                if (!job.is_aftercare) patch.as_until = addOneYear(today());
                 if (photoAction === "install") {
                   expected.install_date = job.install_date;
                   patch.install_completed = true;
-                  patch.install_date = job.install_date || today();
                 }
               }
             }
@@ -374,7 +393,7 @@ export default function JobCard({
                 finish
                   ? photoAction === "install"
                     ? "시공 완료로 저장했어요."
-                    : "작업을 완료했어요."
+                    : job.is_aftercare ? "A/S 방문을 완료했어요." : "작업을 완료했어요."
                   : "현장 사진을 저장했어요.",
               );
             }

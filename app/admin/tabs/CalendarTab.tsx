@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useSyncExternalStore } from "react";
 import type { Job } from "../lib/types";
+import type { FollowUpKind } from "../lib/followUp";
 import type { Tech } from "../lib/constants";
 import { formatFullDate, getCalendarDays, pad, today } from "../lib/utils";
 import { jobHasTech } from "../lib/jobTechs";
@@ -21,6 +22,8 @@ interface Props {
   loggedUser: string;
   onUpdate: (id: string, patch: Partial<Job>) => Promise<boolean>;
   onEdit: (job: Job, phase: "visit" | "install") => void;
+  onFollowUp: (job: Job, kind: FollowUpKind) => void;
+  onShowSource: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
@@ -33,7 +36,7 @@ function subscribeViewport(callback: () => void) {
 const compactViewport = () => window.matchMedia(compactQuery).matches;
 const desktopViewport = () => false;
 
-export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilter, setCalTechFilter, isAdmin, loggedUser, onUpdate, onEdit, onDelete}: Props) {
+export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilter, setCalTechFilter, isAdmin, loggedUser, onUpdate, onEdit, onDelete, onFollowUp, onShowSource}: Props) {
   const compact = useSyncExternalStore(subscribeViewport, compactViewport, desktopViewport);
   const [fullMonth, setFullMonth] = useState(false);
   const week = compact && !fullMonth;
@@ -97,7 +100,8 @@ export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilt
       </header>
       {visits.length ? <div className={s.jobList}>
         {visits.map(({job,phase})=><div className={schedule.visit} key={job.id + phase} id={`schedule-${job.id}-${phase}`} tabIndex={-1}>
-          <JobCard job={job} scheduleDate={selectedDay} schedulePhase={phase} isAdmin={isAdmin} onUpdate={onUpdate} onEdit={edited => onEdit(edited, phase)} onDelete={onDelete}/>
+          <JobCard job={job} scheduleDate={selectedDay} schedulePhase={phase} isAdmin={isAdmin} onUpdate={onUpdate} onEdit={edited => onEdit(edited, phase)} onDelete={onDelete}
+            onFollowUp={onFollowUp} onShowSource={onShowSource} />
         </div>)}
       </div> : <div className={s.empty}><strong>이날 예정된 현장이 없어요</strong>
         {nextDate && <button type="button" className={s.linkButton} onClick={()=>onSelectDay(nextDate)}>다음 일정 보기 · {Number(nextDate.slice(5,7))}월 {Number(nextDate.slice(8))}일</button>}

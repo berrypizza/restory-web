@@ -4,12 +4,14 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import type { Job } from "./lib/types";
 import type { Tech } from "./lib/constants";
 import { formatFullDate, thisYearMonth, today } from "./lib/utils";
-import { inQueue, workQueues, workStatus, type QueueField, type VisitPhase, type WorkStatus } from "./lib/schedule";
+import { canScheduleInstall, inQueue, visitsForJob, workQueues, workStatus, type QueueField, type VisitPhase, type WorkStatus } from "./lib/schedule";
+import type { FollowUpDraft, FollowUpKind } from "./lib/followUp";
 import { getJobTechs, getVisibleMemo, jobHasTech } from "./lib/jobTechs";
 import { useJobs, emptyForm, formFromJob } from "./hooks/useJobs";
 import AdminNavigation, { destinations } from "./components/AdminNavigation";
 import AdminIcon from "./components/AdminIcon";
 import JobForm from "./components/JobForm";
+import FollowUpDialog from "./components/FollowUpDialog";
 import HomeTab from "./tabs/HomeTab";
 import CalendarTab from "./tabs/CalendarTab";
 import loadComponent from "next/dynamic";
@@ -61,6 +63,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const [searchQuery, setSearchQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [original, setOriginal] = useState<Job | null>(null);
+  const newJobId = useRef<string | null>(null);
+  const [followUp, setFollowUp] = useState<{ job: Job; kind: FollowUpKind } | null>(null);
   const [editPhase, setEditPhase] = useState<VisitPhase>("visit");
   const [initialField, setInitialField] = useState<QueueField>();
   const [saveError, setSaveError] = useState("");
@@ -73,7 +77,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const heading = useRef<HTMLHeadingElement>(null);
   const pageKey = queue ?? tab;
   const previousTab = useRef<string>(pageKey);
-  const { jobs, hasData, loadError, refreshing, load, update, remove, save, reviewPending } = useJobs();
+  const { jobs, hasData, loadError, refreshing, load, update, remove, save, scheduleInstall, createAftercare, reviewPending } = useJobs();
+  const visibleJobs = useMemo(() => isAdmin ? jobs : jobs.filter(j => jobHasTech(j, user)), [isAdmin, jobs, user]);
 
   useEffect(() => {
     if (tab === "jobs" && hasData && searchRequested.current) {
@@ -107,6 +112,10 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   }, [saveNotice]);
 
   function startEdit(job: Job, phase: VisitPhase = "visit", field?: QueueField) {
+    if (field === "install_date") {
+      openFollowUp(job, "install");
+      return;
+    }
     setEditPhase(phase);
     setInitialField(field);
     setSaveError("");
@@ -116,6 +125,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
     setShowForm(true);
   }
   function openNew() {
+    newJobId.current = crypto.randomUUID();
     setSaveNotice("");
     setInitialField(undefined);
     setSaveError("");
@@ -127,11 +137,45 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
     setCalTechFilter(roleFilter);
     setSelectedDay(date);
     setFocusJob(null);
-    if (tab !== "calendar") window.location.hash = "calendar";
+    if (tab !== "calendar") window.location.assign("#calendar");
   }
   function showInCalendar(jobId: string, date: string, phase: VisitPhase = "visit") {
     showDay(date);
     setFocusJob({ id: jobId, phase });
+  }
+  function openFollowUp(job: Job, kind: FollowUpKind) {
+    if (!isAdmin) return;
+    setSaveNotice("");
+    setFollowUp({ job, kind });
+  }
+  async function saveFollowUp(draft: FollowUpDraft, onError: (message: string) => void) {
+    if (!isAdmin || !followUp) return;
+    const { job, kind } = followUp;
+    const current = jobs.find(row => row.id === job.id);
+    if (!current || current.status === "취소") {
+      onError("이 작업의 상태가 바뀌었어요. 창을 닫고 작업을 다시 확인해 주세요.");
+      return;
+    }
+    if (kind === "aftercare") {
+      const created = await createAftercare(job, draft);
+      showInCalendar(created.id, created.visit_date);
+      setSaveNotice("A/S 방문을 등록했어요. 매출에서 제외돼요.");
+    } else {
+      if (!canScheduleInstall(current) || draft.date < current.visit_date) {
+        onError("실측 일정이나 완료 상태가 바뀌었어요. 작업을 다시 확인해 주세요.");
+        return;
+      }
+      if (!(await scheduleInstall(job, draft, onError))) return;
+      showInCalendar(job.id, draft.date, "install");
+      setSaveNotice("시공 일정을 저장했어요.");
+    }
+    setFollowUp(null);
+  }
+  function showSource(id: string) {
+    const source = visibleJobs.find(job => job.id === id);
+    const visit = source && visitsForJob(source).at(-1);
+    if (visit) showInCalendar(id, visit.date, visit.phase);
+    else setSaveNotice("원작업 일정을 찾을 수 없어요.");
   }
   const closeForm = () => {
     setShowForm(false);
@@ -142,10 +186,11 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
     setSaving(true);
     setSaveError("");
     try {
-      await save(form, original, (id) => {
+      await save(form, original, newJobId.current, (id, visitDate) => {
         closeForm();
-        const showInstall = original && editPhase === "install" && form.install_date && (form.is_measurement || form.visit_date !== form.install_date) ? form.install_date : null;
-        showInCalendar(id, showInstall || form.visit_date, showInstall ? "install" : "visit");
+        const changedInstall = original && (original.install_date !== form.install_date || (original.install_time || null) !== form.install_time);
+        const showInstall = original && (editPhase === "install" || changedInstall) && form.install_date && (form.is_measurement || form.visit_date !== form.install_date) ? form.install_date : null;
+        showInCalendar(id, showInstall || visitDate, showInstall ? "install" : "visit");
         setSaveNotice(original ? "일정을 수정했어요." : "일정을 등록했어요.");
       }, setSaveError);
     } finally {
@@ -164,9 +209,9 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
       ...getJobTechs(job),
       job.visit_date,
       job.install_date,
+      job.is_aftercare ? "A/S AS 에이에스" : "",
     ].some((value) => normalize(value).includes(query));
 
-  const visibleJobs = useMemo(() => isAdmin ? jobs : jobs.filter(j => jobHasTech(j, user)), [isAdmin, jobs, user]);
   const visibleReviews = isAdmin ? reviewPending : reviewPending.filter((j) => jobHasTech(j, user));
   const filtered = tab === "jobs" ? visibleJobs.filter(j => {
     if (queue) return inQueue(j, queue) && matchSearch(j);
@@ -281,6 +326,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
                   loggedUser={user}
                   onUpdate={update}
                   onEdit={startEdit}
+                  onFollowUp={openFollowUp}
+                  onShowSource={showSource}
                   onDelete={remove}
                 />
               )}
@@ -297,6 +344,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
                   isAdmin={isAdmin}
                   loggedUser={user}
                   onEdit={startEdit}
+                  onFollowUp={openFollowUp}
                   queue={queue}
                   onReset={resetList}
                   onShowSchedule={showInCalendar}
@@ -325,6 +373,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
           onClose={closeForm}
         />
       )}
+      {followUp && <FollowUpDialog job={followUp.job} kind={followUp.kind} onClose={() => setFollowUp(null)} onSave={saveFollowUp} />}
     </div>
   );
 }

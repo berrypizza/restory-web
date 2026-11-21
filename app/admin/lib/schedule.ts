@@ -44,6 +44,7 @@ export function visitDone({ job, phase }: Visit) {
 }
 
 export function visitLabel({ job, phase }: Visit) {
+  if (job.is_aftercare) return "A/S";
   if (phase === "install") return "시공";
   return job.is_measurement ? "실측" : "방문";
 }
@@ -68,6 +69,10 @@ export function workStatus(job: Job): Exclude<WorkStatus, "전체"> {
   return job.status === "완료" && !isFinishedJob(job) ? "시공 대기" : job.status;
 }
 
+export function canScheduleInstall(job: Job) {
+  return Boolean(job.is_measurement && job.status === "완료" && !job.install_completed && !job.is_aftercare);
+}
+
 export const workQueues = {
   unassigned: { label: "주담당 미배정", action: "기사 배정", field: "tech", phase: "visit", empty: "주담당을 배정할 작업이 없어요" },
   unscheduled: { label: "시공일 미정", action: "시공일 입력", field: "install_date", phase: "install", empty: "시공일을 정할 작업이 없어요" },
@@ -76,6 +81,6 @@ export type WorkQueue = keyof typeof workQueues;
 export type QueueField = (typeof workQueues)[WorkQueue]["field"];
 
 export function inQueue(job: Job, queue: WorkQueue) {
-  if (queue === "unscheduled") return workStatus(job) === "시공 대기" && !job.install_date;
+  if (queue === "unscheduled") return canScheduleInstall(job) && !job.install_date;
   return !job.tech?.trim() && job.status !== "취소" && !isFinishedJob(job);
 }

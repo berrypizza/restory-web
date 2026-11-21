@@ -31,17 +31,25 @@ export function isFinishedJob(job: Job): boolean {
 }
 
 export const won = (amount: number) => `${amount.toLocaleString("ko-KR")}원`;
-export const jobAmount = (jobs: Job[]) => jobs.reduce((sum, job) => sum + (job.price || 0), 0);
+export const jobAmount = (jobs: Job[]) =>
+  jobs.reduce((sum, job) => sum + (job.is_aftercare ? 0 : job.price || 0), 0);
 export const expenseAmount = (rows: ExpenseRow[]) =>
   rows.reduce((sum, row) => sum + (row.amount || 0), 0);
 
+export function revenueDate(job: Job) {
+  if (job.is_aftercare || !isFinishedJob(job)) return null;
+  return job.is_measurement ? job.install_date || job.visit_date : job.visit_date;
+}
+
 export function finishedInMonth(jobs: Job[], month: string) {
   return jobs
-    .filter((job) => isFinishedJob(job) && job.visit_date?.startsWith(month))
+    .filter((job) => revenueDate(job)?.startsWith(month))
     .sort(
       (a, b) =>
-        b.visit_date.localeCompare(a.visit_date) ||
-        (b.visit_time || "").localeCompare(a.visit_time || ""),
+        revenueDate(b)!.localeCompare(revenueDate(a)!) ||
+        ((b.is_measurement ? b.install_time : b.visit_time) || "").localeCompare(
+          (a.is_measurement ? a.install_time : a.visit_time) || "",
+        ),
     );
 }
 

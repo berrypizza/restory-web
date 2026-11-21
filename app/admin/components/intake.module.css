@@ -26,6 +26,28 @@
   font-weight: 750;
   font-size: 17px;
 }
+.followUpContext {
+  display: grid;
+  gap: 4px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border-radius: 12px;
+  background: #f2f6fc;
+  color: #465b73;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.followUpContext strong { color: #203448; font-size: 16px; }
+.quickDates { display: flex; gap: 8px; }
+.quickDates button {
+  min-height: 40px;
+  padding: 4px 15px;
+  border: 1px solid #d5dfe9;
+  border-radius: 10px;
+  color: #35516c;
+}
+.quickDates button[aria-pressed="true"] { color: #194da1; background: #eaf1ff; border-color: #aac3ec; }
+.quickDates button:disabled { opacity: .45; }
 .pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

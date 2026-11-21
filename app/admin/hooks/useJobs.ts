@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { Job, JobFormState } from "../lib/types";
 import { isFinishedJob } from "../lib/settlement";
+import { aftercareVisit, type FollowUpDraft } from "../lib/followUp";
+import { canScheduleInstall } from "../lib/schedule";
 import { getSupabase, today, addOneYear } from "../lib/utils";
 
 export function useJobs() {
@@ -123,10 +125,48 @@ export function useJobs() {
     await load();
   };
 
+  function receiveCreated(created: Job) {
+    setRows(previous => previous ? [...previous.filter(job => job.id !== created.id), created] : null);
+    if (reading.current || rows === null) void load();
+  }
+
+  async function insertOnce(payload: Partial<Job> & { id: string }) {
+    const jobsTable = getSupabase().from("jobs");
+    const { data, error } = await jobsTable.upsert(payload, {
+      onConflict: "id", ignoreDuplicates: true,
+    }).select("*").maybeSingle();
+    if (error) throw error;
+    // A previous attempt may have committed before its response reached the device.
+    const created = data ?? (await jobsTable.select("*").eq("id", payload.id).single()).data;
+    if (!created || (created.aftercare_source_id ?? null) !== (payload.aftercare_source_id ?? null) ||
+        Boolean(created.is_aftercare) !== Boolean(payload.is_aftercare)) throw new Error("저장한 일정을 확인할 수 없어요.");
+    receiveCreated(created as Job);
+    return created as Job;
+  }
+  const createAftercare = (source: Job, draft: FollowUpDraft) => insertOnce(aftercareVisit(source, draft));
+
+  async function scheduleInstall(source: Job, draft: FollowUpDraft, onError: (message: string) => void) {
+    let message = "";
+    const saved = await update(source.id, { install_date: draft.date, install_time: draft.time || null }, {
+      status: source.status, is_measurement: source.is_measurement, install_completed: source.install_completed,
+      visit_date: source.visit_date, install_date: source.install_date, install_time: source.install_time,
+    }, value => { message = value; });
+    if (saved) return true;
+    // A dropped response or a simultaneous save of the same schedule is already a success.
+    const { data } = await getSupabase().from("jobs").select("*").eq("id", source.id).maybeSingle();
+    if (data && canScheduleInstall(data) && data.install_date === draft.date && (data.install_time || "").slice(0, 5) === draft.time) {
+      await load();
+      return true;
+    }
+    onError(message);
+    return false;
+  }
+
   const save = async (
     form: JobFormState,
     original: Job | null,
-    onSuccess: (id: string) => void,
+    draftId: string | null,
+    onSuccess: (id: string, visitDate: string) => void,
     onError: (message: string) => void,
   ) => {
     if (!form.name.trim() || !form.region.trim() || !form.symptom.trim() || !form.visit_date) return;
@@ -143,20 +183,19 @@ export function useJobs() {
       if (changed.length) {
         const patch = Object.fromEntries(changed.map(key => [key, payload[key]]));
         const expected = Object.fromEntries(changed.map(key => [key, original[key] ?? null]));
+        if (changed.some(key => ["visit_date", "install_date", "install_time", "is_measurement", "install_completed", "status"].includes(key))) {
+          for (const key of ["visit_date", "install_date", "install_time", "is_measurement", "install_completed", "status"] as const)
+            expected[key] = original[key] ?? null;
+        }
         if (!(await update(original.id, patch, expected, onError))) return;
       }
-      onSuccess(original.id);
+      onSuccess(original.id, form.visit_date);
       return;
     }
     try {
-      const { data, error } = await getSupabase().from("jobs").insert(payload).select("*").single();
-      if (error || !data?.id) throw new Error();
-      const created = data as Job;
-      // Merge a Realtime echo and the insert response into one visible row.
-      setRows(previous => previous ? [...previous.filter(job => job.id !== created.id), created] : null);
-      onSuccess(created.id);
-      // A read that started before the insert must not replace the new row.
-      if (reading.current || rows === null) void load();
+      if (!draftId) throw new Error("등록할 일정이 없어요.");
+      const created = await insertOnce({ ...payload, id: draftId });
+      onSuccess(created.id, created.visit_date);
     } catch {
       onError("일정을 저장하지 못했어요. 연결 상태를 확인한 뒤 다시 시도해 주세요.");
     }
@@ -164,9 +203,9 @@ export function useJobs() {
 
   // 파생 데이터
   const jobs = rows ?? [];
-  const reviewPending = jobs.filter((j) => isFinishedJob(j) && !j.review_requested && j.phone);
+  const reviewPending = jobs.filter((j) => !j.is_aftercare && isFinishedJob(j) && !j.review_requested && j.phone);
 
-  return { jobs, hasData: rows !== null, loadError, refreshing, load, update, remove, save, reviewPending };
+  return { jobs, hasData: rows !== null, loadError, refreshing, load, update, remove, save, scheduleInstall, createAftercare, reviewPending };
 }
 
 // ── 폼 초기값 ─────────────────────────────────────────────────
@@ -184,6 +223,7 @@ export function emptyForm(date = today()): JobFormState {
     memo: "",
     as_until: addOneYear(date),
     intake_photos: "",
+    is_aftercare: false,
     is_measurement: false,
     install_date: null,
     install_time: null,
@@ -205,6 +245,7 @@ export function formFromJob(job: Job): JobFormState {
     memo: job.memo || "",
     as_until: job.as_until || "",
     intake_photos: job.intake_photos || "",
+    is_aftercare: Boolean(job.is_aftercare),
     is_measurement: job.is_measurement ?? false,
     install_date: job.install_date || null,
     install_time: job.install_time || null,

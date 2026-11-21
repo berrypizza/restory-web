@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Job } from "../lib/types";
 import { formatDate } from "../lib/utils";
-import { jobAmount, productBreakdown, technicianBreakdown, won } from "../lib/settlement";
+import { jobAmount, productBreakdown, revenueDate, technicianBreakdown, won } from "../lib/settlement";
 import s from "./reporting.module.css";
 import f from "./settlement.module.css";
 
@@ -15,7 +15,7 @@ export function CompletedRows({ jobs }: { jobs: Job[] }) {
           <div>
             <b>{job.name || "고객명 미입력"}</b>
             <small>
-              {formatDate(job.visit_date)} 방문 · {job.symptom || "품목 미지정"}
+              {formatDate(revenueDate(job) || job.visit_date)} {job.is_measurement ? "시공" : "방문"} · {job.symptom || "품목 미지정"}
             </small>
           </div>
           <strong>{won(job.price || 0)}</strong>

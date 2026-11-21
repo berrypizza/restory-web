@@ -5,7 +5,7 @@ import JobDialog from "./JobDialog";
 import JobPhotoEditor from "./JobPhotoEditor";
 import s from "./jobPhotos.module.css";
 
-export type PhotoMode = "complete" | "install" | "manage";
+export type PhotoMode = "complete" | "install" | "aftercare" | "manage";
 
 interface PhotoCaptureProps {
   jobId: string;
@@ -36,7 +36,7 @@ export default function PhotoCapture({
   const busy = saving || uploading;
   const dirty = original.length !== list.length || list.some((url, i) => url !== original[i]);
   const completing = mode !== "manage";
-  const title = mode === "install" ? "시공 완료" : mode === "complete" ? "작업 완료" : "완료 사진 관리";
+  const title = mode === "aftercare" ? "A/S 방문 완료" : mode === "install" ? "시공 완료" : mode === "complete" ? "작업 완료" : "완료 사진 관리";
 
   function close() {
     if (!busy && ((!dirty && !unresolved) || window.confirm("사진 변경 사항을 저장하지 않고 닫을까요?")))
@@ -81,6 +81,7 @@ export default function PhotoCapture({
         {mode === "install" && !list.length && (
           <p className={s.instructions}>시공 사진은 선택 사항이에요.</p>
         )}
+        {mode === "aftercare" && <p className={s.instructions}>필요하면 사진을 추가해 주세요. A/S 방문은 매출에서 제외돼요.</p>}
         {completing && (
           <dl className={s.amount}>
             <dt>완료 시 매출 반영액</dt>
@@ -118,7 +119,7 @@ export default function PhotoCapture({
               ? "사진 저장하고 작업 완료"
               : mode === "install"
                 ? "시공 완료 확정"
-                : "사진 저장"}
+                : mode === "aftercare" ? "A/S 완료 확정" : "사진 저장"}
         </button>
       </footer>
     </JobDialog>

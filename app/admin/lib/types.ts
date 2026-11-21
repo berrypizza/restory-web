@@ -36,6 +36,8 @@ export interface Job {
   install_date?: string | null;
   install_time?: string | null;
   install_completed?: boolean;
+  is_aftercare?: boolean;
+  aftercare_source_id?: string | null;
 }
 
 export type JobFormState = {
@@ -51,6 +53,7 @@ export type JobFormState = {
   memo: string;
   as_until: string;
   intake_photos: string;
+  is_aftercare: boolean;
   is_measurement: boolean;
   install_date: string | null;
   install_time: string | null;
