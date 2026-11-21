@@ -1,362 +1,108 @@
-// app/cases/page.tsx
-
+import Form from "next/form";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import CaseCategoryFilters from "./CaseCategoryFilters";
-import {
-  cases,
-  PARENT_CATEGORIES,
-  SUB_CATEGORIES,
-  type CaseCategory,
-  type CaseItem,
-  type ParentCategory,
-} from "@/lib/case-data";
-import { sanitizePublicCaseText } from "@/lib/public-case-text";
+import { cases, PARENT_CATEGORIES, SUB_CATEGORIES } from "@/lib/case-data";
+import { browseCases, listHref, listQuery, pageSize, type CaseFilters, type CaseParams } from "./case-browser";
+import CaseCard from "./CaseCard";
+import s from "./cases.module.css";
 
-const PER_PAGE = 6;
-const PAGE_WINDOW = 10;
-
-const REFORM_CATEGORIES = ["싱크대 리폼", "가죽 리폼"] as const;
-
-type SearchParams = Record<string, string | string[] | undefined>;
-
+const site = "https://www.restorystudio.co.kr";
 export const metadata: Metadata = {
-  title: "작업 사례 | 리스토리 스튜디오",
-  description:
-    "싱크대 수리·리폼, 가죽 리폼, 소파 복원 실제 작업 사례 모음. 강남·인천·경기 당일 출장 가능. 사진 한 장으로 견적 확인.",
-  alternates: {
-    canonical: "https://www.restorystudio.co.kr/cases",
-  },
-  openGraph: {
-    title: "작업 사례 | 리스토리 스튜디오",
-    description:
-      "싱크대 수리·리폼, 가죽 리폼, 소파 복원 실제 작업 사례 모음. 사진 한 장으로 견적 확인.",
-    url: "https://www.restorystudio.co.kr/cases",
-    type: "website",
-  },
+  title: "수리·리폼 작업 사례",
+  description: "싱크대 수리와 리폼, 냉장고장 리폼, 가죽 교체, 소파 복원 현장을 지역·증상별로 찾고 실제 작업 전후 사진을 비교해 보세요.",
+  alternates: { canonical: `${site}/cases` },
+  openGraph: { title: "수리·리폼 작업 사례 | 리스토리 스튜디오", url: `${site}/cases`, type: "website" },
 };
 
-function getStringParam(
-  searchParams: SearchParams,
-  key: string,
-): string | undefined {
-  const value = searchParams[key];
-  return Array.isArray(value) ? value[0] : value;
-}
+const featured = cases.find(item => item.id === "case-099");
 
-function getParentFromCategory(category: string): ParentCategory {
-  for (const [parent, subs] of Object.entries(SUB_CATEGORIES)) {
-    if (subs?.includes(category as CaseCategory)) {
-      return parent as ParentCategory;
-    }
-  }
-
-  if (PARENT_CATEGORIES.includes(category as ParentCategory)) {
-    return category as ParentCategory;
-  }
-
-  return "전체";
-}
-
-function getSubFromCategory(category: string): CaseCategory | "전체" {
-  for (const subs of Object.values(SUB_CATEGORIES)) {
-    if (subs?.includes(category as CaseCategory)) {
-      return category as CaseCategory;
-    }
-  }
-
-  return "전체";
-}
-
-function isReformCategory(category: string) {
-  return REFORM_CATEGORIES.includes(
-    category as (typeof REFORM_CATEGORIES)[number],
-  );
-}
-
-function filterCases(
-  parentCat: ParentCategory,
-  subCat: CaseCategory | "전체",
-  activeTag: string,
-) {
-  const subCategories =
-    parentCat !== "전체" ? SUB_CATEGORIES[parentCat] : undefined;
-
-  return cases
-    .filter((item) => {
-      if (activeTag) {
-        return item.tags.map((tag) => tag.trim()).includes(activeTag);
-      }
-
-      if (parentCat === "전체") return true;
-      if (item.parentCategory !== parentCat) return false;
-      if (subCat !== "전체" && subCategories) return item.category === subCat;
-
-      return true;
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
-
-function getCaseImage(item: CaseItem) {
-  return isReformCategory(item.parentCategory) ? item.afterImg : item.beforeImg;
-}
-
-function makePageHref(
-  page: number,
-  activeCategory: string,
-  activeTag: string,
-) {
-  const params = new URLSearchParams();
-  if (activeCategory !== "전체") params.set("cat", activeCategory);
-  if (activeTag) params.set("tag", activeTag);
-  if (page > 1) params.set("page", String(page));
-  const query = params.toString();
-  return query ? `/cases?${query}` : "/cases";
-}
-
-function Pagination({
-  page,
-  totalPages,
-  activeCategory,
-  activeTag,
-}: {
-  page: number;
-  totalPages: number;
-  activeCategory: string;
-  activeTag: string;
-}) {
-  if (totalPages <= 1) return null;
-
-  const windowStart = Math.floor((page - 1) / PAGE_WINDOW) * PAGE_WINDOW + 1;
-  const windowEnd = Math.min(windowStart + PAGE_WINDOW - 1, totalPages);
-  const windowPages = Array.from(
-    { length: windowEnd - windowStart + 1 },
-    (_, index) => windowStart + index,
-  );
-
-  const previousWindowPage = Math.max(1, windowStart - PAGE_WINDOW);
-  const nextWindowPage = Math.min(totalPages, windowEnd + 1);
-
+function CaseSearch({ filters }: { filters: CaseFilters }) {
   return (
-    <nav
-      className="flex items-center justify-center gap-2 mt-8 mb-4"
-      aria-label="사례 목록 페이지">
-      <Link
-        href={makePageHref(previousWindowPage, activeCategory, activeTag)}
-        aria-disabled={windowStart === 1}
-        className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
-        style={{
-          color: windowStart === 1 ? "#d1d5db" : "#64748b",
-          border: "1px solid #e5e7eb",
-          backgroundColor: "#fff",
-          pointerEvents: windowStart === 1 ? "none" : "auto",
-        }}>
-        ‹
-      </Link>
+    <Form action="/cases" role="search" aria-label="작업 사례 검색" className={s.search} key={filters.query}>
+      {filters.category !== "전체" && <input type="hidden" name="cat" value={filters.category} />}
+      {filters.tag && <input type="hidden" name="tag" value={filters.tag} />}
+      <label htmlFor="case-search" className="sr-only">지역, 가구 또는 증상</label>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5" strokeLinecap="round"/></svg>
+      <input type="search" id="case-search" name="q" maxLength={80} defaultValue={filters.query} placeholder="지역, 가구, 증상으로 검색" />
+      <button type="submit">검색</button>
+    </Form>
+  );
+}
 
-      {windowPages.map((itemPage) => (
-        <Link
-          key={itemPage}
-          href={makePageHref(itemPage, activeCategory, activeTag)}
-          aria-current={page === itemPage ? "page" : undefined}
-          className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
-          style={{
-            backgroundColor: page === itemPage ? "#1f66ff" : "#fff",
-            color: page === itemPage ? "white" : "#64748b",
-            border: page === itemPage ? "none" : "1px solid #e5e7eb",
-          }}>
-          {itemPage}
-        </Link>
-      ))}
-
-      <Link
-        href={makePageHref(nextWindowPage, activeCategory, activeTag)}
-        aria-disabled={windowEnd === totalPages}
-        className="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition"
-        style={{
-          color: windowEnd === totalPages ? "#d1d5db" : "#64748b",
-          border: "1px solid #e5e7eb",
-          backgroundColor: "#fff",
-          pointerEvents: windowEnd === totalPages ? "none" : "auto",
-        }}>
-        ›
-      </Link>
+function Pagination({ page, total, filters }: { page: number; total: number; filters: CaseFilters }) {
+  if (total < 2) return null;
+  const start = Math.max(1, Math.min(page - 1, total - 2));
+  const numbers = [...new Set([1, start, start + 1, Math.min(start + 2, total), total])].sort((a, b) => a - b);
+  const href = (p: number) => listHref(filters, p) + "#case-results";
+  return (
+    <nav className={s.pages} aria-label="사례 목록 페이지">
+      {page > 1 ? <Link href={href(page - 1)} rel="prev">이전</Link> : <span className={s.disabled} aria-disabled="true">이전</span>}
+      <div className={s.pageNumbers}>
+        {numbers.map((n, i) => <span key={n}>
+          {i > 0 && n - numbers[i - 1] > 1 && <span className={s.ellipsis} aria-hidden="true">…</span>}
+          <Link href={href(n)} aria-label={`${n}페이지`} aria-current={n === page ? "page" : undefined}>{n}</Link>
+        </span>)}
+      </div>
+      <span className={s.pageCount} aria-label={`전체 ${total}페이지 중 ${page}페이지`}><b>{page}</b> / {total}</span>
+      {page < total ? <Link href={href(page + 1)} rel="next">다음</Link> : <span className={s.disabled} aria-disabled="true">다음</span>}
     </nav>
   );
 }
 
-export default async function CasesPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const resolvedSearchParams = await searchParams;
-  const activeTag = getStringParam(resolvedSearchParams, "tag") ?? "";
-  const requestedCategory =
-    (getStringParam(resolvedSearchParams, "cat") as CaseCategory) || "전체";
-  const parentCat = activeTag
-    ? "전체"
-    : getParentFromCategory(requestedCategory);
-  const subCat = activeTag ? "전체" : getSubFromCategory(requestedCategory);
-  const activeCategory = activeTag
-    ? "전체"
-    : subCat !== "전체"
-      ? subCat
-      : parentCat;
-  const requestedPage = Number(getStringParam(resolvedSearchParams, "page"));
-  const filtered = filterCases(parentCat, subCat, activeTag);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
-  const page = Number.isFinite(requestedPage)
-    ? Math.min(Math.max(1, requestedPage), totalPages)
-    : 1;
-  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-
-  const itemListJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "리스토리 작업사례",
-    description:
-      "싱크대 수리, 상부장 처짐 수리, 가죽 리폼, 소파 복원, 의자 천갈이 작업사례 모음",
-    itemListElement: filtered.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      url: `https://www.restorystudio.co.kr/cases/${item.id}`,
-      name: item.title,
-      image: `https://www.restorystudio.co.kr${getCaseImage(item)}`,
+export default async function CasesPage({ searchParams }: { searchParams: Promise<CaseParams> }) {
+  const { filters, parent, page, totalPages, matches, items } = browseCases(await searchParams);
+  const context = listQuery(filters, page);
+  const showFeature = Boolean(featured && !context);
+  const children = SUB_CATEGORIES[parent];
+  const jsonLd = {
+    "@context": "https://schema.org", "@type": "ItemList", name: "리스토리 작업 사례", numberOfItems: matches.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem", position: (page - 1) * pageSize + index + 1, name: item.title, url: `${site}/cases/${item.id}`, image: `${site}${item.afterImg}`,
     })),
   };
-
   return (
-    <main className="min-h-screen bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(itemListJsonLd),
-        }}
-      />
-
-      <div
-        className="sticky top-0 z-30 bg-white"
-        style={{ borderBottom: "1px solid #f3f4f6" }}>
-        <div className="mx-auto max-w-3xl px-4 pt-5 pb-3">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-black" style={{ color: "#111827" }}>
-              작업사례
-            </h1>
-            <span className="text-sm font-bold" style={{ color: "#94a3b8" }}>
-              총 {filtered.length}건
-            </span>
+    <main className={s.page} data-service-id="cases">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <div className={s.shell}>
+        <header data-service-section="hero" className={showFeature ? s.hero : s.compactHero}>
+          <div className={s.heroText}>
+            <h1>수리·리폼 <span>작업 사례</span></h1>
+            {showFeature && <p>우리 집과 비슷한 현장을 전후 사진으로 살펴보세요.</p>}
+            <CaseSearch filters={filters} />
           </div>
+          {showFeature && featured && <Link href={`/cases/${featured.id}`} className={s.feature} aria-label={`${featured.title} 사례 보기`}>
+            <Image src={featured.afterImg} alt="문짝 교체 후의 마포구 주방" fill preload sizes="(max-width: 740px) 96vw, 590px" />
+            <span className={s.featureBefore}><Image src={featured.beforeImg} alt="문짝 교체 전의 같은 주방" fill sizes="110px" /><span>작업 전</span></span>
+            <span className={s.featureCaption}><span>작업 후</span><strong>{featured.title.split(",")[0]}</strong></span>
+          </Link>}
+        </header>
 
-          <CaseCategoryFilters
-            activeCategory={activeCategory}
-            activeTag={activeTag}
-          />
-        </div>
-      </div>
+        <section className={s.finder} aria-label="작업 분야 필터" id="case-finder">
+          <h2>작업 분야</h2>
+          <nav className={s.categories} aria-label="작업 분야">
+            {PARENT_CATEGORIES.map(category => <Link key={category} href={listHref({ ...filters, category }) + "#case-finder"}
+              aria-current={parent === category ? "true" : undefined}>{category}</Link>)}
+          </nav>
+          {children && <nav className={s.subcategories} aria-label="세부 작업">
+            {[parent, ...children].map(category => <Link key={category} href={listHref({ ...filters, category }) + "#case-finder"}
+              aria-current={filters.category === category ? "true" : undefined}>{category === parent ? "분야 전체" : category}</Link>)}
+          </nav>}
+        </section>
 
-      <div className="mx-auto max-w-3xl px-4 py-4">
-        {paged.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-sm" style={{ color: "#94a3b8" }}>
-              등록된 사례가 없어요
-            </p>
+        <section className={s.results} id="case-results" data-service-section="cases" aria-labelledby="case-results-title">
+          <div className={s.resultsHead}>
+            <h2 id="case-results-title">{filters.query || filters.tag ? "검색 결과" : parent === "전체" ? "전체 사례" : filters.category} <span>{matches.length}건</span></h2>
+            {items.length > 0 && <span>최신순</span>}
           </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {paged.map((item) => {
-              const imageSrc = getCaseImage(item);
-              const imageAlt = `${item.title} ${
-                isReformCategory(item.parentCategory) ? "리폼 후" : "수리 전"
-              }`;
-
-              return (
-                <article key={item.id}>
-                  <Link
-                    href={`/cases/${item.id}`}
-                    className="flex gap-4 rounded-2xl p-3 transition hover:bg-gray-50"
-                    style={{
-                      border: "1px solid #f3f4f6",
-                      textDecoration: "none",
-                    }}>
-                    <div
-                      className="flex-shrink-0 rounded-xl overflow-hidden"
-                      style={{
-                        width: 88,
-                        height: 88,
-                        backgroundColor: "#f3f4f6",
-                      }}>
-                      <Image
-                        src={imageSrc}
-                        alt={imageAlt}
-                        width={88}
-                        height={88}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0 py-0.5">
-                      <h2
-                        className="text-[15px] font-bold truncate mb-1"
-                        style={{ color: "#111827" }}>
-                        {item.title}
-                      </h2>
-                      <p
-                        className="text-xs mb-2 line-clamp-2"
-                        style={{ color: "#64748b" }}>
-                        {sanitizePublicCaseText(item.summary)}
-                      </p>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span
-                          className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                          style={{
-                            backgroundColor: "#1f66ff15",
-                            color: "#1f66ff",
-                          }}>
-                          {item.parentCategory}
-                        </span>
-                        {item.category !== item.parentCategory && (
-                          <span
-                            className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                            style={{
-                              backgroundColor: "#f0f4ff",
-                              color: "#4f7fff",
-                            }}>
-                            {item.category}
-                          </span>
-                        )}
-                        <span
-                          className="text-[11px]"
-                          style={{ color: "#94a3b8" }}>
-                          {item.region}
-                        </span>
-                        <span style={{ color: "#d1d5db" }}>·</span>
-                        <time
-                          className="text-[11px]"
-                          dateTime={item.date}
-                          style={{ color: "#94a3b8" }}>
-                          {new Date(item.date).toLocaleDateString("ko-KR", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </time>
-                      </div>
-                    </div>
-                  </Link>
-                </article>
-              );
-            })}
-          </div>
-        )}
-
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          activeCategory={activeCategory}
-          activeTag={activeTag}
-        />
+          {(filters.query || filters.tag) && <div className={s.activeFilters}>
+            {filters.query && <Link aria-label={`검색어 ${filters.query} 해제`} href={listHref({ ...filters, query: "" }) + "#case-finder"}>{filters.query} <span aria-hidden="true">×</span></Link>}
+            {filters.tag && <Link aria-label={`태그 ${filters.tag} 해제`} href={listHref({ ...filters, tag: "" }) + "#case-finder"}>#{filters.tag} <span aria-hidden="true">×</span></Link>}
+          </div>}
+          {items.length ? <div className={s.grid}>{items.map(item => <CaseCard key={item.id} item={item} context={context} anchor />)}</div> :
+            <div className={s.empty}><h3>일치하는 사례가 없어요</h3><p>지역 이름이나 가구 종류로 다시 찾아보세요.</p><Link href="/cases#case-finder">전체 사례 보기</Link></div>}
+          <Pagination page={page} total={totalPages} filters={filters} />
+        </section>
       </div>
     </main>
   );

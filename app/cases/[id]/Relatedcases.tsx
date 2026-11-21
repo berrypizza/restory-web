@@ -1,133 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useId, useState, type ReactNode } from "react";
 import Link from "next/link";
-import type { CaseItem } from "@/lib/case-data";
+import s from "../cases.module.css";
 
-const REFORM_CATEGORIES = ["싱크대 리폼", "가죽 리폼"] as const;
-function isReformCategory(cat: string) {
-  return REFORM_CATEGORIES.includes(cat as (typeof REFORM_CATEGORIES)[number]);
-}
-
-interface Props {
-  similarCases: CaseItem[];
-  otherCases: CaseItem[];
-}
-
-export default function RelatedCases({
-  similarCases,
-  otherCases,
-}: Props) {
-  const [tab, setTab] = useState<"similar" | "other">("similar");
-
-  const similar = similarCases;
-  const other = otherCases;
-
-  const list = tab === "similar" ? similar : other;
-
-  const CaseCard = ({ item }: { item: CaseItem }) => {
-    const reform = isReformCategory(item.parentCategory);
-    return (
-      <Link
-        href={`/cases/${item.id}`}
-        className="flex-shrink-0 block overflow-hidden rounded-2xl"
-        style={{
-          width: 148,
-          textDecoration: "none",
-          border: "1px solid #eef0f5",
-        }}>
-        <div
-          className="relative overflow-hidden bg-neutral-100"
-          style={{ height: 120 }}>
-          <Image
-            src={reform ? item.afterImg : item.beforeImg}
-            alt={`${item.title} ${reform ? "리폼 후" : "수리 전"}`}
-            fill
-            className="object-cover"
-            sizes="148px"
-          />
-        </div>
-        <div className="p-2.5">
-          <span
-            className="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded-full mb-1"
-            style={{ backgroundColor: "#1f66ff15", color: "#1f66ff" }}>
-            {item.parentCategory}
-          </span>
-          <p
-            className="text-[12px] font-bold leading-snug"
-            style={{
-              color: "#111827",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}>
-            {item.title}
-          </p>
-          <p className="text-[11px] mt-1" style={{ color: "#94a3b8" }}>
-            {item.region}
-          </p>
-        </div>
-      </Link>
-    );
-  };
-
-  if (similar.length === 0 && other.length === 0) return null;
-
-  return (
-    <section className="mb-8">
-      <div className="h-px mb-6" style={{ backgroundColor: "#f3f4f6" }} />
-
-      {/* 헤더 */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-1">
-          <button
-            onClick={() => setTab("similar")}
-            className="px-3 py-1.5 rounded-full text-[13px] font-bold transition-all"
-            style={{
-              backgroundColor: tab === "similar" ? "#1f66ff" : "#f3f4f6",
-              color: tab === "similar" ? "white" : "#64748b",
-            }}>
-            비슷한 사례
-          </button>
-          <button
-            onClick={() => setTab("other")}
-            className="px-3 py-1.5 rounded-full text-[13px] font-bold transition-all"
-            style={{
-              backgroundColor: tab === "other" ? "#1f66ff" : "#f3f4f6",
-              color: tab === "other" ? "white" : "#64748b",
-            }}>
-            다른 서비스
-          </button>
-        </div>
-        <Link
-          href="/cases"
-          className="text-[12px] font-bold"
-          style={{ color: "#1f66ff", textDecoration: "none" }}>
-          전체 보기 →
-        </Link>
-      </div>
-
-      {/* 가로 스크롤 슬라이더 */}
-      {list.length > 0 ? (
-        <div
-          className="flex gap-3 overflow-x-auto pb-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-          <style>{`.related-scroll::-webkit-scrollbar{display:none}`}</style>
-          <div
-            className="related-scroll flex gap-3 overflow-x-auto pb-2 w-full"
-            style={{ scrollbarWidth: "none" }}>
-            {list.map((item) => (
-              <CaseCard key={item.id} item={item} />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <p className="text-[13px]" style={{ color: "#94a3b8" }}>
-          등록된 사례가 없습니다
-        </p>
-      )}
-    </section>
-  );
+export default function RelatedCases({ similar, other }: { similar: ReactNode; other: ReactNode }) {
+  const [group, setGroup] = useState<"similar" | "other">(similar ? "similar" : "other");
+  const id = useId();
+  if (!similar && !other) return null;
+  return <section className={s.related} data-service-section="related">
+    <div className={s.relatedHead}><h2>다른 작업도 살펴보세요</h2><Link href="/cases">전체 사례</Link></div>
+    {similar && other && <div className={s.relatedSwitch} role="group" aria-label="관련 사례 선택">
+      <button type="button" aria-pressed={group === "similar"} aria-controls={id} onClick={() => setGroup("similar")}>비슷한 작업</button>
+      <button type="button" aria-pressed={group === "other"} aria-controls={id} onClick={() => setGroup("other")}>다른 분야</button>
+    </div>}
+    <div className={s.grid} id={id}>{group === "similar" ? similar : other}</div>
+  </section>;
 }

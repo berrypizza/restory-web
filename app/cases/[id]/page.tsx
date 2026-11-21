@@ -1,390 +1,106 @@
+import { Suspense } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { sanitizePublicCaseText } from "@/lib/public-case-text";
-import BeforeAfterToggle from "./BeforeAfterToggle";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
-import CollapsibleContent from "./CollapsibleContent";
+import { caseDate, categoryHref, formatCaseDate, listHref, publicRegion, relatedTo } from "../case-browser";
+import CaseCard from "../CaseCard";
+import BackToCases from "./BackToCases";
+import CasePhotos from "./CasePhotos";
+import CaseStory from "./CaseStory";
 import RelatedCases from "./Relatedcases";
-import type { Metadata } from "next";
+import s from "../cases.module.css";
+
+const site = "https://www.restorystudio.co.kr";
+const kakao = buildTrackedContactPath("kakao", "case_detail");
+const phone = buildTrackedContactPath("phone", "case_detail");
+type Props = { params: Promise<{ id: string }> };
 
 export function generateStaticParams() {
-  return cases.map((item) => ({ id: item.id }));
+  return cases.map(({ id }) => ({ id }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const item = cases.find((c) => c.id === id);
+  const item = cases.find(entry => entry.id === id);
   if (!item) return {};
-
-  const imageUrl = `https://www.restorystudio.co.kr${item.afterImg}`;
-  const summary = sanitizePublicCaseText(item.summary);
-
+  const url = `${site}/cases/${item.id}`;
+  const image = `${site}${item.afterImg}`;
+  const description = sanitizePublicCaseText(item.summary);
   return {
-    title: item.title,
-    description: summary,
-    alternates: {
-      canonical: `https://www.restorystudio.co.kr/cases/${item.id}`,
-    },
-    openGraph: {
-      title: item.title,
-      description: summary,
-      url: `https://www.restorystudio.co.kr/cases/${item.id}`,
-      type: "article",
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 900,
-          alt: `${item.title} 시공 후`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: item.title,
-      description: summary,
-      images: [imageUrl],
-    },
+    title: item.title, description, alternates: { canonical: url },
+    openGraph: { title: item.title, description, url, type: "article", images: [{ url: image, alt: `${item.title} 작업 후` }] },
+    twitter: { card: "summary_large_image", title: item.title, description, images: [image] },
   };
 }
 
-const PHONE = buildTrackedContactPath("phone", "case_detail");
-const KAKAO_URL = buildTrackedContactPath("kakao", "case_detail");
-const OTHER_CATEGORIES = [
-  "싱크대 수리",
-  "싱크대 리폼",
-  "냉장고장 리폼",
-  "가죽 리폼",
-  "소파 복원",
-];
-
-function toPublicCaseItem(item: (typeof cases)[number]) {
-  const publicContent = item.content
-    ? sanitizePublicCaseText(item.content)
-    : undefined;
-
-  return {
-    ...item,
-    summary: sanitizePublicCaseText(item.summary),
-    content: publicContent,
-    price: undefined,
-  };
-}
-
-export default async function CaseDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function CaseDetailPage({ params }: Props) {
   const { id } = await params;
-  const item = cases.find((c) => c.id === id);
+  const item = cases.find(entry => entry.id === id);
   if (!item) notFound();
-  const publicSummary = sanitizePublicCaseText(item.summary);
-  const publicContent = item.content
-    ? sanitizePublicCaseText(item.content)
-    : undefined;
-  const publicItem = toPublicCaseItem(item);
-  const similarCases = cases
-    .filter(
-      (c) => c.parentCategory === item.parentCategory && c.id !== item.id,
-    )
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 6)
-    .map(toPublicCaseItem);
-  const otherCases = OTHER_CATEGORIES.filter(
-    (category) => category !== item.parentCategory,
-  ).flatMap((category) =>
-    cases
-      .filter((c) => c.parentCategory === category && c.id !== item.id)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 2)
-      .map(toPublicCaseItem),
-  );
-
-  // JSON-LD
+  const summary = sanitizePublicCaseText(item.summary);
+  const content = sanitizePublicCaseText(item.content ?? "");
+  const review = item.review && sanitizePublicCaseText(item.review.content);
+  const region = publicRegion(item);
+  const tags = [...new Set(item.tags.map(tag => tag.trim()).filter(Boolean))];
+  const { similar, other } = relatedTo(item);
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: item.title,
-    description: publicSummary,
-    datePublished: item.date,
-    dateModified: item.date,
-    image: [
-      `https://www.restorystudio.co.kr${item.beforeImg}`,
-      `https://www.restorystudio.co.kr${item.afterImg}`,
-    ],
-
-    keywords: item.tags.map((t) => t.trim()).join(", "),
-    articleSection: item.parentCategory,
-    about: {
-      "@type": "Service",
-      name: item.parentCategory,
-      serviceType: item.category,
-      areaServed: {
-        "@type": "Place",
-        name: item.region,
-      },
-    },
-    author: {
-      "@type": "LocalBusiness",
-      name: "리스토리 스튜디오",
-      url: "https://www.restorystudio.co.kr",
-      telephone: "1688-2957",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: item.region,
-        addressCountry: "KR",
-      },
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "리스토리 스튜디오",
-      url: "https://www.restorystudio.co.kr",
-      logo: {
-        "@type": "ImageObject",
-        url: "https://www.restorystudio.co.kr/images/logo-cc.png",
-      },
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `https://www.restorystudio.co.kr/cases/${item.id}`,
-    },
+    "@context": "https://schema.org", "@type": "Article", headline: item.title, description: summary,
+    datePublished: caseDate(item.date), dateModified: caseDate(item.date), image: [site + item.beforeImg, site + item.afterImg],
+    keywords: tags.join(", "), articleSection: item.parentCategory,
+    about: { "@type": "Service", name: item.parentCategory, serviceType: item.category, areaServed: region ? { "@type": "Place", name: region } : undefined },
+    author: { "@type": "LocalBusiness", name: "리스토리 스튜디오", url: site, telephone: "1688-2957",
+      address: { "@type": "PostalAddress", addressLocality: region || undefined, addressCountry: "KR" } },
+    publisher: { "@type": "Organization", name: "리스토리 스튜디오", url: site, logo: { "@type": "ImageObject", url: site + "/images/logo-cc.png" } },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${site}/cases/${item.id}` },
   };
-
   return (
-    <main className="min-h-screen bg-white mx-auto max-w-2xl px-4 pt-5">
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
-      {/* 헤더 */}
-      <div
-        className="sticky top-0 z-30 bg-white px-4 py-3 -mx-4 flex items-center gap-3"
-        style={{ borderBottom: "1px solid #f3f4f6" }}>
-        <Link
-          href="/cases"
-          className="text-lg"
-          style={{ color: "#64748b", textDecoration: "none" }}>
-          ←
-        </Link>
-        <span
-          className="text-base font-bold truncate"
-          style={{ color: "#111827" }}>
-          {item.title}
-        </span>
+    <main className={s.page} data-service-id="cases" data-service-keyword={item.id}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <div className={s.shell}>
+        <nav className={s.crumb} aria-label="사례 탐색">
+          <Suspense fallback={<Link href="/cases">작업 사례 목록</Link>}><BackToCases id={item.id} /></Suspense>
+          <span aria-hidden="true">/</span><Link href={categoryHref(item.category)}>{item.category}</Link>
+        </nav>
+        <header className={s.detailHeader} data-service-section="hero">
+          <h1>{item.title}</h1>
+          <div className={s.detailMeta}>{region && <span>{region}</span>}<time dateTime={caseDate(item.date)}>{formatCaseDate(item.date)}</time></div>
+        </header>
+        <div className={s.readingGrid}>
+          <CasePhotos photos={{ title: item.title, before: item.beforeImg, after: item.afterImg }} />
+          <div className={s.storyColumn}>
+            <section data-service-section="process" className={s.story}>
+              <h2>작업 기록</h2>
+              {summary && <p className={s.summary}>{summary}</p>}
+              {content && content !== summary && <CaseStory content={content} />}
+            </section>
+            {review && <section className={s.review}>
+              <h2>고객 후기</h2><blockquote><p>{review}</p><footer>{item.review!.author}</footer></blockquote>
+            </section>}
+            {tags.length > 0 && <nav className={s.tags} aria-label="관련 태그">
+              {tags.map(tag => <Link key={tag} href={listHref({ category: "전체", query: "", tag })}>#{tag}</Link>)}
+            </nav>}
+            <div className={s.sources}>
+              {item.blogUrl && <a href={item.blogUrl} target="_blank" rel="noopener noreferrer">네이버 블로그에서 작업 과정 보기</a>}
+              <a href="https://cafe.naver.com/f-e/cafes/22748193/menus/85?viewType=L" target="_blank" rel="noopener noreferrer">카페에 질문 남기기</a>
+            </div>
+          </div>
+          <aside className={s.consult} data-case-consult data-service-section="contact" aria-labelledby="consult-title">
+            <h2 id="consult-title">우리 집도 수리할 수 있을까요?</h2>
+            <p>가구 전체와 손상 부위 사진을 보내주시면 수리 방법을 안내해 드려요.</p>
+            <div className={s.contactLinks} data-service-section="inline_contact">
+              <a href={kakao} target="_blank" rel="noopener noreferrer">카카오톡으로 사진 상담</a>
+              <a href={phone}>전화 상담 <span>1688-2957</span></a>
+            </div>
+          </aside>
+        </div>
+        <RelatedCases similar={similar.length ? similar.map(entry => <CaseCard key={entry.id} item={entry} />) : null}
+          other={other.length ? other.map(entry => <CaseCard key={entry.id} item={entry} />) : null} />
       </div>
-
-      <div className="pt-5 pb-32">
-        {/* 메타 */}
-        <div className="flex items-center gap-2 mb-4">
-          <span
-            className="text-xs font-bold px-3 py-1 rounded-full"
-            style={{ backgroundColor: "#1f66ff15", color: "#1f66ff" }}>
-            {item.parentCategory}
-          </span>
-          <span className="text-xs" style={{ color: "#94a3b8" }}>
-            {item.region}
-          </span>
-          <span style={{ color: "#d1d5db" }}>·</span>
-          <span className="text-xs" style={{ color: "#94a3b8" }}>
-            {new Date(item.date).toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </span>
-        </div>
-
-        {/* h1 */}
-        <h1 className="text-2xl font-black mb-2" style={{ color: "#111827" }}>
-          {item.title}
-        </h1>
-        <p
-          className="text-base leading-relaxed mb-6"
-          style={{ color: "#64748b" }}>
-          {publicSummary}
-        </p>
-
-        {/* Before / After 토글 — before 이미지가 HTML에 존재, 네이버 썸네일 수집 */}
-        <BeforeAfterToggle item={publicItem} />
-
-        {/* 인라인 CTA */}
-        <div
-          className="rounded-2xl p-5 mb-8"
-          style={{
-            background: "linear-gradient(135deg, #0a1628 0%, #1a3a6b 100%)",
-          }}>
-          <p
-            className="text-[13px] font-semibold mb-1"
-            style={{ color: "rgba(255,255,255,0.5)" }}>
-            이런 증상 있으신가요?
-          </p>
-          <p className="text-[17px] font-black text-white mb-4">
-            사진 한 장이면 바로 견적 드립니다
-          </p>
-          <div className="flex flex-col gap-2">
-            <a
-              href={KAKAO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] font-black"
-              style={{ background: "#FEE500", color: "#1a1a1a" }}>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-              </svg>
-              카카오로 사진 보내기
-            </a>
-            <a
-              href={PHONE}
-              className="flex items-center justify-center gap-2 rounded-xl py-3 text-[14px] font-bold text-white"
-              style={{
-                background: "rgba(255,255,255,0.1)",
-                border: "1px solid rgba(255,255,255,0.15)",
-              }}>
-              📞 전화 문의
-            </a>
-          </div>
-        </div>
-
-        {/* 작업 내용 */}
-        {publicContent && (
-          <section className="mb-8">
-            <h2
-              className="text-xl font-black mb-4"
-              style={{ color: "#111827" }}>
-              작업 내용
-            </h2>
-            <CollapsibleContent content={publicContent} collapsedHeight={160} />
-          </section>
-        )}
-
-        {/* 태그 */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {item.tags.map((tag) => (
-            <Link
-              key={tag}
-              href={`/cases?tag=${encodeURIComponent(tag.trim())}`}
-              className="text-xs font-bold px-3 py-1.5 rounded-full transition-colors hover:bg-[#1f66ff] hover:text-white"
-              style={{
-                backgroundColor: "#f3f4f6",
-                color: "#64748b",
-                textDecoration: "none",
-              }}>
-              #{tag.trim()}
-            </Link>
-          ))}
-        </div>
-
-        {/* 관련 사례 */}
-        <RelatedCases
-          similarCases={similarCases}
-          otherCases={otherCases}
-        />
-
-        {/* 하단 CTA */}
-        <div className="h-px mb-6" style={{ backgroundColor: "#f3f4f6" }} />
-        <div
-          className="rounded-2xl p-5 mb-4"
-          style={{ background: "#f8f9fb", border: "1px solid #e5e7eb" }}>
-          <p
-            className="text-[15px] font-black mb-1"
-            style={{ color: "#111827" }}>
-            {item.parentCategory} 문의하기
-          </p>
-          <p className="text-[13px] mb-4" style={{ color: "#64748b" }}>
-            사진 한 장이면 수리 가능 여부 바로 확인해드립니다
-          </p>
-          <div className="flex flex-col gap-2">
-            <a
-              href={KAKAO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl py-3.5 text-[15px] font-black"
-              style={{ background: "#FEE500", color: "#1a1a1a" }}>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-              </svg>
-              카카오로 문의하기
-            </a>
-            <a
-              href={PHONE}
-              className="flex items-center justify-center gap-2 rounded-xl py-3 text-[14px] font-bold text-white"
-              style={{
-                background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
-              }}>
-              📞 전화 문의
-            </a>
-          </div>
-        </div>
-
-        {/* 블로그 / 카페 링크 */}
-        <a
-          href={item.blogUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-between rounded-2xl px-5 py-4 mb-2 transition hover:shadow-md"
-          style={{
-            backgroundColor: "#f8fbff",
-            border: "1px solid #b7d1ff",
-            textDecoration: "none",
-          }}>
-          <div>
-            <p
-              className="text-medium font-black mb-0.5"
-              style={{ color: "#1f66ff" }}>
-              블로그에서 자세히 보기
-            </p>
-            <p className="text-xs" style={{ color: "#748aa8" }}>
-              작업 과정과 상세 후기를 확인하세요
-            </p>
-          </div>
-          <span className="text-lg" style={{ color: "#1f66ff" }}>
-            ›
-          </span>
-        </a>
-        <a
-          href="https://cafe.naver.com/f-e/cafes/22748193/menus/85?viewType=L"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-between rounded-2xl px-5 py-4 transition hover:shadow-md"
-          style={{
-            backgroundColor: "#1f66ff",
-            border: "1px solid #dbe8ff",
-            textDecoration: "none",
-          }}>
-          <div>
-            <p
-              className="text-medium font-black mb-0.5"
-              style={{ color: "#ffffff" }}>
-              궁금한 점 문의하기
-            </p>
-            <p className="text-xs" style={{ color: "#ffffffde" }}>
-              사소한 질문이라도 언제든지 환영입니다!
-            </p>
-          </div>
-          <span className="text-lg" style={{ color: "#ffffff" }}>
-            ›
-          </span>
-        </a>
-      </div>
-
-      <FloatingCTA />
+      <div className={s.mobileContact}><FloatingCTA compactMobile avoidOverlapSelector="[data-case-consult]" label="카카오톡으로 사진 상담" /></div>
     </main>
   );
 }
