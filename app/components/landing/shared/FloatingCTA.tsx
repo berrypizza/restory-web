@@ -34,17 +34,48 @@ export default function FloatingCTA({
   useEffect(() => {
     if (!avoidOverlapSelector || typeof IntersectionObserver === "undefined") return;
 
-    const visibleContacts = new Set<Element>();
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) visibleContacts.add(entry.target);
-        else visibleContacts.delete(entry.target);
-      }
-      setInlineContactVisible(visibleContacts.size > 0);
-    }, { rootMargin: "64px 0px", threshold: 0 });
+    const contacts = Array.from(document.querySelectorAll(avoidOverlapSelector));
+    const desktop = window.matchMedia("(min-width: 48rem)");
+    const header = document.querySelector<HTMLElement>("[data-site-sticky-nav]");
+    let observer: IntersectionObserver;
 
-    document.querySelectorAll(avoidOverlapSelector).forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    function observeContacts() {
+      observer?.disconnect();
+      const top = desktop.matches ? -64 : (header?.offsetHeight ?? 0);
+      const bottom = desktop.matches ? 64 : 0;
+
+      // Initialize from this layout before the observer delivers its first entries.
+      const isVisible = (contact: Element) => {
+        const rect = contact.getBoundingClientRect();
+        return rect.height > 0 && rect.bottom > top && rect.top < innerHeight + bottom;
+      };
+      const visibleContacts = new Set(contacts.filter(isVisible));
+      setInlineContactVisible(visibleContacts.size > 0);
+
+      observer = new IntersectionObserver((entries, source) => {
+        if (source !== observer) return;
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRect.height > 0) visibleContacts.add(entry.target);
+          else visibleContacts.delete(entry.target);
+        }
+        setInlineContactVisible(visibleContacts.size > 0);
+      }, {
+        rootMargin: `${-top}px 0px ${bottom}px 0px`,
+        // A zero-area edge contact must also notify us when the first pixels become visible.
+        threshold: [0, 0.000001],
+      });
+      contacts.forEach(contact => observer.observe(contact));
+    }
+
+    observeContacts();
+    desktop.addEventListener("change", observeContacts);
+    const resize = header && new ResizeObserver(observeContacts);
+    if (header) resize?.observe(header);
+    return () => {
+      observer.disconnect();
+      desktop.removeEventListener("change", observeContacts);
+      resize?.disconnect();
+    };
   }, [avoidOverlapSelector]);
 
   const visible = showSticky && !inlineContactVisible;
@@ -123,7 +154,7 @@ export default function FloatingCTA({
         target="_blank"
         rel="noopener noreferrer"
         data-cta="floating_kakao_bar"
-        className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] transition-all duration-300 md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4"
+        className={`fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 py-4 text-[17px] font-extrabold text-white shadow-[0px_-4px_16px_0px_rgba(0,0,0,0.25)] md:bottom-6 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-fit md:rounded-full md:px-12 md:py-4 ${avoidOverlapSelector ? "md:transition-all md:duration-300" : "transition-all duration-300"}`}
         style={{
           background: "linear-gradient(135deg, #3672ff 0%, #1a5cff 100%)",
           visibility: visible ? "visible" : "hidden",

@@ -129,6 +129,7 @@ export default function Navbar() {
       </div>
 
       <header
+        data-site-sticky-nav
         className={`sticky top-0 z-50 border-b shadow-[0_1px_0_rgba(0,0,0,0.08)] ${
           isDarkPage
             ? "border-white/10 bg-black"
