@@ -100,7 +100,13 @@
 .subcategories a { padding: 6px 11px; min-height: 40px; font-size: .875rem; font-weight: 600; }
 .subcategories a[aria-current], .activeFilters a { background: #edf4ff; color: #184fae; }
 .subcategories a:hover, .tags a:hover { color: var(--blue); text-decoration: underline; }
-.results { padding-block: 26px 60px; }
+.results { position: relative; padding-block: 26px 60px; }
+.results [inert] { opacity: .48; }
+.pendingNotice:not(:empty) {
+  position: absolute; z-index: 1; right: 0; top: 21px; padding: 5px 10px;
+  border-radius: 8px; background: #edf4ff; color: #184fae; font-size: .875rem; font-weight: 650;
+}
+.search button:disabled { background: #526b88; cursor: progress; }
 .resultsHead, .relatedHead { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .resultsHead h2, .relatedHead h2, .story h2, .review h2 { font-size: clamp(1.25rem, 2vw, 1.55rem); }
 .resultsHead h2 span { color: var(--blue); margin-left: 5px; font-size: .95em; }

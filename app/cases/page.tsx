@@ -1,10 +1,10 @@
-import Form from "next/form";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { cases, PARENT_CATEGORIES, SUB_CATEGORIES } from "@/lib/case-data";
 import { browseCases, listHref, listQuery, pageSize, type CaseFilters, type CaseParams } from "./case-browser";
 import CaseCard from "./CaseCard";
+import { BrowseLink, CaseNavigation, CaseResults, CaseSearch } from "./CaseNavigation";
 import s from "./cases.module.css";
 
 const site = "https://www.restorystudio.co.kr";
@@ -17,19 +17,6 @@ export const metadata: Metadata = {
 
 const featured = cases.find(item => item.id === "case-099");
 
-function CaseSearch({ filters }: { filters: CaseFilters }) {
-  return (
-    <Form action="/cases" role="search" aria-label="작업 사례 검색" className={s.search} key={filters.query}>
-      {filters.category !== "전체" && <input type="hidden" name="cat" value={filters.category} />}
-      {filters.tag && <input type="hidden" name="tag" value={filters.tag} />}
-      <label htmlFor="case-search" className="sr-only">지역, 가구 또는 증상</label>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5" strokeLinecap="round"/></svg>
-      <input type="search" id="case-search" name="q" maxLength={80} defaultValue={filters.query} placeholder="지역, 가구, 증상으로 검색" />
-      <button type="submit">검색</button>
-    </Form>
-  );
-}
-
 function Pagination({ page, total, filters }: { page: number; total: number; filters: CaseFilters }) {
   if (total < 2) return null;
   const start = Math.max(1, Math.min(page - 1, total - 2));
@@ -37,15 +24,15 @@ function Pagination({ page, total, filters }: { page: number; total: number; fil
   const href = (p: number) => listHref(filters, p) + "#case-results";
   return (
     <nav className={s.pages} aria-label="사례 목록 페이지">
-      {page > 1 ? <Link href={href(page - 1)} rel="prev">이전</Link> : <span className={s.disabled} aria-disabled="true">이전</span>}
+      {page > 1 ? <BrowseLink href={href(page - 1)} rel="prev">이전</BrowseLink> : <span className={s.disabled} aria-disabled="true">이전</span>}
       <div className={s.pageNumbers}>
         {numbers.map((n, i) => <span key={n}>
           {i > 0 && n - numbers[i - 1] > 1 && <span className={s.ellipsis} aria-hidden="true">…</span>}
-          <Link href={href(n)} aria-label={`${n}페이지`} aria-current={n === page ? "page" : undefined}>{n}</Link>
+          <BrowseLink href={href(n)} aria-label={`${n}페이지`} aria-current={n === page ? "page" : undefined}>{n}</BrowseLink>
         </span>)}
       </div>
       <span className={s.pageCount} aria-label={`전체 ${total}페이지 중 ${page}페이지`}><b>{page}</b> / {total}</span>
-      {page < total ? <Link href={href(page + 1)} rel="next">다음</Link> : <span className={s.disabled} aria-disabled="true">다음</span>}
+      {page < total ? <BrowseLink href={href(page + 1)} rel="next">다음</BrowseLink> : <span className={s.disabled} aria-disabled="true">다음</span>}
     </nav>
   );
 }
@@ -64,7 +51,7 @@ export default async function CasesPage({ searchParams }: { searchParams: Promis
   return (
     <main className={s.page} data-service-id="cases">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <div className={s.shell}>
+      <CaseNavigation>
         <header data-service-section="hero" className={showFeature ? s.hero : s.compactHero}>
           <div className={s.heroText}>
             <h1>수리·리폼 <span>작업 사례</span></h1>
@@ -81,29 +68,29 @@ export default async function CasesPage({ searchParams }: { searchParams: Promis
         <section className={s.finder} aria-label="작업 분야 필터" id="case-finder">
           <h2>작업 분야</h2>
           <nav className={s.categories} aria-label="작업 분야">
-            {PARENT_CATEGORIES.map(category => <Link key={category} href={listHref({ ...filters, category }) + "#case-finder"}
-              aria-current={parent === category ? "true" : undefined}>{category}</Link>)}
+            {PARENT_CATEGORIES.map(category => <BrowseLink key={category} href={listHref({ ...filters, category }) + "#case-finder"}
+              aria-current={parent === category ? "true" : undefined}>{category}</BrowseLink>)}
           </nav>
           {children && <nav className={s.subcategories} aria-label="세부 작업">
-            {[parent, ...children].map(category => <Link key={category} href={listHref({ ...filters, category }) + "#case-finder"}
-              aria-current={filters.category === category ? "true" : undefined}>{category === parent ? "분야 전체" : category}</Link>)}
+            {[parent, ...children].map(category => <BrowseLink key={category} href={listHref({ ...filters, category }) + "#case-finder"}
+              aria-current={filters.category === category ? "true" : undefined}>{category === parent ? "분야 전체" : category}</BrowseLink>)}
           </nav>}
         </section>
 
-        <section className={s.results} id="case-results" data-service-section="cases" aria-labelledby="case-results-title">
+        <CaseResults>
           <div className={s.resultsHead}>
             <h2 id="case-results-title">{filters.query || filters.tag ? "검색 결과" : parent === "전체" ? "전체 사례" : filters.category} <span>{matches.length}건</span></h2>
             {items.length > 0 && <span>최신순</span>}
           </div>
           {(filters.query || filters.tag) && <div className={s.activeFilters}>
-            {filters.query && <Link aria-label={`검색어 ${filters.query} 해제`} href={listHref({ ...filters, query: "" }) + "#case-finder"}>{filters.query} <span aria-hidden="true">×</span></Link>}
-            {filters.tag && <Link aria-label={`태그 ${filters.tag} 해제`} href={listHref({ ...filters, tag: "" }) + "#case-finder"}>#{filters.tag} <span aria-hidden="true">×</span></Link>}
+            {filters.query && <BrowseLink aria-label={`검색어 ${filters.query} 해제`} href={listHref({ ...filters, query: "" }) + "#case-finder"}>{filters.query} <span aria-hidden="true">×</span></BrowseLink>}
+            {filters.tag && <BrowseLink aria-label={`태그 ${filters.tag} 해제`} href={listHref({ ...filters, tag: "" }) + "#case-finder"}>#{filters.tag} <span aria-hidden="true">×</span></BrowseLink>}
           </div>}
           {items.length ? <div className={s.grid}>{items.map(item => <CaseCard key={item.id} item={item} context={context} anchor />)}</div> :
-            <div className={s.empty}><h3>일치하는 사례가 없어요</h3><p>지역 이름이나 가구 종류로 다시 찾아보세요.</p><Link href="/cases#case-finder">전체 사례 보기</Link></div>}
+            <div className={s.empty}><h3>일치하는 사례가 없어요</h3><p>지역 이름이나 가구 종류로 다시 찾아보세요.</p><BrowseLink href="/cases#case-finder">전체 사례 보기</BrowseLink></div>}
           <Pagination page={page} total={totalPages} filters={filters} />
-        </section>
-      </div>
+        </CaseResults>
+      </CaseNavigation>
     </main>
   );
 }
