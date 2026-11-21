@@ -1,676 +1,360 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { Job } from "../lib/types";
+import { useId, useRef, useState } from "react";
+import JobDialog from "../components/JobDialog";
 import { formatYearMonth, getSupabase } from "../lib/utils";
+import {
+  categories,
+  expenseAmount,
+  expenseGroups,
+  expenseNames,
+  won,
+  type ExpenseGroup,
+  type ExpenseRow,
+} from "../lib/settlement";
+import s from "./reporting.module.css";
+import f from "./settlement.module.css";
 
-type ExpenseGroup = "material" | "labor" | "marketing";
+export type ExpenseFilter = ExpenseGroup | "all";
 
-type ExpenseItem = {
-  group: ExpenseGroup;
-  category: string;
-  label: string;
-  helper: string;
-};
-
-type ExpenseDraft = Record<string, { amount: number; memo: string }>;
-type ExpenseEntries = Record<string, BusinessExpenseRow[]>;
-
-type BusinessExpenseRow = {
-  id: string;
-  expense_month: string;
-  group_key: ExpenseGroup;
-  category: string;
-  amount: number | null;
-  memo: string | null;
-  created_at: string;
-  updated_at: string | null;
-};
-
-interface ExpenseTabProps {
-  monthFilter: string;
-  setMonthFilter: (v: string) => void;
-  doneMonth: Job[];
-  revenue: number;
-  isAdmin: boolean;
-}
-
-const EXPENSE_ITEMS: ExpenseItem[] = [
-  { group: "material", category: "지엔", label: "지엔", helper: "공장/문짝" },
-  {
-    group: "material",
-    category: "스폰지",
-    label: "스폰지",
-    helper: "폼/충전재",
-  },
-  { group: "material", category: "가죽", label: "가죽", helper: "원단/가죽" },
-  { group: "material", category: "기타", label: "기타", helper: "부자재" },
-  {
-    group: "marketing",
-    category: "네이버",
-    label: "네이버",
-    helper: "검색/플레이스",
-  },
-  { group: "marketing", category: "메타", label: "메타", helper: "페북/인스타" },
-  { group: "labor", category: "팀장", label: "팀장", helper: "현장/관리" },
-  { group: "labor", category: "기사", label: "기사", helper: "시공 인력" },
-  { group: "labor", category: "외주", label: "외주", helper: "외부 작업" },
-  { group: "labor", category: "기타", label: "기타", helper: "식대/추가 인건" },
-];
-
-const EXPENSE_GROUPS: ExpenseGroup[] = ["material", "labor", "marketing"];
-
-const GROUP_META: Record<
-  ExpenseGroup,
-  { title: string; subtitle: string; color: string; softBg: string }
-> = {
-  material: {
-    title: "자재비",
-    subtitle: "지엔, 스폰지, 가죽, 기타",
-    color: "#1f66ff",
-    softBg: "#eff6ff",
-  },
-  labor: {
-    title: "인건비",
-    subtitle: "팀장, 기사, 외주, 기타",
-    color: "#0f766e",
-    softBg: "#ecfdf5",
-  },
-  marketing: {
-    title: "마케팅비",
-    subtitle: "네이버, 메타",
-    color: "#8b5cf6",
-    softBg: "#f5f3ff",
-  },
-};
-
-function expenseKey(item: Pick<ExpenseItem, "group" | "category">) {
-  return `${item.group}:${item.category}`;
-}
-
-function emptyDraft(): ExpenseDraft {
-  return EXPENSE_ITEMS.reduce<ExpenseDraft>((acc, item) => {
-    acc[expenseKey(item)] = { amount: 0, memo: "" };
-    return acc;
-  }, {});
-}
-
-function emptyEntries(): ExpenseEntries {
-  return EXPENSE_ITEMS.reduce<ExpenseEntries>((acc, item) => {
-    acc[expenseKey(item)] = [];
-    return acc;
-  }, {});
-}
-
-function toAmount(value: string) {
-  return Number(value.replace(/[^\d]/g, "")) || 0;
-}
-
-function formatWon(value: number) {
-  return `${value.toLocaleString("ko-KR")}원`;
-}
-
-function rate(value: number, base: number) {
-  if (base <= 0) return 0;
-  return Math.round((value / base) * 1000) / 10;
-}
-
-function shortDate(value: string) {
+type Draft = { amount: string; memo: string; id?: string; group?: ExpenseGroup; category?: string };
+const blankDraft: Draft = { amount: "", memo: "" };
+const dateFormatter = new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul",
+  month: "long",
+  day: "numeric",
+});
+function dateLabel(value: string) {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString("ko-KR", {
-    month: "numeric",
-    day: "numeric",
-  });
+  return Number.isNaN(date.getTime()) ? "날짜 미상" : dateFormatter.format(date);
+}
+
+export function ExpenseEditor({
+  open,
+  onClose,
+  month,
+  rows,
+  initialGroup,
+  initialCategory,
+  onSaved,
+}: {
+  open: boolean;
+  onClose: () => void;
+  month: string;
+  rows: ExpenseRow[] | null;
+  initialGroup: ExpenseGroup;
+  initialCategory: string;
+  onSaved: (notice: string) => void;
+}) {
+  const title = useId();
+  const categoryId = useId();
+  const [drafts, setDrafts] = useState<Record<string, Draft>>({});
+  const [busy, setBusy] = useState(false);
+  const pending = useRef(false);
+  const [error, setError] = useState("");
+  const [conflict, setConflict] = useState(false);
+  const draft = drafts[month] ?? blankDraft;
+  const group = draft.group ?? initialGroup;
+  const category = draft.category ?? initialCategory;
+  const amount = Number(draft.amount);
+  const choices = [
+    ...new Set([
+      ...categories[group],
+      ...(rows ?? []).filter((row) => row.group_key === group).map((row) => row.category),
+      category,
+    ]),
+  ];
+  function edit(update: Partial<Draft>) {
+    setDrafts((prev) => ({
+      ...prev,
+      [month]: { ...blankDraft, ...prev[month], group, category, ...update },
+    }));
+    setError("");
+  }
+  function dismiss() {
+    if (pending.current) return;
+    if (conflict) {
+      clearDraft();
+      setConflict(false);
+      onSaved("먼저 저장된 내역을 장부에 반영했어요.");
+    }
+    setError("");
+    onClose();
+  }
+  function clearDraft() {
+    setDrafts((prev) => {
+      const next = { ...prev };
+      delete next[month];
+      return next;
+    });
+  }
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!Number.isSafeInteger(amount) || amount < 1 || amount > 2147483647) {
+      setError("1원에서 2,147,483,647원 사이의 금액을 입력해 주세요.");
+      return;
+    }
+    if (pending.current || conflict || !rows) return;
+    pending.current = true;
+    setBusy(true);
+    setError("");
+    const id = draft.id ?? crypto.randomUUID();
+    edit({ id });
+    const payload = {
+      id,
+      expense_month: month,
+      group_key: group,
+      category,
+      amount,
+      memo: draft.memo.trim() || null,
+    };
+    try {
+      const db = getSupabase();
+      const { error: writeError } = await db.from("business_expenses").insert(payload);
+      if (writeError) {
+        if (writeError.code !== "23505") throw writeError;
+        // A response may be interrupted after the insert has already committed.
+        const { data: prior, error: readError } = await db
+          .from("business_expenses")
+          .select("expense_month,group_key,category,amount,memo")
+          .eq("id", id)
+          .maybeSingle();
+        if (readError || !prior) throw writeError;
+        if (
+          prior.expense_month !== month ||
+          prior.group_key !== group ||
+          prior.category !== category ||
+          prior.amount !== amount ||
+          prior.memo !== payload.memo
+        ) {
+          setError(
+            "먼저 저장한 금액은 " + won(prior.amount) + "이에요. 창을 닫고 장부에서 확인해 주세요.",
+          );
+          setConflict(true);
+          return;
+        }
+      }
+      clearDraft();
+      onClose();
+      onSaved(`${category} 비용 ${won(amount)}을 추가했어요.`);
+    } catch {
+      setError("비용을 저장하지 못했어요. 입력한 내용으로 다시 시도할 수 있어요.");
+    } finally {
+      pending.current = false;
+      setBusy(false);
+    }
+  }
+  if (!open) return null;
+  return (
+    <JobDialog labelledBy={title} onClose={dismiss} busy={busy}>
+      <form className={f.editor} onSubmit={submit}>
+        <div className={f.editorHead}>
+          <div>
+            <p>{formatYearMonth(month)}</p>
+            <h2 id={title}>비용 추가</h2>
+          </div>
+          <button type="button" className={s.secondaryAction} onClick={dismiss} disabled={busy}>
+            닫기
+          </button>
+        </div>
+        <label className={f.moneyField}>
+          금액 (원)
+          <input
+            inputMode="numeric"
+            autoFocus
+            autoComplete="off"
+            placeholder="0"
+            required
+            disabled={busy || conflict}
+            value={draft.amount ? Number(draft.amount).toLocaleString("ko-KR") : ""}
+            onChange={(e) => edit({ amount: e.target.value.replace(/[^0-9]/g, "").slice(0, 11) })}
+          />
+        </label>
+        <fieldset className={f.categoryField} disabled={busy || conflict}>
+          <legend>비용 분류</legend>
+          <div className={f.segment}>
+            {expenseGroups.map((item) => (
+              <button
+                type="button"
+                key={item}
+                aria-pressed={group === item}
+                onClick={() => {
+                  edit({ group: item, category: categories[item][0] });
+                }}
+              >
+                {expenseNames[item]}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+        <div className={f.editorField}>
+          <label htmlFor={categoryId}>항목</label>
+          <select
+            id={categoryId}
+            value={category}
+            disabled={busy || conflict}
+            onChange={(e) => {
+              edit({ group, category: e.target.value });
+            }}
+          >
+            {choices.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </div>
+        <label>
+          메모 (선택)
+          <input
+            value={draft.memo}
+            disabled={busy || conflict}
+            placeholder="거래처 또는 사용처"
+            onChange={(e) => edit({ memo: e.target.value })}
+          />
+        </label>
+        {error && (
+          <p role="alert" className={s.feedback}>
+            {error}
+          </p>
+        )}
+        <button className={s.primaryAction} disabled={busy || conflict || !rows || !amount}>
+          {busy ? "저장 중…" : "비용 저장"}
+        </button>
+      </form>
+    </JobDialog>
+  );
 }
 
 export default function ExpenseTab({
-  monthFilter,
-  setMonthFilter,
-  doneMonth,
-  revenue,
-  isAdmin,
-}: ExpenseTabProps) {
-  const [activeGroup, setActiveGroup] = useState<ExpenseGroup>("material");
-  const [draft, setDraft] = useState<ExpenseDraft>(() => emptyDraft());
-  const [rows, setRows] = useState<BusinessExpenseRow[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [savingKey, setSavingKey] = useState<string | null>(null);
-  const [tableError, setTableError] = useState<string | null>(null);
-  const [savedAt, setSavedAt] = useState<string | null>(null);
-
-  const loadExpenses = async () => {
-    if (!isAdmin) return;
-    setLoading(true);
-    setTableError(null);
-
-    const { data, error } = await getSupabase()
-      .from("business_expenses")
-      .select("*")
-      .eq("expense_month", monthFilter)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      setTableError(error.message);
-      setRows([]);
-      setLoading(false);
-      return;
-    }
-
-    setRows(
-      ((data as BusinessExpenseRow[] | null) ?? []).filter(
-        (row) => (row.amount || 0) > 0,
-      ),
-    );
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      loadExpenses();
-    }, 0);
-    return () => window.clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [monthFilter, isAdmin]);
-
-  const entries = useMemo(() => {
-    const next = emptyEntries();
-    rows.forEach((row) => {
-      const key = expenseKey({
-        group: row.group_key,
-        category: row.category,
-      });
-      if (!next[key]) return;
-      next[key].push(row);
-    });
-    return next;
-  }, [rows]);
-
-  const totals = useMemo(() => {
-    const material = rows
-      .filter((row) => row.group_key === "material")
-      .reduce((sum, row) => sum + (row.amount || 0), 0);
-    const labor = rows
-      .filter((row) => row.group_key === "labor")
-      .reduce((sum, row) => sum + (row.amount || 0), 0);
-    const marketing = rows
-      .filter((row) => row.group_key === "marketing")
-      .reduce((sum, row) => sum + (row.amount || 0), 0);
-    const totalExpense = material + labor + marketing;
-    const profit = revenue - totalExpense;
-
-    return {
-      material,
-      labor,
-      marketing,
-      totalExpense,
-      profit,
-      expenseRate: rate(totalExpense, revenue),
-      profitRate: rate(profit, revenue),
-    };
-  }, [rows, revenue]);
-
-  const groupTotal = (group: ExpenseGroup) =>
-    rows
-      .filter((row) => row.group_key === group)
-      .reduce((sum, row) => sum + (row.amount || 0), 0);
-
-  const changeMonth = (delta: number) => {
-    const d = new Date(monthFilter + "-01");
-    d.setMonth(d.getMonth() + delta);
-    setMonthFilter(d.toISOString().slice(0, 7));
-  };
-
-  const updateDraft = (
-    key: string,
-    patch: Partial<{ amount: number; memo: string }>,
-  ) => {
-    setDraft((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        ...patch,
-      },
-    }));
-  };
-
-  const addExpense = async (item: ExpenseItem) => {
-    const key = expenseKey(item);
-    const row = draft[key] ?? { amount: 0, memo: "" };
-    if (row.amount <= 0) return;
-
-    setSavingKey(key);
-    setTableError(null);
-
-    const { error } = await getSupabase().from("business_expenses").insert({
-      expense_month: monthFilter,
-      group_key: item.group,
-      category: item.category,
-      amount: row.amount,
-      memo: row.memo.trim() || null,
-    });
-
-    if (error) {
-      setTableError(error.message);
-      setSavingKey(null);
-      return;
-    }
-
-    updateDraft(key, { amount: 0, memo: "" });
-    setSavedAt(new Date().toLocaleTimeString("ko-KR", { hour12: false }));
-    setSavingKey(null);
-    loadExpenses();
-  };
-
-  const removeExpense = async (row: BusinessExpenseRow) => {
-    if (!window.confirm(`${formatWon(row.amount || 0)} 내역을 삭제할까요?`))
-      return;
-
-    setSavingKey(row.id);
-    setTableError(null);
-
-    const { error } = await getSupabase()
-      .from("business_expenses")
-      .delete()
-      .eq("id", row.id);
-
-    if (error) {
-      setTableError(error.message);
-      setSavingKey(null);
-      return;
-    }
-
-    setRows((prev) => prev.filter((item) => item.id !== row.id));
-    setSavingKey(null);
-  };
-
-  const summaryCards = [
-    {
-      label: "매출",
-      value: revenue,
-      sub: `${doneMonth.length}건 완료`,
-      color: "#1f66ff",
-    },
-    {
-      label: "총 비용",
-      value: totals.totalExpense,
-      sub: `비용률 ${totals.expenseRate}%`,
-      color: "#ef4444",
-    },
-    {
-      label: totals.profit >= 0 ? "남은 금액" : "초과 지출",
-      value: totals.profit,
-      sub: `순이익률 ${totals.profitRate}%`,
-      color: totals.profit >= 0 ? "#16a34a" : "#ef4444",
-    },
-  ];
-
-  const activeItems = EXPENSE_ITEMS.filter(
-    (item) => item.group === activeGroup,
+  rows,
+  group,
+  category,
+  onFilter,
+  onRemoved,
+  onStale,
+}: {
+  rows: ExpenseRow[];
+  group: ExpenseFilter;
+  category: string;
+  onFilter: (group: ExpenseFilter, category: string) => void;
+  onRemoved: (message: string) => void;
+  onStale: () => void;
+}) {
+  const [limit, setLimit] = useState(20);
+  const [removing, setRemoving] = useState("");
+  const [error, setError] = useState("");
+  const grouped = group === "all" ? rows : rows.filter((row) => row.group_key === group);
+  const choices = [...new Set(grouped.map((row) => row.category))].sort((a, b) =>
+    a.localeCompare(b, "ko"),
   );
-  const activeMeta = GROUP_META[activeGroup];
-
-  if (!isAdmin) {
-    return (
-      <div
-        className="rounded-2xl p-5 text-center"
-        style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
-        <p className="text-sm font-bold" style={{ color: "#111827" }}>
-          관리자만 비용을 확인할 수 있어요.
-        </p>
-      </div>
-    );
+  const activeCategory = choices.includes(category) ? category : "";
+  const filtered = activeCategory ? grouped.filter((row) => row.category === activeCategory) : grouped;
+  function filter(next: ExpenseFilter, nextCategory: string) {
+    setLimit(20);
+    setError("");
+    onFilter(next, nextCategory);
   }
-
+  async function remove(row: ExpenseRow) {
+    if (removing || !window.confirm(`${row.category} 비용 ${won(row.amount)}을 삭제할까요?`)) return;
+    setRemoving(row.id);
+    setError("");
+    try {
+      const { data, error: writeError } = await getSupabase()
+        .from("business_expenses")
+        .delete()
+        .eq("id", row.id)
+        .eq("expense_month", row.expense_month)
+        .select("id");
+      if (writeError) throw writeError;
+      if (!data?.length) {
+        onStale();
+        return;
+      }
+      onRemoved(`${row.category} 비용 ${won(row.amount)}을 삭제했어요.`);
+    } catch {
+      setError("내역을 삭제하지 못했어요. 다시 시도해 주세요.");
+    } finally {
+      setRemoving("");
+    }
+  }
   return (
-    <div className="flex flex-col gap-5">
-      <div
-        className="flex items-center justify-between rounded-2xl p-1.5"
-        style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
-        <button
-          onClick={() => changeMonth(-1)}
-          className="px-4 py-2 rounded-xl text-xl font-bold"
-          style={{ color: "#111827" }}>
-          ‹
-        </button>
-        <div className="text-center">
-          <p className="text-xs font-bold" style={{ color: "#94a3b8" }}>
-            비용 장부
-          </p>
-          <span className="text-base font-black" style={{ color: "#111827" }}>
-            {formatYearMonth(monthFilter)}
-          </span>
-        </div>
-        <button
-          onClick={() => changeMonth(1)}
-          className="px-4 py-2 rounded-xl text-xl font-bold"
-          style={{ color: "#111827" }}>
-          ›
-        </button>
+    <section className={s.panel}>
+      <div className={s.panelHeader}>
+        <h2>비용 내역</h2>
+        <span className={f.dim}>최근 입력순</span>
       </div>
-
-      {tableError && (
-        <div
-          className="rounded-2xl p-4 text-sm"
-          style={{
-            backgroundColor: "#fff7ed",
-            border: "1px solid #fed7aa",
-            color: "#9a3412",
-          }}>
-          <p className="font-bold mb-1">Supabase 비용 테이블 확인 필요</p>
-          <p>
-            `docs/admin-business-expenses.sql`을 Supabase SQL Editor에서 다시
-            실행하면 저장이 가능해요.
-          </p>
-        </div>
-      )}
-
-      <section
-        className="rounded-2xl p-5"
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #e5e7eb",
-          boxShadow: "0 8px 24px rgba(15,23,42,0.05)",
-        }}>
-        <div className="flex items-start justify-between gap-3 mb-5">
-          <div>
-            <p className="text-xs font-bold mb-1" style={{ color: "#94a3b8" }}>
-              이번 달 손익
-            </p>
-            <p
-              className="text-3xl font-black leading-tight"
-              style={{ color: totals.profit >= 0 ? "#111827" : "#ef4444" }}>
-              {formatWon(totals.profit)}
-            </p>
-          </div>
-          <span
-            className="text-xs font-black px-3 py-1.5 rounded-full"
-            style={{
-              color: totals.profit >= 0 ? "#16a34a" : "#ef4444",
-              backgroundColor: totals.profit >= 0 ? "#dcfce7" : "#fef2f2",
-            }}>
-            {totals.profitRate}%
-          </span>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 mb-5">
-          {summaryCards.map((card) => (
-            <div
-              key={card.label}
-              className="rounded-xl p-3"
-              style={{ backgroundColor: "#f8fafc" }}>
-              <p
-                className={`font-bold mb-1 ${
-                  card.label === "매출" ? "text-xs" : "text-[11px]"
-                }`}
-                style={{ color: "#64748b" }}>
-                {card.label}
-              </p>
-              <p
-                className={`font-black leading-snug break-keep ${
-                  card.label === "매출" ? "text-lg" : "text-sm"
-                }`}
-                style={{ color: card.color }}>
-                {formatWon(card.value)}
-              </p>
-              <p className="text-[11px] mt-1" style={{ color: "#94a3b8" }}>
-                {card.sub}
-              </p>
-            </div>
+      <div className={f.listFilters}>
+        <div className={f.segment} role="group" aria-label="비용 분류 필터">
+          {(["all", ...expenseGroups] as const).map((item) => (
+            <button
+              type="button"
+              key={item}
+              aria-pressed={group === item}
+              onClick={() => filter(item, "")}
+            >
+              {item === "all" ? "전체" : expenseNames[item]}
+            </button>
           ))}
         </div>
-
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs font-bold" style={{ color: "#64748b" }}>
-            매출 대비 비용률
-          </span>
-          <span className="text-xs font-black" style={{ color: "#111827" }}>
-            {totals.expenseRate}%
-          </span>
-        </div>
-        <div
-          className="h-2.5 rounded-full overflow-hidden"
-          style={{ backgroundColor: "#e5e7eb" }}>
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: `${Math.min(totals.expenseRate, 100)}%`,
-              background: "linear-gradient(to right, #1f66ff, #8b5cf6)",
-            }}
-          />
-        </div>
-      </section>
-
-      <div
-        className="grid grid-cols-3 gap-2 rounded-2xl p-1"
-        style={{ backgroundColor: "#e9eef7" }}>
-        {EXPENSE_GROUPS.map((group) => {
-          const meta = GROUP_META[group];
-          const selected = activeGroup === group;
-          return (
-            <button
-              key={group}
-              onClick={() => setActiveGroup(group)}
-              className="rounded-xl px-3 py-3 text-left"
-              style={{
-                backgroundColor: selected ? "#ffffff" : "transparent",
-                boxShadow: selected ? "0 4px 14px rgba(15,23,42,0.08)" : "none",
-              }}>
-              <span
-                className="block text-xs font-bold"
-                style={{ color: selected ? meta.color : "#64748b" }}>
-                {meta.title}
-              </span>
-              <span
-                className="block text-sm font-black mt-1"
-                style={{ color: selected ? "#111827" : "#64748b" }}>
-                {formatWon(groupTotal(group))}
-              </span>
-            </button>
-          );
-        })}
+        {choices.length > 0 && (
+          <select
+            className={f.select}
+            aria-label="비용 항목 필터"
+            value={activeCategory}
+            onChange={(e) => filter(group, e.target.value)}
+          >
+            <option value="">전체 항목</option>
+            {choices.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        )}
       </div>
-
-      <section
-        className="rounded-2xl"
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #cbd5e1",
-          boxShadow: "0 10px 28px rgba(15,23,42,0.06)",
-          overflow: "hidden",
-        }}>
-        <div
-          className="px-5 py-4"
-          style={{
-            backgroundColor: activeMeta.softBg,
-            borderBottom: "1px solid #dbe4f0",
-          }}>
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-black" style={{ color: "#111827" }}>
-                {activeMeta.title}
-              </h2>
-              <p className="text-sm mt-1 font-bold" style={{ color: "#64748b" }}>
-                {activeMeta.subtitle}
-              </p>
-            </div>
-            <span
-              className="text-base font-black px-3 py-1 rounded-full"
-              style={{
-                color: activeMeta.color,
-                backgroundColor: "#ffffff",
-                border: "1px solid #dbe4f0",
-              }}>
-              {formatWon(groupTotal(activeGroup))}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          {activeItems.map((item, index) => {
-            const key = expenseKey(item);
-            const draftRow = draft[key] ?? { amount: 0, memo: "" };
-            const itemEntries = entries[key] ?? [];
-            const itemTotal = itemEntries.reduce(
-              (sum, row) => sum + (row.amount || 0),
-              0,
-            );
-            const isSaving = savingKey === key;
-
-            return (
-              <div
-                key={key}
-                className="px-5 py-6"
-                style={{
-                  borderTop: index > 0 ? "1px solid #dbe4f0" : "none",
-                }}>
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div>
-                    <p className="text-lg font-black" style={{ color: "#111827" }}>
-                      {item.label}
-                    </p>
-                    <p className="text-sm mt-1 font-bold" style={{ color: "#64748b" }}>
-                      {item.helper} · {itemEntries.length}건
-                    </p>
-                  </div>
-                  <span
-                    className="text-lg font-black text-right"
-                    style={{ color: itemTotal > 0 ? activeMeta.color : "#64748b" }}>
-                    {formatWon(itemTotal)}
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-2.5 mb-4">
-                  <label className="text-sm font-black" style={{ color: "#334155" }}>
-                    추가할 금액
-                  </label>
-                  <input
-                    inputMode="numeric"
-                    value={
-                      draftRow.amount ? draftRow.amount.toLocaleString("ko-KR") : ""
-                    }
-                    onChange={(e) =>
-                      updateDraft(key, {
-                        amount: toAmount(e.target.value),
-                      })
-                    }
-                    placeholder="금액"
-                    className="w-full rounded-xl px-4 py-3.5 text-right text-xl font-black placeholder:text-slate-500"
-                    style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #cbd5e1",
-                      color: "#111827",
-                      outline: "none",
-                      boxShadow: "inset 0 1px 2px rgba(15,23,42,0.04)",
-                    }}
-                  />
-                  <input
-                    value={draftRow.memo}
-                    onChange={(e) => updateDraft(key, { memo: e.target.value })}
-                    placeholder="메모 선택 입력"
-                    className="w-full rounded-xl px-4 py-3.5 text-base font-bold placeholder:text-slate-500"
-                    style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #dbe4f0",
-                      color: "#334155",
-                      outline: "none",
-                    }}
-                  />
-                  <button
-                    onClick={() => addExpense(item)}
-                    disabled={draftRow.amount <= 0 || Boolean(savingKey)}
-                    className="w-full rounded-xl py-3.5 text-base font-black"
-                    style={{
-                      backgroundColor:
-                        draftRow.amount > 0 && !savingKey
-                          ? activeMeta.color
-                          : "#cbd5e1",
-                      color: "white",
-                    }}>
-                    {isSaving ? "추가 중..." : `${item.label} 비용 추가`}
-                  </button>
-                </div>
-
-                {itemEntries.length === 0 ? (
-                  <div
-                    className="rounded-xl px-4 py-3.5 text-base font-bold"
-                    style={{
-                      backgroundColor: "#f8fafc",
-                      border: "1px solid #dbe4f0",
-                      color: "#64748b",
-                    }}>
-                    아직 추가된 내역이 없어요.
-                  </div>
-                ) : (
-                  <div
-                    className="flex flex-col gap-2"
-                    style={{
-                      maxHeight: itemEntries.length > 4 ? 240 : "none",
-                      overflowY: itemEntries.length > 4 ? "auto" : "visible",
-                    }}>
-                    {itemEntries.map((row) => (
-                      <div
-                        key={row.id}
-                        className="flex items-center justify-between gap-3 rounded-xl px-4 py-3.5"
-                        style={{
-                          backgroundColor: "#ffffff",
-                          border: "1px solid #dbe4f0",
-                          boxShadow: "0 3px 10px rgba(15,23,42,0.04)",
-                        }}>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className="text-lg font-black"
-                              style={{ color: "#111827" }}>
-                              {formatWon(row.amount || 0)}
-                            </span>
-                            <span
-                              className="text-sm font-black"
-                              style={{ color: "#64748b" }}>
-                              {shortDate(row.created_at)}
-                            </span>
-                          </div>
-                          {row.memo && (
-                            <p
-                              className="text-sm font-bold truncate mt-1"
-                              style={{ color: "#475569" }}>
-                              {row.memo}
-                            </p>
-                          )}
-                        </div>
-                        <button
-                          onClick={() => removeExpense(row)}
-                          disabled={Boolean(savingKey)}
-                          className="text-sm font-black px-3 py-2 rounded-lg"
-                          style={{
-                            color: "#ef4444",
-                            backgroundColor: "#fef2f2",
-                            border: "1px solid #fee2e2",
-                            flexShrink: 0,
-                          }}>
-                          삭제
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+      <div className={f.ledgerTotal}>
+        <span>
+          {group === "all" ? "전체" : expenseNames[group]} {activeCategory} · {filtered.length}건
+        </span>
+        <strong>{won(expenseAmount(filtered))}</strong>
+      </div>
+      {error && (
+        <p role="alert" className={s.feedback}>
+          {error}
+        </p>
+      )}
+      {!filtered.length ? (
+        <p className={s.empty}>
+          {rows.length ? "선택한 조건의 비용이 없어요." : "이달에 입력된 비용이 없어요."}
+        </p>
+      ) : (
+        <ul className={s.list}>
+          {filtered.slice(0, limit).map((row) => (
+            <li key={row.id} className={f.entry}>
+              <div className={f.entryMain}>
+                <strong>{row.category}</strong>
+                <p className={s.muted}>
+                  {dateLabel(row.created_at)} · {expenseNames[row.group_key]}
+                </p>
+                {row.memo && <p className={f.entryMemo}>{row.memo}</p>}
               </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {loading && (
-        <p className="text-center text-xs" style={{ color: "#94a3b8" }}>
-          불러오는 중...
-        </p>
+              <div className={f.entryAmount}>
+                <b>{won(row.amount)}</b>
+                <button
+                  type="button"
+                  disabled={Boolean(removing)}
+                  onClick={() => void remove(row)}
+                  aria-label={`${row.category} ${won(row.amount)} 내역 삭제`}
+                >
+                  {removing === row.id ? "삭제 중" : "삭제"}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
-
-      {savedAt && (
-        <p className="text-center text-xs" style={{ color: "#94a3b8" }}>
-          {savedAt} 추가됨
-        </p>
+      {limit < filtered.length && (
+        <button type="button" className={s.secondaryAction} onClick={() => setLimit((n) => n + 20)}>
+          내역 더 보기
+        </button>
       )}
-    </div>
+    </section>
   );
 }

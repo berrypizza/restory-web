@@ -19,7 +19,7 @@ export interface Job {
   id: string;
   created_at: string;
   visit_date: string;
-  visit_time: string;
+  visit_time: string | null;
   name: string;
   phone: string;
   region: string;
@@ -30,7 +30,7 @@ export interface Job {
   memo: string;
   review_requested: boolean;
   completion_photo?: string;
-  as_until?: string;
+  as_until?: string | null;
   intake_photos?: string;
   is_measurement?: boolean;
   install_date?: string | null;

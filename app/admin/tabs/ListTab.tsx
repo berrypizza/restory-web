@@ -1,57 +1,40 @@
 "use client";
 
+import { useState } from "react";
 import type { Job } from "../lib/types";
-import type { Status, Tech } from "../lib/constants";
-import { TECHS, STATUSES, TECH_COLOR } from "../lib/constants";
-import { formatPrice, formatYearMonth } from "../lib/utils";
-import JobCard from "../components/JobCard";
+import type { Tech } from "../lib/constants";
+import { formatDate, formatTime, formatYearMonth, thisYearMonth, pad } from "../lib/utils";
+import { getJobTechs } from "../lib/jobTechs";
+import { visitLabel, visitsForJob, workQueues, workStatus, type QueueField, type VisitPhase, type WorkQueue, type WorkStatus } from "../lib/schedule";
+import AdminIcon from "../components/AdminIcon";
+import list from "./workList.module.css";
+
+import {
+  MonthControls,
+  TechnicianFilter,
+} from "../components/ScheduleControls";
+import s from "../operations.module.css";
 
 interface ListTabProps {
   filtered: Job[];
+  hasSearchQuery?: boolean;
   monthFilter: string;
   setMonthFilter: (v: string) => void;
-  statusFilter: Status | "전체";
-  setStatusFilter: (v: Status | "전체") => void;
+  statusFilter: WorkStatus;
+  setStatusFilter: (v: WorkStatus) => void;
   techFilter: Tech | "전체";
   setTechFilter: (v: Tech | "전체") => void;
   isAdmin: boolean;
   loggedUser: string | null;
-  onUpdate: (id: string, patch: Partial<Job>) => void;
-  onEdit: (job: Job) => void;
-  onDelete: (id: string) => void;
-}
-
-function TechFilterSelect({
-  value,
-  onChange,
-}: {
-  value: Tech | "전체";
-  onChange: (v: Tech | "전체") => void;
-}) {
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value as Tech | "전체")}
-      className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
-      style={{
-        backgroundColor:
-          value !== "전체" ? TECH_COLOR[value] + "22" : "#ffffff",
-        color: value !== "전체" ? TECH_COLOR[value] : "#475569",
-        border: `1px solid ${value !== "전체" ? TECH_COLOR[value] + "44" : "#e5e7eb"}`,
-        outline: "none",
-      }}>
-      <option value="전체">전체 기사</option>
-      {TECHS.map((t) => (
-        <option key={t} value={t}>
-          {t}
-        </option>
-      ))}
-    </select>
-  );
+  queue?: WorkQueue;
+  onReset: () => void;
+  onEdit: (job: Job, phase?: VisitPhase, field?: QueueField) => void;
+  onShowSchedule: (id: string, date: string, phase: VisitPhase) => void;
 }
 
 export default function ListTab({
   filtered,
+  hasSearchQuery = false,
   monthFilter,
   setMonthFilter,
   statusFilter,
@@ -60,112 +43,122 @@ export default function ListTab({
   setTechFilter,
   isAdmin,
   loggedUser,
-  onUpdate,
+  queue,
+  onReset,
   onEdit,
-  onDelete,
+  onShowSchedule,
 }: ListTabProps) {
-  const doneRevenue = filtered
-    .filter(
-      (j) => j.status === "완료" && (!j.is_measurement || j.install_completed),
-    )
-    .reduce((s, j) => s + (j.price || 0), 0);
+  const [limit, setLimit] = useState(20);
+  const queueInfo = queue && workQueues[queue];
+  const editLabel = queueInfo?.action ?? "일정 수정";
+  function latestDate(job: Job) {
+    return [job.visit_date, job.install_date].filter(
+      (date): date is string => Boolean(date && (queue || hasSearchQuery || date.startsWith(monthFilter)))
+    ).sort().at(-1) || "";
+  }
+  const ordered = [...filtered].sort((a, b) =>
+    latestDate(b).localeCompare(latestDate(a)) || (a.name || "").localeCompare(b.name || "", "ko") || a.id.localeCompare(b.id)
+  );
+  const moveMonth = (offset: number) => {
+    const [year, month] = monthFilter.split("-").map(Number);
+    const next = new Date(year, month - 1 + offset, 1);
+    setMonthFilter(`${next.getFullYear()}-${pad(next.getMonth() + 1)}`);
+  };
+  const hasFilters = !queue && (statusFilter !== "전체" || (isAdmin && techFilter !== "전체"));
 
   return (
-    <>
-      {/* 월 선택 */}
-      <div
-        className="flex items-center justify-between mb-4 rounded-xl p-1.5"
-        style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
-        <button
-          onClick={() => {
-            const d = new Date(monthFilter + "-01");
-            d.setMonth(d.getMonth() - 1);
-            setMonthFilter(d.toISOString().slice(0, 7));
-          }}
-          className="px-4 py-2 rounded-lg text-xl font-bold"
-          style={{ color: "#111827" }}>
-          ‹
-        </button>
-        <span className="text-sm font-bold" style={{ color: "#111827" }}>
-          {formatYearMonth(monthFilter)}
-        </span>
-        <button
-          onClick={() => {
-            const d = new Date(monthFilter + "-01");
-            d.setMonth(d.getMonth() + 1);
-            setMonthFilter(d.toISOString().slice(0, 7));
-          }}
-          className="px-4 py-2 rounded-lg text-xl font-bold"
-          style={{ color: "#111827" }}>
-          ›
-        </button>
-      </div>
-
-      {/* 필터 */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        <div className="flex flex-wrap gap-1">
-          {(["전체", ...STATUSES] as const).map((s) => (
+    <div className={s.stack}>
+      {queueInfo ? (
+        <section className={list.queueHead} aria-label="선택한 작업 목록">
+          <div><span>전체 기간</span><h2>{queueInfo.label}</h2></div>
+          <a href="#jobs" onClick={onReset}>전체 작업 보기 <AdminIcon name="arrow" size={14} /></a>
+        </section>
+      ) : <section className={s.panel} aria-label="작업 목록 필터">
+        <div className={s.toolbar}>
+          {hasSearchQuery ? (
+            <h2 className={s.title}>전체 기간 검색 결과</h2>
+          ) : (
+            <MonthControls
+              label={formatYearMonth(monthFilter)}
+              onPrevious={() => moveMonth(-1)}
+              onNext={() => moveMonth(1)}
+              onToday={() => setMonthFilter(thisYearMonth())}
+              todayLabel="이번 달"
+            />
+          )}
+          <TechnicianFilter
+            value={techFilter}
+            onChange={setTechFilter}
+            isAdmin={isAdmin}
+            loggedUser={loggedUser}
+          />
+        </div>
+        <div className={s.filterGroup} role="group" aria-label="작업 상태">
+          {(["전체", "대기", "배정", "시공 대기", "완료", "취소"] as const).map((status) => (
             <button
-              key={s}
-              onClick={() => setStatusFilter(s as Status | "전체")}
-              className="rounded-full px-3 py-1.5 text-xs font-semibold"
-              style={{
-                backgroundColor: statusFilter === s ? "#1f66ff" : "#ffffff",
-                color: statusFilter === s ? "white" : "#6b7280",
-                border: "1px solid #e5e7eb",
-              }}>
-              {s}
+              key={status}
+              type="button"
+              onClick={() => setStatusFilter(status)}
+              aria-pressed={statusFilter === status}
+            >
+              {status}
             </button>
           ))}
         </div>
-        {isAdmin ? (
-          <TechFilterSelect value={techFilter} onChange={setTechFilter} />
-        ) : (
-          <span
-            className="text-xs font-bold px-3 py-2 rounded-xl"
-            style={{
-              backgroundColor: TECH_COLOR[loggedUser!] + "22",
-              color: TECH_COLOR[loggedUser!],
-              border: `1px solid ${TECH_COLOR[loggedUser!]}44`,
-            }}>
-            {loggedUser}
-          </span>
-        )}
-      </div>
+      </section>}
 
-      {/* 요약 */}
-      <div
-        className="flex gap-3 mb-4 text-xs font-medium"
-        style={{ color: "#64748b" }}>
-        <span>{filtered.length}건</span>
-        <span>·</span>
-        <span style={{ color: "#1f66ff" }}>
-          완료 {filtered.filter((j) => j.status === "완료").length}건
-        </span>
-        <span>·</span>
-        <span>{formatPrice(doneRevenue)}</span>
+      <div className={s.resultLine} aria-live="polite">
+        <strong>작업 {filtered.length}건</strong>
+        {filtered.length > 1 && <span>최근 일정순</span>}
       </div>
-
-      {/* 목록 */}
-      {filtered.length === 0 ? (
-        <div className="text-center py-16" style={{ color: "#94a3b8" }}>
-          <p className="text-4xl mb-3">📋</p>
-          <p className="text-sm">접수된 작업이 없어요</p>
-        </div>
+      {ordered.length > 0 ? (
+        <>
+          <ul className={list.rows}>
+            {ordered.slice(0, limit).map(job => {
+              const crew = getJobTechs(job).join(" · ") || "담당 미정";
+              const schedule = visitsForJob(job);
+              const status = workStatus(job);
+              return <li key={job.id}>
+                <div className={list.detail}>
+                  <div className={list.meta}><span className={s.status} data-status={status}>{status}</span><span>{crew}</span></div>
+                  <h3>{job.name || "이름 미입력"}</h3>
+                  <p>{[job.symptom, job.region].filter(Boolean).join(" · ")}</p>
+                </div>
+                <div className={list.actions}>
+                  {schedule.map(visit => <button key={visit.phase} type="button"
+                    aria-label={`${job.name} ${visit.date} ${visitLabel(visit)} 일정 보기`}
+                    onClick={() => onShowSchedule(job.id, visit.date, visit.phase)}>
+                    {visitLabel(visit)} {formatDate(visit.date)} · {visit.time ? formatTime(visit.time) : "시간 미정"} <AdminIcon name="arrow" size={14} />
+                  </button>)}
+                  {isAdmin && <button className={queue ? list.queueAction : list.edit} type="button"
+                    aria-label={`${job.name} ${editLabel}`}
+                    onClick={() => onEdit(job, queueInfo?.phase, queueInfo?.field)}>
+                    {editLabel}
+                  </button>}
+                </div>
+              </li>;
+            })}
+          </ul>
+          {limit < ordered.length && <button className={s.neutral} type="button" onClick={() => setLimit(previous => previous + 20)}>작업 더 보기 ({Math.min(limit, ordered.length)}/{ordered.length})</button>}
+        </>
       ) : (
-        <div className="flex flex-col gap-2">
-          {filtered.map((job) => (
-            <JobCard
-              key={job.id}
-              job={job}
-              onUpdate={onUpdate}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              isAdmin={isAdmin}
-            />
-          ))}
+        <div className={s.empty}>
+          <strong>
+            {hasFilters || hasSearchQuery
+              ? "조건에 맞는 작업이 없어요"
+              : queueInfo?.empty ?? "이달에 접수된 작업이 없어요"}
+          </strong>
+          {(hasFilters || hasSearchQuery) && (
+            <button
+              type="button"
+              className={s.linkButton}
+              onClick={onReset}
+            >
+              {hasSearchQuery ? "검색 조건 지우기" : "필터 초기화"}
+            </button>
+          )}
         </div>
       )}
-    </>
+    </div>
   );
 }

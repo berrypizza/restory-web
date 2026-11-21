@@ -49,9 +49,10 @@ export function useMaterials() {
       .insert({ job_id: jobId, ...payload });
     if (error) {
       alert("추가 실패: " + error.message);
-      return;
+      return false;
     }
     await loadByJob(jobId);
+    return true;
   };
 
   const update = async (

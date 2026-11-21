@@ -13,11 +13,9 @@ export const TECH_COLOR: Record<string, string> = {
   "": "#64748b",
 };
 
-export const TECH_PHOTO: Record<string, string> = {
+export const TECH_PHOTO: Partial<Record<string, string>> = {
   고관호: "/images/knight/knights-1.png",
   고현호: "/images/knight/knights-2.png",
-  이주형: "/images/knight/knights-3.png",
-  강영훈: "/images/knight/knights-4.png",
 };
 
 export const TECH_HOME: Record<string, string> = {

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   // 루트 layout의 manifest.json을 덮어씀
   manifest: "/manifest-admin.json",
+  icons: { apple: "/images/logo-cc-admin.png" },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -25,11 +26,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      {/* iOS용 어드민 아이콘 (별도 아이콘 없으면 icon-192.png 그대로 써도 됨) */}
-      <link rel="apple-touch-icon" href="/icons/icon-admin-192.png" />
-      {children}
-    </>
-  );
+  return children;
 }

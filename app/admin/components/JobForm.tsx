@@ -1,654 +1,565 @@
 "use client";
 
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { JobFormState } from "../lib/types";
-import type { Status, Tech } from "../lib/constants";
-import { PRODUCT_OPTIONS, TECHS, STATUSES, isProductOption } from "../lib/constants";
+import type { QueueField } from "../lib/schedule";
 import {
-  getSupabase,
-  adjTime,
-  addOneYear,
-  today,
-  compressImage,
-} from "../lib/utils";
-import {
-  getExtraTechsFromMemo,
-  getVisibleMemo,
-  setExtraTechsInMemo,
-} from "../lib/jobTechs";
+  PRODUCT_OPTIONS,
+  QUICK_TIMES,
+  STATUSES,
+  TECHS,
+  isProductOption,
+  type Tech,
+  type Status,
+} from "../lib/constants";
+import { addOneYear, today } from "../lib/utils";
+import { getExtraTechsFromMemo, getVisibleMemo, setExtraTechsInMemo } from "../lib/jobTechs";
+import { photoList } from "../lib/photoList";
+import JobDialog from "./JobDialog";
+import JobPhotoEditor from "./JobPhotoEditor";
+import common from "../operations.module.css";
+import s from "./intake.module.css";
 
 interface JobFormProps {
   form: JobFormState;
   setForm: React.Dispatch<React.SetStateAction<JobFormState>>;
   editId: string | null;
+  initialField?: QueueField;
+  saveError: string;
   saving: boolean;
   onSave: () => void;
   onClose: () => void;
 }
 
-export default function JobForm({
-  form,
-  setForm,
-  editId,
-  saving,
-  onSave,
-  onClose,
-}: JobFormProps) {
-  const inputStyle: React.CSSProperties = {
-    backgroundColor: "#ffffff",
-    border: "1px solid #dbe3f0",
-    color: "#111827",
-    borderRadius: 10,
-    padding: "9px 12px",
-    fontSize: 14,
-    outline: "none",
-    width: "100%",
-  };
+function Section({ title, summary, children }: { title: string; summary?: string; children: ReactNode }) {
+  return (
+    <details className={s.detail}>
+      <summary>
+        <span>{title}</span>
+        {summary && <small>{summary}</small>}
+      </summary>
+      <div className={s.detailBody}>{children}</div>
+    </details>
+  );
+}
 
-  const intakeList: string[] = form.intake_photos
-    ? (() => {
-        try {
-          return JSON.parse(form.intake_photos);
-        } catch {
-          return [];
-        }
-      })()
-    : [];
+const quickTimes = QUICK_TIMES.map((time) => ({
+  label: time.label,
+  value:
+    String((time.h % 12) + (time.ampm === "PM" ? 12 : 0)).padStart(2, "0") +
+    ":" +
+    String(time.m).padStart(2, "0"),
+}));
 
-  const extraTechs = getExtraTechsFromMemo(form.memo);
+function ArrivalTime({
+  value,
+  name,
+  label,
+  onChange,
+}: {
+  value: string;
+  name: string;
+  label: string;
+  onChange: (value: string) => void;
+}) {
+  const id = useId();
+  const [custom, setCustom] = useState(() =>
+    Boolean(value && !quickTimes.some((item) => item.value === value.slice(0, 5))),
+  );
+  const selectValue = custom ? "custom" : value.slice(0, 5);
+  return (
+    <div className={common.field}>
+      <label htmlFor={id}>{label}</label>
+      <select
+        id={id}
+        name={custom ? undefined : name}
+        value={selectValue}
+        onChange={(event) => {
+          const choice = event.target.value;
+          setCustom(choice === "custom");
+          if (choice !== "custom") onChange(choice);
+        }}
+      >
+        <option value="">시간 미정</option>
+        {quickTimes.map((item) => (
+          <option key={item.value} value={item.value}>
+            {item.label}
+          </option>
+        ))}
+        <option value="custom">직접 입력</option>
+      </select>
+      {custom && (
+        <input
+          type="time"
+          name={name}
+          aria-label={label + " 직접 입력"}
+          value={value.slice(0, 5)}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      )}
+    </div>
+  );
+}
+
+export default function JobForm({ form, setForm, editId, initialField, saveError, saving, onSave, onClose }: JobFormProps) {
+  const titleId = useId();
+  const dismissId = useId();
+  const formId = useId();
+  const formElement = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (!initialField) return;
+    const field = formElement.current?.elements.namedItem(initialField);
+    if (field instanceof HTMLElement) field.focus();
+  }, [initialField]);
+  const [original] = useState(form);
+  const autoWarranty = useRef(!editId);
+  const [customProduct, setCustomProduct] = useState(() =>
+    Boolean(form.symptom && !isProductOption(form.symptom)),
+  );
+  const [submitted, setSubmitted] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [unresolvedPhotos, setUnresolvedPhotos] = useState(false);
+  const [confirmDismiss, setConfirmDismiss] = useState(false);
+  const installDraft = useRef({
+    date: form.install_date,
+    time: form.install_time,
+    completed: form.install_completed,
+  });
+  const photos = photoList(form.intake_photos);
+  const extra = getExtraTechsFromMemo(form.memo);
   const visibleMemo = getVisibleMemo(form.memo);
-  const setExtraTechs = (techs: Tech[]) => {
-    setForm((p) => ({
-      ...p,
-      memo: setExtraTechsInMemo(p.memo, techs.filter((t) => t && t !== p.tech)),
-    }));
-  };
+  const busy = saving || uploading;
+  const edited =
+    unresolvedPhotos ||
+    (Object.keys(original) as (keyof JobFormState)[]).some((key) => form[key] !== original[key]);
+  const set = <K extends keyof JobFormState>(key: K, value: JobFormState[K]) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleIntakeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-    const newUrls: string[] = [];
-    for (const file of files) {
-      const compressed = await compressImage(file);
-      // eslint-disable-next-line react-hooks/purity -- generated inside an upload event handler, not during render
-      const path = `intake-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-      const { error } = await getSupabase()
-        .storage.from("completion-photos")
-        .upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
-      if (error) {
-        alert("업로드 실패: " + error.message);
-        continue;
-      }
-      const { data } = getSupabase()
-        .storage.from("completion-photos")
-        .getPublicUrl(path);
-      newUrls.push(data.publicUrl);
-    }
-    const all = [...intakeList, ...newUrls];
-    setForm((p) => ({
-      ...p,
-      intake_photos: all.length ? JSON.stringify(all) : "",
+  function requestClose() {
+    if (busy) return;
+    if (edited) setConfirmDismiss(true);
+    else onClose();
+  }
+
+  function setVisitDate(date: string) {
+    const nextWarranty = date && autoWarranty.current ? addOneYear(date) : undefined;
+    setForm((prev) => ({ ...prev, visit_date: date, as_until: nextWarranty ?? prev.as_until }));
+  }
+
+  function setVisitType(isMeasurement: boolean) {
+    if (isMeasurement === form.is_measurement) return;
+    if (!isMeasurement)
+      installDraft.current = {
+        date: form.install_date,
+        time: form.install_time,
+        completed: form.install_completed,
+      };
+    setForm((prev) => ({
+      ...prev,
+      is_measurement: isMeasurement,
+      install_date: isMeasurement ? installDraft.current.date : null,
+      install_time: isMeasurement ? installDraft.current.time : null,
+      install_completed: isMeasurement && prev.status === "완료" && installDraft.current.completed,
     }));
+  }
+
+  const errors = {
+    name: !form.name.trim() ? "고객명을 입력해 주세요." : "",
+    region: !form.region.trim() ? "방문할 주소나 지역을 입력해 주세요." : "",
+    symptom: !form.symptom.trim() ? "작업 품목을 선택하거나 직접 입력해 주세요." : "",
+    visit_date: !form.visit_date ? "방문일을 선택해 주세요." : "",
   };
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (busy || unresolvedPhotos) return;
+    setSubmitted(true);
+    const missing = Object.entries(errors).find(([, message]) => message);
+    if (missing) {
+      const field = event.currentTarget.elements.namedItem(missing[0]);
+      if (field instanceof HTMLElement) field.focus();
+      return;
+    }
+    onSave();
+  }
+  type FieldName = keyof typeof errors;
+  const invalid = (key: FieldName) => submitted && Boolean(errors[key]);
+  const errorId = (key: FieldName) => (invalid(key) ? formId + "-" + key : undefined);
+  const errorLine = (key: FieldName) =>
+    invalid(key) && (
+      <small className={s.fieldError} id={errorId(key)}>
+        {errors[key]}
+      </small>
+    );
+  const setExtra = (techs: Tech[]) =>
+    setForm((prev) => ({
+      ...prev,
+      memo: setExtraTechsInMemo(
+        prev.memo,
+        techs.filter((tech) => tech && tech !== prev.tech),
+      ),
+    }));
+  const statusOptions = STATUSES.filter((status) => status !== "완료" || original.status === "완료");
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.88)" }}>
-      <div
-        className="w-full max-w-md rounded-2xl p-5 flex flex-col gap-3"
-        style={{
-          backgroundColor: "#ffffff",
-          border: "1px solid #dbe3f0",
-          maxHeight: "90vh",
-          overflowY: "auto",
-        }}>
-        {/* 헤더 */}
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-base font-bold" style={{ color: "#111827" }}>
-            {editId ? "수정" : "새 접수"}
-          </h3>
-          <button onClick={onClose} style={{ color: "#64748b", fontSize: 20 }}>
-            ✕
-          </button>
-        </div>
-
-        {/* 기본 텍스트 필드 */}
-        {(
-          [
-            { label: "이름 *", key: "name", placeholder: "홍길동" },
-            { label: "연락처", key: "phone", placeholder: "010-0000-0000" },
-            { label: "지역 *", key: "region", placeholder: "인천 서구 ○○동" },
-          ] as const
-        ).map((f) => (
-          <label key={f.key} className="flex flex-col gap-1.5">
-            <span
-              className="text-xs font-semibold"
-              style={{ color: "#6b7280" }}>
-              {f.label}
-            </span>
-            <input
-              value={form[f.key]}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, [f.key]: e.target.value }))
-              }
-              placeholder={f.placeholder}
-              style={inputStyle}
-            />
-          </label>
-        ))}
-
-        {/* 품목 */}
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-semibold" style={{ color: "#6b7280" }}>
-            품목 *
-          </span>
-          <select
-            value={isProductOption(form.symptom) ? form.symptom : form.symptom ? "__custom" : ""}
-            onChange={(e) =>
-              setForm((p) => ({
-                ...p,
-                symptom: e.target.value === "__custom" ? "" : e.target.value,
-              }))
-            }
-            style={inputStyle}>
-            <option value="">품목 선택</option>
-            {PRODUCT_OPTIONS.map((product) => (
-              <option key={product} value={product}>
-                {product}
-              </option>
-            ))}
-            <option value="__custom">직접 입력</option>
-          </select>
-          {(!isProductOption(form.symptom) || !form.symptom) && (
-            <input
-              value={isProductOption(form.symptom) ? "" : form.symptom}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, symptom: e.target.value }))
-              }
-              placeholder="직접 입력한 품목은 분석에서 기타로 집계"
-              style={inputStyle}
-            />
-          )}
-        </label>
-
-        {/* 방문일 + 시간 */}
-        <div className="grid grid-cols-2 gap-3">
-          <label className="flex flex-col gap-1.5">
-            <span
-              className="text-xs font-semibold"
-              style={{ color: "#6b7280" }}>
-              방문일
-            </span>
-            <input
-              type="date"
-              value={form.visit_date}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, visit_date: e.target.value }))
-              }
-              style={inputStyle}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span
-              className="text-xs font-semibold"
-              style={{ color: "#6b7280" }}>
-              도착 시간
-            </span>
-            <div className="flex items-center gap-1">
-              <input
-                type="time"
-                value={form.visit_time}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, visit_time: e.target.value }))
-                }
-                style={{ ...inputStyle, flex: 1 }}
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  setForm((p) => ({
-                    ...p,
-                    visit_time: adjTime(p.visit_time, -30),
-                  }))
-                }
-                className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                style={{
-                  backgroundColor: "#f8fafc",
-                  color: "#64748b",
-                  border: "1px solid #dbe3f0",
-                }}>
-                －
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setForm((p) => ({
-                    ...p,
-                    visit_time: adjTime(p.visit_time, 30),
-                  }))
-                }
-                className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                style={{
-                  backgroundColor: "#f8fafc",
-                  color: "#64748b",
-                  border: "1px solid #dbe3f0",
-                }}>
-                ＋
-              </button>
-            </div>
-          </label>
-        </div>
-
-        {/* 금액 */}
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-semibold" style={{ color: "#6b7280" }}>
-            금액 (원)
-          </span>
-          <input
-            type="number"
-            value={form.price || ""}
-            onChange={(e) =>
-              setForm((p) => ({ ...p, price: parseInt(e.target.value) || 0 }))
-            }
-            placeholder="150000"
-            style={inputStyle}
-          />
-        </label>
-
-        {/* 기사 + 상태 */}
-        <div className="grid grid-cols-2 gap-3">
-          <label className="flex flex-col gap-1.5">
-            <span
-              className="text-xs font-semibold"
-              style={{ color: "#6b7280" }}>
-              기사
-            </span>
-            <select
-              value={form.tech}
-              onChange={(e) =>
-                setForm((p) => ({
-                  ...p,
-                  tech: e.target.value as Tech,
-                  memo: setExtraTechsInMemo(
-                    p.memo,
-                    getExtraTechsFromMemo(p.memo).filter(
-                      (t) => t !== (e.target.value as Tech),
-                    ),
-                  ),
-                }))
-              }
-              style={inputStyle}>
-              <option value="">미배정</option>
-              {TECHS.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-            <div className="mt-2 flex flex-col gap-1.5">
-              {extraTechs.map((tech, idx) => (
-                <div key={`${tech}-${idx}`} className="flex items-center gap-1.5">
-                  <select
-                    value={tech}
-                    onChange={(e) => {
-                      const next = [...extraTechs];
-                      next[idx] = e.target.value as Tech;
-                      setExtraTechs(next);
-                    }}
-                    style={{ ...inputStyle, padding: "7px 9px", fontSize: 12 }}>
-                    <option value="">동행 기사 선택</option>
-                    {TECHS.filter(
-                      (t) =>
-                        t !== form.tech && (!extraTechs.includes(t) || t === tech),
-                    ).map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => setExtraTechs(extraTechs.filter((_, i) => i !== idx))}
-                    className="rounded-xl px-2 py-1.5 text-xs font-bold"
-                    style={{
-                      backgroundColor: "#fef2f2",
-                      color: "#ef4444",
-                      border: "1px solid #fecaca",
-                    }}>
-                    제거
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => {
-                  const nextTech = TECHS.find(
-                    (t) => t !== form.tech && !extraTechs.includes(t),
-                  );
-                  if (nextTech) setExtraTechs([...extraTechs, nextTech]);
-                }}
-                disabled={!TECHS.some((t) => t !== form.tech && !extraTechs.includes(t))}
-                className="rounded-xl px-3 py-2 text-xs font-bold"
-                style={{
-                  backgroundColor: "#eff6ff",
-                  color: "#1f66ff",
-                  border: "1px solid #bfd3ff",
-                  opacity: TECHS.some((t) => t !== form.tech && !extraTechs.includes(t))
-                    ? 1
-                    : 0.45,
-                }}>
-                + 기사 추가
-              </button>
-            </div>
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span
-              className="text-xs font-semibold"
-              style={{ color: "#6b7280" }}>
-              상태
-            </span>
-            <select
-              value={form.status}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, status: e.target.value as Status }))
-              }
-              style={inputStyle}>
-              {STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        {/* AS 만료일 */}
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-semibold" style={{ color: "#6b7280" }}>
-            🛡 AS 만료일{" "}
-            <span className="ml-1 font-normal" style={{ color: "#94a3b8" }}>
-              (기본 1년)
-            </span>
-          </span>
-          <div className="flex gap-2 items-center">
-            <input
-              type="date"
-              value={form.as_until || ""}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, as_until: e.target.value }))
-              }
-              style={{ ...inputStyle, flex: 1 }}
-            />
-            <button
-              type="button"
-              onClick={() =>
-                setForm((p) => ({
-                  ...p,
-                  as_until: addOneYear(p.visit_date || today()),
-                }))
-              }
-              className="rounded-xl px-3 py-2 text-xs font-bold flex-shrink-0"
-              style={{
-                backgroundColor: "#f8fafc",
-                color: "#64748b",
-                border: "1px solid #dbe3f0",
-              }}>
-              1년
-            </button>
-          </div>
-        </label>
-
-        {/* 실측 토글 */}
+    <JobDialog labelledBy={titleId} busy={busy} onClose={requestClose}>
+      <div className={common.modalHeader}>
+        <h2 id={titleId}>{editId ? "일정 수정" : "일정 등록"}</h2>
         <button
           type="button"
-          onClick={() =>
-            setForm((p) => ({
-              ...p,
-              is_measurement: !p.is_measurement,
-              install_date: null,
-              install_time: null,
-              install_completed: false,
-            }))
-          }
-          className="flex items-center justify-between rounded-xl px-4 py-3"
-          style={{
-            backgroundColor: form.is_measurement ? "#a855f718" : "#ffffff",
-            border: `1px solid ${form.is_measurement ? "#a855f755" : "#dbe3f0"}`,
-          }}>
-          <div className="flex items-center gap-2.5">
-            <span className="text-base">📐</span>
-            <div className="text-left">
-              <p
-                className="text-sm font-bold"
-                style={{ color: form.is_measurement ? "#a855f7" : "#334155" }}>
-                실측 방문
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>
-                체크 시 완료해도 매출에 포함 안 됨
-              </p>
-            </div>
-          </div>
-          <div
-            className="rounded-full flex-shrink-0"
-            style={{
-              width: 44,
-              height: 24,
-              backgroundColor: form.is_measurement ? "#a855f7" : "#dbe3f0",
-              position: "relative",
-            }}>
-            <div
-              style={{
-                position: "absolute",
-                top: 3,
-                left: form.is_measurement ? 23 : 3,
-                width: 18,
-                height: 18,
-                borderRadius: "50%",
-                backgroundColor: "white",
-                transition: "left 0.2s",
-              }}
-            />
-          </div>
+          className={common.close}
+          aria-label="일정 창 닫기"
+          disabled={busy}
+          onClick={requestClose}
+        >
+          ×
         </button>
-
-        {/* 시공 날짜/시간 (실측일 때만) */}
-        {form.is_measurement && (
-          <div
-            className="rounded-xl p-4 flex flex-col gap-3"
-            style={{ backgroundColor: "#f8fafc", border: "1px solid #bfd3ff" }}>
-            <p className="text-xs font-bold" style={{ color: "#1f66ff" }}>
-              🔨 시공 날짜 · 시간{" "}
-              <span className="font-normal" style={{ color: "#94a3b8" }}>
-                (미정이면 비워두세요)
-              </span>
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <label className="flex flex-col gap-1.5">
-                <span
-                  className="text-xs font-semibold"
-                  style={{ color: "#6b7280" }}>
-                  시공 날짜
-                </span>
-                <input
-                  type="date"
-                  value={form.install_date || ""}
-                  onChange={(e) =>
-                    setForm((p) => ({
-                      ...p,
-                      install_date: e.target.value || null,
-                    }))
-                  }
-                  style={inputStyle}
-                />
-              </label>
-              <label className="flex flex-col gap-1.5">
-                <span
-                  className="text-xs font-semibold"
-                  style={{ color: "#6b7280" }}>
-                  시공 시간
-                </span>
-                <div className="flex items-center gap-1">
-                  <input
-                    type="time"
-                    value={form.install_time || ""}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        install_time: e.target.value || null,
-                      }))
-                    }
-                    style={{ ...inputStyle, flex: 1 }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((p) => ({
-                        ...p,
-                        install_time: adjTime(p.install_time || "00:00", -30),
-                      }))
-                    }
-                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                    style={{
-                      backgroundColor: "#f8fafc",
-                      color: "#64748b",
-                      border: "1px solid #dbe3f0",
-                    }}>
-                    －
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((p) => ({
-                        ...p,
-                        install_time: adjTime(p.install_time || "00:00", 30),
-                      }))
-                    }
-                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                    style={{
-                      backgroundColor: "#f8fafc",
-                      color: "#64748b",
-                      border: "1px solid #dbe3f0",
-                    }}>
-                    ＋
-                  </button>
-                </div>
-              </label>
-            </div>
-            {form.install_date && (
-              <button
-                type="button"
-                onClick={() =>
-                  setForm((p) => ({
-                    ...p,
-                    install_date: null,
-                    install_time: null,
-                  }))
-                }
-                className="text-xs font-bold py-2 rounded-xl"
-                style={{
-                  backgroundColor: "#ef444418",
-                  color: "#ef4444",
-                  border: "1px solid #ef444430",
-                }}>
-                시공 날짜 초기화
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* 접수 사진 */}
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-semibold" style={{ color: "#f59e0b" }}>
-            📷 접수 사진{" "}
-            <span className="font-normal" style={{ color: "#94a3b8" }}>
-              (고장 상태)
-            </span>
-          </span>
-          <div className="flex flex-col gap-2">
-            {intakeList.length > 0 && (
-              <div className="flex gap-2 flex-wrap">
-                {intakeList.map((url, idx) => (
-                  <div key={url} className="relative">
-                    <img
-                      src={url}
-                      alt={`접수 ${idx + 1}`}
-                      className="rounded-xl"
-                      style={{
-                        height: 172,
-                        width: 172,
-                        objectFit: "cover",
-                        border: "1px solid #f59e0b44",
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const next = intakeList.filter((_, i) => i !== idx);
-                        setForm((p) => ({
-                          ...p,
-                          intake_photos: next.length
-                            ? JSON.stringify(next)
-                            : "",
-                        }));
-                      }}
-                      className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
-                      style={{ backgroundColor: "#ef4444", color: "white" }}>
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <label
-              className="flex items-center gap-2 rounded-xl px-3 py-2.5 cursor-pointer"
-              style={{
-                backgroundColor: "#ffffff",
-                border: "1px dashed #f59e0b55",
-                color: "#f59e0b",
-              }}>
-              <span className="text-sm">📷</span>
-              <span className="text-xs font-semibold">
-                사진 추가 (갤러리 / 카메라)
+      </div>
+      <form ref={formElement} id={formId} className={s.body} onSubmit={handleSubmit} noValidate inert={saving} aria-busy={saving}>
+        <fieldset className={s.section}>
+          <legend>고객과 작업</legend>
+          <div className={s.pair}>
+            <label className={common.field}>
+              <span>
+                고객명 <small>필수</small>
               </span>
               <input
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={handleIntakeUpload}
+                name="name"
+                required
+                autoComplete="off"
+                placeholder="고객 이름"
+                value={form.name}
+                onChange={(event) => set("name", event.target.value)}
+                aria-invalid={invalid("name")}
+                aria-describedby={errorId("name")}
+              />
+              {errorLine("name")}
+            </label>
+            <label className={common.field}>
+              <span>연락처</span>
+              <input
+                type="tel"
+                autoComplete="off"
+                placeholder="010-0000-0000"
+                value={form.phone}
+                onChange={(event) => set("phone", event.target.value)}
               />
             </label>
           </div>
-        </label>
-
-        {/* 메모 */}
-        <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-semibold" style={{ color: "#6b7280" }}>
-            메모
-          </span>
-          <textarea
-            value={visibleMemo}
-            onChange={(e) =>
-              setForm((p) => ({
-                ...p,
-                memo: setExtraTechsInMemo(e.target.value, getExtraTechsFromMemo(p.memo)),
-              }))
-            }
-            placeholder="특이사항, 요청사항..."
-            rows={2}
-            style={{ ...inputStyle, resize: "none" }}
-          />
-        </label>
-
-        {/* 저장 버튼 */}
-        <button
-          onClick={onSave}
-          disabled={saving}
-          className="mt-1 rounded-xl py-3.5 text-sm font-bold text-white"
-          style={{ backgroundColor: "#1f66ff", opacity: saving ? 0.7 : 1 }}>
-          {saving ? "저장 중..." : editId ? "수정 완료" : "접수 저장"}
+          <label className={common.field}>
+            <span>
+              방문 주소 <small>필수</small>
+            </span>
+            <input
+              name="region"
+              required
+              autoComplete="off"
+              placeholder="주소 또는 지역"
+              value={form.region}
+              onChange={(event) => set("region", event.target.value)}
+              aria-invalid={invalid("region")}
+              aria-describedby={errorId("region")}
+            />
+            {errorLine("region")}
+          </label>
+          <div className={s.pair}>
+            <label className={common.field}>
+              <span>
+                작업 품목 <small>필수</small>
+              </span>
+              <select
+                aria-label="작업 품목"
+                required
+                name={customProduct ? undefined : "symptom"}
+                value={customProduct ? "__custom" : form.symptom}
+                aria-invalid={invalid("symptom") && !customProduct}
+                aria-describedby={!customProduct ? errorId("symptom") : undefined}
+                onChange={(event) => {
+                  setCustomProduct(event.target.value === "__custom");
+                  set("symptom", event.target.value === "__custom" ? "" : event.target.value);
+                }}
+              >
+                <option value="">품목 선택</option>
+                {PRODUCT_OPTIONS.map((product) => (
+                  <option key={product}>{product}</option>
+                ))}
+                <option value="__custom">직접 입력</option>
+              </select>
+              {!customProduct && errorLine("symptom")}
+            </label>
+            <label className={common.field}>
+              <span>주담당 기사</span>
+              <select
+                aria-label="주담당 기사"
+                name="tech"
+                value={form.tech}
+                onChange={(event) => {
+                  const tech = event.target.value as Tech;
+                  setForm((prev) => ({
+                    ...prev,
+                    tech,
+                    memo: setExtraTechsInMemo(
+                      prev.memo,
+                      getExtraTechsFromMemo(prev.memo).filter((t) => t !== tech),
+                    ),
+                  }));
+                }}
+              >
+                <option value="">미배정</option>
+                {TECHS.map((tech) => (
+                  <option key={tech}>{tech}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {customProduct && (
+            <label className={common.field}>
+              <span>품목 직접 입력</span>
+              <input
+                name="symptom"
+                required
+                value={form.symptom}
+                onChange={(event) => set("symptom", event.target.value)}
+                aria-invalid={invalid("symptom")}
+                aria-describedby={errorId("symptom")}
+              />
+              {errorLine("symptom")}
+            </label>
+          )}
+        </fieldset>
+        <fieldset className={s.section}>
+          <legend>방문 일정</legend>
+          <div className={s.pair}>
+            <label className={common.field}>
+              <span>방문일</span>
+              <input
+                name="visit_date"
+                required
+                type="date"
+                value={form.visit_date}
+                onChange={(event) => setVisitDate(event.target.value)}
+                aria-invalid={invalid("visit_date")}
+                aria-describedby={errorId("visit_date")}
+              />
+              {errorLine("visit_date")}
+            </label>
+            <ArrivalTime
+              name="visit_time"
+              label="도착 시각"
+              value={form.visit_time}
+              onChange={(time) => set("visit_time", time)}
+            />
+          </div>
+          <div className={s.typePicker} role="group" aria-label="방문 유형">
+            <button type="button" aria-pressed={!form.is_measurement} onClick={() => setVisitType(false)}>
+              일반 작업
+            </button>
+            <button type="button" aria-pressed={form.is_measurement} onClick={() => setVisitType(true)}>
+              실측 후 시공
+            </button>
+          </div>
+          {form.is_measurement && (
+            <div className={s.install}>
+              <p>시공 일정은 실측 후에도 입력할 수 있어요.</p>
+              <div className={s.pair}>
+                <label className={common.field}>
+                  <span>시공일</span>
+                  <input
+                    type="date"
+                    name="install_date"
+                    value={form.install_date || ""}
+                    onChange={(event) => set("install_date", event.target.value || null)}
+                  />
+                </label>
+                <ArrivalTime
+                  name="install_time"
+                  label="시공 시각"
+                  value={form.install_time || ""}
+                  onChange={(time) => set("install_time", time || null)}
+                />
+              </div>
+              {(form.install_date || form.install_time) && (
+                <button
+                  type="button"
+                  className={s.textButton}
+                  onClick={() => {
+                    setForm((prev) => ({ ...prev, install_date: null, install_time: null }));
+                  }}
+                >
+                  시공 일정 비우기
+                </button>
+              )}
+            </div>
+          )}
+        </fieldset>
+        <div className={s.additional}>
+          <Section
+            title="견적·A/S"
+            summary={form.price ? form.price.toLocaleString("ko-KR") + "원" : undefined}
+          >
+            <label className={common.field}>
+              <span>견적 금액 (원)</span>
+              <input
+                type="number"
+                inputMode="numeric"
+                placeholder="예) 150000"
+                value={form.price || ""}
+                onChange={(event) => set("price", parseInt(event.target.value) || 0)}
+              />
+            </label>
+            <label className={common.field}>
+              <span>A/S 만료일</span>
+              <input
+                type="date"
+                value={form.as_until || ""}
+                onChange={(event) => {
+                  autoWarranty.current = false;
+                  set("as_until", event.target.value);
+                }}
+              />
+            </label>
+            <button
+              type="button"
+              className={s.textButton}
+              onClick={() => {
+                autoWarranty.current = true;
+                set("as_until", addOneYear(form.visit_date || today()));
+              }}
+            >
+              방문일 기준 1년 적용
+            </button>
+          </Section>
+          <Section
+            title="동행 기사·진행 상태"
+            summary={[extra.length ? extra.length + "명" : "", form.status].filter(Boolean).join(" · ")}
+          >
+            <div className={s.pair}>
+              <label className={common.field}>
+                <span>동행 기사</span>
+                <select
+                  aria-label="동행 기사"
+                  value=""
+                  onChange={(event) => {
+                    if (event.target.value) setExtra([...extra, event.target.value as Tech]);
+                  }}
+                  disabled={!TECHS.some((tech) => tech !== form.tech && !extra.includes(tech))}
+                >
+                  <option value="">동행 기사 추가</option>
+                  {TECHS.filter((tech) => tech !== form.tech && !extra.includes(tech)).map((tech) => (
+                    <option key={tech}>{tech}</option>
+                  ))}
+                </select>
+              </label>
+              <label className={common.field}>
+                <span>진행 상태</span>
+                <select
+                  aria-label="진행 상태"
+                  value={form.status}
+                  onChange={(event) => {
+                    const status = event.target.value as Status;
+                    setForm((prev) => ({
+                      ...prev,
+                      status,
+                      install_completed: status === "완료" && prev.is_measurement && original.install_completed,
+                    }));
+                  }}
+                >
+                  {statusOptions.map((status) => (
+                    <option key={status}>{status}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {!!extra.length && (
+              <div className={common.crewChips}>
+                {extra.map((tech) => (
+                  <button
+                    type="button"
+                    key={tech}
+                    aria-label={tech + " 동행에서 제외"}
+                    onClick={() => setExtra(extra.filter((t) => t !== tech))}
+                  >
+                    {tech} ×
+                  </button>
+                ))}
+              </div>
+            )}
+            {original.status !== "완료" && (
+              <p className={s.hint}>작업 완료는 현장 일정의 작업 카드에서 처리해 주세요.</p>
+            )}
+          </Section>
+          <Section
+            title="사진·현장 메모"
+            summary={[
+              photos.length ? "사진 " + photos.length + "장" : "",
+              visibleMemo.trim() ? "메모 있음" : "",
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          >
+            <JobPhotoEditor
+              label="접수 사진"
+              storagePrefix="intake"
+              photos={photos}
+              onChange={(urls) => set("intake_photos", urls.length ? JSON.stringify(urls) : "")}
+              onBusyChange={setUploading}
+              onUnresolvedChange={setUnresolvedPhotos}
+              disabled={saving}
+            />
+            <label className={common.field}>
+              <span>현장 메모</span>
+              <textarea
+                rows={3}
+                value={visibleMemo}
+                onChange={(event) => {
+                  const memo = event.target.value;
+                  setForm((prev) => ({
+                    ...prev,
+                    memo: setExtraTechsInMemo(memo, getExtraTechsFromMemo(prev.memo)),
+                  }));
+                }}
+                placeholder="출입 방법, 작업 시 요청사항 등"
+              />
+            </label>
+          </Section>
+        </div>
+      </form>
+      <div className={common.modalFooter}>
+        {saveError && <p className={common.validation} role="alert">{saveError}</p>}
+        {submitted && Object.values(errors).some(Boolean) && (
+          <p className={common.validation} role="alert">
+            표시된 항목을 확인해 주세요.
+          </p>
+        )}
+        {unresolvedPhotos && (
+          <p className={common.validation} role="alert">
+            저장 전에 실패한 사진을 다시 올리거나 제외해 주세요.
+          </p>
+        )}
+        <button type="submit" form={formId} className={common.primary} disabled={busy || unresolvedPhotos}>
+          {uploading ? "사진 업로드 중…" : saving ? "저장 중…" : editId ? "변경 사항 저장" : "일정 등록"}
         </button>
       </div>
-    </div>
+      {confirmDismiss && (
+        <JobDialog labelledBy={dismissId} onClose={() => setConfirmDismiss(false)}>
+          <div className={s.discard}>
+            <h3 id={dismissId}>저장하지 않고 닫을까요?</h3>
+            <p>지금까지 입력한 변경 사항이 사라져요.</p>
+            <div>
+              <button type="button" className={common.neutral} onClick={onClose}>
+                저장하지 않고 닫기
+              </button>
+              <button
+                type="button"
+                className={common.primary}
+                autoFocus
+                onClick={() => setConfirmDismiss(false)}
+              >
+                계속 작성
+              </button>
+            </div>
+          </div>
+        </JobDialog>
+      )}
+    </JobDialog>
   );
 }

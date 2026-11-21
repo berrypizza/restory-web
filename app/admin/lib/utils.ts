@@ -35,7 +35,7 @@ export function formatDate(d: string) {
 export function formatFullDate(d: string) {
   if (!d) return "-";
   const [y, m, day] = d.split("-");
-  const dow = ["일", "월", "화", "수", "목", "금", "토"][new Date(d).getDay()];
+  const dow = ["일", "월", "화", "수", "목", "금", "토"][new Date(d).getUTCDay()];
   return `${y}년 ${parseInt(m)}월 ${parseInt(day)}일 (${dow})`;
 }
 
@@ -44,12 +44,12 @@ export function formatYearMonth(ym: string) {
   return `${y}년 ${parseInt(m)}월`;
 }
 
-export function formatTime(t: string) {
+export function formatTime(t?: string | null) {
   if (!t) return "";
   const [h, m] = t.split(":");
   const hour = parseInt(h);
   const min = parseInt(m || "0");
-  const ampm = hour < 12 ? "AM" : "PM";
+  const ampm = hour < 12 ? "오전" : "오후";
   const h12 = hour % 12 || 12;
   return min > 0 ? `${ampm} ${h12}시 ${min}분` : `${ampm} ${h12}시`;
 }
@@ -72,12 +72,12 @@ export function pad(n: number) {
 
 // ── 가격 ─────────────────────────────────────────────────────
 export function formatPrice(p: number) {
-  if (p >= 10000) {
+  if (p >= 10000 && p % 1000 === 0) {
     const man = Math.floor(p / 10000);
     const cheon = Math.floor((p % 10000) / 1000);
     return cheon > 0 ? `${man}만 ${cheon}천원` : `${man}만원`;
   }
-  return `${p.toLocaleString()}원`;
+  return `${p.toLocaleString("ko-KR")}원`;
 }
 
 // ── 캘린더 ───────────────────────────────────────────────────
@@ -96,7 +96,7 @@ export function compressImage(
   maxWidth = 1280,
   quality = 0.75,
 ): Promise<Blob> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const img = new window.Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
@@ -109,8 +109,20 @@ export function compressImage(
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
-      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
-      canvas.toBlob((blob) => resolve(blob!), "image/jpeg", quality);
+      const context = canvas.getContext("2d");
+      if (!context) {
+        reject(new Error("사진을 처리할 수 없어요."));
+        return;
+      }
+      context.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob);
+        else reject(new Error("사진을 압축하지 못했어요."));
+      }, "image/jpeg", quality);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("사진 파일을 읽을 수 없어요."));
     };
     img.src = url;
   });
@@ -119,7 +131,7 @@ export function compressImage(
 // ── 기타 ─────────────────────────────────────────────────────
 export function reviewSms(job: { name: string; phone: string }) {
   return encodeURIComponent(
-    `안녕하세요 ${job.name}님, 리스토리입니다 😊\n지난번 가구 수리 잘 쓰고 계신가요?\n\n네이버 지도에 후기 남겨주시면 정말 큰 힘이 됩니다.\nhttps://naver.me/XXXXXXXX\n\n감사합니다 🙏`,
+    `안녕하세요 ${job.name}님, 리스토리입니다 😊\n지난번 가구 수리 잘 쓰고 계신가요?\n\n네이버 지도에서 리스토리를 찾아 후기를 남겨주시면 정말 큰 힘이 됩니다.\n\n감사합니다 🙏`,
   );
 }
 

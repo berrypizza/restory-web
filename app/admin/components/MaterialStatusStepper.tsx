@@ -1,36 +1,32 @@
 "use client";
 
-import type { MaterialStatus } from "../lib/constants";
-import { MATERIAL_STATUSES, MATERIAL_STATUS_STYLE } from "../lib/constants";
+import { MATERIAL_STATUSES, type MaterialStatus } from "../lib/constants";
+import s from "../tabs/reporting.module.css";
 
 export default function MaterialStatusStepper({
   status,
   onChange,
+  disabled = false,
 }: {
   status: MaterialStatus;
   onChange: (status: MaterialStatus) => void;
+  disabled?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-1 w-full">
-      {MATERIAL_STATUSES.map((s) => {
-        const active = s === status;
-        const style = MATERIAL_STATUS_STYLE[s];
-        return (
-          <button
-            key={s}
-            type="button"
-            onClick={() => onChange(s)}
-            className="flex-1 text-center text-[11px] font-bold py-1.5 rounded-lg"
-            style={{
-              backgroundColor: active ? style.color : "#f8fafc",
-              color: active ? "#ffffff" : "#94a3b8",
-              border: `1px solid ${active ? style.color : "#e5e7eb"}`,
-              transition: "all 0.15s",
-            }}>
-            {s}
-          </button>
-        );
-      })}
+    <div className={s.stepper} role="group" aria-label="자재 준비 상태">
+      {MATERIAL_STATUSES.map((step) => (
+        <button
+          key={step}
+          type="button"
+          aria-pressed={status === step}
+          disabled={disabled}
+          onClick={() => {
+            if (status !== step) onChange(step);
+          }}
+        >
+          {step}
+        </button>
+      ))}
     </div>
   );
 }

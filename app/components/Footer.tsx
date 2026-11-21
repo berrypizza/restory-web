@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
   const [contactOpen, setContactOpen] = useState(false);
   const pathname = usePathname();
+  if (pathname === "/admin" || pathname?.startsWith("/admin/")) return null;
   if (pathname === "/academy" || pathname?.startsWith("/academy/")) return null;
 
   return (
