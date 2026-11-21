@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffectEvent, useId, useLayoutEffect, useRef, useState, type UIEvent } from "react";
 import JobDialog from "./JobDialog";
 import s from "./jobPhotos.module.css";
 
@@ -19,12 +19,60 @@ export default function JobPhotoViewer({
 }) {
   const [position, setPosition] = useState(start);
   const titleId = useId();
-  const touch = useRef<{ x: number; y: number } | null>(null);
-  const index = Math.min(position, photos.length - 1);
+  const stage = useRef<HTMLDivElement>(null);
+  const pageWidth = useRef(0);
+  const requested = useRef<number | null>(null);
+  const hasPhotos = photos.length > 0;
+  const index = Math.max(0, Math.min(position, photos.length - 1));
   const current = photos[index];
-  function move(step: number) {
-    setPosition(Math.max(0, Math.min(index + step, photos.length - 1)));
+
+  const alignPage = useEffectEvent(() => {
+    const viewport = stage.current;
+    if (!viewport || !viewport.clientWidth || viewport.clientWidth === pageWidth.current) return;
+    pageWidth.current = viewport.clientWidth;
+    viewport.scrollTo({ left: (requested.current ?? index) * pageWidth.current, behavior: "instant" });
+  });
+
+  useLayoutEffect(() => {
+    const viewport = stage.current;
+    if (!viewport) return;
+    alignPage();
+    const observer = new ResizeObserver(() => alignPage());
+    observer.observe(viewport);
+    return () => {
+      observer.disconnect();
+      pageWidth.current = 0;
+    };
+  }, [hasPhotos]);
+
+  function goTo(photoIndex: number, behavior: ScrollBehavior = "auto") {
+    const viewport = stage.current;
+    if (!viewport) return;
+    const next = Math.max(0, Math.min(photoIndex, photos.length - 1));
+    requested.current = next;
+    viewport.scrollTo({ left: next * viewport.clientWidth, behavior });
   }
+
+  function move(step: number) {
+    goTo((requested.current ?? index) + step);
+  }
+
+  function followScroll(event: UIEvent<HTMLDivElement>) {
+    const viewport = event.currentTarget;
+    const width = viewport.clientWidth;
+    // ResizeObserver realigns the same photo before we read offsets at the new width.
+    if (!width || width !== pageWidth.current) return;
+    const nearest = Math.round(viewport.scrollLeft / width);
+    if (requested.current === nearest && Math.abs(viewport.scrollLeft - nearest * width) < 1) {
+      requested.current = null;
+    }
+    setPosition(nearest);
+  }
+
+  function takeOverScroll() {
+    requested.current = null;
+  }
+
   if (!current) return null;
   const groups = Array.from(
     new Set(photos.map((photo) => photo.group).filter((group): group is string => Boolean(group))),
@@ -40,18 +88,21 @@ export default function JobPhotoViewer({
     /* Local and legacy paths can be opened through their original URL. */
   }
   return (
-    <JobDialog labelledBy={titleId} onClose={onClose} wide>
-      <div
-        className={s.viewer}
-        onKeyDown={(event) => {
-          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-            event.preventDefault();
-            move(event.key === "ArrowLeft" ? -1 : 1);
-          }
-        }}
-      >
+    <JobDialog
+      labelledBy={titleId}
+      onClose={onClose}
+      wide
+      onKeyDown={(event) => {
+        if (event.altKey || event.metaKey || event.ctrlKey) return;
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          move(event.key === "ArrowLeft" ? -1 : 1);
+        }
+      }}
+    >
+      <div className={s.viewer}>
         <header className={s.viewerHeader}>
-          <div aria-live="polite">
+          <div aria-live="polite" aria-atomic="true">
             <h2 id={titleId}>{current.label}</h2>
             <span>
               {index + 1} / {photos.length}
@@ -75,7 +126,7 @@ export default function JobPhotoViewer({
                 key={group}
                 type="button"
                 aria-pressed={group === current.group}
-                onClick={() => setPosition(photos.findIndex((photo) => photo.group === group))}
+                onClick={() => goTo(photos.findIndex((photo) => photo.group === group), "instant")}
               >
                 {group} {photos.filter((photo) => photo.group === group).length}
               </button>
@@ -83,32 +134,36 @@ export default function JobPhotoViewer({
           </div>
         )}
         <div
+          ref={stage}
           className={s.stage}
-          onTouchStart={(event) => {
-            touch.current =
-              event.touches.length === 1
-                ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
-                : null;
-          }}
-          onTouchEnd={(event) => {
-            if (!touch.current || event.touches.length) return;
-            const dx = event.changedTouches[0].clientX - touch.current.x;
-            const dy = event.changedTouches[0].clientY - touch.current.y;
-            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) move(dx < 0 ? 1 : -1);
-            touch.current = null;
-          }}
+          role="region"
+          aria-label="현장 사진"
+          tabIndex={photos.length > 1 ? 0 : undefined}
+          onScroll={followScroll}
+          onPointerDown={takeOverScroll}
+          onWheel={takeOverScroll}
         >
-          {/* Field photos may use Supabase storage or a legacy image URL. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img key={current.url} src={current.url} alt={current.label} />
+          {photos.map((photo, i) => (
+            <div key={`${i}-${photo.url}`} className={s.slide} aria-hidden={i !== index}>
+              {/* Field photos may use Supabase storage or a legacy image URL. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photo.url}
+                alt={photo.label}
+                loading={Math.abs(i - index) <= 1 ? "eager" : "lazy"}
+                draggable={false}
+              />
+            </div>
+          ))}
         </div>
         <footer className={s.viewerFoot}>
           {photos.length > 1 && (
             <button
               type="button"
               className={s.secondary}
-              disabled={index === 0}
-              onClick={() => move(-1)}
+              aria-disabled={index === 0}
+              tabIndex={index === 0 ? -1 : undefined}
+              onClick={index === 0 ? undefined : () => move(-1)}
             >
               이전 사진
             </button>
@@ -126,8 +181,9 @@ export default function JobPhotoViewer({
             <button
               type="button"
               className={s.secondary}
-              disabled={index === photos.length - 1}
-              onClick={() => move(1)}
+              aria-disabled={index === photos.length - 1}
+              tabIndex={index === photos.length - 1 ? -1 : undefined}
+              onClick={index === photos.length - 1 ? undefined : () => move(1)}
             >
               다음 사진
             </button>
