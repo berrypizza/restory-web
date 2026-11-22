@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { PRODUCT_OPTIONS } from "../admin/lib/products";
+import { isProductOption, PRODUCT_OPTIONS } from "../admin/lib/products";
 import PhotoPicker, { type SelectedPhoto } from "./PhotoPicker";
 import s from "./request.module.css";
 
-export default function CustomerRequestForm() {
-  const [product, setProduct] = useState("");
+export default function CustomerRequestForm({ initialItem = "" }: { initialItem?: string }) {
+  const customItem = initialItem && !isProductOption(initialItem) ? initialItem : "";
+  const [product, setProduct] = useState(customItem ? "custom" : initialItem);
   const [phase, setPhase] = useState<"ready" | "sending" | "done">("ready");
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
@@ -72,7 +73,7 @@ export default function CustomerRequestForm() {
           {PRODUCT_OPTIONS.map(item => <option key={item}>{item}</option>)}
           <option value="custom">기타 · 직접 입력</option>
         </select></label>
-        {product === "custom" && <label>상담할 품목<input name="customItem" placeholder="어떤 가구나 수리가 필요한가요?" maxLength={100} required /></label>}
+        {product === "custom" && <label>상담할 품목<input name="customItem" defaultValue={customItem} placeholder="어떤 가구나 수리가 필요한가요?" maxLength={100} required /></label>}
         <label>이름<input name="name" autoComplete="name" maxLength={60} placeholder="성함" required /></label>
         <label>전화번호<input name="phone" type="tel" autoComplete="tel-national" inputMode="tel" maxLength={23} placeholder="010-0000-0000" required /></label>
         <label>방문 주소<input name="address" autoComplete="street-address" minLength={2} maxLength={250} placeholder="도로명 또는 지번, 동·호수" required /></label>
