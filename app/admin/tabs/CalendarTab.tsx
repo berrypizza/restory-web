@@ -7,6 +7,7 @@ import type { Tech } from "../lib/constants";
 import { formatFullDate, getCalendarDays, pad, today } from "../lib/utils";
 import { jobHasTech } from "../lib/jobTechs";
 import { indexVisits, shiftDay, visitDone } from "../lib/schedule";
+import { dailyRevenue, won } from "../lib/settlement";
 import JobCard from "../components/JobCard";
 import { MonthControls, TechnicianFilter } from "../components/ScheduleControls";
 import s from "../operations.module.css";
@@ -42,10 +43,12 @@ export default function CalendarTab({jobs, view, onView, selectedDay, onSelectDa
     ? Array.from({length: 7}, (_, index) => shiftDay(start, index))
     : getCalendarDays(year, month - 1).map(day => day ? `${monthKey}-${pad(day)}` : null);
 
-  const byDate = useMemo(
-    () => indexVisits(jobs.filter(job => jobHasTech(job, calTechFilter))),
+  const calendarJobs = useMemo(
+    () => jobs.filter(job => jobHasTech(job, calTechFilter)),
     [jobs, calTechFilter],
   );
+  const byDate = useMemo(() => indexVisits(calendarJobs), [calendarJobs]);
+  const revenue = useMemo(() => dailyRevenue(calendarJobs, selectedDay), [calendarJobs, selectedDay]);
   const visits = byDate.get(selectedDay) ?? [];
   const finished = visits.filter(visitDone).length;
   const cancelled = visits.filter(v => v.job.status === "취소").length;
@@ -81,6 +84,16 @@ export default function CalendarTab({jobs, view, onView, selectedDay, onSelectDa
           </button>;
         })}
       </div>
+      <dl className={schedule.dayRevenue} aria-label={`${formatFullDate(selectedDay)} 매출`} aria-live="polite" aria-atomic="true">
+        <div>
+          <dt>예상 매출</dt>
+          <dd>{won(revenue.expected)}</dd>
+        </div>
+        <div>
+          <dt>완료 매출</dt>
+          <dd>{won(revenue.completed)}</dd>
+        </div>
+      </dl>
       <div className={schedule.calendarFoot}>
         <TechnicianFilter value={calTechFilter} onChange={setCalTechFilter} isAdmin={isAdmin} loggedUser={loggedUser}/>
         <label className={schedule.jump}>

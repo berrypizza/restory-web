@@ -26,6 +26,26 @@
 .day:hover{background:#edf2fa}
 .day[aria-current=date] > span{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .day[aria-pressed=true],.day[aria-pressed=true] small{color:#fff;background:#2056c5}
+.dayRevenue {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0 10px 8px;
+}
+.dayRevenue > div { min-width: 0; padding: 7px 12px; border-radius: 10px; background: #f5f7fa; }
+.dayRevenue dt { color: #506178; font-size: 12px; line-height: 1.35; font-weight: 600; }
+.dayRevenue dd {
+  margin: 2px 0 0;
+  color: #192536;
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.dayRevenue > div:last-child { background: #eef4ff; }
+.dayRevenue > div:last-child dd { color: #1c55b4; }
 .calendarFoot {display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid #e4eaf0}
 .calendarFoot select,.calendarFoot > span {margin-right:auto}
 .calendarFoot button,.jump {border:0;background:transparent;padding:0 8px;min-height:44px;display:inline-flex;align-items:center;color:#365476;font-size:13px;font-weight:650}
