@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
 import { SITE_URL } from "@/lib/landing-seo";
 import { hasAttachedPhoto, newConversation, readConversation, saveConversation, type Conversation, type SkillRequest } from "./conversation";
-import { answerTurn, fallback, RITORI_GREETING, type Reply } from "./replies";
+import { answerTurn, COUNSELOR_GREETING, COUNSELOR_LABEL, fallback, type Reply } from "./replies";
 import { INTAKE_LABEL, services } from "@/lib/consultation-services";
 
 export const runtime = "nodejs";
 export const maxDuration = 5;
 
 const AI_RESPONSE_TIMEOUT_MS = 1800;
-const RITORI_PHOTO = {
+const COUNSELOR_PHOTO = {
   imageUrl: new URL("/images/ritori-counselor.png", SITE_URL).href,
-  altText: "리스토리 AI 상담사 리토리",
+  altText: COUNSELOR_LABEL,
 };
-const SYSTEM_PROMPT = `너는 가구 수리·리폼 전문 리스토리의 AI 상담사 리토리다.
+const SYSTEM_PROMPT = `너는 ${COUNSELOR_LABEL}다. 가구 수리·리폼 상담을 맡는다.
 고객이 물어본 것부터 쉬운 한국어 해요체로 답한다. 두세 문장, 180자 이내로 쓴다.
 접수 양식과 상담원 연결은 답변 아래 버튼에서 안내하므로 질문에 대한 답만 쓴다.
 이미 알려준 지역이나 보낸 사진을 다시 요구하지 않는다. 사진이 없으면 글로도 상담할 수 있다.
@@ -29,7 +29,7 @@ function respond(reply: Reply, context: Conversation, firstTurn: boolean) {
   const showIntake = !context.submitted || reply.firstButton === "intake";
   const buttons = showIntake ? [intake, operator] : [operator];
   if (showIntake && reply.firstButton === "operator") buttons.reverse();
-  const title = firstTurn ? RITORI_GREETING : reply.title;
+  const title = firstTurn ? COUNSELOR_GREETING : reply.title;
   const answer = reply.title && reply.title !== title ? `${reply.title}\n${reply.text}` : reply.text;
   const introduceForm = showIntake && firstTurn && !reply.firstButton;
   const description = introduceForm
@@ -40,13 +40,13 @@ function respond(reply: Reply, context: Conversation, firstTurn: boolean) {
   }));
   const card = { title, description, buttons, buttonLayout: "horizontal" };
   let outputs;
-  if (title !== RITORI_GREETING) {
+  if (title !== COUNSELOR_GREETING) {
     outputs = [{ textCard: card }];
   } else if (description.length <= 230) {
-    outputs = [{ basicCard: { ...card, thumbnail: { ...RITORI_PHOTO, fixedRatio: true } } }];
+    outputs = [{ basicCard: { ...card, thumbnail: { ...COUNSELOR_PHOTO, fixedRatio: true } } }];
   } else {
     // Kakao limits the image card description to 230 characters.
-    outputs = [{ simpleImage: RITORI_PHOTO }, { textCard: card }];
+    outputs = [{ simpleImage: COUNSELOR_PHOTO }, { textCard: card }];
   }
 
   return NextResponse.json({

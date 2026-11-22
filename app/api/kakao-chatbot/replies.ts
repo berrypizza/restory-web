@@ -9,7 +9,8 @@ export type Reply = {
   choices?: readonly Choice[];
 };
 
-export const RITORI_GREETING = "안녕하세요, 리스토리 AI 상담사 리토리예요";
+export const COUNSELOR_LABEL = "리스토리 AI 상담사 리사";
+export const COUNSELOR_GREETING = `안녕하세요, ${COUNSELOR_LABEL}예요`;
 
 const PRICE: Choice = ["예상 비용", "예상 비용이 궁금해요"];
 const VISIT: Choice = ["방문 일정", "언제 방문할 수 있나요?"];
@@ -24,7 +25,7 @@ const intake: Reply = {
   firstButton: "intake",
 };
 const welcome: Reply = {
-  title: RITORI_GREETING,
+  title: COUNSELOR_GREETING,
   text: `궁금한 점은 이 채팅에서 바로 물어보세요.\n아래 ‘${INTAKE_LABEL}’로 상담 내용을 남겨 주시면 담당자가 연락드려요.`,
   firstButton: "intake",
   choices: [PRICE, VISIT, AREA],

@@ -5,7 +5,7 @@ import test from "node:test";
 const { parse } = createRequire(import.meta.url)("next/dist/compiled/node-html-parser");
 const base = process.env.SERVICE_TEST_BASE_URL;
 const form = "https://www.restorystudio.co.kr/request";
-const greeting = "안녕하세요, 리스토리 AI 상담사 리토리예요";
+const greeting = "안녕하세요, 리스토리 AI 상담사 리사예요";
 const intakeLabel = "빠른 상담 접수";
 const portrait = new URL("/images/ritori-counselor.png", form);
 
@@ -25,7 +25,7 @@ function checkIntake(reply) {
   assert.match(card.description, /확인한 뒤.*답변/);
 }
 
-test("Ritori welcomes customers to chat or open the quick intake form", { skip: !base }, async () => {
+test("Lisa welcomes customers to chat or open the quick intake form", { skip: !base }, async () => {
   for (const payload of [
     { userRequest: { utterance: "", block: { name: "웰컴 블록" } } },
     { userRequest: { utterance: "안녕하세요!" } },
@@ -35,7 +35,7 @@ test("Ritori welcomes customers to chat or open the quick intake form", { skip: 
     const card = checkFirstForm(reply);
     assert.equal(card.title, greeting);
     assert.deepEqual(reply.template.outputs.map(output => Object.keys(output)), [["basicCard"]]);
-    assert.deepEqual(card.thumbnail, { imageUrl: portrait.href, altText: "리스토리 AI 상담사 리토리", fixedRatio: true });
+    assert.deepEqual(card.thumbnail, { imageUrl: portrait.href, altText: "리스토리 AI 상담사 리사", fixedRatio: true });
     assert.match(card.description, /채팅에서 바로 물어보세요/);
     assert.match(card.description, /빠른 상담 접수.*담당자가 연락/);
     assert.deepEqual(card.buttons.map(button => button.action), ["webLink", "operator"]);
