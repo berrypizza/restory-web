@@ -8,6 +8,10 @@ export const runtime = "nodejs";
 export const maxDuration = 5;
 
 const AI_RESPONSE_TIMEOUT_MS = 1800;
+const RITORI_PHOTO = {
+  imageUrl: new URL("/images/ritori-counselor.png", SITE_URL).href,
+  altText: "리스토리 AI 상담사 리토리",
+};
 const SYSTEM_PROMPT = `너는 가구 수리·리폼 전문 리스토리의 AI 상담사 리토리다.
 고객이 물어본 것부터 쉬운 한국어 해요체로 답한다. 두세 문장, 180자 이내로 쓴다.
 접수 양식과 상담원 연결은 답변 아래 버튼에서 안내하므로 질문에 대한 답만 쓴다.
@@ -34,11 +38,21 @@ function respond(reply: Reply, context: Conversation, firstTurn: boolean) {
   const quickReplies = reply.choices?.map(([label, messageText]) => ({
     label, action: "message", messageText, extra: { consultation: context },
   }));
+  const card = { title, description, buttons, buttonLayout: "horizontal" };
+  let outputs;
+  if (title !== RITORI_GREETING) {
+    outputs = [{ textCard: card }];
+  } else if (description.length <= 230) {
+    outputs = [{ basicCard: { ...card, thumbnail: { ...RITORI_PHOTO, fixedRatio: true } } }];
+  } else {
+    // Kakao limits the image card description to 230 characters.
+    outputs = [{ simpleImage: RITORI_PHOTO }, { textCard: card }];
+  }
 
   return NextResponse.json({
     version: "2.0",
     template: {
-      outputs: [{ textCard: { title, description, buttons, buttonLayout: "horizontal" } }],
+      outputs,
       quickReplies,
     },
     data: { answer: [title, description, showIntake && `${INTAKE_LABEL}\n${intakeUrl.href}`].filter(Boolean).join("\n\n") },

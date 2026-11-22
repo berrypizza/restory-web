@@ -7,6 +7,7 @@ const base = process.env.SERVICE_TEST_BASE_URL;
 const form = "https://www.restorystudio.co.kr/request";
 const greeting = "안녕하세요, 리스토리 AI 상담사 리토리예요";
 const intakeLabel = "빠른 상담 접수";
+const portrait = new URL("/images/ritori-counselor.png", form);
 
 async function ask(payload) {
   const response = await fetch(new URL("/api/kakao-chatbot", base), {
@@ -33,11 +34,16 @@ test("Ritori welcomes customers to chat or open the quick intake form", { skip: 
     const reply = await ask(payload);
     const card = checkFirstForm(reply);
     assert.equal(card.title, greeting);
+    assert.deepEqual(reply.template.outputs.map(output => Object.keys(output)), [["basicCard"]]);
+    assert.deepEqual(card.thumbnail, { imageUrl: portrait.href, altText: "리스토리 AI 상담사 리토리", fixedRatio: true });
     assert.match(card.description, /채팅에서 바로 물어보세요/);
     assert.match(card.description, /빠른 상담 접수.*담당자가 연락/);
     assert.deepEqual(card.buttons.map(button => button.action), ["webLink", "operator"]);
     assert.equal(reply.data.answer.split(greeting).length - 1, 1);
   }
+  const photo = await fetch(new URL(portrait.pathname, base));
+  assert.equal(photo.status, 200);
+  assert.match(photo.headers.get("content-type") ?? "", /^image\/png/);
 });
 
 test("both Kakao intake block names and typed intake commands open the form", { skip: !base }, async () => {
@@ -53,7 +59,7 @@ test("both Kakao intake block names and typed intake commands open the form", { 
 test("asking for the form after submitting a chat photo still opens the form", { skip: !base }, async () => {
   const user = { id: `form-verification-${crypto.randomUUID()}` };
   const photo = await ask({ userRequest: { user, utterance: "" }, action: { params: { image: "test.jpg" } } });
-  const buttons = photo.template.outputs[0].textCard.buttons;
+  const buttons = checkCard(photo).buttons;
   assert.ok(buttons.some(button => button.action === "operator"));
   assert.ok(buttons.some(button => button.webLinkUrl === form));
   checkIntake(await ask({ userRequest: { user, utterance: "상담 접수" } }));
@@ -64,13 +70,15 @@ function message(utterance, user, action) {
 }
 
 function checkCard(reply) {
-  const { textCard } = reply.template.outputs[0];
+  const output = reply.template.outputs.at(-1);
+  const card = output.basicCard ?? output.textCard;
   assert.equal(reply.version, "2.0");
-  assert.ok(textCard.description);
-  assert.ok((textCard.title ?? "").length + textCard.description.length <= 400);
-  assert.ok(textCard.buttons.length <= 2 && textCard.buttons.every(button => button.label.length <= 8));
-  assert.ok(reply.data.answer.includes(textCard.description));
-  return textCard;
+  assert.ok(card.description);
+  if (output.basicCard) assert.ok(card.description.length <= 230);
+  assert.ok((card.title ?? "").length + card.description.length <= 400);
+  assert.ok(card.buttons.length <= 2 && card.buttons.every(button => button.label.length <= 8));
+  assert.ok(reply.data.answer.includes(card.description));
+  return card;
 }
 
 function checkFirstForm(reply, expectedService = null) {
@@ -91,8 +99,10 @@ test("the first answer invites form completion for greetings, direct questions a
     ["인천에서 싱크대 문짝 교체 비용이 얼마예요?", "doors"],
     ["소파가 꺼졌어요", "sofa"], ["", null, { params: { image: "room.jpg" } }],
   ]) {
-    const card = checkFirstForm(await message(utterance, undefined, action), service ?? null);
+    const reply = await message(utterance, undefined, action);
+    const card = checkFirstForm(reply, service ?? null);
     assert.equal(card.title, greeting);
+    assert.equal((card.thumbnail ?? reply.template.outputs[0].simpleImage).imageUrl, portrait.href);
     assert.match(card.description, /양식|접수/);
     assert.ok(card.buttons.some(button => button.action === "operator"));
   }
@@ -106,6 +116,7 @@ test("a customer can tap from the cost question to a service and its photo guide
     assert.equal(chip.action, "message");
     reply = await message(chip.messageText, undefined, { clientExtra: chip.extra });
     assert.ok(!reply.data.answer.includes(greeting));
+    assert.deepEqual(reply.template.outputs.map(output => Object.keys(output)), [["textCard"]]);
   }
   const card = checkFirstForm(reply, "sofa");
   assert.match(card.description, /꺼진 자리/);
