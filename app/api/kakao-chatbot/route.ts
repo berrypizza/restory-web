@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { SITE_URL } from "@/lib/landing-seo";
 
 export const runtime = "nodejs";
 export const maxDuration = 5;
@@ -8,8 +9,14 @@ const AI_RESPONSE_TIMEOUT_MS = 1800;
 const FALLBACK_TEXT =
   "정확한 확인이 필요한 내용이에요.\n아래 [✅ 담당자에게 문의하기] 버튼을 눌러주시면 담당자가 직접 확인해드릴게요.";
 
-const HOME_TEXT =
-  "안녕하세요, 리스토리입니다.\n\n사진 한 장으로 수리·리폼 가능 여부를 먼저 확인해드립니다.\n원하시는 서비스를 선택하거나 문의 내용을 남겨주세요. 사진 상담 단계에서 문제 부위와 전체 구조 사진을 안내해드리겠습니다.";
+const INTAKE_BUTTON = { action: "webLink", label: "상담 접수하기", webLinkUrl: `${SITE_URL}/request` };
+const INTAKE_TEXT =
+  "상담할 품목과 방문 주소, 성함, 연락처를 아래 양식에 남겨 주세요. 현장 사진도 함께 첨부할 수 있어요.\n\n담당자가 내용을 확인한 뒤 남겨 주신 연락처로 답변드릴게요.";
+const INTAKE_COMMANDS = new Set([
+  "시작", "시작하기", "처음으로", "홈", "안내", "사용안내", "help", "안녕", "안녕하세요", "하이",
+  "문의", "문의가능", "상담", "상담가능", "상담접수", "상담접수하기", "상담신청", "상담신청하기",
+  "접수", "접수하기", "접수링크", "접수양식", "상담양식", "상담양식보내주세요", "접수링크보내주세요",
+]);
 
 const CONSULTATION_TRIGGER_TEXT = "상담직원 연결";
 const PHOTO_CONSULT_BUTTON_LABEL = "📷 사진 2장 보내기";
@@ -66,8 +73,10 @@ const SYSTEM_PROMPT = `너는 리스토리 카카오톡 상담 챗봇이다.
 기본 마무리 문구는 상황에 맞게 한 번만 쓴다: "사진 보내주시면 먼저 상태를 확인해드리겠습니다."`;
 
 type KakaoSkillRequest = {
+  intent?: { name?: unknown };
   userRequest?: {
     utterance?: unknown;
+    block?: { name?: unknown };
     user?: {
       id?: unknown;
     };
@@ -84,6 +93,23 @@ type ConversationContext = {
 const CONTEXT_TTL_MS = 30 * 60 * 1000;
 const conversationContexts = new Map<string, ConversationContext>();
 
+function isIntakeEntry(body: KakaoSkillRequest, utterance: string) {
+  const blocks = [body.intent?.name, body.userRequest?.block?.name];
+  const command = utterance.replace(/\s+/g, "").replace(/[.!?~]+$/, "").toLowerCase();
+  return blocks.some(name => name === "웰컴 블록" || name === "상담 접수") || INTAKE_COMMANDS.has(command);
+}
+
+function intakeResponse() {
+  return NextResponse.json({
+    version: "2.0",
+    template: {
+      outputs: [{ textCard: { title: "리스토리 스튜디오 상담 접수", description: INTAKE_TEXT, buttons: [INTAKE_BUTTON] } }],
+      quickReplies: [STAFF_CONSULT_QUICK_REPLY],
+    },
+    data: { answer: `${INTAKE_TEXT}\n\n${INTAKE_BUTTON.webLinkUrl}` },
+  });
+}
+
 function kakaoResponse(text: string, quickReply: QuickReply = STAFF_CONSULT_QUICK_REPLY) {
   const answer = text.slice(0, 700);
 
@@ -91,7 +117,7 @@ function kakaoResponse(text: string, quickReply: QuickReply = STAFF_CONSULT_QUIC
     version: "2.0",
     template: {
       outputs: [{ simpleText: { text: answer } }],
-      quickReplies: [quickReply],
+      quickReplies: [{ label: INTAKE_BUTTON.label, action: "message", messageText: "상담 접수" }, quickReply],
     },
     data: { answer },
   });
@@ -116,7 +142,7 @@ function operatorCardResponse(text: string) {
           textCard: {
             title: PHOTO_CONSULT_TITLE,
             description: answer,
-            buttons: [PHOTO_CONSULT_OPERATOR_BUTTON],
+            buttons: [PHOTO_CONSULT_OPERATOR_BUTTON, INTAKE_BUTTON],
           },
         },
       ],
@@ -290,7 +316,6 @@ function getDirectReply(
   context: ConversationContext,
 ): string | null {
   const normalized = utterance.replace(/\s+/g, " ").trim();
-  const lower = normalized.toLowerCase();
   const hasPhoto = context.hasPhoto;
   const hasArea = context.hasArea;
   const hasRepeatedReplyComplaint = includesAny(normalized, [
@@ -328,14 +353,6 @@ function getDirectReply(
 
   if (hasRepeatedReplyComplaint) {
     return "맞습니다. 이미 보내주신 내용을 다시 요청해 불편을 드렸습니다. 사진·지역·증상은 이 채팅에 남아 있으니 추가로 보내실 필요 없습니다. 상담원 확인 전에는 확정 견적을 안내하지 않는 점 양해 부탁드립니다.";
-  }
-
-  if (/^(시작|시작하기|안내|사용 안내|help|홈)$/i.test(lower)) {
-    return HOME_TEXT;
-  }
-
-  if (/^(안녕|안녕하세요|하이|문의|상담|상담 가능|문의 가능)[.!?~ ]*$/i.test(lower)) {
-    return HOME_TEXT;
   }
 
   if (includesAny(normalized, ["싱크대 문짝 교체", "싱크대 문짝", "문짝 교체", "문짝만 교체"])) {
@@ -436,6 +453,7 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as KakaoSkillRequest;
     const utterance = getUtterance(body);
+    if (isIntakeEntry(body, utterance)) return intakeResponse();
     const userKey = getUserKey(body);
     const context = getConversationContext(userKey);
     const hasMedia = requestHasMedia(body);
@@ -447,7 +465,7 @@ export async function POST(request: Request) {
         if (userKey) conversationContexts.set(userKey, context);
         return photoConsultResponse(PHOTO_RECEIVED_TEXT);
       }
-      return kakaoResponse(FALLBACK_TEXT);
+      return intakeResponse();
     }
 
     rememberConversation(userKey, context, utterance);

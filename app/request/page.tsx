@@ -5,10 +5,10 @@ import s from "./request.module.css";
 
 export const metadata: Metadata = {
   title: "현장 상담 접수",
-  description: "리스토리 스튜디오에 상담할 품목과 방문 주소를 보내 주세요.",
+  description: "상담할 품목과 방문 주소를 남겨 주시면 리스토리 스튜디오 담당자가 확인 후 답변드려요.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/request" },
-  openGraph: { title: "리스토리 스튜디오 현장 상담 접수", description: "상담 품목과 연락처를 남겨 주세요.", url: "/request" },
+  openGraph: { title: "리스토리 스튜디오 현장 상담 접수", description: "상담 품목과 연락처를 남겨 주시면 담당자가 확인 후 답변드려요.", url: "/request" },
 };
 
 export default function RequestPage() {

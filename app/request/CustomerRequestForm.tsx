@@ -60,11 +60,11 @@ export default function CustomerRequestForm() {
   if (phase === "done") return <section className={s.success}>
     <span className={s.check} aria-hidden="true">✓</span>
     <h1 tabIndex={-1} ref={success}>상담이 접수됐어요</h1>
-    <p>담당자가 내용을 확인하고 남겨 주신 전화번호로 연락드려 방문 일정을 조율할게요.</p>
+    <p>담당자가 보내 주신 내용을 확인한 뒤 남겨 주신 연락처로 답변드릴게요. 방문이 필요하면 그때 일정을 함께 정해요.</p>
   </section>;
 
   return <>
-    <div className={s.intro}><h1>현장 상담 접수</h1><p>상담할 품목과 방문 주소를 남겨 주세요.<br />담당자가 확인하고 연락드릴게요.</p></div>
+    <div className={s.intro}><h1>현장 상담 접수</h1><p>상담할 품목과 방문 주소를 남겨 주세요.<br />담당자가 내용을 확인한 뒤 답변드릴게요.</p></div>
     <form className={s.card} method="post" onSubmit={submit} onInvalid={() => setChecking(true)}>
       <fieldset disabled={phase === "sending"} className={checking ? s.checked : undefined}>
         <label>상담 품목<select required name="item" value={product} onChange={e => setProduct(e.target.value)}>
