@@ -54,6 +54,7 @@ const nextConfig: NextConfig = {
       },
       { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "private, no-store" }] },
       { source: "/academy/consult", headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }] },
+      { source: "/request", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       {
         source: "/icons/:path*",
         headers: [

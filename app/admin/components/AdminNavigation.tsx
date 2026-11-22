@@ -69,6 +69,7 @@ export default function AdminNavigation({
       <div className={s.navGroup}>
         <p>현장 업무</p>
         {destinations.filter(item => item.id !== "stats").map(item => navLink(item))}
+        <Link href="/admin/intake" onClick={closeMenu}><AdminIcon name="person" />{isAdmin ? "고객 접수함" : "직원 계정"}</Link>
       </div>
       <div className={s.navGroup}>
         <p>운영 관리</p>

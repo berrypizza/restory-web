@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import loadComponent from "next/dynamic";
 import AdminLogin from "./components/AdminLogin";
+import { useIntakeStaff } from "./hooks/useIntakeStaff";
+import { getSupabase } from "./lib/utils";
 import { USERS, type Tech } from "./lib/constants";
 import s from "./workspace.module.css";
 
@@ -14,6 +16,9 @@ const Workspace = loadComponent(() => import("./AdminWorkspace"), {
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<Tech | null | undefined>(undefined);
+  const staff = useIntakeStaff();
+  const [signingOut, setSigningOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
   useEffect(() => {
     const timer = window.setTimeout(() => {
       try {
@@ -35,7 +40,20 @@ export default function AdminDashboard() {
     }
     setUser(name);
   }
-  function logout() {
+  async function logout() {
+    setLogoutError("");
+    if (staff.status !== "guest") {
+      setSigningOut(true);
+      try {
+        const { error } = await getSupabase().auth.signOut({ scope: "local" });
+        if (error) throw error;
+      } catch {
+        setLogoutError("로그아웃을 완료하지 못했어요. 연결 상태를 확인해 주세요.");
+        return;
+      } finally {
+        setSigningOut(false);
+      }
+    }
     try {
       localStorage.removeItem("restory_admin_expiry");
       localStorage.removeItem("restory_logged_name");
@@ -45,19 +63,31 @@ export default function AdminDashboard() {
     window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
     setUser(null);
   }
-  if (user === undefined)
+  if (user === undefined || staff.status === "loading" || signingOut)
     return (
       <main className={s.login}>
         <p role="status">로그인 확인 중…</p>
       </main>
     );
-  if (!user) return <AdminLogin onLogin={login} />;
+  if (staff.status === "unlisted" || staff.status === "error") return <main className={s.login}>
+    <div className={s.loginCard}>
+      <h1>직원 계정 확인</h1>
+      <p role="alert">{logoutError || (staff.status === "error" ? "직원 권한을 확인하지 못했어요." : "직원으로 등록된 계정으로 로그인해 주세요.")}</p>
+      <button className={s.primary} onClick={() => window.location.reload()}>다시 확인</button>
+      <button className={s.logout} onClick={logout}>로그아웃</button>
+    </div>
+  </main>;
+  const name = staff.status === "staff" ? staff.name : user;
+  if (!name) return <AdminLogin onLogin={login} />;
   return (
-    <Workspace
-      key={user}
-      user={user}
-      isAdmin={USERS.some((u) => u.name === user && u.role === "admin")}
-      onLogout={logout}
-    />
+    <>
+      {logoutError && <p role="alert">{logoutError}</p>}
+      <Workspace
+        key={staff.status === "staff" ? staff.id + staff.role : name}
+        user={name}
+        isAdmin={staff.status === "staff" ? staff.role === "admin" : USERS.some((u) => u.name === name && u.role === "admin")}
+        onLogout={logout}
+      />
+    </>
   );
 }

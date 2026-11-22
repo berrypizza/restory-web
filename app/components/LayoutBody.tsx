@@ -9,24 +9,30 @@ import YoutubeProblemFinder from "@/app/components/YoutubeProblemFinder";
 
 export default function LayoutBody({
   children,
+  analytics,
 }: {
   children: React.ReactNode;
+  analytics: React.ReactNode;
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isIntake = pathname === "/request";
   const isAcademy = pathname === "/academy" || pathname?.startsWith("/academy/");
 
   return (
     <>
-      {!isAdmin && (
-        <Suspense fallback={null}>
-          <AttributionTracker />
-          <ServiceAnalytics />
-        </Suspense>
+      {!isAdmin && !isIntake && (
+        <>
+          {analytics}
+          <Suspense fallback={null}>
+            <AttributionTracker />
+            <ServiceAnalytics />
+          </Suspense>
+        </>
       )}
-      {!isAdmin && !isAcademy && <Navbar />}
+      {!isAdmin && !isAcademy && !isIntake && <Navbar />}
       {children}
-      {!isAdmin && !isAcademy && <YoutubeProblemFinder />}
+      {!isAdmin && !isAcademy && !isIntake && <YoutubeProblemFinder />}
     </>
   );
 }

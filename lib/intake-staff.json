@@ -1,0 +1,6 @@
+[
+  { "login": "고관호", "name": "고관호", "role": "admin", "authEmail": "manager-01@staff.restory.invalid" },
+  { "login": "kohh1115", "name": "고현호", "role": "admin", "authEmail": "manager-02@staff.restory.invalid" },
+  { "login": "juhyung", "name": "이주형", "role": "tech", "authEmail": "field-01@staff.restory.invalid" },
+  { "login": "younghun", "name": "강영훈", "role": "tech", "authEmail": "field-02@staff.restory.invalid" }
+]

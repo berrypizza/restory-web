@@ -1,0 +1,23 @@
+.page { min-height: 100dvh; background: #f5f7fa; color: #192536; padding: 24px 18px 44px; }
+.shell { margin: 0 auto; max-width: 540px; }
+.brand { display: flex; align-items: center; gap: 8px; color: #25344a; font-size: 16px; font-weight: 750; }
+.brand img { object-fit: contain; }
+.intro { margin: 36px 0 24px; }
+.intro h1, .success h1 { margin: 0 0 8px; font-size: clamp(29px, 5vw, 39px); font-weight: 800; line-height: 1.22; letter-spacing: -.06em; }
+.intro p, .success p { margin: 0; color: #536477; font-size: 16px; line-height: 1.6; word-break: keep-all; }
+.card, .success { border: 1px solid #e2e7ee; border-radius: 22px; background: #fff; padding: clamp(20px, 4vw, 30px); }
+.card fieldset { padding: 0; margin: 0; border: 0; min-width: 0; display: grid; gap: 20px; }
+.card label { display: grid; gap: 7px; font-size: 15px; font-weight: 700; }
+.card label small { font-weight: 500; font-size: 13px; color: #657386; margin-left: 3px; }
+.card :is(input:not([type=checkbox]), select, textarea) { background: #fbfcfe; border: 1px solid #c9d3df; border-radius: 11px; font: inherit; font-size: 16px; font-weight: 450; line-height: 1.4; min-height: 48px; padding: 12px; width: 100%; }
+.card select { appearance: auto; }
+.card textarea { resize: vertical; }
+.card :focus-visible { outline: 3px solid #3172db; outline-offset: 2px; }
+.card .checked :is(input, select):invalid { border-color: #ad3b34; }
+.card .consent { display: flex; align-items: flex-start; gap: 10px; color: #4e5f73; font-size: 13px; line-height: 1.55; font-weight: 500; padding: 2px 0; cursor: pointer; }
+.consent input { flex: 0 0 18px; width: 18px; height: 18px; margin-top: 2px; accent-color: #215ed6; }
+.primary { width: 100%; min-height: 50px; border: 0; border-radius: 13px; background: #215ed6; color: white; font-weight: 750; cursor: pointer; margin-top: 20px; }
+.primary:disabled { opacity: .65; cursor: wait; }
+.error { margin: 12px 0 0; color: #a12a22; font-size: 14px; }
+.success { margin-top: 40px; padding-block: 42px; text-align: center; }
+.check { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 18px; background: #e7f1ff; color: #215ed6; font-size: 29px; }

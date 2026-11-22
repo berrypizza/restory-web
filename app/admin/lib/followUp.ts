@@ -10,6 +10,7 @@ export function aftercareVisit(source: Job, draft: FollowUpDraft) {
   return {
     id: draft.id,
     aftercare_source_id: source.aftercare_source_id || source.id,
+    ...(source.from_customer_intake ? { from_customer_intake: true, intake_assistants: crew } : {}),
     is_aftercare: true,
     name: source.name,
     phone: source.phone,

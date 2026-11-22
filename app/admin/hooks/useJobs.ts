@@ -6,6 +6,7 @@ import { isFinishedJob } from "../lib/settlement";
 import { aftercareVisit, type FollowUpDraft } from "../lib/followUp";
 import { canScheduleInstall } from "../lib/schedule";
 import { getSupabase, today, addOneYear } from "../lib/utils";
+import { getExtraTechsFromMemo } from "../lib/jobTechs";
 
 export function useJobs() {
   const [rows, setRows] = useState<Job[] | null>(null);
@@ -80,7 +81,9 @@ export function useJobs() {
     const token = Symbol();
     latestWrite.current.set(id, token);
     try {
-      let query = getSupabase().from("jobs").update(patch).eq("id", id);
+      const write = patch.memo !== undefined && rows?.some(row => row.id === id && row.from_customer_intake)
+        ? { ...patch, intake_assistants: getExtraTechsFromMemo(patch.memo) } : patch;
+      let query = getSupabase().from("jobs").update(write).eq("id", id);
       for (const [column, value] of Object.entries(expected ?? {})) {
         query = value == null ? query.is(column, null) : query.eq(column, value);
       }

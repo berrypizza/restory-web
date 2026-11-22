@@ -39,6 +39,8 @@ export interface Job {
   install_completed_on?: string | null;
   is_aftercare?: boolean;
   aftercare_source_id?: string | null;
+  from_customer_intake?: boolean;
+  intake_assistants?: Tech[];
 }
 
 export type JobFormState = {

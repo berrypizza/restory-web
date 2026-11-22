@@ -4,12 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { USERS, type Tech } from "../lib/constants";
+import { signInStaff } from "../lib/staffLogin";
 import AdminIcon from "./AdminIcon";
 import s from "../workspace.module.css";
 
 export default function AdminLogin({ onLogin }: { onLogin: (name: Tech) => void }) {
   const [showPassword, setShowPassword] = useState(false);
   const [invalid, setInvalid] = useState(false);
+  const [busy, setBusy] = useState(false);
   return (
     <main className={s.login}>
       <div className={s.loginFrame}>
@@ -26,17 +28,23 @@ export default function AdminLogin({ onLogin }: { onLogin: (name: Tech) => void 
           <p className={s.loginHint}>현장 업무에 사용하는 팀 계정으로 로그인해 주세요.</p>
           <form
             onChange={() => setInvalid(false)}
-            onSubmit={(event) => {
+            method="post"
+            onSubmit={async (event) => {
               event.preventDefault();
+              if (busy) return;
               const fields = new FormData(event.currentTarget);
-              const user = USERS.find(
-                (u) => u.id === String(fields.get("id")).trim() && u.password === fields.get("password"),
-              );
-              if (!user) {
+              const id = String(fields.get("id")).trim().normalize("NFC");
+              const password = String(fields.get("password"));
+              const user = USERS.find(u => u.id === id && u.password === password);
+              if (user) return onLogin(user.name);
+              setBusy(true);
+              try {
+                if (!await signInStaff(id, password)) setInvalid(true);
+              } catch {
                 setInvalid(true);
-                return;
+              } finally {
+                setBusy(false);
               }
-              onLogin(user.name);
             }}
           >
             <label htmlFor="admin-id">아이디</label>
@@ -77,10 +85,15 @@ export default function AdminLogin({ onLogin }: { onLogin: (name: Tech) => void 
                 아이디와 비밀번호를 다시 확인해 주세요.
               </p>
             )}
-            <button type="submit" className={s.primary}>
-              로그인 <AdminIcon name="forward" size={17} />
+            <button type="submit" className={s.primary} disabled={busy}>
+              {busy ? "로그인 중…" : "로그인"} <AdminIcon name="forward" size={17} />
             </button>
           </form>
+          <Link className={s.consultLink} href="/admin/intake">
+            <span className={s.consultIcon}><AdminIcon name="list" size={19} /></span>
+            <span>직원 계정으로 로그인<small>고객 접수함과 현장 일정</small></span>
+            <AdminIcon name="arrow" size={16} />
+          </Link>
           <Link className={s.consultLink} href="/admin/consultations">
             <span className={s.consultIcon}><AdminIcon name="review" size={19} /></span>
             <span>기살 상담 신청 관리<small>카카오 관리자 계정으로 이용</small></span>

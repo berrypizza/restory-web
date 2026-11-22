@@ -87,11 +87,8 @@ export default function RootLayout({
           fontFamily:
             "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
         }}>
-        {/* Initialize analytics queues before page effects emit their first events. */}
-        <Analytics />
-        <GoogleAnalytics gaId="G-ZT8HRBBXVR" />
         <LocalBusinessJsonLd />
-        <LayoutBody>{children}</LayoutBody>
+        <LayoutBody analytics={<><Analytics /><GoogleAnalytics gaId="G-ZT8HRBBXVR" /></>}>{children}</LayoutBody>
         <Footer />
       </body>
     </html>

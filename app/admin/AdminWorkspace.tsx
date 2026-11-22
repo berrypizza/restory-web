@@ -30,6 +30,14 @@ function subscribeTab(notify: () => void) {
 }
 const readTab = () => window.location.hash.slice(1);
 const defaultTab = () => "home";
+function readCalendarTarget() {
+  if (typeof window === "undefined" || window.location.hash !== "#calendar") return null;
+  const query = new URLSearchParams(window.location.search);
+  const date = query.get("day"), id = query.get("job");
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !id || !/^[\da-f-]{36}$/i.test(id)) return null;
+  const parsed = new Date(date + "T00:00:00Z");
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === date ? { date, id } : null;
+}
 function subscribeDay(notify: () => void) {
   const timer = window.setInterval(notify, 60_000);
   document.addEventListener("visibilitychange", notify);
@@ -60,7 +68,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const [statusFilter, setStatusFilter] = useState<WorkStatus>("전체");
   const [listMonth, setListMonth] = useState(thisYearMonth);
   const [reportMonth, setReportMonth] = useState(thisYearMonth);
-  const [selectedDay, setSelectedDay] = useState(today);
+  const [target] = useState(readCalendarTarget);
+  const [selectedDay, setSelectedDay] = useState(() => target?.date ?? today());
   const [searchQuery, setSearchQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [original, setOriginal] = useState<Job | null>(null);
@@ -71,7 +80,9 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const [initialField, setInitialField] = useState<QueueField>();
   const [saveError, setSaveError] = useState("");
   const [form, setForm] = useState(() => emptyForm());
-  const [focusJob, setFocusJob] = useState<{ id: string; phase: VisitPhase } | null>(null);
+  const [focusJob, setFocusJob] = useState<{ id: string; phase: VisitPhase } | null>(
+    () => target ? { id: target.id, phase: "visit" } : null,
+  );
   const searchInput = useRef<HTMLInputElement>(null);
   const searchRequested = useRef(false);
   const [saving, setSaving] = useState(false);
