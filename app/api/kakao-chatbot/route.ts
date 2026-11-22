@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { SITE_URL } from "@/lib/landing-seo";
 import { hasAttachedPhoto, newConversation, readConversation, saveConversation, type Conversation, type SkillRequest } from "./conversation";
-import { answerTurn, fallback, type Reply } from "./replies";
+import { answerTurn, fallback, INTAKE_LABEL, RITORI_GREETING, type Reply } from "./replies";
 import { services } from "@/lib/consultation-services";
 
 export const runtime = "nodejs";
 export const maxDuration = 5;
 
 const AI_RESPONSE_TIMEOUT_MS = 1800;
-const SYSTEM_PROMPT = `너는 가구 수리·리폼 전문 리스토리의 카카오톡 상담 도우미다.
+const SYSTEM_PROMPT = `너는 가구 수리·리폼 전문 리스토리의 AI 상담사 리토리다.
 고객이 물어본 것부터 쉬운 한국어 해요체로 답한다. 두세 문장, 180자 이내로 쓴다.
 접수 양식과 상담원 연결은 답변 아래 버튼에서 안내하므로 질문에 대한 답만 쓴다.
 이미 알려준 지역이나 보낸 사진을 다시 요구하지 않는다. 사진이 없으면 글로도 상담할 수 있다.
@@ -20,15 +20,17 @@ function respond(reply: Reply, context: Conversation, firstTurn: boolean) {
   const intakeUrl = new URL("/request", SITE_URL);
   if (context.service) intakeUrl.searchParams.set("service", context.service);
 
-  const intake = { label: "상담 접수하기", action: "webLink", webLinkUrl: intakeUrl.href };
+  const intake = { label: INTAKE_LABEL, action: "webLink", webLinkUrl: intakeUrl.href };
   const operator = { label: "상담원 연결", action: "operator" };
   const showIntake = !context.submitted || reply.firstButton === "intake";
   const buttons = showIntake ? [intake, operator] : [operator];
   if (showIntake && reply.firstButton === "operator") buttons.reverse();
+  const title = firstTurn ? RITORI_GREETING : reply.title;
+  const answer = reply.title && reply.title !== title ? `${reply.title}\n${reply.text}` : reply.text;
   const introduceForm = showIntake && firstTurn && !reply.firstButton;
   const description = introduceForm
-    ? `${reply.text}\n\n아래 접수 양식에 연락처를 남겨 주세요. 담당자가 확인 후 연락드려요.`
-    : reply.text;
+    ? `${answer}\n\n‘${INTAKE_LABEL}’로 신청하시면 담당자가 연락드려요.`
+    : answer;
   const quickReplies = reply.choices?.map(([label, messageText]) => ({
     label, action: "message", messageText, extra: { consultation: context },
   }));
@@ -36,10 +38,10 @@ function respond(reply: Reply, context: Conversation, firstTurn: boolean) {
   return NextResponse.json({
     version: "2.0",
     template: {
-      outputs: [{ textCard: { title: reply.title, description, buttons, buttonLayout: "horizontal" } }],
+      outputs: [{ textCard: { title, description, buttons, buttonLayout: "horizontal" } }],
       quickReplies,
     },
-    data: { answer: [reply.title, description, showIntake && `상담 접수하기\n${intakeUrl.href}`].filter(Boolean).join("\n\n") },
+    data: { answer: [title, description, showIntake && `${INTAKE_LABEL}\n${intakeUrl.href}`].filter(Boolean).join("\n\n") },
   });
 }
 

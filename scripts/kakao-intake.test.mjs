@@ -5,6 +5,8 @@ import test from "node:test";
 const { parse } = createRequire(import.meta.url)("next/dist/compiled/node-html-parser");
 const base = process.env.SERVICE_TEST_BASE_URL;
 const form = "https://www.restorystudio.co.kr/request";
+const greeting = "안녕하세요, 리스토리 AI 상담사 리토리예요";
+const intakeLabel = "빠른 상담 접수";
 
 async function ask(payload) {
   const response = await fetch(new URL("/api/kakao-chatbot", base), {
@@ -18,19 +20,33 @@ async function ask(payload) {
 }
 
 function checkIntake(reply) {
-  assert.equal(reply.version, "2.0");
-  const card = reply.template.outputs[0].textCard;
-  assert.deepEqual(card.buttons[0], { label: "상담 접수하기", action: "webLink", webLinkUrl: form });
+  const card = checkFirstForm(reply);
   assert.match(card.description, /확인한 뒤.*답변/);
-  assert.ok(reply.data.answer.includes(form));
 }
 
-test("Kakao welcome and returning-customer blocks open the public intake form", { skip: !base }, async () => {
+test("Ritori welcomes customers to chat or open the quick intake form", { skip: !base }, async () => {
   for (const payload of [
     { userRequest: { utterance: "", block: { name: "웰컴 블록" } } },
-    { intent: { name: "상담 접수" }, userRequest: { utterance: "양식이 어디에 있나요?" } },
-    { userRequest: { utterance: "접수 링크" } },
     { userRequest: { utterance: "안녕하세요!" } },
+    { userRequest: { utterance: "시작하기" } },
+  ]) {
+    const reply = await ask(payload);
+    const card = checkFirstForm(reply);
+    assert.equal(card.title, greeting);
+    assert.match(card.description, /채팅에서 바로 물어보세요/);
+    assert.match(card.description, /빠른 상담 접수.*담당자가 연락/);
+    assert.deepEqual(card.buttons.map(button => button.action), ["webLink", "operator"]);
+    assert.equal(reply.data.answer.split(greeting).length - 1, 1);
+  }
+});
+
+test("both Kakao intake block names and typed intake commands open the form", { skip: !base }, async () => {
+  for (const payload of [
+    { intent: { name: "상담 접수" }, userRequest: { utterance: "양식이 어디에 있나요?" } },
+    { userRequest: { block: { name: intakeLabel }, utterance: "양식이 어디에 있나요?" } },
+    { userRequest: { utterance: "접수 링크" } },
+    { userRequest: { utterance: "상담 접수하기" } },
+    { userRequest: { utterance: intakeLabel } },
   ]) checkIntake(await ask(payload));
 });
 
@@ -60,12 +76,12 @@ function checkCard(reply) {
 function checkFirstForm(reply, expectedService = null) {
   const card = checkCard(reply);
   const first = card.buttons[0];
-  assert.equal(first.label, "상담 접수하기");
+  assert.equal(first.label, intakeLabel);
   assert.equal(first.action, "webLink");
   const url = new URL(first.webLinkUrl);
   assert.equal(url.origin + url.pathname, form);
   assert.equal(url.searchParams.get("service"), expectedService);
-  assert.ok(reply.data.answer.includes(url.href));
+  assert.ok(reply.data.answer.includes(`${intakeLabel}\n${url.href}`));
   return card;
 }
 
@@ -76,6 +92,7 @@ test("the first answer invites form completion for greetings, direct questions a
     ["소파가 꺼졌어요", "sofa"], ["", null, { params: { image: "room.jpg" } }],
   ]) {
     const card = checkFirstForm(await message(utterance, undefined, action), service ?? null);
+    assert.equal(card.title, greeting);
     assert.match(card.description, /양식|접수/);
     assert.ok(card.buttons.some(button => button.action === "operator"));
   }
@@ -88,6 +105,7 @@ test("a customer can tap from the cost question to a service and its photo guide
     const chip = reply.template.quickReplies.find(choice => choice.label === label);
     assert.equal(chip.action, "message");
     reply = await message(chip.messageText, undefined, { clientExtra: chip.extra });
+    assert.ok(!reply.data.answer.includes(greeting));
   }
   const card = checkFirstForm(reply, "sofa");
   assert.match(card.description, /꺼진 자리/);

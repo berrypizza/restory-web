@@ -9,6 +9,9 @@ export type Reply = {
   choices?: readonly Choice[];
 };
 
+export const RITORI_GREETING = "안녕하세요, 리스토리 AI 상담사 리토리예요";
+export const INTAKE_LABEL = "빠른 상담 접수";
+
 const PRICE: Choice = ["예상 비용", "예상 비용이 궁금해요"];
 const VISIT: Choice = ["방문 일정", "언제 방문할 수 있나요?"];
 const AREA: Choice = ["출장 지역", "어느 지역까지 방문하나요?"];
@@ -21,7 +24,12 @@ const intake: Reply = {
   text: "아래 양식에 상담 품목과 방문 주소, 연락처를 적어 주세요. 담당자가 내용을 확인한 뒤 남겨 주신 번호로 답변드려요.",
   firstButton: "intake",
 };
-const welcome: Reply = { ...intake, choices: [PRICE, VISIT, AREA] };
+const welcome: Reply = {
+  title: RITORI_GREETING,
+  text: `궁금한 점은 이 채팅에서 바로 물어보세요.\n아래 ‘${INTAKE_LABEL}’로 상담 내용을 남겨 주시면 담당자가 연락드려요.`,
+  firstButton: "intake",
+  choices: [PRICE, VISIT, AREA],
+};
 const handoff: Reply = {
   title: "상담원과 이야기할 수 있어요",
   text: "‘상담원 연결’을 누르면 1:1 채팅으로 이어져요.",
@@ -45,7 +53,7 @@ export function fallback(context: Conversation): Reply {
 const restartCommands = new Set(["처음으로", "시작", "시작하기", "홈", "새상담", "다른품목상담"]);
 const welcomeCommands = new Set(["안내", "사용안내", "help", "안녕", "안녕하세요", "하이", "문의", "문의가능", "상담", "상담가능"]);
 const intakeCommands = new Set(["상담접수", "상담접수하기", "상담신청", "상담신청하기", "접수", "접수하기",
-  "접수링크", "접수양식", "상담양식", "양식보내주세요", "상담양식보내주세요", "접수링크보내주세요"]);
+  "빠른상담접수", "빠른상담접수하기", "접수링크", "접수양식", "상담양식", "양식보내주세요", "상담양식보내주세요", "접수링크보내주세요"]);
 
 function priceReply(context: Conversation, waitingForItem: boolean): Reply {
   const guide = context.service && services[context.service];
@@ -98,7 +106,7 @@ export function answerTurn(body: SkillRequest, utterance: string, attached: bool
   }
   const reportedSubmission = /(?:접수|신청)(?:를|을|은|는|도)?(?:이미|방금)?(?:했|해뒀|마쳤|완료(?:했|$))|(?:양식|신청서|접수폼)(?:을|를)?(?:작성했|제출했|보냈)|^(?:작성|제출)(?:했어요|했습니다)$/.test(text);
   if (reportedSubmission) context.submitted = true;
-  if (blocks.includes("상담 접수") && !reportedSubmission) return intake;
+  if (!reportedSubmission && (blocks.includes("상담 접수") || blocks.includes(INTAKE_LABEL))) return intake;
   if (welcomeCommands.has(text) || (!text && !attached)) return context.submitted ? submitted : welcome;
 
   const service = findService(text);
