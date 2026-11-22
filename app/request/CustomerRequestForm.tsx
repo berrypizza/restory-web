@@ -2,6 +2,7 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { PRODUCT_OPTIONS } from "../admin/lib/products";
+import PhotoPicker, { type SelectedPhoto } from "./PhotoPicker";
 import s from "./request.module.css";
 
 export default function CustomerRequestForm() {
@@ -9,13 +10,15 @@ export default function CustomerRequestForm() {
   const [phase, setPhase] = useState<"ready" | "sending" | "done">("ready");
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
+  const [photos, setPhotos] = useState<SelectedPhoto[]>([]);
+  const [preparing, setPreparing] = useState(false);
   const requestId = useRef<string | null>(null);
   const pending = useRef(false);
   const success = useRef<HTMLHeadingElement>(null);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending.current) return;
+    if (pending.current || preparing) return;
     const form = event.currentTarget;
     const fields = new FormData(form);
     const field = (key: string) => String(fields.get(key) ?? "").trim();
@@ -35,13 +38,15 @@ export default function CustomerRequestForm() {
       const res = await fetch("/api/customer-intake", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: requestId.current, name: field("name"), phone, address: field("address"),
-          item: product === "custom" ? field("customItem") : product, notes: field("notes"), consent: fields.has("consent") }),
+          item: product === "custom" ? field("customItem") : product, notes: field("notes"), consent: fields.has("consent"),
+          photos: photos.map(({ image, thumbnail }) => ({ image, thumbnail })) }),
       });
       if (!res.ok) {
         setError(res.status === 400 ? "이름, 전화번호, 주소와 품목을 다시 확인해 주세요." : "접수 결과를 확인하지 못했어요. 다시 보내 주세요.");
         setPhase("ready");
         return;
       }
+      setPhotos([]);
       setPhase("done");
       window.requestAnimationFrame(() => success.current?.focus());
     } catch {
@@ -72,12 +77,13 @@ export default function CustomerRequestForm() {
         <label>전화번호<input name="phone" type="tel" autoComplete="tel-national" inputMode="tel" maxLength={23} placeholder="010-0000-0000" required /></label>
         <label>방문 주소<input name="address" autoComplete="street-address" minLength={2} maxLength={250} placeholder="도로명 또는 지번, 동·호수" required /></label>
         <label><span>상담 내용 <small>선택</small></span><textarea name="notes" rows={3} maxLength={800} placeholder="불편한 점이나 미리 알려주실 내용을 적어 주세요." /></label>
+        <PhotoPicker photos={photos} onChange={setPhotos} onBusy={setPreparing} />
         <label className={s.consent}><input name="consent" type="checkbox" required />
-          <span>리스토리 스튜디오가 상담 연락과 방문 일정 관리를 위해 입력한 이름, 전화번호, 주소, 상담 내용을 수집·이용하는 데 동의해요.</span>
+          <span>리스토리 스튜디오가 상담 연락과 방문 일정 관리를 위해 이름, 전화번호, 주소, 상담 내용과 첨부한 사진을 수집·이용하는 데 동의해요.</span>
         </label>
       </fieldset>
       {error && <p role="alert" className={s.error}>{error}</p>}
-      <button type="submit" className={s.primary} disabled={phase === "sending"}>{phase === "sending" ? "접수하는 중…" : "상담 접수하기"}</button>
+      <button type="submit" className={s.primary} disabled={preparing || phase === "sending"}>{preparing ? "사진 준비 중…" : phase === "sending" ? "접수하는 중…" : "상담 접수하기"}</button>
     </form>
   </>;
 }

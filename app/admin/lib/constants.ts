@@ -35,14 +35,12 @@ export const STATUS_STYLE: Record<
   취소: { bg: "#fef2f2", color: "#ef4444", border: "#ef444433" },
 };
 
-export const USERS: {
+export const LEGACY_TECHS: {
   id: string;
   name: Tech;
   role: UserRole;
   password: string;
 }[] = [
-  { id: "고관호", name: "고관호", role: "admin", password: "su3024" },
-  { id: "kohh1115", name: "고현호", role: "admin", password: "7071" },
   { id: "juhyung", name: "이주형", role: "tech", password: "su2000" },
   { id: "younghun", name: "강영훈", role: "tech", password: "su2000" },
 ];

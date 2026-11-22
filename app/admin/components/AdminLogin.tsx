@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { USERS, type Tech } from "../lib/constants";
+import { LEGACY_TECHS, type Tech } from "../lib/constants";
 import { signInStaff } from "../lib/staffLogin";
 import AdminIcon from "./AdminIcon";
 import s from "../workspace.module.css";
@@ -35,7 +35,7 @@ export default function AdminLogin({ onLogin }: { onLogin: (name: Tech) => void 
               const fields = new FormData(event.currentTarget);
               const id = String(fields.get("id")).trim().normalize("NFC");
               const password = String(fields.get("password"));
-              const user = USERS.find(u => u.id === id && u.password === password);
+              const user = LEGACY_TECHS.find(u => u.id === id && u.password === password);
               if (user) return onLogin(user.name);
               setBusy(true);
               try {
@@ -89,11 +89,6 @@ export default function AdminLogin({ onLogin }: { onLogin: (name: Tech) => void 
               {busy ? "로그인 중…" : "로그인"} <AdminIcon name="forward" size={17} />
             </button>
           </form>
-          <Link className={s.consultLink} href="/admin/intake">
-            <span className={s.consultIcon}><AdminIcon name="list" size={19} /></span>
-            <span>직원 계정으로 로그인<small>고객 접수함과 현장 일정</small></span>
-            <AdminIcon name="arrow" size={16} />
-          </Link>
           <Link className={s.consultLink} href="/admin/consultations">
             <span className={s.consultIcon}><AdminIcon name="review" size={19} /></span>
             <span>기살 상담 신청 관리<small>카카오 관리자 계정으로 이용</small></span>

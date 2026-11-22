@@ -21,3 +21,14 @@
 .error { margin: 12px 0 0; color: #a12a22; font-size: 14px; }
 .success { margin-top: 40px; padding-block: 42px; text-align: center; }
 .check { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 18px; background: #e7f1ff; color: #215ed6; font-size: 29px; }
+.photos { display: grid; gap: 10px; }
+.photoHead, .photoButtons { display: flex; align-items: center; gap: 8px; }
+.photoHead { justify-content: space-between; font-size: 15px; }
+.photoHead small, .photoHead > span, .photos p { color: #536477; font-size: 13px; font-weight: 500; }
+.photoButtons button { display: inline-flex; min-height: 44px; flex: 1; gap: 7px; align-items: center; justify-content: center; border-radius: 12px; background: #eff4fc; color: #24579e; font-size: 14px; font-weight: 650; cursor: pointer; }
+.photoButtons button:disabled { opacity: .55; }
+.film { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; list-style: none; margin: 0; padding: 0; }
+.film li { position: relative; aspect-ratio: 4 / 3; }
+.film img { width: 100%; height: 100%; object-fit: cover; border-radius: 11px; }
+.film button { display: grid; place-items: center; width: 32px; height: 32px; position: absolute; right: 3px; top: 3px; background: #15263bd9; color: white; border-radius: 50%; cursor: pointer; }
+.photos input[hidden] { display: none; }

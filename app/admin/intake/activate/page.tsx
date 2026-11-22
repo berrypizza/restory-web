@@ -3,18 +3,21 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase } from "../../lib/utils";
+import { signInStaff } from "../../lib/staffLogin";
 import s from "../intake.module.css";
 
 export default function ActivateStaff() {
   const token = useRef("");
+  const invitation = useRef({ ticket: "", login: "" });
   const setupClient = useRef<SupabaseClient | null>(null);
   const verified = useRef(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   useEffect(() => {
-    const value = new URLSearchParams(window.location.hash.slice(1)).get("setup");
-    if (value) {
-      token.current = value;
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    if (params.has("setup") || params.has("invite")) {
+      token.current = params.get("setup") ?? "";
+      invitation.current = { ticket: params.get("invite") ?? "", login: params.get("login") ?? "" };
       window.history.replaceState(window.history.state, "", window.location.pathname);
     }
   }, []);
@@ -25,10 +28,22 @@ export default function ActivateStaff() {
     const fields = new FormData(form);
     const password = String(fields.get("password"));
     if (password !== fields.get("confirm")) return setError("두 비밀번호가 같은지 확인해 주세요.");
-    if (!token.current && !verified.current) return setError("담당자에게 받은 비밀번호 설정 링크를 다시 열어 주세요.");
+    if (!invitation.current.ticket && !token.current && !verified.current) return setError("담당자에게 받은 비밀번호 설정 링크를 다시 열어 주세요.");
     setBusy(true);
     setError("");
     try {
+      if (invitation.current.ticket) {
+        const { ticket, login } = invitation.current;
+        const { data, error } = await getSupabase().functions.invoke("activate-intake-staff", { body: { ticket, password } });
+        // If the response was lost after enrollment, the chosen credentials already work.
+        if (!await signInStaff(data?.login ?? login, password)) {
+          return setError(error?.context?.status === 422 ? "더 긴 비밀번호로 다시 시도해 주세요."
+            : "계정 설정을 마치지 못했어요. 본인의 설정 링크와 비밀번호를 확인해 주세요.");
+        }
+        form.reset();
+        window.location.replace("/admin#home");
+        return;
+      }
       // Keep setup isolated from staff accounts signed into other tabs.
       const db = setupClient.current ??= createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -45,7 +60,7 @@ export default function ActivateStaff() {
       form.reset();
       const { data: { session } } = await db.auth.getSession();
       if (session) await getSupabase().auth.setSession(session);
-      window.location.replace("/admin/intake");
+      window.location.replace("/admin#home");
     } catch {
       setError("연결 상태를 확인하고 다시 시도해 주세요.");
     } finally { setBusy(false); }

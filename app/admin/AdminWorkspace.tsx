@@ -14,12 +14,14 @@ import JobForm from "./components/JobForm";
 import FollowUpDialog from "./components/FollowUpDialog";
 import JobRemovalDialog, { type RemovalRequest } from "./components/JobRemovalDialog";
 import HomeTab from "./tabs/HomeTab";
+import IntakeHomeCard from "./components/IntakeHomeCard";
 import CalendarTab from "./tabs/CalendarTab";
 import loadComponent from "next/dynamic";
 import type { ReportView } from "./tabs/StatsTab";
 import ListTab from "./tabs/ListTab";
 import s from "./workspace.module.css";
 
+const IntakeDesk = loadComponent(() => import("./intake/IntakeDesk"));
 const StatsTab = loadComponent(() => import("./tabs/StatsTab"), {
   loading: () => <p role="status" className={s.loading}>집계를 불러오는 중…</p>,
 });
@@ -60,8 +62,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
     ? requestedTab : undefined;
   const destinationId = reportView ? "stats" : queue ? "jobs" : requestedTab;
   const destination = destinations.find(item => item.id === destinationId) ?? destinations[0];
-  const tab = destination.id;
-  const title = tab === "stats" && !isAdmin ? "내 실적" : destination.label;
+  const tab = isAdmin && requestedTab === "intake" ? "intake" : destination.id;
+  const title = tab === "intake" ? "고객 접수함" : tab === "stats" && !isAdmin ? "내 실적" : destination.label;
   const roleFilter = isAdmin ? "전체" : user;
   const [techFilter, setTechFilter] = useState<Tech | "전체">(roleFilter);
   const [calTechFilter, setCalTechFilter] = useState<Tech | "전체">(roleFilter);
@@ -155,6 +157,15 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   function showInCalendar(jobId: string, date: string, phase: VisitPhase = "visit") {
     showDay(date);
     setFocusJob({ id: jobId, phase });
+  }
+  function showScheduledIntake(jobId: string, date: string) {
+    void load();
+    showInCalendar(jobId, date);
+    const url = new URL(window.location.href);
+    url.searchParams.set("day", date);
+    url.searchParams.set("job", jobId);
+    url.hash = "calendar";
+    window.history.replaceState(window.history.state, "", url);
   }
   function openFollowUp(job: Job, kind: FollowUpKind) {
     if (!isAdmin) return;
@@ -286,11 +297,13 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
                   <AdminIcon name="search" size={18} /><span>작업 검색</span>
                 </button>
               )}
-              {tab !== "stats" && isAdmin && <button type="button" className={s.primary} onClick={openNew}><AdminIcon name="plus" size={18} />일정 등록</button>}
+              {tab !== "stats" && tab !== "intake" && isAdmin && <button type="button" className={s.primary} onClick={openNew}><AdminIcon name="plus" size={18} />일정 등록</button>}
             </div>
           </header>
 
-          {loadError && (
+          {tab === "home" && isAdmin && <IntakeHomeCard />}
+          {tab === "intake" && <IntakeDesk onView={showScheduledIntake} />}
+          {tab !== "intake" && loadError && (
             <div className={s.error} role="alert">
               <div>
                 <strong>일정을 불러오지 못했어요</strong>
@@ -305,7 +318,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
               </button>
             </div>
           )}
-          {!hasData && !loadError && (
+          {tab !== "intake" && !hasData && !loadError && (
             <p role="status" className={s.loading}>
               일정을 불러오는 중…
             </p>

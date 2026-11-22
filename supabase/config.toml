@@ -1,0 +1,5 @@
+project_id = "restory-web"
+
+[functions.activate-intake-staff]
+# Initial enrollment authenticates the owner-issued invitation before an employee has a session.
+verify_jwt = false

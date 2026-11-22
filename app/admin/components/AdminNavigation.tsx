@@ -13,7 +13,7 @@ export const destinations = [
   { id: "jobs", label: "작업 목록", short: "작업", icon: "list" },
   { id: "stats", label: "월간 집계", short: "집계", icon: "chart" },
 ] as const;
-export type Destination = (typeof destinations)[number]["id"];
+export type Destination = (typeof destinations)[number]["id"] | "intake";
 
 export function AdminBrand() {
   return (
@@ -69,7 +69,7 @@ export default function AdminNavigation({
       <div className={s.navGroup}>
         <p>현장 업무</p>
         {destinations.filter(item => item.id !== "stats").map(item => navLink(item))}
-        <Link href="/admin/intake" onClick={closeMenu}><AdminIcon name="person" />{isAdmin ? "고객 접수함" : "직원 계정"}</Link>
+        {isAdmin && <a href="#intake" aria-current={active === "intake" ? "page" : undefined} onClick={closeMenu}><AdminIcon name="inbox" />고객 접수함</a>}
       </div>
       <div className={s.navGroup}>
         <p>운영 관리</p>

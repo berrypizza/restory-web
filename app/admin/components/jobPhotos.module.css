@@ -370,3 +370,10 @@
     padding: 8px;
   }
 }
+.customerStrip { display: grid; gap: 9px; margin-top: 16px; }
+.customerStrip h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.customerStrip small { color: #53677d; font-size: 13px; font-weight: 550; }
+.customerThumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 7px; }
+.customerThumbs button { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 10px; background: #e6edf5; cursor: zoom-in; }
+.customerThumbs img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.photoFeedback { display: grid; gap: 12px; padding: 24px; }

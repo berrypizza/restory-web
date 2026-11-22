@@ -5,7 +5,7 @@ import loadComponent from "next/dynamic";
 import AdminLogin from "./components/AdminLogin";
 import { useIntakeStaff } from "./hooks/useIntakeStaff";
 import { getSupabase } from "./lib/utils";
-import { USERS, type Tech } from "./lib/constants";
+import { LEGACY_TECHS, type Tech } from "./lib/constants";
 import s from "./workspace.module.css";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +24,7 @@ export default function AdminDashboard() {
       try {
         const name = localStorage.getItem("restory_logged_name");
         const expires = Number(localStorage.getItem("restory_admin_expiry"));
-        setUser(Date.now() < expires ? (USERS.find((u) => u.name === name)?.name ?? null) : null);
+        setUser(Date.now() < expires ? (LEGACY_TECHS.find((u) => u.name === name)?.name ?? null) : null);
       } catch {
         setUser(null);
       }
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
       <Workspace
         key={staff.status === "staff" ? staff.id + staff.role : name}
         user={name}
-        isAdmin={staff.status === "staff" ? staff.role === "admin" : USERS.some((u) => u.name === name && u.role === "admin")}
+        isAdmin={staff.status === "staff" && staff.role === "admin"}
         onLogout={logout}
       />
     </>

@@ -40,6 +40,7 @@ export interface Job {
   is_aftercare?: boolean;
   aftercare_source_id?: string | null;
   from_customer_intake?: boolean;
+  customer_photo_count?: number;
   intake_assistants?: Tech[];
 }
 

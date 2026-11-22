@@ -1,51 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
 import AdminIcon from "../components/AdminIcon";
-import { useIntakeStaff } from "../hooks/useIntakeStaff";
+import { CustomerPhotoStrip } from "../components/CustomerPhotos";
 import { TECHS } from "../lib/constants";
 import { formatFullDate, getSupabase, today } from "../lib/utils";
-import { signInStaff } from "../lib/staffLogin";
 import s from "./intake.module.css";
 
 type Intake = {
-  id: string; received_at: string; customer_name: string; phone: string; address: string; item: string; notes: string | null;
+  id: string; received_at: string; customer_name: string; phone: string; address: string; item: string; notes: string | null; photo_count: number;
 };
 type Scheduled = { job_id: string; visit_date: string };
 const pageSize = 25;
 const receivedDate = new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Seoul" });
-
-function StaffSignIn() {
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  async function login(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (busy) return;
-    const fields = new FormData(event.currentTarget);
-    setBusy(true);
-    setError("");
-    try {
-      if (!await signInStaff(String(fields.get("login")), String(fields.get("password")))) {
-        setError("직원 아이디와 비밀번호를 다시 확인해 주세요.");
-      }
-    } catch {
-      setError("연결 상태를 확인한 뒤 다시 로그인해 주세요.");
-    } finally {
-      setBusy(false);
-    }
-  }
-  return <section className={s.panel}>
-    <h2>직원 계정으로 로그인</h2>
-    <p>고객 접수는 고관호·고현호 관리자가 확인하고 일정으로 등록할 수 있어요.</p>
-    <form className={s.fields} onSubmit={login} method="post">
-      <label>직원 아이디<input autoComplete="username" autoCapitalize="none" spellCheck={false} name="login" required /></label>
-      <label>비밀번호<input type="password" name="password" autoComplete="current-password" required /></label>
-      {error && <p role="alert" className={s.error}>{error}</p>}
-      <button className={s.primary} disabled={busy}>{busy ? "로그인 중…" : "직원 로그인"}</button>
-    </form>
-  </section>;
-}
 
 function CopyLink() {
   const [status, setStatus] = useState<"idle" | "copied" | "manual">("idle");
@@ -103,6 +70,7 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
       <dt>방문 주소</dt><dd>{row.address}</dd>
       {row.notes && <><dt>상담 내용</dt><dd>{row.notes}</dd></>}
     </dl>
+    {row.photo_count > 0 && <CustomerPhotoStrip requestId={row.id} count={row.photo_count} />}
     <form method="post" onSubmit={schedule} className={s.fields}>
       <fieldset disabled={busy}>
         <legend>방문 일정</legend>
@@ -119,7 +87,7 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
   </div>;
 }
 
-function Inbox() {
+export default function IntakeDesk({ onView }: { onView: (id: string, date: string) => void }) {
   const [rows, setRows] = useState<Intake[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -134,7 +102,7 @@ function Inbox() {
     setLoading(true);
     setError("");
     try {
-      let query = getSupabase().from("customer_intakes").select("id,received_at,customer_name,phone,address,item,notes")
+      let query = getSupabase().from("customer_intakes").select("id,received_at,customer_name,phone,address,item,notes,photo_count")
         .is("scheduled_at", null).order("received_at").order("id").limit(pageSize + 1);
       if (after) query = query.or(`received_at.gt.${after.received_at},and(received_at.eq.${after.received_at},id.gt.${after.id})`);
       const { data, error } = await query;
@@ -161,11 +129,15 @@ function Inbox() {
     void load();
     window.requestAnimationFrame(() => notice.current?.focus());
   }
-  return <>
+  return <div className={s.desk}>
     <CopyLink />
     {result && <div className={s.notice} role="status" tabIndex={-1} ref={notice}>
       <strong>{formatFullDate(result.visit_date)} 일정으로 등록됐어요.</strong>
-      <Link href={`/admin?day=${result.visit_date}&job=${result.job_id}#calendar`}>일정표에서 보기 <AdminIcon name="arrow" size={16} /></Link>
+      <a href={`/admin?day=${result.visit_date}&job=${result.job_id}#calendar`} onClick={event => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        onView(result.job_id, result.visit_date);
+      }}>일정표에서 보기 <AdminIcon name="arrow" size={16} /></a>
     </div>}
     <section className={s.panel} aria-label="확인 대기 접수">
       <div className={s.panelHead}><h2>접수 대기</h2>
@@ -176,37 +148,12 @@ function Inbox() {
       <ul className={s.list}>{rows.map(row => <li key={row.id}>
         <button className={s.summary} aria-expanded={expanded === row.id} aria-controls={expanded === row.id ? `intake-${row.id}` : undefined}
           onClick={() => setExpanded(expanded === row.id ? null : row.id)}>
-          <span><strong>{row.customer_name}</strong><span>{row.item}</span><small>{receivedDate.format(new Date(row.received_at))} 접수</small></span>
+          <span><strong>{row.customer_name}</strong><span>{row.item}</span><small>{receivedDate.format(new Date(row.received_at))} 접수{row.photo_count > 0 && ` · 사진 ${row.photo_count}장`}</small></span>
           <AdminIcon name="arrow" size={18} />
         </button>
         {expanded === row.id && <div id={`intake-${row.id}`}><ScheduleForm row={row} onScheduled={scheduled} /></div>}
       </li>)}</ul>
       {more && <button className={s.secondary} disabled={loading} onClick={() => void load(rows.at(-1))}>다음 접수 더 보기</button>}
     </section>
-  </>;
-}
-
-export default function IntakeDesk() {
-  const staff = useIntakeStaff();
-  const [error, setError] = useState("");
-  async function logout() {
-    try {
-      const { error } = await getSupabase().auth.signOut({ scope: "local" });
-      if (error) throw error;
-      setError("");
-    } catch { setError("로그아웃하지 못했어요. 다시 시도해 주세요."); }
-  }
-  return <main className={s.page}><div className={s.shell}>
-    <header className={s.bar}><Link href="/admin">← 업무 홈</Link>
-      {(staff.status === "staff" || staff.status === "unlisted") && <button type="button" onClick={logout}>직원 로그아웃</button>}
-    </header>
-    <h1>고객 접수함</h1>
-    {error && <p role="alert" className={s.error}>{error}</p>}
-    {staff.status === "loading" && <p role="status">직원 계정을 확인하는 중…</p>}
-    {staff.status === "guest" && <StaffSignIn />}
-    {staff.status === "error" && <div className={s.panel}><p role="alert">직원 권한을 확인하지 못했어요.</p><button className={s.secondary} onClick={() => window.location.reload()}>다시 확인</button></div>}
-    {staff.status === "unlisted" && <div className={s.panel}><p>직원으로 등록된 계정으로 로그인해 주세요.</p></div>}
-    {staff.status === "staff" && (staff.role === "admin" ? <Inbox key={staff.id} /> :
-      <section className={s.panel}><h2>{staff.name} 기사님</h2><p>배정된 방문 일정은 일정표에서 확인할 수 있어요.</p><Link className={s.primary} href="/admin#calendar">내 일정표 열기</Link></section>)}
-  </div></main>;
+  </div>;
 }

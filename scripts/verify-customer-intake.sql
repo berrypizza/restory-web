@@ -13,9 +13,22 @@ do $$ begin
 end $$;
 
 set local role anon;
-do $$ declare k uuid := '14000000-0000-4000-8000-000000000010'; begin
+do $$ declare
+  k uuid := '14000000-0000-4000-8000-000000000010';
+  pic jsonb := jsonb_build_object('image',encode(decode('ffd8ff0011ffd9','hex'),'base64'),
+    'thumbnail',encode(decode('ffd8ff22ffd9','hex'),'base64'));
+begin
+  perform public.submit_customer_intake(k,'검증 고객','010-0000-0000','테스트로 1','소파 수리','테스트 메모',true,jsonb_build_array(pic,pic));
   perform public.submit_customer_intake(k,'검증 고객','010-0000-0000','테스트로 1','소파 수리','테스트 메모',true);
-  perform public.submit_customer_intake(k,'검증 고객','010-0000-0000','테스트로 1','소파 수리','테스트 메모',true);
+  begin
+    perform public.submit_customer_intake('14000000-0000-4000-8000-000000000011','검증 사진','01000000000','테스트로 1','기타','',true,
+      jsonb_build_array(pic,jsonb_build_object('image','aGVsbG8=','thumbnail','aGVsbG8=')));
+    raise exception 'accepted invalid second photo';
+  exception when invalid_parameter_value then null; end;
+  begin
+    perform 1 from public.read_customer_photos(k,null,true);
+    raise exception 'anonymous photo access';
+  exception when insufficient_privilege then null; end;
   begin
     perform public.submit_customer_intake(gen_random_uuid(),'검증 고객','잘못된 번호','테스트로 1','기타','',true);
     raise exception 'invalid phone accepted';
@@ -35,6 +48,9 @@ do $$ declare k uuid := '14000000-0000-4000-8000-000000000010'; begin
 end $$;
 reset role;
 do $$ begin
+  if exists(select 1 from public.customer_intakes where id='14000000-0000-4000-8000-000000000011')
+    or (select count(*) from public.customer_intake_photos where request_id='14000000-0000-4000-8000-000000000010') <> 2
+    then raise exception 'intake or media saved partially or twice'; end if;
   if exists(select 1 from public.jobs where name = '검증 고객')
     or (select count(*) from public.customer_intakes where customer_name = '검증 고객') <> 1
     then raise exception 'submission must create exactly one pending request and no job'; end if;
@@ -44,6 +60,8 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000003', true);
 do $$ begin
   if exists(select 1 from public.customer_intakes) then raise exception 'technician read pending intake'; end if;
+  if exists(select 1 from public.read_customer_photos('14000000-0000-4000-8000-000000000010',null,true))
+    then raise exception 'technician read pending photos'; end if;
   begin
     perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000010',current_date,null,'',false);
     raise exception 'technician approval';
@@ -53,6 +71,9 @@ select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000001'
 do $$ begin
   if (select phone from public.customer_intakes where id='14000000-0000-4000-8000-000000000010') is distinct from '01000000000'
     then raise exception 'manager cannot review intake'; end if;
+  if (select photo_count from public.customer_intakes where id='14000000-0000-4000-8000-000000000010') is distinct from 2
+    or (select count(*) from public.read_customer_photos('14000000-0000-4000-8000-000000000010',null,true) where decode(jpeg,'base64')=decode('ffd8ff22ffd9','hex')) <> 2
+    then raise exception 'manager cannot preview both images'; end if;
   perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000010','2027-01-12','14:30','이주형',true);
 end $$;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000002', true);
@@ -62,7 +83,7 @@ do $$ declare saved uuid; retried uuid; begin
   if saved is null or retried is distinct from saved then raise exception 'repeat approval created another job'; end if;
   if not exists(select 1 from public.jobs where id=saved and is_measurement and visit_date='2027-01-12'
     and visit_time='14:30' and symptom='소파 수리' and name='검증 고객' and phone='01000000000'
-    and region='테스트로 1' and memo='테스트 메모' and tech='이주형' and status='배정')
+    and region='테스트로 1' and memo='테스트 메모' and tech='이주형' and status='배정' and customer_photo_count=2)
     then raise exception 'scheduled job incomplete'; end if;
   if not exists(select 1 from public.customer_intakes where job_id=saved and customer_name is null and phone is null
     and address is null and item is null and notes is null and scheduled_by='14000000-0000-4000-8000-000000000001')
@@ -74,11 +95,14 @@ end $$;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000003', true);
 do $$ begin
   if (select count(*) from public.jobs where name='검증 고객') <> 1 then raise exception 'assigned tech cannot see job'; end if;
+  if (select count(*) from public.read_customer_photos(null,(select id from public.jobs where name='검증 고객'),false)
+      where decode(jpeg,'base64')=decode('ffd8ff0011ffd9','hex')) <> 2 then raise exception 'assigned tech cannot see both original photos'; end if;
 end $$;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000004', true);
 do $$ begin
   if exists(select 1 from public.customer_intakes) or exists(select 1 from public.jobs where from_customer_intake)
     then raise exception 'nonstaff read intake'; end if;
+  if exists(select 1 from public.customer_intake_photos) then raise exception 'nonstaff read photos'; end if;
 end $$;
 reset role;
 select set_config('request.jwt.claim.sub','',true);
@@ -97,5 +121,10 @@ do $$ begin
     raise exception 'deleted job recreated';
   exception when no_data_found then null; end;
   if not exists(select 1 from public.jobs where name='검증 재방문' and from_customer_intake) then raise exception 'orphan lost privacy'; end if;
+end $$;
+reset role;
+do $$ begin
+  if exists(select 1 from public.customer_intake_photos where request_id='14000000-0000-4000-8000-000000000010')
+    then raise exception 'photos retained after full job deletion'; end if;
 end $$;
 rollback;

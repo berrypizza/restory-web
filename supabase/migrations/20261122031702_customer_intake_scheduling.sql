@@ -24,6 +24,7 @@ create table public.customer_intakes (
   address text,
   item text,
   notes text,
+  photo_count smallint not null default 0 check (photo_count between 0 and 6),
   scheduled_at timestamptz,
   scheduled_by uuid references public.intake_staff(user_id) on delete set null,
   job_id uuid unique references public.jobs(id) on delete set null,
@@ -43,7 +44,35 @@ using (exists (select 1 from public.intake_staff where user_id = (select auth.ui
 
 alter table public.jobs
   add column from_customer_intake boolean not null default false,
+  add column customer_photo_count smallint not null default 0 check (customer_photo_count between 0 and 6),
   add column intake_assistants text[] not null default '{}';
+
+-- Keep compressed media outside calendar reads. Intake submission, approval and deletion are atomic.
+create table public.customer_intake_photos (
+  request_id uuid not null references public.customer_intakes(id) on delete cascade,
+  photo_number smallint not null check (photo_number between 1 and 6),
+  job_id uuid references public.jobs(id) on delete cascade,
+  image bytea not null check (octet_length(image) between 5 and 440000),
+  thumbnail bytea not null check (octet_length(thumbnail) between 5 and 22000),
+  primary key(request_id, photo_number)
+);
+create index customer_photo_job on public.customer_intake_photos(job_id, photo_number) where job_id is not null;
+alter table public.customer_intake_photos enable row level security;
+revoke all on public.customer_intake_photos from public, anon, authenticated;
+grant select on public.customer_intake_photos to authenticated;
+create policy photo_visible_with_parent on public.customer_intake_photos for select to authenticated using (
+  (job_id is null and exists (select 1 from public.customer_intakes r where r.id = request_id and r.scheduled_at is null))
+  or exists (select 1 from public.jobs j where j.id = job_id and j.from_customer_intake)
+);
+create function public.read_customer_photos(p_request uuid, p_job uuid, p_previews boolean)
+returns table(photo_number smallint, jpeg text) language sql stable security invoker set search_path = '' as $$
+  select p.photo_number, encode(case when p_previews then p.thumbnail else p.image end, 'base64')
+  from public.customer_intake_photos p
+  where (p_job is null and p_request = p.request_id) or (p_request is null and p_job = p.job_id)
+  order by p.photo_number;
+$$;
+revoke all on function public.read_customer_photos(uuid,uuid,boolean) from public, anon, authenticated;
+grant execute on function public.read_customer_photos(uuid,uuid,boolean) to authenticated;
 
 create function intake_private.can_access_job(primary_tech text, assistants text[])
 returns boolean language sql stable security definer set search_path = '' as $$
@@ -88,10 +117,14 @@ create trigger customer_job_origin before insert or update of from_customer_inta
 on public.jobs for each row execute function intake_private.keep_job_origin();
 
 create function intake_private.submit_request(p_id uuid, p_name text, p_phone text, p_address text,
-  p_item text, p_notes text, p_consent boolean)
+  p_item text, p_notes text, p_consent boolean, p_photos jsonb)
 returns void language plpgsql security definer set search_path = '' as $$
 declare
   digits text := regexp_replace(coalesce(p_phone,''), '[[:space:]()-]', '', 'g');
+  attachment jsonb;
+  jpeg bytea;
+  thumb bytea;
+  number smallint := 0;
 begin
   digits := regexp_replace(digits, '^\+820?', '0');
   p_name := regexp_replace(p_name, '^[[:space:]]+|[[:space:]]+$', '', 'g');
@@ -105,21 +138,39 @@ begin
      length(coalesce(p_notes,'')) > 800 then
     raise exception 'invalid_intake' using errcode = '22023';
   end if;
-  insert into public.customer_intakes (id, customer_name, phone, address, item, notes)
+  if jsonb_typeof(p_photos) is distinct from 'array' then raise exception 'invalid_photos' using errcode='22023'; end if;
+  if jsonb_array_length(p_photos) > 6 then raise exception 'too_many_photos' using errcode='22023'; end if;
+  insert into public.customer_intakes (id, customer_name, phone, address, item, notes, photo_count)
   values (p_id, p_name, digits, p_address, p_item,
-    nullif(btrim(replace(p_notes, '<!--RESTORY_', 'RESTORY_')), ''))
+    nullif(btrim(replace(p_notes, '<!--RESTORY_', 'RESTORY_')), ''), jsonb_array_length(p_photos))
   on conflict (id) do nothing;
+  if not found then return; end if;
+  for attachment in select value from jsonb_array_elements(p_photos) loop
+    if coalesce(length(attachment->>'image'),0) not between 8 and 586668 or
+       coalesce(length(attachment->>'thumbnail'),0) not between 8 and 29336 then
+      raise exception 'invalid_photo_size' using errcode='22023';
+    end if;
+    jpeg := decode(attachment->>'image','base64');
+    thumb := decode(attachment->>'thumbnail','base64');
+    if substr(jpeg,1,3) <> decode('ffd8ff','hex') or substr(jpeg,length(jpeg)-1) <> decode('ffd9','hex')
+       or substr(thumb,1,3) <> decode('ffd8ff','hex') or substr(thumb,length(thumb)-1) <> decode('ffd9','hex')
+       or length(jpeg) > 440000 or length(thumb) > 22000 then
+      raise exception 'invalid_jpeg' using errcode='22023';
+    end if;
+    number := number + 1;
+    insert into public.customer_intake_photos(request_id, photo_number, image, thumbnail) values(p_id, number, jpeg, thumb);
+  end loop;
 end;
 $$;
-revoke all on function intake_private.submit_request(uuid,text,text,text,text,text,boolean) from public, anon, authenticated;
-grant execute on function intake_private.submit_request(uuid,text,text,text,text,text,boolean) to anon, authenticated;
+revoke all on function intake_private.submit_request(uuid,text,text,text,text,text,boolean,jsonb) from public, anon, authenticated;
+grant execute on function intake_private.submit_request(uuid,text,text,text,text,text,boolean,jsonb) to anon, authenticated;
 create function public.submit_customer_intake(p_id uuid, p_name text, p_phone text, p_address text,
-  p_item text, p_notes text, p_consent boolean)
+  p_item text, p_notes text, p_consent boolean, p_photos jsonb default '[]')
 returns void language sql security invoker set search_path = '' as $$
-  select intake_private.submit_request(p_id,p_name,p_phone,p_address,p_item,p_notes,p_consent);
+  select intake_private.submit_request(p_id,p_name,p_phone,p_address,p_item,p_notes,p_consent,p_photos);
 $$;
-revoke all on function public.submit_customer_intake(uuid,text,text,text,text,text,boolean) from public, anon, authenticated;
-grant execute on function public.submit_customer_intake(uuid,text,text,text,text,text,boolean) to anon, authenticated;
+revoke all on function public.submit_customer_intake(uuid,text,text,text,text,text,boolean,jsonb) from public, anon, authenticated;
+grant execute on function public.submit_customer_intake(uuid,text,text,text,text,text,boolean,jsonb) to anon, authenticated;
 
 create function intake_private.schedule_request(p_id uuid, p_date date, p_time time, p_tech text, p_measurement boolean)
 returns table(job_id uuid, visit_date date) language plpgsql security definer set search_path = '' as $$
@@ -141,11 +192,12 @@ begin
     raise exception 'invalid_schedule' using errcode = '22023';
   end if;
   insert into public.jobs (visit_date, visit_time, name, phone, region, symptom, memo, tech,
-    status, price, is_measurement, as_until, from_customer_intake)
+    status, price, is_measurement, as_until, from_customer_intake, customer_photo_count)
   values (p_date, p_time, request.customer_name, request.phone, request.address, request.item,
     coalesce(request.notes,''), technician, case when technician = '' then '대기' else '배정' end,
-    0, p_measurement, (p_date + interval '1 year')::date, true)
+    0, p_measurement, (p_date + interval '1 year')::date, true, request.photo_count)
   returning id into new_job_id;
+  update public.customer_intake_photos set job_id = new_job_id where request_id = p_id;
   -- Keep the retry receipt even after the job is deleted, and keep only one copy of customer details.
   update public.customer_intakes set scheduled_at = now(), scheduled_by = (select auth.uid()), job_id = new_job_id,
     customer_name = null, phone = null, address = null, item = null, notes = null where id = p_id;

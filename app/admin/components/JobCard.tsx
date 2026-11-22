@@ -7,6 +7,7 @@ import PhotoCapture, { type PhotoMode } from "./PhotoCapture";
 import MaterialSection from "./MaterialSection";
 import { mergePhotoChanges, photoList } from "../lib/photoList";
 import JobPhotoViewer from "./JobPhotoViewer";
+import { CustomerPhotoViewer } from "./CustomerPhotos";
 import photoStyle from "./jobPhotos.module.css";
 import type { Job } from "../lib/types";
 import type { FollowUpKind } from "../lib/followUp";
@@ -77,6 +78,8 @@ export default function JobCard({
     ...photos.map((url, i) => ({ url, label: `완료 사진 ${i + 1}`, group: "완료" })),
   ];
   const finished = isFinishedJob(job);
+  const customerPhotos = job.customer_photo_count ?? 0;
+  const photoCount = allPhotos.length + customerPhotos;
   const measured = canScheduleInstall(job);
   const statusText = visitStatus(job, installVisit ? "install" : measurementVisit ? "visit" : undefined);
   const canCompleteThisVisit =
@@ -204,11 +207,11 @@ export default function JobCard({
           type="button"
           className={photoStyle.secondary}
           onClick={() => {
-            if (allPhotos.length) setViewPhotos(true);
+            if (photoCount) setViewPhotos(true);
             else setPhotoAction("manage");
           }}
         >
-          {allPhotos.length ? `현장 사진 ${allPhotos.length}장` : "현장 사진 추가"}
+          {photoCount ? `현장 사진 ${photoCount}장` : "현장 사진 추가"}
         </button>
         {canCompleteThisVisit && (
           <button
@@ -352,7 +355,9 @@ export default function JobCard({
           )}
         </div>
       )}
-      {viewPhotos && allPhotos.length > 0 && (
+      {viewPhotos && customerPhotos > 0 && <CustomerPhotoViewer jobId={job.id} extra={allPhotos}
+        onClose={() => setViewPhotos(false)} onManage={() => { setViewPhotos(false); setPhotoAction("manage"); }} />}
+      {viewPhotos && !customerPhotos && allPhotos.length > 0 && (
         <JobPhotoViewer
           photos={allPhotos}
           onClose={() => setViewPhotos(false)}
