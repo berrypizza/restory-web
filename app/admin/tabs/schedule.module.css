@@ -3,6 +3,17 @@
 .calendarHead {padding:18px 16px 14px}
 .calendarHead > div {justify-content:space-between}
 .calendarHead h2 {font-size:19px}
+.viewSwitch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  margin-top: 8px;
+  background: #eef2f6;
+  border-radius: 12px;
+}
+.viewSwitch button { min-height: 40px; border-radius: 9px; color: #4c6076; font-size: 14px; font-weight: 650; }
+.viewSwitch button[aria-pressed=true] { background: #fff; color: #184cad; box-shadow: 0 1px 4px #142d4c20; }
 .dates {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:0 8px 9px}
 .weekday,.day {text-align:center}
 .weekday {padding:6px 0 8px;color:#5e6c7e;font-size:13px;font-weight:650}

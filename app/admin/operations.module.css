@@ -512,6 +512,8 @@
   font-size: 12px;
   color: #73541b;
 }
+.memo[data-author="customer"] { background: #eff4fa; color: #344a62; }
+.memo[data-author="customer"] b { color: #466484; }
 .detailNote {
   margin: 0;
   color: #526276;
@@ -565,6 +567,18 @@
   font-size: 11px;
   font-weight: 600;
 }
+.clockInputs {
+  display: flex;
+  gap: 5px;
+}
+.field .clockInputs select {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 6px 1px;
+  font-variant-numeric: tabular-nums;
+}
+.field .clockInputs select:first-child { flex-grow: 1.35; }
+.clockInputs select:disabled { color: #738195; }
 .field :is(input:not([type="checkbox"]), select, textarea),
 .timeControls input {
   width: 100%;

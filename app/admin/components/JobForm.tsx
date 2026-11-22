@@ -22,6 +22,7 @@ import s from "./intake.module.css";
 
 interface JobFormProps {
   form: JobFormState;
+  customerNotes?: string | null;
   setForm: React.Dispatch<React.SetStateAction<JobFormState>>;
   editId: string | null;
   initialField?: QueueField;
@@ -43,7 +44,7 @@ function Section({ title, summary, children }: { title: string; summary?: string
   );
 }
 
-export default function JobForm({ form, setForm, editId, initialField, saveError, saving, onSave, onClose }: JobFormProps) {
+export default function JobForm({ form, customerNotes, setForm, editId, initialField, saveError, saving, onSave, onClose }: JobFormProps) {
   const titleId = useId();
   const dismissId = useId();
   const formId = useId();
@@ -288,7 +289,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
         </fieldset>
         <fieldset className={s.section}>
           <legend>방문 일정</legend>
-          <div className={s.pair}>
+          <div className={s.dateTimePair}>
             <label className={common.field}>
               <span>방문일</span>
               <input
@@ -322,7 +323,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
           {form.is_measurement && (
             <div className={s.install}>
               <p>{form.install_completed ? "시공 일정을 비워도 완료 기록과 매출은 기존 시공일에 남아요." : "시공 일정은 실측 후에도 입력할 수 있어요."}</p>
-              <div className={s.pair}>
+              <div className={s.dateTimePair}>
                 <label className={common.field}>
                   <span>시공일</span>
                   <input
@@ -460,7 +461,7 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
             title="사진·현장 메모"
             summary={[
               photos.length ? "사진 " + photos.length + "장" : "",
-              visibleMemo.trim() ? "메모 있음" : "",
+              visibleMemo.trim() || customerNotes ? "메모 있음" : "",
             ]
               .filter(Boolean)
               .join(" · ")}
@@ -474,8 +475,9 @@ export default function JobForm({ form, setForm, editId, initialField, saveError
               onUnresolvedChange={setUnresolvedPhotos}
               disabled={saving}
             />
+            {customerNotes && <p className={common.memo} data-author="customer"><b>고객 메모</b>{customerNotes}</p>}
             <label className={common.field}>
-              <span>현장 메모</span>
+              <span>{customerNotes != null ? "직원 메모" : "현장 메모"}</span>
               <textarea
                 rows={3}
                 value={visibleMemo}

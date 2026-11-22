@@ -41,6 +41,27 @@ export function revenueDate(job: Job) {
   return job.is_measurement ? job.install_completed_on || job.install_date || job.visit_date : job.visit_date;
 }
 
+export function dailyRevenue(jobs: Job[], day: string) {
+  let expected = 0;
+  let completed = 0;
+  let expectedCount = 0;
+  let completedCount = 0;
+  for (const job of jobs) {
+    if (job.is_aftercare || job.status === "취소") continue;
+    const completedOn = revenueDate(job);
+    const workDay = completedOn ?? (job.is_measurement ? job.install_date : job.visit_date);
+    if (workDay !== day) continue;
+    const amount = job.price || 0;
+    expected += amount;
+    expectedCount++;
+    if (completedOn) {
+      completed += amount;
+      completedCount++;
+    }
+  }
+  return { expected, completed, expectedCount, completedCount };
+}
+
 export function finishedInMonth(jobs: Job[], month: string) {
   return jobs
     .filter((job) => revenueDate(job)?.startsWith(month))

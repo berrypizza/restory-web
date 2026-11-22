@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  grid-template-areas: "summary week" "agenda queue";
+  grid-template-areas: "summary week" "revenue revenue" "agenda queue";
   gap: 20px;
   align-items: start;
 }
@@ -32,6 +32,31 @@
   background: #fff;
   border: 1px solid var(--line);
 }
+.revenue {
+  grid-area: revenue;
+  min-width: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: white;
+}
+.revenueValues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+.revenueValues > div {
+  flex: 1 1 125px;
+  padding: 14px 16px;
+  background: #f5f7fa;
+  border-radius: 14px;
+}
+.revenueValues > div:last-child { background: #eef4ff; }
+.revenueValues dt { color: #506178; font-size: 14px; font-weight: 650; }
+.revenueValues dd { margin: 3px 0 0; font-size: clamp(21px, 3vw, 32px); font-weight: 750; letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
+.revenueValues > div:last-child dd:first-of-type { color: #1c55b4; }
+.revenueValues .revenueCount { margin-top: 4px; color: var(--muted); font-size: 12px; font-weight: 500; letter-spacing: normal; }
 .summary, .week {
   min-height: 214px;
   align-self: stretch;
@@ -226,7 +251,10 @@
   .queueLink { gap: 6px; grid-template-columns: 34px minmax(0, 1fr) auto 12px; font-size: 14px; }
 }
 @media (max-width: 760px) {
-  .grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "summary" "agenda" "queue" "week"; gap: 14px; }
+  .grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "summary" "revenue" "agenda" "queue" "week"; gap: 14px; }
+  .revenue { padding: 16px; border-radius: 18px; }
+  .revenueValues { gap: 6px; margin-top: 10px; }
+  .revenueValues > div { padding: 11px 12px; }
   .summary, .week, .agenda, .queue { border-radius: 18px; }
   .summary { min-height: 166px; padding: 19px 21px 0; }
   .summaryLabel { font-size: 14px; }

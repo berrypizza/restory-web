@@ -45,15 +45,6 @@ export const LEGACY_TECHS: {
   { id: "younghun", name: "강영훈", role: "tech", password: "su2000" },
 ];
 
-export const QUICK_TIMES = [
-  { label: "오전 9시", ampm: "AM" as const, h: 9, m: 0 },
-  { label: "오전 10시", ampm: "AM" as const, h: 10, m: 0 },
-  { label: "오전 11시", ampm: "AM" as const, h: 11, m: 0 },
-  { label: "오후 1시", ampm: "PM" as const, h: 1, m: 0 },
-  { label: "오후 2시", ampm: "PM" as const, h: 2, m: 0 },
-  { label: "오후 3시", ampm: "PM" as const, h: 3, m: 0 },
-];
-
 export const AM_HOURS = [6, 7, 8, 9, 10, 11, 12];
 export const PM_HOURS = [1, 2, 3, 4, 5, 6, 7, 8];
 

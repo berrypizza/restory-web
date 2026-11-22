@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import AdminIcon, { type AdminIconName } from "../components/AdminIcon";
 import { formatDate, formatFullDate, formatTime } from "../lib/utils";
+import { dailyRevenue, won } from "../lib/settlement";
 import { indexVisits, inQueue, shiftDay, visitDone, visitLabel, visitStatus, workQueues, type VisitPhase } from "../lib/schedule";
 import type { Job } from "../lib/types";
 import common from "../operations.module.css";
@@ -37,6 +38,7 @@ export default function HomeTab({ jobs, day, isAdmin, reviews, onDay, onVisit, o
   onQueue: () => void;
 }) {
   const byDate = useMemo(() => indexVisits(jobs), [jobs]);
+  const revenue = useMemo(() => dailyRevenue(jobs, day), [jobs, day]);
   const visits = byDate.get(day) ?? [];
   const done = visits.filter(visitDone).length;
   const cancelled = visits.filter(({ job }) => job.status === "취소").length;
@@ -71,6 +73,25 @@ export default function HomeTab({ jobs, day, isAdmin, reviews, onDay, onVisit, o
           <span className={s.summaryAction}>{nextVisit ? "다음 현장 보기" : "일정 보기"} <AdminIcon name="arrow" size={14} /></span>
         </span>
       </button>
+
+      <section className={s.revenue} aria-label="오늘 매출">
+        <div className={s.panelHead}>
+          <h2>오늘 매출</h2>
+          <time className={s.meta} dateTime={day}>{formatDate(day)}{!isAdmin && " · 내 작업"}</time>
+        </div>
+        <dl className={s.revenueValues}>
+          <div>
+            <dt>예상 매출</dt>
+            <dd>{won(revenue.expected)}</dd>
+            <dd className={s.revenueCount}>예정·완료 {revenue.expectedCount}건</dd>
+          </div>
+          <div>
+            <dt>완료 매출</dt>
+            <dd>{won(revenue.completed)}</dd>
+            <dd className={s.revenueCount}>작업 완료 {revenue.completedCount}건</dd>
+          </div>
+        </dl>
+      </section>
 
       <section className={s.agenda}>
         <div className={s.panelHead}>

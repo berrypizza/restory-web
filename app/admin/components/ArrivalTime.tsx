@@ -1,63 +1,40 @@
 "use client";
 
-import { useId, useState } from "react";
-import { QUICK_TIMES } from "../lib/constants";
-import common from "../operations.module.css";
+import { useId } from "react";
+import s from "../operations.module.css";
 
-const quickTimes = QUICK_TIMES.map((time) => ({
-  label: time.label,
-  value:
-    String((time.h % 12) + (time.ampm === "PM" ? 12 : 0)).padStart(2, "0") +
-    ":" +
-    String(time.m).padStart(2, "0"),
-}));
+const hours = Array.from({ length: 24 }, (_, index) => String(index).padStart(2, "0"));
 
-export default function ArrivalTime({
-  value,
-  name,
-  label,
-  onChange,
-}: {
+export default function ArrivalTime({ value, name, label, onChange }: {
   value: string;
   name: string;
   label: string;
   onChange: (value: string) => void;
 }) {
   const id = useId();
-  const [custom, setCustom] = useState(() =>
-    Boolean(value && !quickTimes.some((item) => item.value === value.slice(0, 5))),
-  );
-  const selectValue = custom ? "custom" : value.slice(0, 5);
+  const hour = value.slice(0, 2);
+  const minute = value.slice(3, 5);
+  const seconds = Number(value.slice(6));
+  const legacy = Boolean(value) && (!hours.includes(hour) || (minute !== "00" && minute !== "30") || seconds !== 0);
   return (
-    <div className={common.field}>
+    <div className={s.field}>
       <label htmlFor={id}>{label}</label>
-      <select
-        id={id}
-        name={custom ? undefined : name}
-        value={selectValue}
-        onChange={(event) => {
-          const choice = event.target.value;
-          setCustom(choice === "custom");
-          if (choice !== "custom") onChange(choice);
-        }}
-      >
-        <option value="">시간 미정</option>
-        {quickTimes.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-        <option value="custom">직접 입력</option>
-      </select>
-      {custom && (
-        <input
-          type="time"
-          name={name}
-          aria-label={label + " 직접 입력"}
-          value={value.slice(0, 5)}
-          onChange={(event) => onChange(event.target.value)}
-        />
-      )}
+      <div className={s.clockInputs}>
+        <select id={id} value={legacy ? "original" : hour} onChange={event => {
+          const next = event.target.value;
+          onChange(next ? `${next}:${minute === "30" ? "30" : "00"}` : "");
+        }}>
+          <option value="">시간 미정</option>
+          {legacy && <option value="original" disabled>기존 {seconds ? value : value.slice(0, 5)}</option>}
+          {hours.map(h => <option key={h} value={h}>{h}시</option>)}
+        </select>
+        {!legacy && <select aria-label={`${label} 분`} disabled={!hour} value={minute || "00"}
+          onChange={event => onChange(`${hour}:${event.target.value}`)}>
+          <option value="00">00분</option>
+          <option value="30">30분</option>
+        </select>}
+      </div>
+      <input type="hidden" name={name} value={value} />
     </div>
   );
 }

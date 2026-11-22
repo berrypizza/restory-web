@@ -32,7 +32,7 @@ export default function FollowUpDialog({ kind, job, onClose, onSave }: Props) {
   const [draft, setDraft] = useState<FollowUpDraft>(() => ({
     id: crypto.randomUUID(),
     date: install ? job.install_date || "" : day,
-    time: install ? job.install_time?.slice(0, 5) || "" : "",
+    time: install ? job.install_time || "" : "",
     tech: job.tech || "",
     memo: getVisibleMemo(job.memo),
   }));
@@ -74,7 +74,7 @@ export default function FollowUpDialog({ kind, job, onClose, onSave }: Props) {
           <span>{formatFullDate(install ? job.visit_date : job.install_completed_on || job.install_date || job.visit_date)} {install ? "실측 방문" : "기존 작업"}</span>
         </section>
         <div className={s.section}>
-          <div className={s.pair}>
+          <div className={s.dateTimePair}>
             <label className={common.field}>
               <span>{install ? "시공일" : "A/S 방문일"}</span>
               <input ref={dateInput} type="date" required min={install ? job.visit_date : undefined}

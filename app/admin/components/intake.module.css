@@ -48,7 +48,7 @@
 }
 .quickDates button[aria-pressed="true"] { color: #194da1; background: #eaf1ff; border-color: #aac3ec; }
 .quickDates button:disabled { opacity: .45; }
-.pair {
+.pair, .dateTimePair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 11px;
@@ -176,6 +176,10 @@
   }
   .pair {
     gap: 8px;
+  }
+  .dateTimePair {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
   .body input[type="date"],
   .body input[type="time"] {

@@ -179,9 +179,12 @@ export default function JobCard({
             </a>
           )}
         </div>
+        {job.customer_notes && (
+          <p className={s.memo} data-author="customer"><b>고객 메모</b>{job.customer_notes}</p>
+        )}
         {memo && (
           <p className={s.memo}>
-            <b>현장 메모</b>
+            <b>{job.customer_notes != null ? "직원 메모" : "현장 메모"}</b>
             {memo}
           </p>
         )}

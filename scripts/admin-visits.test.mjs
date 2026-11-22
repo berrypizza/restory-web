@@ -17,13 +17,36 @@ function adminModule(name) {
   return modules.get(name);
 }
 
-const { finishedInMonth, jobAmount, technicianBreakdown, productBreakdown } = adminModule("settlement");
+const { dailyRevenue, finishedInMonth, jobAmount, technicianBreakdown, productBreakdown } = adminModule("settlement");
 const { visitsForJob, visitDone, inQueue } = adminModule("schedule");
 const { aftercareVisit } = adminModule("followUp");
 const { setExtraTechsInMemo, getVisibleMemo, getJobTechs } = adminModule("jobTechs");
 const regular = { id: "one", name: "테스트", phone: "000", region: "현장", symptom: "소파 수리", price: 320000,
   tech: "주담당", memo: setExtraTechsInMemo("출입 메모", ["동행"]), visit_date: "2026-11-30", status: "완료" };
 const measured = { ...regular, is_measurement: true, install_completed: false };
+
+test("일간 예상 매출은 오늘 예정과 완료를 합산하고, 완료 매출은 그중 완료한 작업만 잡는다", () => {
+  const day = regular.visit_date;
+  const tomorrow = "2026-12-01";
+  const jobs = [
+    { ...regular, status: "배정", price: 180000 },
+    { ...regular, price: 100000 },
+    { ...measured, visit_date: "2026-11-28", install_date: day, price: 45000 },
+    { ...measured, install_date: day, install_completed: true, price: 250000 },
+    { ...measured, install_date: null, install_completed: true, install_completed_on: day, price: 12000 },
+    { ...regular, status: "대기", price: 0 },
+    { ...measured, install_date: tomorrow, price: 66000 },
+    { ...regular, visit_date: tomorrow, price: 4000 },
+    measured,
+    { ...regular, status: "취소" },
+    { ...regular, is_aftercare: true },
+  ];
+  assert.deepEqual(dailyRevenue(jobs, day), { expected: 587000, completed: 362000, expectedCount: 6, completedCount: 3 });
+  assert.deepEqual(dailyRevenue(jobs, tomorrow), { expected: 70000, completed: 4000, expectedCount: 2, completedCount: 1 });
+  assert.deepEqual(dailyRevenue(jobs, "2026-11-28"), { expected: 0, completed: 0, expectedCount: 0, completedCount: 0 });
+  jobs[0].status = "완료";
+  assert.deepEqual(dailyRevenue(jobs, day), { expected: 587000, completed: 542000, expectedCount: 6, completedCount: 4 });
+});
 
 test("실측 완료와 시공일 저장은 매출을 만들지 않고 시공 완료는 시공월에 한 번 반영된다", () => {
   assert(inQueue(measured, "unscheduled"));

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import type { Job } from "../lib/types";
 import type { FollowUpKind } from "../lib/followUp";
 import type { Tech } from "../lib/constants";
@@ -14,6 +14,8 @@ import schedule from "./schedule.module.css";
 
 interface Props {
   jobs: Job[];
+  view: CalendarView;
+  onView: (view: CalendarView) => void;
   selectedDay: string;
   onSelectDay: (date: string) => void;
   calTechFilter: Tech | "전체";
@@ -28,19 +30,10 @@ interface Props {
   onDeleteJob: (job: Job) => void;
 }
 
-const compactQuery = "(max-width: 1099px)";
-function subscribeViewport(callback: () => void) {
-  const media = window.matchMedia(compactQuery);
-  media.addEventListener("change", callback);
-  return () => media.removeEventListener("change", callback);
-}
-const compactViewport = () => window.matchMedia(compactQuery).matches;
-const desktopViewport = () => false;
+export type CalendarView = "month" | "week";
 
-export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilter, setCalTechFilter, isAdmin, loggedUser, onUpdate, onEdit, onRemoveInstall, onDeleteJob, onFollowUp, onShowSource}: Props) {
-  const compact = useSyncExternalStore(subscribeViewport, compactViewport, desktopViewport);
-  const [fullMonth, setFullMonth] = useState(false);
-  const week = compact && !fullMonth;
+export default function CalendarTab({jobs, view, onView, selectedDay, onSelectDay, calTechFilter, setCalTechFilter, isAdmin, loggedUser, onUpdate, onEdit, onRemoveInstall, onDeleteJob, onFollowUp, onShowSource}: Props) {
+  const week = view === "week";
   const todayKey = today();
   const monthKey = selectedDay.slice(0, 7);
   const [year, month] = monthKey.split("-").map(Number);
@@ -68,6 +61,10 @@ export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilt
     <section className={schedule.calendar} aria-label={week ? "주간 작업 달력" : "월간 작업 달력"}>
       <div className={schedule.calendarHead}>
         <MonthControls label={`${year}년 ${month}월`} onPrevious={()=>move(-1)} onNext={()=>move(1)} onToday={()=>onSelectDay(todayKey)} unit={week ? "주":"달"} />
+        <div className={schedule.viewSwitch} role="group" aria-label="달력 보기 방식">
+          <button type="button" aria-pressed={!week} onClick={() => onView("month")}>월별</button>
+          <button type="button" aria-pressed={week} onClick={() => onView("week")}>주별</button>
+        </div>
       </div>
       <div className={schedule.dates}>
         {["일","월","화","수","목","금","토"].map(day=><span key={day} className={schedule.weekday}>{day}</span>)}
@@ -78,7 +75,7 @@ export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilt
             aria-label={`${formatFullDate(date)}, 일정 ${events.length}건`}
             aria-pressed={date === selectedDay} aria-current={date === todayKey ? "date":undefined}
             data-outside={date.slice(0,7)!==monthKey || undefined}
-            onClick={()=>{onSelectDay(date); if (compact && fullMonth) setFullMonth(false);}}>
+            onClick={()=>onSelectDay(date)}>
             <span>{Number(date.slice(8))}</span>
             <small>{events.length > 0 ? `${events.length}건` : "\u00a0"}</small>
           </button>;
@@ -91,7 +88,6 @@ export default function CalendarTab({jobs, selectedDay, onSelectDay, calTechFilt
           <input aria-label="날짜로 이동" type="date" value={selectedDay}
             onChange={event=>{ const date=event.target.value; if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)) onSelectDay(date); }}/>
         </label>
-        {compact && <button type="button" aria-expanded={fullMonth} onClick={()=>setFullMonth(!fullMonth)}>{fullMonth ? "한 주 보기" : "한 달 보기"}</button>}
       </div>
     </section>
     <section aria-label="선택한 날짜의 일정" className={schedule.agenda} id="day-agenda" tabIndex={-1}>

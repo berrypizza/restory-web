@@ -127,4 +127,49 @@ do $$ begin
   if exists(select 1 from public.customer_intake_photos where request_id='14000000-0000-4000-8000-000000000010')
     then raise exception 'photos retained after full job deletion'; end if;
 end $$;
+
+set local role anon;
+select public.submit_customer_intake('14000000-0000-4000-8000-000000000020','메모 검증','01000000000','검증 주소','기타','고객 원문',true);
+do $$ begin
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모');
+    raise exception 'anonymous approval with staff memo';
+  exception when insufficient_privilege then null; end;
+end $$;
+reset role;
+set local role authenticated;
+select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000003',true);
+do $$ begin
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모');
+    raise exception 'technician approval with staff memo';
+  exception when insufficient_privilege then null; end;
+end $$;
+select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000001',true);
+do $$ declare
+  request_id uuid := '14000000-0000-4000-8000-000000000020';
+  saved uuid;
+  retried uuid;
+  invalid_time time;
+begin
+  foreach invalid_time in array array[time '09:15', time '09:30:01', time '24:00'] loop
+    begin
+      perform public.schedule_customer_intake(request_id,current_date,invalid_time,'',false,'');
+      raise exception 'off-grid time accepted';
+    exception when invalid_parameter_value then null; end;
+  end loop;
+  begin
+    perform public.schedule_customer_intake(request_id,current_date,null,'',false,repeat('가',1201));
+    raise exception 'overlength staff memo accepted';
+  exception when invalid_parameter_value then null; end;
+  select job_id into saved from public.schedule_customer_intake(request_id,current_date,'09:30','이주형',false,'  직원 메모  ');
+  select job_id into retried from public.schedule_customer_intake(request_id,current_date,'12:00','',false,'재시도 메모');
+  if saved is null or retried is distinct from saved or not exists (
+    select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 메모' and visit_time='09:30'
+  ) then raise exception 'approval or retry mixed the two authors or changed the time'; end if;
+  update public.jobs set memo='직원 수정' where id=saved;
+  if not exists(select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 수정')
+    then raise exception 'staff edit changed the customer note'; end if;
+end $$;
+reset role;
 rollback;

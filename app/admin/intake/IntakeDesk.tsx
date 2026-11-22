@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import AdminIcon from "../components/AdminIcon";
+import ArrivalTime from "../components/ArrivalTime";
 import { CustomerPhotoStrip } from "../components/CustomerPhotos";
 import { TECHS } from "../lib/constants";
 import { formatFullDate, getSupabase, today } from "../lib/utils";
@@ -36,6 +37,7 @@ function CopyLink() {
 }
 
 function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result: Scheduled) => void }) {
+  const [time, setTime] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const locked = useRef(false);
@@ -50,6 +52,7 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
       const { data, error } = await getSupabase().rpc("schedule_customer_intake", {
         p_id: row.id, p_date: fields.get("date"), p_time: fields.get("time") || null,
         p_tech: fields.get("tech"), p_measurement: fields.get("kind") === "measure",
+        p_staff_memo: String(fields.get("staffMemo") ?? "").trim(),
       }).single<Scheduled>();
       if (error || !data) {
         setError(error?.code === "P0002" ? "이미 처리된 접수예요. 접수함을 새로고침해 주세요."
@@ -68,18 +71,23 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
     <dl>
       <dt>전화번호</dt><dd><a href={`tel:${row.phone}`}>{row.phone}</a></dd>
       <dt>방문 주소</dt><dd>{row.address}</dd>
-      {row.notes && <><dt>상담 내용</dt><dd>{row.notes}</dd></>}
+      {row.notes && <><dt>고객 메모</dt><dd>{row.notes}</dd></>}
     </dl>
     {row.photo_count > 0 && <CustomerPhotoStrip requestId={row.id} count={row.photo_count} />}
     <form method="post" onSubmit={schedule} className={s.fields}>
       <fieldset disabled={busy}>
         <legend>방문 일정</legend>
-        <div className={s.pair}>
+        <div className={s.dateTimePair}>
           <label>방문일<input type="date" name="date" defaultValue={today()} required /></label>
-          <label>시간 <small>선택</small><input type="time" name="time" /></label>
-          <label>일정 종류<select name="kind"><option value="visit">일반 방문</option><option value="measure">실측</option></select></label>
-          <label>담당 기사<select name="tech"><option value="">미배정</option>{TECHS.map(tech => <option key={tech}>{tech}</option>)}</select></label>
+          <ArrivalTime name="time" label="방문 시각" value={time} onChange={setTime} />
         </div>
+        <div className={s.pair}>
+          <label>일정 종류<select name="kind" aria-label="일정 종류"><option value="visit">일반 방문</option><option value="measure">실측</option></select></label>
+          <label>담당 기사<select name="tech" aria-label="담당 기사"><option value="">미배정</option>{TECHS.map(tech => <option key={tech}>{tech}</option>)}</select></label>
+        </div>
+        <label className={s.staffMemo}>직원 메모 <small>선택</small>
+          <textarea name="staffMemo" rows={3} maxLength={1200} placeholder="통화한 내용이나 현장에서 확인할 점" />
+        </label>
       </fieldset>
       {error && <p role="alert" className={s.error}>{error}</p>}
       <button className={s.primary} disabled={busy}>{busy ? "등록하는 중…" : "일정 등록"}</button>

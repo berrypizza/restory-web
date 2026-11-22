@@ -15,7 +15,7 @@ import FollowUpDialog from "./components/FollowUpDialog";
 import JobRemovalDialog, { type RemovalRequest } from "./components/JobRemovalDialog";
 import HomeTab from "./tabs/HomeTab";
 import IntakeHomeCard from "./components/IntakeHomeCard";
-import CalendarTab from "./tabs/CalendarTab";
+import CalendarTab, { type CalendarView } from "./tabs/CalendarTab";
 import loadComponent from "next/dynamic";
 import type { ReportView } from "./tabs/StatsTab";
 import ListTab from "./tabs/ListTab";
@@ -72,6 +72,11 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
   const [reportMonth, setReportMonth] = useState(thisYearMonth);
   const [target] = useState(readCalendarTarget);
   const [selectedDay, setSelectedDay] = useState(() => target?.date ?? today());
+  const calendarViewKey = `restory-calendar-view:${user}`;
+  const [calendarView, setCalendarView] = useState<CalendarView>(() => {
+    try { return sessionStorage.getItem(calendarViewKey) === "week" ? "week" : "month"; }
+    catch { return "month"; }
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [original, setOriginal] = useState<Job | null>(null);
@@ -147,6 +152,10 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
     setForm(emptyForm(tab === "calendar" ? selectedDay : today()));
     setOriginal(null);
     setShowForm(true);
+  }
+  function changeCalendarView(view: CalendarView) {
+    setCalendarView(view);
+    try { sessionStorage.setItem(calendarViewKey, view); } catch { /* Keep the selection in memory. */ }
   }
   function showDay(date: string) {
     setCalTechFilter(roleFilter);
@@ -243,6 +252,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
       job.phone,
       job.region,
       job.symptom,
+      job.customer_notes,
       getVisibleMemo(job.memo),
       ...getJobTechs(job),
       job.visit_date,
@@ -359,6 +369,8 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
               {tab === "calendar" && (
                 <CalendarTab
                   jobs={visibleJobs}
+                  view={calendarView}
+                  onView={changeCalendarView}
                   selectedDay={selectedDay}
                   onSelectDay={setSelectedDay}
                   calTechFilter={calTechFilter}
@@ -406,6 +418,7 @@ export default function AdminWorkspace({ user, isAdmin, onLogout }: { user: Tech
       {showForm && (
         <JobForm
           form={form}
+          customerNotes={original?.customer_notes}
           setForm={setForm}
           editId={original?.id ?? null}
           initialField={initialField}
