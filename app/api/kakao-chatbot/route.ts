@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { SITE_URL } from "@/lib/landing-seo";
 import { hasAttachedPhoto, newConversation, readConversation, saveConversation, type Conversation, type SkillRequest } from "./conversation";
-import { answerTurn, fallback, INTAKE_LABEL, RITORI_GREETING, type Reply } from "./replies";
-import { services } from "@/lib/consultation-services";
+import { answerTurn, fallback, RITORI_GREETING, type Reply } from "./replies";
+import { INTAKE_LABEL, services } from "@/lib/consultation-services";
 
 export const runtime = "nodejs";
 export const maxDuration = 5;

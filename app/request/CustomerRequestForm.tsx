@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import { INTAKE_LABEL } from "@/lib/consultation-services";
 import { isProductOption, PRODUCT_OPTIONS } from "../admin/lib/products";
 import PhotoPicker, { type SelectedPhoto } from "./PhotoPicker";
 import s from "./request.module.css";
@@ -65,7 +66,7 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
   </section>;
 
   return <>
-    <div className={s.intro}><h1>현장 상담 접수</h1><p>상담할 품목과 방문 주소를 남겨 주세요.<br />담당자가 내용을 확인한 뒤 답변드릴게요.</p></div>
+    <div className={s.intro}><h1>{INTAKE_LABEL}</h1><p>상담할 품목과 방문 주소를 남겨 주세요.<br />담당자가 내용을 확인한 뒤 답변드릴게요.</p></div>
     <form className={s.card} method="post" onSubmit={submit} onInvalid={() => setChecking(true)}>
       <fieldset disabled={phase === "sending"} className={checking ? s.checked : undefined}>
         <label>상담 품목<select required name="item" value={product} onChange={e => setProduct(e.target.value)}>

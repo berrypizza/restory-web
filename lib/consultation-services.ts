@@ -1,5 +1,7 @@
 import type { ProductOption } from "@/app/admin/lib/products";
 
+export const INTAKE_LABEL = "빠른 상담 접수";
+
 type ServiceGuide = {
   label: string;
   matches: RegExp;

@@ -170,6 +170,9 @@ test("the first form link opens with the recognized item already editable", { sk
     const res = await fetch(new URL(link.pathname + link.search, base));
     assert.equal(res.status, 200);
     const html = parse(await res.text());
+    assert.equal(html.querySelector("h1")?.textContent, intakeLabel);
+    assert.ok(html.querySelector("title")?.textContent.includes(intakeLabel));
+    assert.equal(html.querySelector('meta[property="og:title"]')?.getAttribute("content"), `리스토리 스튜디오 ${intakeLabel}`);
     const option = html.querySelector('select[name="item"] option[selected]');
     assert.ok(option);
     const selected = option.getAttribute("value") ?? option.textContent;

@@ -1,4 +1,4 @@
-import { findService, services, type Service } from "@/lib/consultation-services";
+import { findService, INTAKE_LABEL, services, type Service } from "@/lib/consultation-services";
 import { findArea, isPhotoUrl, newConversation, type Conversation, type SkillRequest } from "./conversation";
 
 type Choice = readonly [label: string, message: string];
@@ -10,7 +10,6 @@ export type Reply = {
 };
 
 export const RITORI_GREETING = "안녕하세요, 리스토리 AI 상담사 리토리예요";
-export const INTAKE_LABEL = "빠른 상담 접수";
 
 const PRICE: Choice = ["예상 비용", "예상 비용이 궁금해요"];
 const VISIT: Choice = ["방문 일정", "언제 방문할 수 있나요?"];

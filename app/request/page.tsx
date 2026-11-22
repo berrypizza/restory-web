@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { intakeItemFor, isService } from "@/lib/consultation-services";
+import { INTAKE_LABEL, intakeItemFor, isService } from "@/lib/consultation-services";
 import CustomerRequestForm from "./CustomerRequestForm";
 import s from "./request.module.css";
 
 export const metadata: Metadata = {
-  title: "현장 상담 접수",
+  title: INTAKE_LABEL,
   description: "상담할 품목과 방문 주소를 남겨 주시면 리스토리 스튜디오 담당자가 확인 후 답변드려요.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/request" },
-  openGraph: { title: "리스토리 스튜디오 현장 상담 접수", description: "상담 품목과 연락처를 남겨 주시면 담당자가 확인 후 답변드려요.", url: "/request" },
+  openGraph: { title: `리스토리 스튜디오 ${INTAKE_LABEL}`, description: "상담 품목과 연락처를 남겨 주시면 담당자가 확인 후 답변드려요.", url: "/request" },
 };
 
 export default async function RequestPage({ searchParams }: { searchParams: Promise<{ service?: string | string[] }> }) {
