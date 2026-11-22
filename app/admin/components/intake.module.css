@@ -183,6 +183,6 @@
     max-width: 100%;
   }
   .discard {
-    padding: 20px 16px max(20px, env(safe-area-inset-bottom));
+    padding: 20px 16px;
   }
 }

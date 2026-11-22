@@ -2,6 +2,7 @@
 // 어드민 전용 레이아웃 - 어드민 manifest 참조
 
 import { Metadata, Viewport } from "next";
+import s from "./workspace.module.css";
 
 export const metadata: Metadata = {
   title: "리스토리 관리자",
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#1f66ff",
+  viewportFit: "cover",
 };
 
 export default function AdminLayout({
@@ -26,5 +28,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <div className={s.deviceFrame}>{children}</div>;
 }

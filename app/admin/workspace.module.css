@@ -1,3 +1,9 @@
+.deviceFrame {
+  --admin-screen-height: calc(100dvh - env(safe-area-inset-top, 0px));
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+  background: #f5f7fa;
+}
 .workspace,
 .login {
   --ink: #192536;
@@ -7,7 +13,7 @@
   --canvas: #f5f7fa;
   color: var(--ink);
   background: var(--canvas);
-  min-height: 100dvh;
+  min-height: var(--admin-screen-height);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.018em;
   -webkit-font-smoothing: antialiased;
@@ -34,12 +40,12 @@
   background: white;
   border-right: 1px solid var(--line);
   position: sticky;
-  top: 0;
-  height: 100dvh;
+  top: env(safe-area-inset-top, 0px);
+  height: var(--admin-screen-height);
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 32px 16px 20px;
+  padding: 32px 16px calc(20px + env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
 }
 .brand {
@@ -396,7 +402,7 @@
 }
 .menu {
   position: fixed;
-  inset: auto 0 0;
+  inset: auto env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
   width: min(100%, 520px);
   max-height: 90dvh;
   margin: 0 auto;
@@ -411,7 +417,7 @@
   background: #18273b66;
 }
 .sheetContent {
-  padding: 16px 20px max(18px, env(safe-area-inset-bottom));
+  padding: 16px 20px calc(18px + env(safe-area-inset-bottom, 0px));
 }
 .sheetTitle {
   display: flex;
@@ -569,9 +575,19 @@
     padding-inline: 20px;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 760px), (hover: none) and (pointer: coarse) and (max-height: 500px) and (max-width: 1024px) {
+  :global(html):has(.workspace) {
+    --admin-tab-height: 51px;
+    --admin-nav-height: calc(var(--admin-tab-height) + 13px + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: calc(var(--admin-nav-height) + 12px);
+  }
   .workspace {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .main {
+    flex: 1 0 auto;
   }
   .rail {
     display: none;
@@ -608,7 +624,7 @@
     display: none;
   }
   .inner {
-    padding: 22px 14px calc(92px + env(safe-area-inset-bottom));
+    padding: 22px 14px 20px;
   }
   .pageHead {
     margin-bottom: 16px;
@@ -666,17 +682,17 @@
   .bottomNav {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    position: fixed;
+    order: 1;
+    position: sticky;
     bottom: 0;
-    left: 0;
-    right: 0;
     z-index: 20;
-    padding: 4px 8px max(4px, env(safe-area-inset-bottom));
+    flex: none;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--line);
     background: #fff;
   }
   .bottomNav > * {
-    min-height: 51px;
+    min-height: var(--admin-tab-height);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -694,12 +710,20 @@
     background: #eef4ff;
   }
   .menu[open] {
-    max-height: calc(100dvh - 12px);
+    max-height: calc(var(--admin-screen-height) - 12px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .workspace .saveNotice:not(:empty) {
+    bottom: calc(var(--admin-nav-height) + 10px);
+    width: max-content;
+    max-width: calc(100% - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    white-space: normal;
   }
 }
 
 @media (max-width: 700px) {
-  .login { padding: 18px; }
+  .login { padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px)); }
   .loginFrame { grid-template-columns: minmax(0, 1fr); min-height: 0; width: min(100%, 435px); border-radius: 21px; }
   .loginVisual { min-height: 126px; }
   .loginBrand { height: 100%; align-content: center; gap: 7px; padding: 19px 24px; }

@@ -928,16 +928,15 @@
   }
   .modal {
     margin: auto auto 0;
-    width: 100vw;
-    max-height: 93dvh;
+    inset-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+    width: calc(100% - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: min(93dvh, calc(var(--admin-screen-height) - 12px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     border-radius: 20px 20px 0 0;
   }
   .modalHeader,
   .modalFooter {
     padding: 12px 16px;
-  }
-  .modalFooter {
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
   .formBody {
     padding: 0 16px;
