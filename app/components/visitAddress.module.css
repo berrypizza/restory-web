@@ -14,7 +14,7 @@
 .choices button { padding: 6px 11px; border: 1px solid #d3dce7; border-radius: 10px; background: white; color: #40556e; }
 .choices button[aria-pressed="true"] { border-color: #4778ce; background: #edf4ff; color: #174eaa; }
 .choices button[aria-pressed="true"]::before { content: "✓ "; }
-.address .hint, .address .error { margin: 0; font-size: 13px; line-height: 1.55; }
+.address .hint, .address .error { margin: 0; font-size: 13px; line-height: 1.55; word-break: keep-all; overflow-wrap: anywhere; }
 .address .hint { color: #50647b; }
 .address .error { color: #a52e28; }
 .address :focus-visible { outline: 3px solid #3875d5; outline-offset: 2px; }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import { addressIssue, type AddressIssue, type AddressMode, type VisitAddress } from "@/lib/intake-address";
 import PostcodeSearch from "../request/PostcodeSearch";
 import s from "./visitAddress.module.css";
@@ -18,14 +18,19 @@ export default function VisitAddressFields({ value, onChange, allowLater = false
   const [searchError, setSearchError] = useState("");
   const baseInput = useRef<HTMLInputElement>(null);
   const detailInput = useRef<HTMLInputElement>(null);
-  function selectBase(base: string) {
+  const selectBase = useCallback((base: string) => {
     const next = { base, detail: "", mode: "detail" } as const;
     const incomplete = addressIssue({ ...next, mode: "none" });
     setSearchOpen(false);
     if (incomplete) setSearchError("검색한 주소에 건물번호나 지번을 더해 주세요.");
     onChange(next);
     window.requestAnimationFrame(() => (incomplete ? baseInput.current : detailInput.current)?.focus());
-  }
+  }, [onChange]);
+  const unavailable = useCallback(() => {
+    setSearchOpen(false);
+    setSearchError("주소 검색을 열지 못했어요. 기본주소를 직접 입력해 주세요.");
+    baseInput.current?.focus();
+  }, []);
 
   function choose(mode: AddressMode) {
     const nextMode = value.mode === mode ? "detail" : mode;
@@ -50,11 +55,7 @@ export default function VisitAddressFields({ value, onChange, allowLater = false
     {baseError && <p className={s.error} id={id + "-base-error"} role="alert">{baseError}</p>}
     {searchError && <p className={s.hint} role="status">{searchError}</p>}
     {searchOpen && <div id={id + "-search"} className={s.searchPanel}>
-      <PostcodeSearch onSelect={selectBase} onUnavailable={() => {
-        setSearchOpen(false);
-        setSearchError("주소 검색을 열지 못했어요. 기본주소를 직접 입력해 주세요.");
-        baseInput.current?.focus();
-      }} />
+      <PostcodeSearch onSelect={selectBase} onUnavailable={unavailable} />
       <button type="button" className={s.manual} onClick={() => { setSearchOpen(false); baseInput.current?.focus(); }}>직접 입력하기</button>
     </div>}
     <label htmlFor={id + "-detail"} className={s.detailLabel}>상세주소</label>
@@ -68,6 +69,6 @@ export default function VisitAddressFields({ value, onChange, allowLater = false
       {allowLater && <button type="button" aria-pressed={value.mode === "later"} onClick={() => choose("later")}>통화할 때 알려드릴게요</button>}
     </div>
     {detailError && <p className={s.error} id={id + "-detail-error"} role="alert">{detailError}</p>}
-    {value.mode === "later" && <p className={s.hint} role="status">상담은 바로 접수돼요. 방문 일정을 잡기 전에 전화로 확인할게요.</p>}
+    {value.mode === "later" && <p className={s.hint} role="status">상담은 바로 접수돼요. 상세주소는 전화로 확인할게요.</p>}
   </div>;
 }
