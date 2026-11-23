@@ -133,7 +133,7 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
                 <input ref={priceInput} id={priceId} name="price" type="text" inputMode="numeric" enterKeyHint="done"
                   autoComplete="off" placeholder="예) 150,000" required={!measurement} value={priceText}
                   aria-label="견적 금액 (원)" aria-invalid={Boolean(priceError)}
-                  aria-describedby={priceError || measurement ? priceId + "-hint" : undefined}
+                  aria-describedby={priceId + "-hint"}
                   onChange={event => setPriceText(event.target.value)}
                   onFocus={() => { if (quote.amount !== null) setPriceText(String(quote.amount)); }}
                   onBlur={() => {
@@ -144,7 +144,7 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
                 <span aria-hidden="true">원</span>
               </div>
               {priceError ? <p id={priceId + "-hint"} role="alert" className={s.error}>{priceError}</p>
-                : measurement && <p id={priceId + "-hint"}>실측 후에 견적을 입력해도 돼요.</p>}
+                : <p id={priceId + "-hint"}>{measurement ? "실측 후에 견적을 입력해도 돼요." : "고객에게 안내한 견적 금액을 입력해 주세요."}</p>}
             </div>
           </div>
           <div className={s.dateTimePair}>
@@ -158,7 +158,15 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
         </div>
       </fieldset>
       {error && <p role="alert" className={s.error}>{error}</p>}
-      <button className={s.primary} disabled={busy}>{busy ? "등록하는 중…" : "일정 등록"}</button>
+      {quote.error ? (
+        <button type="button" className={s.quoteAction} aria-controls={priceId} onClick={focusPrice}>
+          {priceText.trim() ? "견적 금액 확인하기" : "견적 금액 입력하기"}
+        </button>
+      ) : (
+        <button type="submit" className={s.primary} disabled={busy}>
+          {busy ? "등록하는 중…" : measurement ? "실측 일정 등록" : "일반 방문 등록"}
+        </button>
+      )}
     </form>
   </div>;
 }

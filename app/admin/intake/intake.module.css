@@ -47,8 +47,10 @@
 .panel .quoteField p { margin: 0; font-size: 13px; line-height: 1.45; }
 :is(.page, .desk) :is(input, select) { width: 100%; min-width: 0; min-height: 46px; border: 1px solid #bcc9d8; border-radius: 10px; background: white; padding: 8px 10px; font-size: 16px; font-weight: 450; }
 :is(.page, .desk) select { appearance: auto; }
-.primary, .secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+.primary, .secondary, .quoteAction { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 .primary { color: white; background: #215ed6; }
+.fields :is(.primary, .quoteAction) { min-height: 48px; }
+.quoteAction { color: #194a9a; background: #e2ecfc; }
 .secondary { color: #214575; background: #fff; border: 1px solid #c8d5e3; }
 :is(.page, .desk) button:disabled { opacity: .65; cursor: wait; }
 :is(.page, .desk) :is(button, a, input, select):focus-visible, .notice:focus-visible { outline: 3px solid #3278ed; outline-offset: 2px; }
