@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { Breadcrumb } from "@/app/components/PublicIntro";
+import ui from "@/app/components/customer.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { buildTrackedContactPath } from "@/lib/attribution";
@@ -151,36 +153,20 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
   const banner = tip.ctaBanner ?? CATEGORY_BANNER[tip.category];
 
   return (
-    <main
-      className="bg-white min-h-screen pb-[72px]"
+    <main data-service-id="tips" data-service-keyword={tip.id}
+      className="bg-white min-h-screen"
       style={{
         fontFamily:
           "'Wanted Sans Variable', 'Wanted Sans', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
       }}>
-      {/* BREADCRUMB */}
-      <div className="border-b border-neutral-100 bg-white px-5 py-3">
-        <div className="mx-auto max-w-3xl text-[12px] text-neutral-400 md:text-[13px]">
-          <Link
-            href="/tips"
-            className="hover:text-[#1f66ff] transition-colors"
-            style={{ textDecoration: "none", color: "inherit" }}>
-            꿀팁게시판
-          </Link>
-          <span className="mx-1.5 text-neutral-300">›</span>
-          <Link
-            href={`/tips?cat=${tip.category}`}
-            className="hover:text-[#1f66ff] transition-colors"
-            style={{ textDecoration: "none", color: "inherit" }}>
-            {tip.category}
-          </Link>
-        </div>
-      </div>
-
+      <div className={ui.trail}><div className={ui.wrap}>
+        <Breadcrumb parents={[{ href: "/tips", label: "수리 가이드" }, { href: "/tips?" + new URLSearchParams({ cat: tip.category }), label: tip.category }]} current="글 보기" />
+      </div></div>
       {/* ARTICLE */}
       <article className="px-5 pt-6 pb-12 md:pt-10 md:pb-16">
         <div className="mx-auto max-w-3xl">
           {/* HEADER */}
-          <div className="border-b border-neutral-200 pb-5 md:pb-6">
+          <div data-service-section="hero" className="border-b border-neutral-200 pb-5 md:pb-6">
             <h1 className="text-[22px] font-black leading-[1.4] text-neutral-900 md:text-[28px]">
               {tip.title}
             </h1>
@@ -206,19 +192,19 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
           </div>
 
           {/* CONTENT */}
-          <div
+          <div data-service-section="article"
             className="tip-content mt-7 md:mt-8"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
 
           {/* CTA BOX */}
-          <div
+          <div data-service-section="contact"
             className="mt-12 rounded-2xl overflow-hidden"
             style={{
               background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
             }}>
             <div className="p-6 text-center text-white md:p-8">
-              <p
+              <p data-service-anchor
                 className="text-[14px] font-medium"
                 style={{ color: "rgba(255,255,255,0.7)" }}>
                 가구 수리가 필요하신가요?
@@ -254,7 +240,7 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
 
           {/* RELATED */}
           {related.length > 0 && (
-            <div className="mt-10">
+            <div data-service-section="related" className="mt-10">
               <h3 className="text-[17px] font-black md:text-[19px]">
                 관련 꿀팁
               </h3>
@@ -300,34 +286,16 @@ export default function TipDetailContent({ tip }: { tip: Tip }) {
               href="/tips"
               className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-6 py-2.5 text-[14px] font-bold text-neutral-600 hover:border-[#1f66ff] hover:text-[#1f66ff] transition-colors"
               style={{ textDecoration: "none" }}>
-              ← 꿀팁 목록으로
+              수리 가이드 목록
             </Link>
           </div>
         </div>
       </article>
 
-      {/* ═══════════════════════════════════════
-         하단 고정 배너 — 카테고리별 랜딩 유도
-         아정당 스타일: 둥근 다크 배너
-         ═══════════════════════════════════════ */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 safe-bottom md:pb-5 mb-7 ">
-        <Link
-          href={banner.href}
-          className="mx-auto flex max-w-3xl items-center justify-between rounded-2xl px-5 py-4 border-2 border-transparent"
-          style={{
-            background: "linear-gradient(135deg, #1f66ff 0%, #003bbb 100%)",
-          }}>
-          <div className="min-w-0">
-            <p className="text-[17px] font-extrabold text-white truncate md:text-[16px]">
-              {banner.text}
-            </p>
-            <p className="mt-0.5 text-[12px] font-medium text-white/90 md:text-[13px]">
-              {banner.sub}
-            </p>
-          </div>
-          <span className="flex-shrink-0 ml-3 text-white text-[20px]">›</span>
-        </Link>
-      </div>
+      <aside className={ui.intakeRow}><div className={ui.wrap}>
+        <div><strong>{banner.text}</strong><p>{banner.sub}</p></div>
+        <div className={ui.actions}><Link className={ui.lightButton} href={banner.href}>서비스 자세히 보기</Link><Link className={ui.mainButton} href="/request">사진으로 상담 접수</Link></div>
+      </div></aside>
 
       {/* 마크다운 콘텐츠 스타일 */}
       <style jsx global>{`

@@ -6,6 +6,7 @@ import AttributionTracker from "@/app/components/AttributionTracker";
 import ServiceAnalytics from "@/app/components/ServiceAnalytics";
 import Navbar from "@/app/components/Navbar";
 import YoutubeProblemFinder from "@/app/components/YoutubeProblemFinder";
+import s from "./customer.module.css";
 
 export default function LayoutBody({
   children,
@@ -31,7 +32,7 @@ export default function LayoutBody({
         </>
       )}
       {!isAdmin && !isAcademy && !isIntake && <Navbar />}
-      {children}
+      {isAdmin || isIntake || isAcademy ? children : <div id="public-content" tabIndex={-1} className={s.content}>{children}</div>}
       {!isAdmin && !isAcademy && !isIntake && <YoutubeProblemFinder />}
     </>
   );

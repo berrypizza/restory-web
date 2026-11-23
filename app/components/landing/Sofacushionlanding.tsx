@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -276,7 +277,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
     : 0;
 
   return (
-    <main data-service-id="sofa-sag"
+    <main data-service-id="sofa-sag" data-service-keyword={keyword}
       className="bg-white"
       style={{
         fontFamily:
@@ -299,6 +300,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
+      <LandingTrail field="sofa" title="소파 복원" />
       <section data-service-section="hero"
         className="relative overflow-hidden"
         style={{ background: "#0a1628" }}>
@@ -449,6 +451,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
           </div>
         </div>
       </section>
+      <LandingSections sections={[["guide-cases", "시공 사례"], ["guide-budget", "예상 비용"], ["guide-faq", "자주 묻는 질문"]]} />
 
       {/* ★ 지역 배너 */}
       {region && (
@@ -491,7 +494,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       )}
 
       {/* 2. PROOF */}
-      <section data-service-section="cases"
+      <section data-service-section="cases" id="guide-cases"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -724,7 +727,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 5. COST & AFTERCARE */}
-      <section data-service-section="budget" className="px-5 py-14 md:py-20 bg-white">
+      <section data-service-section="budget" id="guide-budget" className="px-5 py-14 md:py-20 bg-white">
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="mb-2 text-[12px] font-bold tracking-widest text-[#1a5cff]">COST & AFTERCARE</p>
@@ -785,7 +788,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       </section>
 
       {/* 7. FAQ */}
-      <section data-service-section="faq"
+      <section data-service-section="faq" id="guide-faq"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -921,6 +924,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
         </div>
       </section>
 
+      <LandingIntake field="sofa" service="sofa" />
       <FloatingCTA compactMobile label="사진 보내고 복원 가능성 확인" />
     </main>
   );

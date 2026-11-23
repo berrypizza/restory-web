@@ -1,68 +1,16 @@
-import Image from "next/image";
+import Link from "next/link";
 import { buildTrackedContactPath } from "@/lib/attribution";
-
-const KAKAO_URL = buildTrackedContactPath("kakao", "bottom_cta");
-const PHONE = buildTrackedContactPath("phone", "bottom_cta");
+import s from "./customer.module.css";
 
 export default function BottomCTA() {
-  return (
-    <section className="px-4 py-8 md:px-6 md:py-12">
-      <div
-        className="relative mx-auto max-w-6xl overflow-hidden rounded-2xl md:rounded-3xl"
-        style={{
-          background:
-            "linear-gradient(135deg, #e8f0fe 0%, #dbe6ffc0 50%, #e32e4077 100%)",
-        }}>
-        <div className="relative z-10 px-6 pt-8 pb-40 md:px-10 md:py-16 md:pb-16">
-          <p
-            className="text-base font-bold mb-0.5 md:text-lg"
-            style={{ color: "#111827" }}>
-            밤 늦게, 새벽에도 상담 가능해요!
-          </p>
-          <p
-            className="text-base font-bold mb-4 md:text-lg"
-            style={{ color: "#111827" }}>
-            클릭 한 번이면 끝!
-          </p>
-          <a
-            href={PHONE}
-            data-cta="bottom_phone"
-            className="flex items-center gap-2 mb-5"
-            style={{ textDecoration: "none" }}>
-            <Image
-              src="/images/phone-icon.png"
-              alt="전화기 아이콘"
-              width={48}
-              height={48}
-              className="h-[48px] w-[48px] object-contain md:h-[56px] md:w-[56px]"
-            />
-            <span
-              className="text-2xl font-black md:text-4xl"
-              style={{ color: "#1f66ff" }}>
-              1688-2957
-            </span>
-          </a>
-          <a
-            href={KAKAO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cta="bottom_kakao"
-            className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-sm font-black text-white md:rounded-2xl md:px-10 md:py-4 md:text-base transition hover:opacity-90"
-            style={{
-              background: "linear-gradient(to right, #1f66ff, #4f8fff)",
-            }}>
-            문의하기 🔍
-          </a>
-        </div>
-        <Image
-          src="/images/bro.webp"
-          alt="리스토리 상담"
-          width={280}
-          height={320}
-          className="absolute bottom-0 right-0 object-contain object-bottom pointer-events-none md:right-8"
-          style={{ width: "clamp(180px, 45vw, 360px)", height: "auto" }}
-        />
+  return <section data-service-section="contact" className={s.section}>
+    <div className={s.wrap}><div className={s.consultBand}>
+      <div><h2>내 가구도 수리할 수 있을까요?</h2><p data-service-anchor>상담할 품목과 사진을 남겨 주세요. 담당자가 확인하고 연락드려요.</p></div>
+      <div className={s.actions}>
+        <Link href="/request" className={s.mainButton}>상담 접수하기</Link>
+        <a href={buildTrackedContactPath("kakao","bottom_cta")} data-cta="bottom_kakao" className={s.lightButton}>카카오톡</a>
+        <a href={buildTrackedContactPath("phone","bottom_cta")} data-cta="bottom_phone" className={s.lightButton}>전화 문의</a>
       </div>
-    </section>
-  );
+    </div></div>
+  </section>;
 }

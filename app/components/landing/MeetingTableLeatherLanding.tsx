@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -251,7 +252,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
     : "https://www.restorystudio.co.kr/leather/회의실-테이블-인조가죽-교체";
 
   return (
-    <main data-service-id="meeting-table"
+    <main data-service-id="meeting-table" data-service-keyword={keyword}
       className="bg-white"
       style={{
         fontFamily:
@@ -268,6 +269,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
+      <LandingTrail field="leather" title="회의실 테이블 가죽 교체" />
       <section data-service-section="hero"
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
@@ -407,6 +409,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
           </div>
         </div>
       </section>
+      <LandingSections sections={[["guide-cases", "시공 사례"], ["guide-process", "작업 과정"], ["guide-faq", "자주 묻는 질문"]]} />
 
       {region && (
         <section className="px-5 py-4" style={{ background: "#1a5cff" }}>
@@ -437,7 +440,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
         </section>
       )}
 
-      <section data-service-section="cases" className="px-5 py-14 md:py-20" style={{ background: "#f8f9fb" }}>
+      <section data-service-section="cases" id="guide-cases" className="px-5 py-14 md:py-20" style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
@@ -843,7 +846,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
         </div>
       </section>
 
-      <section data-service-section="process"
+      <section data-service-section="process" id="guide-process"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -1054,7 +1057,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
         </div>
       </section>
 
-      <section data-service-section="faq" className="px-5 py-14 md:py-20" style={{ background: "#f8f9fb" }}>
+      <section data-service-section="faq" id="guide-faq" className="px-5 py-14 md:py-20" style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
           <FadeIn>
             <p className="text-[12px] font-bold tracking-widest text-[#1a5cff] mb-2">
@@ -1155,6 +1158,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
         </div>
       </section>
 
+      <LandingIntake field="leather" item="회의 테이블 천갈이" />
       <FloatingCTA />
     </main>
   );

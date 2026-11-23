@@ -8,6 +8,7 @@ export const metadata: Metadata = withLandingSeo({
   alternates: { canonical: "/events" },
 });
 
-export default function EventsPage() {
-  return <EventsPageContent />;
+export default async function EventsPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
+  const { status } = await searchParams;
+  return <EventsPageContent status={status === "진행중" || status === "종료" ? status : "전체"} />;
 }

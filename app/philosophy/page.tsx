@@ -77,7 +77,7 @@ function SectionNumber({ value }: { value: string }) {
 
 export default function PhilosophyPage() {
   return (
-    <main className="bg-black text-white">
+    <main data-service-id="philosophy" className="bg-black text-white">
       <WebPageJsonLd
         name="리스토리 스튜디오 사업 철학"
         description="작은 마감 하나에도 정성을 넣는 곳. 리스토리 스튜디오의 솔직한 소통과 시공 신념."
@@ -91,7 +91,7 @@ export default function PhilosophyPage() {
         ]}
       />
 
-      <section className="relative min-h-[86vh] overflow-hidden border-b border-white/10 bg-black">
+      <section data-service-section="hero" className="relative min-h-[min(620px,72svh)] overflow-hidden border-b border-white/10 bg-black">
         <Image
           src={HERO_IMAGE}
           alt="리스토리 대표가 주방 현장에서 고객에게 설명하는 모습"
@@ -103,10 +103,10 @@ export default function PhilosophyPage() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#000_0%,rgba(0,0,0,0.93)_30%,rgba(0,0,0,0.58)_66%,rgba(0,0,0,0.12)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black to-transparent" />
 
-        <div className="relative z-10 mx-auto flex min-h-[86vh] max-w-6xl items-center px-5 py-24 md:px-6">
+        <div className="relative z-10 mx-auto flex min-h-[min(620px,72svh)] max-w-6xl items-center px-5 py-16 md:px-6">
           <div className="max-w-3xl">
             <p className="mb-5 text-sm font-black tracking-[0.3em] text-[#67a3ff]">
-              RESTORY PHILOSOPHY
+              리스토리 소개
             </p>
             <h1 className="text-[44px] font-black leading-[1.04] text-white md:text-[80px]">
               리스토리
@@ -122,15 +122,15 @@ export default function PhilosophyPage() {
               누가, 어떤 생각으로 이 회사를 운영하는지 솔직하게
               말씀드리겠습니다.
             </p>
-            <div className="mt-12 flex items-center gap-3 text-xs font-black tracking-[0.24em] text-white/42">
-              <span className="h-px w-12 bg-white/25" />
-              SCROLL
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#studio-story" className="inline-flex min-h-12 items-center rounded-xl bg-white px-5 font-bold text-slate-900">대표 이야기</a>
+              <a href="/cases" className="inline-flex min-h-12 items-center rounded-xl border border-white/50 px-5 font-bold text-white">작업 사례 보기</a>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-black px-5 py-20 md:px-6 md:py-28">
+      <section data-service-section="story" id="studio-story" className="border-b border-white/10 bg-black px-5 py-20 md:px-6 md:py-28">
         <div className="mx-auto max-w-6xl">
           <SectionNumber value="01" />
           <div className="mt-5 max-w-3xl">
@@ -181,7 +181,7 @@ export default function PhilosophyPage() {
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-[#050505] px-5 py-20 text-white md:px-6 md:py-28">
+      <section data-service-section="problems" className="border-b border-white/10 bg-[#050505] px-5 py-20 text-white md:px-6 md:py-28">
         <div className="mx-auto max-w-6xl">
           <SectionNumber value="02" />
           <div className="mt-5 grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end">
@@ -217,7 +217,7 @@ export default function PhilosophyPage() {
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-black px-5 py-20 md:px-6 md:py-28">
+      <section data-service-section="principles" className="border-b border-white/10 bg-black px-5 py-20 md:px-6 md:py-28">
         <div className="mx-auto max-w-6xl">
           <SectionNumber value="03" />
           <h2 className="mt-5 max-w-4xl text-3xl font-black leading-tight text-white md:text-5xl">
@@ -244,7 +244,7 @@ export default function PhilosophyPage() {
         </div>
       </section>
 
-      <section className="border-b border-white/10 bg-[#050505] px-5 py-20 md:px-6 md:py-28">
+      <section data-service-section="team" className="border-b border-white/10 bg-[#050505] px-5 py-20 md:px-6 md:py-28">
         <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-[0.85fr_1.15fr] md:items-start">
           <div>
             <SectionNumber value="04" />
@@ -297,7 +297,7 @@ export default function PhilosophyPage() {
         </div>
       </section>
 
-      <section className="bg-black px-5 py-20 md:px-6 md:py-28">
+      <section data-service-section="cases" className="bg-black px-5 py-20 md:px-6 md:py-28">
         <div className="mx-auto max-w-6xl border-t border-white/10 pt-16">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-base font-medium leading-8 text-white/66 md:text-lg">

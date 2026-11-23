@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -135,7 +136,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
   const regionalCases = region ? latestHabujangCases.filter((item) => item.region.includes(region)) : [];
   const featuredCases = [...regionalCases, ...latestHabujangCases.filter((item) => !regionalCases.includes(item))].slice(0, 3);
   return (
-    <main data-service-id="habujang" className="bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
+    <main data-service-id="habujang" data-service-keyword={keyword} className="bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
       <ServiceJsonLd
         name={region ? `${region} 싱크대 하부장 밑판 교체` : "싱크대 하부장 밑판 교체"}
         description="기존 장의 상태를 확인해 손상된 하부장 밑판을 교체합니다. 비용은 현장별 상담 견적으로 안내하며, 사진으로 교체 가능 범위·견적·방문 일정을 확인합니다."
@@ -144,6 +145,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalCaseItemListJsonLd name={region ? `${region} 하부장 밑판 교체 참고 사례` : "하부장 밑판 교체 실제 사례"} items={featuredCases} />
+      <LandingTrail field="repair" title="하부장 밑판 교체" />
       <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
         <div className="absolute inset-0 md:hidden">
           <Image src="/images/hero-habujang.webp" alt="" fill priority sizes="100vw" className="object-cover opacity-30" />
@@ -195,13 +197,8 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           </div>
         </div>
       </section>
-      <nav aria-label="하부장 밑판 교체 안내" className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-3xl justify-center gap-3 px-3 text-[12px] font-bold text-neutral-600 sm:gap-8">
-          <a href="#lower-cases" className="px-2 py-5 hover:text-[#1a5cff]">실제 시공 사례</a>
-          <a href="#lower-cost" className="px-2 py-5 hover:text-[#1a5cff]">견적·작업 범위</a>
-          <a href="#lower-faq" className="px-2 py-5 hover:text-[#1a5cff]">자주 묻는 질문</a>
-        </div>
-      </nav>
+
+      <LandingSections sections={[["lower-cases", "시공 사례"], ["lower-cost", "견적 기준"], ["lower-faq", "자주 묻는 질문"]]} />
       <section data-service-section="cases"
         id="lower-cases"
         className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
@@ -453,6 +450,7 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
           </FadeIn>
         </div>
       </section>
+      <LandingIntake field="repair" service="lower" />
       <FloatingCTA compactMobile label="사진으로 교체 범위·견적 확인" />
     </main>
   );

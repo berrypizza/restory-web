@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -288,7 +289,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
   }, []);
 
   return (
-    <main data-service-id={isSofa ? "restaurant-sofa" : "restaurant-chair"}
+    <main data-service-id={isSofa ? "restaurant-sofa" : "restaurant-chair"} data-service-keyword={keyword}
       className="bg-white"
       style={{
         fontFamily:
@@ -312,6 +313,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
+      <LandingTrail field="leather" title={isSofa ? "붙박이 소파 천갈이" : "의자 가죽 천갈이"} />
       <section data-service-section="hero"
         className="relative overflow-hidden"
         style={{ background: "#0a1628", minHeight: "100svh" }}>
@@ -454,6 +456,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
           </div>
         </div>
       </section>
+      <LandingSections sections={[["guide-cases", "시공 사례"], ["guide-process", "작업 과정"], ["guide-faq", "자주 묻는 질문"]]} />
 
       {/* ★ 지역 배너 */}
       {region && (
@@ -503,7 +506,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       )}
 
       {/* 2. PROOF */}
-      <section data-service-section="cases"
+      <section data-service-section="cases" id="guide-cases"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -912,7 +915,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 5. HOW */}
-      <section data-service-section="process"
+      <section data-service-section="process" id="guide-process"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -1122,7 +1125,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       </section>
 
       {/* 8. FAQ */}
-      <section data-service-section="faq"
+      <section data-service-section="faq" id="guide-faq"
         className="px-5 py-14 md:py-20"
         style={{ background: "#f8f9fb" }}>
         <div className="mx-auto max-w-lg">
@@ -1256,6 +1259,7 @@ export default function RestaurantChairLanding({ keyword }: Props) {
         </div>
       </section>
 
+      <LandingIntake field="leather" service={isSofa ? "leather" : "chairs"} />
       <FloatingCTA />
     </main>
   );

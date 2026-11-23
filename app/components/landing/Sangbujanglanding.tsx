@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -227,7 +228,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
     : latestSangbujangCases.slice(0, 3);
 
   return (
-    <main data-service-id="sangbujang"
+    <main data-service-id="sangbujang" data-service-keyword={keyword}
       className="break-keep bg-white"
       style={{
         fontFamily:
@@ -246,6 +247,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         items={featuredCases}
       />
 
+      <LandingTrail field="repair" title="상부장 처짐 수리" />
       <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
         <div className="absolute inset-0 md:hidden">
           <Image
@@ -407,22 +409,8 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </div>
       </section>
 
-      <nav
-        aria-label="상부장 수리 안내"
-        className="border-b border-neutral-200 bg-white px-4"
-      >
-        <div className="mx-auto grid max-w-3xl grid-cols-3 text-center text-[13px] font-bold text-neutral-700">
-          <a href="#upper-cases" className="px-2 py-5 hover:text-[#1a5cff]">
-            실제 시공 사례
-          </a>
-          <a href="#upper-cost" className="px-2 py-5 hover:text-[#1a5cff]">
-            비용·작업 범위
-          </a>
-          <a href="#upper-faq" className="px-2 py-5 hover:text-[#1a5cff]">
-            자주 묻는 질문
-          </a>
-        </div>
-      </nav>
+
+      <LandingSections sections={[["upper-cases", "시공 사례"], ["upper-cost", "비용·작업 범위"], ["upper-faq", "자주 묻는 질문"]]} />
 
       <section data-service-section="cases"
         id="upper-cases"
@@ -791,6 +779,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
           </FadeIn>
         </div>
       </section>
+      <LandingIntake field="repair" service="upper" />
       <FloatingCTA compactMobile avoidOverlapSelector="[data-upper-contact]" label="사진으로 수리 범위·비용 확인" />
     </main>
   );

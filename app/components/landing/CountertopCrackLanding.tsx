@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -135,7 +136,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
   const featuredCases = [...regionalCases, ...latestCrackCases.filter((item) => !regionalIds.has(item.id))].slice(0, 3);
 
   return (
-    <main data-service-id="sink-top-crack" className="break-keep bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
+    <main data-service-id="sink-top-crack" data-service-keyword={keyword} className="break-keep bg-white" style={{ fontFamily: "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif" }}>
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상판 크랙 수리` : "싱크대 상판 크랙 수리"}
         description="보수 가능한 상판의 크랙을 정리하고 마감합니다. 비용 범위는 30~50만 원이며 부가세 별도입니다. 최종 금액은 상태를 보고 상담 후 안내합니다. 예상 마감과 방문 일정, 시공 부위 3년 무상 A/S 적용 조건도 확인하세요."
@@ -145,6 +146,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
       <FAQJsonLd faqs={FAQ_ITEMS} />
       <RegionalCaseItemListJsonLd name={`${region ? `${region} 지역·` : ""}상판 크랙 수리 전후 사례`} items={featuredCases} />
 
+      <LandingTrail field="repair" title="상판 크랙 수리" />
       <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
         <div className="absolute inset-0 md:hidden">
           <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover opacity-25" />
@@ -202,13 +204,8 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
         </div>
       </section>
 
-      <nav aria-label="상판 크랙 수리 안내" className="border-b border-neutral-200 bg-white px-4">
-        <div className="mx-auto grid max-w-3xl grid-cols-3 text-center text-[13px] font-bold text-neutral-700">
-          <a href="#crack-cases" className="px-2 py-5 hover:text-[#1a5cff]">수리 전후 사례</a>
-          <a href="#crack-cost" className="px-2 py-5 hover:text-[#1a5cff]">비용·견적 기준</a>
-          <a href="#crack-faq" className="px-2 py-5 hover:text-[#1a5cff]">자주 묻는 질문</a>
-        </div>
-      </nav>
+
+      <LandingSections sections={[["crack-cases", "수리 전후"], ["crack-cost", "견적 기준"], ["crack-faq", "자주 묻는 질문"]]} />
 
       <section data-service-section="budget" id="crack-cost" className="scroll-mt-24 border-b border-neutral-200 px-5 py-10 md:py-14">
         <div className="mx-auto max-w-3xl rounded-2xl border border-[#dce6fa] bg-[#eef4ff] p-6 md:p-8">
@@ -468,6 +465,7 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
           </FadeIn>
         </div>
       </section>
+      <LandingIntake field="repair" service="counter" />
       <FloatingCTA compactMobile label="사진으로 상판 수리 범위·견적 확인" />
     </main>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { LandingTrail, LandingIntake } from "./shared/LandingNavigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -330,7 +331,7 @@ export default function SinkdoorReformLanding({
   };
 
   return (
-    <main data-service-id="sink-door"
+    <main data-service-id="sink-door" data-service-keyword={keyword}
       className="bg-white"
       style={{
         fontFamily:
@@ -357,6 +358,7 @@ export default function SinkdoorReformLanding({
       />
 
       {/* Desired outcome and a clear first step */}
+      <LandingTrail field="kitchen" title="싱크대 문짝 교체" />
       <section data-service-section="hero" id="sink-door-outcome" className="bg-white px-5 py-8 md:py-12">
         <div className="mx-auto grid max-w-[1100px] items-center gap-7 md:grid-cols-2 md:gap-10">
           <div>
@@ -429,10 +431,7 @@ export default function SinkdoorReformLanding({
         </p>
       </section>
 
-      <nav
-        aria-label="문짝 교체 상세·리뷰"
-        className="sticky top-[57px] z-40 border-b border-neutral-200 bg-white/95 px-4 backdrop-blur"
-      >
+      <nav aria-label="싱크대 문짝 교체 상세·리뷰" data-public-detail-tabs>
         <div className="mx-auto grid max-w-[720px] grid-cols-2 text-center">
           <button
             type="button"
@@ -445,11 +444,7 @@ export default function SinkdoorReformLanding({
               }, 0);
             }}
             aria-pressed={activeTab === "detail"}
-            className={`py-4 text-[15px] ${
-              activeTab === "detail"
-                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
-                : "border-0 font-bold text-neutral-500"
-            }`}
+
           >
             서비스 상세
           </button>
@@ -457,17 +452,11 @@ export default function SinkdoorReformLanding({
             type="button"
             onClick={showReviews}
             aria-pressed={activeTab === "reviews"}
-            className={`py-4 text-[15px] ${
-              activeTab === "reviews"
-                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
-                : "border-0 font-bold text-neutral-500"
-            }`}
+
           >
             <span className="inline-flex items-center justify-center gap-1.5">
-              <span className="text-[#fbbc04]">★</span>
               <span>리뷰</span>
-              <span className="text-[#fbbc04]">★</span>
-            </span>
+              </span>
           </button>
         </div>
       </nav>
@@ -1677,6 +1666,7 @@ export default function SinkdoorReformLanding({
         </div>
       </section>
 
+      <LandingIntake field="kitchen" service="doors" />
       <FloatingCTA
         onReviewClick={showReviews}
         compactMobile

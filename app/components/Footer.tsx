@@ -1,134 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { buildTrackedContactPath } from "@/lib/attribution";
+import { primaryPages, studioPages } from "@/lib/public-navigation";
+import s from "./customer.module.css";
 
 export default function Footer() {
-  const [contactOpen, setContactOpen] = useState(false);
-  const pathname = usePathname();
-  if (pathname === "/request") return null;
-  if (pathname === "/admin" || pathname?.startsWith("/admin/")) return null;
-  if (pathname === "/academy" || pathname?.startsWith("/academy/")) return null;
-
-  return (
-    <footer style={{ backgroundColor: "#fafafa", borderTop: "1px solid #eee" }}>
-      <div className="mx-auto max-w-5xl px-6 py-10">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 mb-8">
-          <div>
-            <p className="text-lg font-bold mb-2" style={{ color: "#1a1a1a" }}>
-              Re&apos;Story
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: "#aaa" }}>
-              안 되는 건 안 된다고 먼저 말합니다.
-            </p>
-          </div>
-          <div className="flex flex-col gap-2 text-sm">
-            <a
-              href="/privacy"
-              className="hover:opacity-80 transition-opacity"
-              style={{ color: "#aaa" }}>
-              개인정보처리방침
-            </a>
-          </div>
-        </div>
-
-        <div style={{ borderTop: "1px solid #eee", marginBottom: 24 }}>
-          {/* <button
-            onClick={() => setContactOpen((v) => !v)}
-            className="flex items-center justify-between w-full py-4"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "inherit",
-            }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#ccc",
-              }}>
-              Contact Us
-            </span>
-            <span
-              style={{
-                color: "#ccc",
-                fontSize: 12,
-                transform: contactOpen ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease",
-              }}>
-              ▾
-            </span>
-          </button> */}
-
-          <div
-            style={{
-              transition: "max-height 0.35s ease",
-            }}>
-            <div
-              style={{
-                borderTop: "1px solid #eee",
-                paddingTop: 14,
-                paddingBottom: 18,
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}>
-              <a
-                href="tel:1688-2957"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  textDecoration: "none",
-                }}>
-                <Image
-                  src="/images/phone-icon.png"
-                  alt="전화기 아이콘"
-                  width={24}
-                  height={24}
-                  className="h-[24px] w-[24px] object-contain md:h-[56px] md:w-[56px]"
-                />{" "}
-                <span style={{ fontSize: 13, color: "#888" }}>
-                  1688-2957{" "}
-                </span>
-              </a>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 12, color: "#ccc" }}>🕐</span>
-                <span style={{ fontSize: 13, color: "#888" }}>
-                  매일 09:00 — 21:00
-                </span>
-              </div>
-              <div
-                style={{
-                  marginTop: 6,
-                  paddingTop: 10,
-                  borderTop: "1px solid #eee",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 3,
-                }}>
-                <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>
-                  상호 리스토리 스튜디오· 대표자 고현호 · 사업자등록번호
-                  692-55-00721
-                </p>
-                <p style={{ fontSize: 11, color: "#ccc", margin: 0 }}>
-                  주소 인천광역시 서구 염곡로498번안길 5-13. 302호(가정동)
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="h-px mb-6" style={{ backgroundColor: "#eee" }} />
-        <p className="text-xs" style={{ color: "#ccc" }}>
-          © {new Date().getFullYear()} Re&apos;Story. All rights reserved.
-        </p>
+  const path = usePathname();
+  if (path === "/request" || /^\/(admin|academy)(\/|$)/.test(path)) return null;
+  return <footer className={s.footer}>
+    <div className={s.wrap}>
+      <div className={s.footerTop}>
+        <div><Link className={s.footerBrand} href="/">리스토리 스튜디오</Link>
+          <a className={s.footerPhone} href={buildTrackedContactPath("phone","footer")}>1688-2957</a>
+          <span>전화 상담 09:00–21:00</span></div>
+        <nav aria-label="서비스와 콘텐츠"><h2>둘러보기</h2>
+          {[...primaryPages, ...studioPages].map(item => <Link key={item.href} href={item.href}>{item.label}</Link>)}</nav>
+        <nav aria-label="고객 문의와 채널"><h2>고객 문의</h2>
+          <Link href="/request">사진으로 상담 접수</Link>
+          <a href={buildTrackedContactPath("kakao","footer")}>카카오톡 상담</a>
+          <a href="https://cafe.naver.com/f-e/cafes/22748193/menus/85?viewType=L">네이버 고객 문의함</a>
+          <a href="https://blog.naver.com/sofaresq">시공 블로그</a>
+          <a href="https://www.youtube.com/@리스토리스튜디오">현장 영상</a>
+          <a href="https://www.instagram.com/restory_studio.kr/">인스타그램</a>
+        </nav>
       </div>
-    </footer>
-  );
+      <div className={s.legal}>
+        <p>상호 리스토리 스튜디오 · 대표 고현호 · 사업자등록번호 692-55-00721<br />인천광역시 서구 염곡로498번안길 5-13, 302호(가정동)</p>
+        <Link href="/request#privacy-consent">상담 접수 개인정보 수집·이용 안내</Link>
+      </div>
+    </div>
+  </footer>;
 }

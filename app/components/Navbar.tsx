@@ -1,239 +1,37 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { buildTrackedContactPath } from "@/lib/attribution";
 import { businessLines } from "@/lib/site-config";
-import DrawerMenu from "@/app/components/DrawerMenu";
-
-const quickLinks = [
-  { label: "작업사례", href: "/cases" },
-  { label: "사업 철학", href: "/philosophy" },
-  { label: "기술로 살아남기", href: "/academy" },
-  { label: "이벤트", href: "/events" },
-  { label: "꿀팁 게시판", href: "/tips" },
-  { label: "커뮤니티", href: "/community" },
-];
+import { primaryPages, sinkDoorGuide } from "@/lib/public-navigation";
+import DrawerMenu from "./DrawerMenu";
+import s from "./navigation.module.css";
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const isDarkPage = pathname === "/philosophy" || pathname.startsWith("/academy");
-  let decodedPath = pathname;
-  try {
-    decodedPath = decodeURIComponent(pathname);
-  } catch {
-    // Keep malformed paths on the standard navigation copy.
-  }
-  const isSinkDoorPage = pathname === "/kitchen/sink-door" ||
-    pathname.startsWith("/kitchen/sink-door/") ||
-    (decodedPath.startsWith("/kitchen/") &&
-      !/냉장고장|냉장고-수납장/.test(decodedPath) &&
-      /문짝|도어|문-교체|주방-문-리폼|리폼-vs-교체/.test(decodedPath));
-  const photoGuide = isSinkDoorPage
-    ? "문짝 가까이 1장 + 주방 전체 1장으로 예상 견적 확인"
-    : undefined;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
+  const sinkDoor = sinkDoorGuide(pathname);
+  const currentField = businessLines.some(line => pathname === line.href || pathname.startsWith(line.href + "/"));
   return (
-    <>
-      <div
-        className={`${isDarkPage ? "bg-black text-white" : "bg-white"} overflow-hidden transition-transform duration-300 ${
-          scrolled ? "-translate-y-full" : "translate-y-0"
-        }`}>
-        <div
-          className={
-            isDarkPage
-              ? "border-b border-white/10 bg-black text-white"
-              : "bg-[#1f66ff] text-white"
-          }>
-          <div className="mx-auto flex h-9 max-w-6xl items-center justify-center px-4 text-xs font-bold md:text-sm">
-            {photoGuide ?? "사진 한 장으로 수리·리폼 가능 여부 먼저 확인"}
-          </div>
-        </div>
-
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/images/logo-v3.png"
-                alt="Re'Story"
-                width={120}
-                height={120}
-                className={`${isDarkPage ? "brightness-0 invert" : ""} w-auto object-contain`}
-                priority
-              />
-            </Link>
-
-            <nav className="hidden lg:flex items-center gap-7 text-sm font-extrabold">
-              {quickLinks.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  aria-current={pathname === item.href || pathname.startsWith(`${item.href}/`) ? "page" : undefined}
-                  className={`whitespace-nowrap transition ${
-                    isDarkPage
-                      ? "text-white/72 hover:text-white"
-                      : "text-[#1f2631] hover:text-[#1f66ff]"
-                  }`}>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-2 max-[360px]:gap-1 md:gap-3">
-            <Link
-              href="/philosophy"
-              className={`md:hidden whitespace-nowrap rounded-xl border px-2.5 py-1.5 text-xs max-[360px]:px-2 max-[360px]:text-[10px] font-bold shadow-sm transition ${
-                isDarkPage
-                  ? "border-[#1f66ff] bg-[#1f66ff] text-white"
-                  : "border-neutral-200 bg-white text-[#1f2631]"
-              }`}>
-              사업 철학
-            </Link>
-
-            <Link
-              href="/cases"
-              className="md:hidden whitespace-nowrap max-[360px]:px-2 max-[360px]:text-[10px] transition text-[#1f2631] border border-[#f5c542] rounded-xl px-2.5 py-1.5 text-xs bg-gradient-to-r from-[#fff4b8] to-[#ffd54f] font-bold shadow-sm">
-              작업 사례
-            </Link>
-
-            <div className="md:hidden">
-              <DrawerMenu photoGuide={photoGuide} />
-            </div>
-
-            <a
-              href="tel:1688-2957"
-              className={`hidden md:inline-flex rounded-xl px-4 py-2 text-xs font-black ${
-                isDarkPage
-                  ? "border border-white/10 bg-white/10 text-white"
-                  : "bg-neutral-100 text-neutral-800"
-              }`}>
-              전화문의
-            </a>
-            <a
-              href={isSinkDoorPage ? "/go/kakao?cta=sink_door" : "https://blog.naver.com/sofaresq/224129090889"}
-              data-cta={isSinkDoorPage ? "sink_door_nav_kakao" : undefined}
-              className="hidden md:inline-flex rounded-xl bg-[#1f66ff] px-4 py-2 text-xs font-black text-white">
-              사진접수
-            </a>
-          </div>
+    <header className={s.header} data-site-sticky-nav>
+      <a className={s.skip} href="#public-content">본문 바로가기</a>
+      <div className={s.bar}>
+        <Link href="/" className={s.brand} aria-label="리스토리 홈">
+          <Image src="/images/logo-v3.png" alt="" width={112} height={112} />
+        </Link>
+        <nav className={s.primary} aria-label="주요 메뉴">
+          <Link href="/#services" aria-current={currentField ? "location" : undefined}>수리 분야</Link>
+          {primaryPages.map(({ href, label }) => (
+            <Link key={href} href={href} aria-current={pathname === href || pathname.startsWith(href + "/") ? "location" : undefined}>{label}</Link>
+          ))}
+        </nav>
+        <div className={s.actions}>
+          {sinkDoor ? <a className={s.contact} data-cta="sink_door_nav_kakao" href={buildTrackedContactPath("kakao", "sink_door")}>문짝 사진 상담</a>
+            : <Link className={s.contact} href="/request">상담 접수</Link>}
+          <DrawerMenu key={pathname} pathname={pathname} sinkDoor={sinkDoor} />
         </div>
       </div>
-
-      <header
-        data-site-sticky-nav
-        className={`sticky top-0 z-50 border-b shadow-[0_1px_0_rgba(0,0,0,0.08)] ${
-          isDarkPage
-            ? "border-white/10 bg-black"
-            : "border-neutral-100 bg-white"
-        }`}>
-        <div className="mx-auto flex h-14 max-w-6xl items-center px-4">
-          <nav
-            className="nav-scroll flex-1 flex h-full items-center gap-0.5 overflow-x-auto overflow-y-hidden"
-            style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              WebkitOverflowScrolling: "touch",
-              touchAction: "pan-x",
-            }}>
-            <style>{`.nav-scroll::-webkit-scrollbar{display:none}`}</style>
-
-            <div className="relative flex h-full shrink-0 items-center">
-              <Link
-                href="/"
-                className={`relative flex h-full items-center px-2 font-bold transition ${
-                  pathname === "/"
-                    ? "text-[#1f66ff]"
-                    : isDarkPage
-                      ? "text-white/68 hover:text-white"
-                      : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
-                }`}>
-                홈
-                {pathname === "/" && (
-                  <span
-                    className="absolute bottom-0 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-[#1f66ff]"
-                    style={{ width: "calc(100%)" }}
-                  />
-                )}
-              </Link>
-            </div>
-
-            {businessLines.map((line) => {
-              const isActive = pathname.startsWith(`/${line.id}`);
-
-              return (
-                <div
-                  key={line.id}
-                  className="group relative flex h-full shrink-0 items-center">
-                  <Link
-                    href={line.href}
-                    className={`relative flex h-full items-center px-2 font-bold transition ${
-                      isActive
-                        ? "text-[#1f66ff]"
-                        : isDarkPage
-                          ? "text-white/68 hover:text-white"
-                          : "text-neutral-400 md:text-neutral-950 hover:text-[#1f66ff]"
-                    }`}>
-                    {line.title}
-                    {isActive && (
-                      <span
-                        className="absolute bottom-0 left-1/2 h-[3px] -translate-x-1/2 rounded-full bg-[#1f66ff]"
-                        style={{ width: "calc(100%)" }}
-                      />
-                    )}
-                  </Link>
-
-                  <div className="hidden md:block invisible absolute left-0 top-full z-50 w-[760px] translate-y-2 rounded-b-3xl border border-t-0 border-neutral-200 bg-white opacity-0 shadow-2xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                    <div className="grid grid-cols-[190px_1fr]">
-                      <div className="bg-[#edf3ff] p-6">
-                        <p className="text-lg font-black text-neutral-950">
-                          {line.title}
-                        </p>
-                        <p className="mt-3 text-sm font-medium leading-relaxed text-neutral-600">
-                          {line.subtitle}
-                        </p>
-                        <Link
-                          href={line.href}
-                          className="mt-6 inline-flex rounded-xl bg-[#1f66ff] px-4 py-3 text-xs font-black text-white">
-                          전체 보기
-                        </Link>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-x-8 gap-y-4 p-6 lg:grid-cols-3">
-                        {line.services.map((service) => (
-                          <Link
-                            key={service.slug}
-                            href={`/${line.id}/${service.slug}`}
-                            className="rounded-2xl p-3 transition hover:bg-neutral-50">
-                            <p className="text-sm font-black text-neutral-950">
-                              {service.shortTitle}
-                            </p>
-                            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-500">
-                              {service.description}
-                            </p>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </nav>
-
-          <div className="hidden md:flex flex-shrink-0 h-full items-center pl-3">
-            <DrawerMenu photoGuide={photoGuide} />
-          </div>
-        </div>
-      </header>
-    </>
+    </header>
   );
 }

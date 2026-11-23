@@ -80,7 +80,7 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
         <label>방문 주소<input name="address" autoComplete="street-address" minLength={2} maxLength={250} placeholder="도로명 또는 지번, 동·호수" required /></label>
         <label><span>상담 내용 <small>선택</small></span><textarea name="notes" rows={3} maxLength={800} placeholder="불편한 점이나 미리 알려주실 내용을 적어 주세요." /></label>
         <PhotoPicker photos={photos} onChange={setPhotos} onBusy={setPreparing} />
-        <label className={s.consent}><input name="consent" type="checkbox" required />
+        <label className={s.consent} id="privacy-consent"><input name="consent" type="checkbox" required />
           <span>리스토리 스튜디오가 상담 연락과 방문 일정 관리를 위해 이름, 전화번호, 주소, 상담 내용과 첨부한 사진을 수집·이용하는 데 동의해요.</span>
         </label>
       </fieldset>

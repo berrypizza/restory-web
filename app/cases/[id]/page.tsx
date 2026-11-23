@@ -1,3 +1,4 @@
+import { findService } from "@/lib/consultation-services";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -57,6 +58,7 @@ export default async function CaseDetailPage({ params }: Props) {
     publisher: { "@type": "Organization", name: "리스토리 스튜디오", url: site, logo: { "@type": "ImageObject", url: site + "/images/logo-cc.png" } },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${site}/cases/${item.id}` },
   };
+  const intakeService = findService(item.category) ?? findService(item.title);
   return (
     <main className={s.page} data-service-id="cases" data-service-keyword={item.id}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
@@ -92,6 +94,7 @@ export default async function CaseDetailPage({ params }: Props) {
             <h2 id="consult-title">우리 집도 수리할 수 있을까요?</h2>
             <p>가구 전체와 손상 부위 사진을 보내주시면 수리 방법을 안내해 드려요.</p>
             <div className={s.contactLinks} data-service-section="inline_contact">
+              <Link href={intakeService ? "/request?service=" + intakeService : "/request"}>사진으로 상담 접수</Link>
               <a href={kakao} target="_blank" rel="noopener noreferrer">카카오톡으로 사진 상담</a>
               <a href={phone}>전화 상담 <span>1688-2957</span></a>
             </div>

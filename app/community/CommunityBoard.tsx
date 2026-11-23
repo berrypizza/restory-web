@@ -1,5 +1,6 @@
 "use client";
 
+import PublicIntro from "@/app/components/PublicIntro";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { communityClient } from "@/lib/community/client";
@@ -70,36 +71,10 @@ export default function CommunityBoard({
   }
 
   return (
-    <main className="community-container">
-      <div className="community-breadcrumb">
-        <Link href="/">홈</Link>
-        <span>/</span>
-        <span>커뮤니티</span>
-      </div>
-      <header className="community-hero">
-        <div>
-          <p className="community-eyebrow">RE’STORY COMMUNITY</p>
-          <h1>
-            함께 고치고,
-            <br className="community-mobile-break" /> 함께 배우는 이야기.
-          </h1>
-          <p>
-            살릴 수 있을까 하는 질문부터, 현장에서 배운 작은 발견까지.
-            <br className="community-desktop-break" /> 고객과 기술자가 서로의
-            경험을 나눕니다.
-          </p>
-        </div>
-        <div className="community-hero-mark" aria-hidden="true">
-          <span>Re:</span>
-          <i>
-            당신의 이야기에
-            <br />
-            경험을 더해요.
-          </i>
-        </div>
-      </header>
+    <main data-service-id="community" className="community-container">
+      <PublicIntro title="커뮤니티" description="가구 수리에 관해 질문하고, 고객과 기술자가 나눈 현장 경험을 읽어 보세요." />
       <div className="community-grid">
-        <section className="community-main" aria-label="커뮤니티 게시판">
+        <section data-service-section="articles" className="community-main" aria-label="커뮤니티 게시판">
           <div className="community-board-heading">
             <h2>우리의 이야기</h2>
             <Link
@@ -319,7 +294,7 @@ export default function CommunityBoard({
             )}
             {auth.error && <p role="alert">{auth.error}</p>}
           </section>
-          <section className="community-side-section">
+          <section data-service-section="related" className="community-side-section">
             <p className="community-eyebrow">함께 참고해요</p>
             <Link href="/cases">
               <span>실제 작업사례</span>
@@ -332,7 +307,7 @@ export default function CommunityBoard({
               <b>↗</b>
             </Link>
           </section>
-          <section className="community-principles">
+          <section data-service-section="principles" className="community-principles">
             <span className="community-eyebrow">우리의 약속</span>
             <p>
               사진을 보고,

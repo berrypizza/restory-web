@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { LandingTrail, LandingIntake } from "./shared/LandingNavigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -263,7 +264,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
   };
 
   return (
-    <main data-service-id="fridge-cabinet"
+    <main data-service-id="fridge-cabinet" data-service-keyword={keyword}
       className="bg-white"
       style={{
         fontFamily:
@@ -278,6 +279,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
       <FAQJsonLd faqs={FAQ_ITEMS} />
 
       {/* 1. HERO */}
+      <LandingTrail field="kitchen" title="냉장고장 리폼" />
       <section data-service-section="hero" className="bg-white px-0 pb-8 pt-0 md:pb-12">
         <div className="mx-auto max-w-[900px]">
           <div className="relative min-h-[560px] overflow-hidden bg-neutral-950 px-6 py-7 md:min-h-[620px] md:px-12 md:py-10">
@@ -346,33 +348,23 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </div>
       </section>
 
-      <nav className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 px-4 backdrop-blur">
+      <nav aria-label="냉장고장 리폼 상세·리뷰" data-public-detail-tabs>
         <div className="mx-auto grid max-w-[720px] grid-cols-2 text-center">
           <button
             type="button"
-            onClick={() => setActiveTab("detail")}
-            className={`py-4 text-[15px] ${
-              activeTab === "detail"
-                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
-                : "border-0 font-bold text-neutral-500"
-            }`}
+            aria-pressed={activeTab === "detail"} onClick={() => setActiveTab("detail")}
+
           >
             서비스 상세
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("reviews")}
-            className={`py-4 text-[15px] ${
-              activeTab === "reviews"
-                ? "rounded-t-lg border-2 border-b-0 border-[#1a5cff] font-black text-[#1a5cff]"
-                : "border-0 font-bold text-neutral-500"
-            }`}
+            aria-pressed={activeTab === "reviews"} onClick={() => setActiveTab("reviews")}
+
           >
             <span className="inline-flex items-center justify-center gap-1.5">
-              <span className="text-[#fbbc04]">★</span>
               <span>리뷰</span>
-              <span className="text-[#fbbc04]">★</span>
-            </span>
+              </span>
           </button>
         </div>
       </nav>
@@ -1933,6 +1925,7 @@ export default function FridgeCabinetLanding({ keyword, canonicalUrl }: Props) {
         </section>
       </div>
 
+      <LandingIntake field="kitchen" item="냉장고장 리폼" />
       <FloatingCTA onReviewClick={showReviews} />
     </main>
   );
