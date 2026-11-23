@@ -54,13 +54,13 @@ export default function GisalLanding() {
           <div className={cx("hero-price")}><span className={cx("price-label")}>{offer.cohort}기 기본 수강료</span><span className={cx("hero-price-now")}>{offer.basicPrice}<span>만 원</span></span></div>
           <div className={cx("hero-actions")}><EnrollButton location="hero" className={cx("button button-green")} /><a className={cx("text-link")} href="#plan-comparison">{offer.basicPrice}·{offer.setupPrice}만 원 과정 비교 <span aria-hidden="true">↓</span></a></div>
           <p className={cx("hero-consult-note")}>현재 상황과 창업 목표를 듣고, 과정 적합도와 시작 방향을 함께 확인합니다.</p>
-          <p className={cx("hero-footnote")}>{offer.weeks}주 사업 교육 · {offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육<br />{offer.startDate} 개강 예정</p><p className={cx("practice-note")}>{offer.practiceCondition}</p>
+          <p className={cx("hero-footnote")}>{offer.weeks}주 사업 교육 · {offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회 현장 기술 교육<br />{offer.cohort}기 개강일 {offer.startDate}</p><p className={cx("practice-note")}>{offer.practiceCondition}</p>
         </div>
         <div className={cx("hero-aside")} aria-hidden="true"><div className={cx("vertical-note")}>BUILD YOUR SKILL. BUILD YOUR BUSINESS.</div><div className={cx("cohort-seal")}><span>FIRST CLASS</span><strong>{String(offer.seats).padStart(2, "0")}</strong><span>함께 시작할 네 사람</span></div><div className={cx("image-caption")}><span className={cx("portrait-label")}>RESTORY BROTHERS</span>리스토리 형제와 함께,<br /><b>기술부터 사업까지.</b></div></div>
       </div>
       <p className={cx("heroArtNote")}>배경은 교육 방향을 표현한 연출 이미지입니다.</p>
     </section>
-    <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>{offer.startDateShort} <small>월요일 개강 예정</small></strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>{offer.seats}명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>{offer.basicPrice}만 원 <small>{offer.cohort}기 기본 수강료</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
+    <section className={cx("quick-facts")} aria-label="1기 모집 핵심 정보"><div className={cx("wrap fact-row")}><div><span className={cx("fact-label")}>START</span><strong>개강일 {offer.startDate}</strong></div><div><span className={cx("fact-label")}>TOGETHER</span><strong>{offer.seats}명 <small>소수 정예</small></strong></div><div><span className={cx("fact-label")}>FIRST CLASS</span><strong>{offer.basicPrice}만 원 <small>{offer.cohort}기 기본 수강료</small></strong></div><a href="#apply" className={cx("fact-link")}>모집 자세히 보기 <span aria-hidden="true">↗</span></a></div></section>
 
     <section id="prepare" className={cx("offer-overview section-light")} aria-labelledby="prepare-title">
       <div className={cx("wrap offer-overview-grid")}>
@@ -326,7 +326,7 @@ export default function GisalLanding() {
           <div className={cx("ticket-body")}>
             <p className={cx("ticket-label")}>기본 과정 · 사업 교육 + 현장 기술 교육</p><h3>기술로 살아남기</h3>
             <div className={cx("ticket-price")}>{offer.basicPrice}<span>만 원</span></div><p className={cx("ticket-price-caption")}>{offer.cohort}기 기본 수강료</p>
-            <dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate} 예정</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>추가 비용 없이 신청 · 현장 일정 조율</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl>
+            <dl className={cx("ticket-facts")}><div><dt>개강일</dt><dd>{offer.startDate}</dd></div><div><dt>모집 인원</dt><dd>{offer.seats}명 소수 정예</dd></div><div><dt>사업 과정</dt><dd>{offer.weeks}주</dd></div><div><dt>현장 기술 수업</dt><dd>{offer.weeks}주간 주 {offer.fieldSessionsPerWeek}회</dd></div><div><dt>수료 후 기술 교육</dt><dd>추가 비용 없이 신청 · 현장 일정 조율</dd></div><div><dt>교육 주제</dt><dd>기술 · 브랜딩 · 마케팅 · 웹사이트</dd></div></dl>
             <ul className={cx("offer-inclusions")}><li>사업자의 마인드·원칙, 브랜딩·마케팅·내 사업 웹사이트 학습</li><li>실제 고객 작업 관찰과 강사 지도 아래 가능한 공정 실습</li><li>과정 중·수료 후 추가 기술 교육 신청 가능 · 추가 비용 없음</li></ul>
             <p className={cx("plan-consult-note")}>사업을 배우고 직접 구축하며 시작하고 싶다면, 지금의 경험과 준비 상태부터 함께 살펴보세요. 어떤 과정이 맞는지 아직 정하지 않아도 괜찮습니다.</p>
             <EnrollButton location="basic" label="기본 과정 무료 상담" className={cx("button button-green")} />
@@ -384,7 +384,7 @@ export default function GisalLanding() {
         ["현장에서는 구경만 하나요? 직접 작업도 해보나요?", `실제 고객 시공 현장에 동행해 관찰하고, 강사의 지도 아래 허용된 작업을 직접 실습한 뒤 피드백을 받습니다. ${offer.practiceCondition} 교육생에게 단독 시공을 맡기는 과정이 아닙니다.`],
         ["5주 동안 모든 수리 기술을 배울 수 있나요?", "모든 기술의 습득이나 모든 공정의 직접 실습을 보장하지 않습니다. 상·하부장, 문짝, 경첩·레일, 슬라이딩 도어, 가죽 리폼, 소파·가구 복원 등은 다룰 수 있는 분야의 예시이며 실제 현장 일정과 안전 조건에 따라 달라집니다."],
         ["사업 교육이 중심인가요? 기술 수업과 어떻게 병행하나요?", `네. 기술로 자기 사업을 준비하도록 사업자의 생각과 원칙, 브랜딩·마케팅·운영을 중심으로 배웁니다. ${offer.weeks}주 사업 교육과 ${offer.weeks}주간 주 ${offer.fieldSessionsPerWeek}회 현장 기술 교육을 병행합니다. 사업 교육은 몰입 환경 → 신념·사명·원칙 → 브랜딩 → 퍼널 마케팅 → 바이브 코딩 사업 사이트 순서입니다. 기술 교육은 실제 현장에서 진행하며 세부 요일·시간과 장소는 확인 후 안내합니다.`],
-        ["언제 시작하고, 몇 명이 함께하나요?", `${offer.startDate} 개강 예정이며 ${offer.cohort}기 정원은 ${offer.seats}명입니다. 사업 과정은 ${offer.weeks}주입니다.`],
+        ["언제 시작하고, 몇 명이 함께하나요?", `${offer.cohort}기 개강일은 ${offer.startDate}입니다. 정원은 ${offer.seats}명이고, 사업 교육은 ${offer.weeks}주간 진행합니다.`],
         [`${offer.setupName}는 기본 과정과 무엇이 다른가요?`, `${offer.setupDescription} ${offer.setupChannels.map(channel => channel.name).join("·")}의 초기 셋업이 포함됩니다. ${offer.setupApproach} ${offer.setupNote}`],
         [`주 ${offer.fieldSessionsPerWeek}회보다 더 교육받고 싶으면 신청할 수 있나요?`, offer.additionalFieldEducation],
         ["수료 후 어떤 지원을 받나요?", offer.followUp],

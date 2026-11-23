@@ -2,8 +2,7 @@
 export const ACADEMY_OFFER = {
   cohort: 1,
   seats: 4,
-  startDate: "2026년 12월 7일 (월)",
-  startDateShort: "12.07",
+  startDate: "미정",
   weeks: 5,
   fieldSessionsPerWeek: 2,
   basicPrice: 490,
