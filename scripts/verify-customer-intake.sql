@@ -130,9 +130,11 @@ end $$;
 
 set local role anon;
 select public.submit_customer_intake('14000000-0000-4000-8000-000000000020','메모 검증','01000000000','검증 주소','기타','고객 원문',true);
+select public.submit_customer_intake('14000000-0000-4000-8000-000000000021','실측 미정','01000000000','검증 주소','기타','',true);
+select public.submit_customer_intake('14000000-0000-4000-8000-000000000022','실측 견적','01000000000','검증 주소','기타','',true);
 do $$ begin
   begin
-    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모');
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모',150000);
     raise exception 'anonymous approval with staff memo';
   exception when insufficient_privilege then null; end;
 end $$;
@@ -141,7 +143,7 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000003',true);
 do $$ begin
   begin
-    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모');
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모',150000);
     raise exception 'technician approval with staff memo';
   exception when insufficient_privilege then null; end;
 end $$;
@@ -151,25 +153,61 @@ do $$ declare
   saved uuid;
   retried uuid;
   invalid_time time;
+  invalid_price integer;
 begin
   foreach invalid_time in array array[time '09:15', time '09:30:01', time '24:00'] loop
     begin
-      perform public.schedule_customer_intake(request_id,current_date,invalid_time,'',false,'');
+      perform public.schedule_customer_intake(request_id,current_date,invalid_time,'',false,'',150000);
       raise exception 'off-grid time accepted';
     exception when invalid_parameter_value then null; end;
   end loop;
   begin
-    perform public.schedule_customer_intake(request_id,current_date,null,'',false,repeat('가',1201));
+    perform public.schedule_customer_intake(request_id,current_date,null,'',false,repeat('가',1201),150000);
     raise exception 'overlength staff memo accepted';
   exception when invalid_parameter_value then null; end;
-  select job_id into saved from public.schedule_customer_intake(request_id,current_date,'09:30','이주형',false,'  직원 메모  ');
-  select job_id into retried from public.schedule_customer_intake(request_id,current_date,'12:00','',false,'재시도 메모');
+  foreach invalid_price in array array[null,0,-1]::integer[] loop
+    begin
+      perform public.schedule_customer_intake(request_id,current_date,null,'',false,'',invalid_price);
+      raise exception 'unquoted regular visit accepted';
+    exception when invalid_parameter_value then
+      if sqlerrm <> 'quote_required' then raise; end if;
+    end;
+  end loop;
+  begin
+    perform public.schedule_customer_intake(request_id,current_date,null,'',false);
+    raise exception 'five-argument approval accepted unquoted visit';
+  exception when invalid_parameter_value then
+    if sqlerrm <> 'quote_required' then raise; end if;
+  end;
+  begin
+    perform public.schedule_customer_intake(request_id,current_date,null,'',false,'');
+    raise exception 'six-argument approval accepted unquoted visit';
+  exception when invalid_parameter_value then
+    if sqlerrm <> 'quote_required' then raise; end if;
+  end;
+  if not exists(select 1 from public.customer_intakes where id=request_id and scheduled_at is null and notes='고객 원문')
+    or exists(select 1 from public.jobs where name='메모 검증')
+    then raise exception 'failed approval consumed the intake'; end if;
+  select job_id into saved from public.schedule_customer_intake(request_id,current_date,'09:30','이주형',false,'  직원 메모  ',150000);
+  select job_id into retried from public.schedule_customer_intake(request_id,current_date,'12:00','',false,'재시도 메모',300000);
   if saved is null or retried is distinct from saved or not exists (
-    select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 메모' and visit_time='09:30'
-  ) then raise exception 'approval or retry mixed the two authors or changed the time'; end if;
+    select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 메모' and visit_time='09:30' and price=150000
+  ) then raise exception 'approval or retry changed the original price, notes or time'; end if;
   update public.jobs set memo='직원 수정' where id=saved;
   if not exists(select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 수정')
     then raise exception 'staff edit changed the customer note'; end if;
+
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000021',current_date,null,'',true,'',-1);
+    raise exception 'negative measurement quote accepted';
+  exception when invalid_parameter_value then
+    if sqlerrm <> 'invalid_quote' then raise; end if;
+  end;
+  perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000021',current_date,null,'',true,'',null);
+  perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000022',current_date,null,'',true,'',70000);
+  if not exists(select 1 from public.jobs where name='실측 미정' and is_measurement and price=0)
+    or not exists(select 1 from public.jobs where name='실측 견적' and is_measurement and price=70000)
+    then raise exception 'measurement quote was not saved as entered'; end if;
 end $$;
 reset role;
 rollback;

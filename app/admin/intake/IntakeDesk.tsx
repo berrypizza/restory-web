@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import AdminIcon from "../components/AdminIcon";
 import ArrivalTime from "../components/ArrivalTime";
 import { CustomerPhotoStrip } from "../components/CustomerPhotos";
@@ -14,6 +14,26 @@ type Intake = {
 type Scheduled = { job_id: string; visit_date: string };
 const pageSize = 25;
 const receivedDate = new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Seoul" });
+const maxJobPrice = 2_147_483_647; // jobs.price is a PostgreSQL integer.
+const quoteRequired = "일반 방문은 견적 금액을 입력해 주세요.";
+const visitKinds = [
+  { value: "visit", label: "일반 방문" },
+  { value: "measure", label: "실측" },
+] as const;
+
+function readQuote(text: string, measurement: boolean) {
+  const trimmed = text.trim();
+  if (!trimmed) return { amount: null, error: measurement ? "" : quoteRequired };
+
+  const digits = trimmed.replace(/\s*원$/, "");
+  if (!/^(?:\d+|\d{1,3}(?:,\d{3})+)$/.test(digits)) {
+    return { amount: null, error: "견적은 원 단위 숫자로 입력해 주세요." };
+  }
+  const amount = Number(digits.replaceAll(",", ""));
+  if (amount > maxJobPrice) return { amount: null, error: "2,147,483,647원 이하로 입력해 주세요." };
+  if (!measurement && amount === 0) return { amount: null, error: "일반 방문 견적은 1원 이상이어야 해요." };
+  return { amount, error: "" };
+}
 
 function CopyLink() {
   const [status, setStatus] = useState<"idle" | "copied" | "manual">("idle");
@@ -38,12 +58,29 @@ function CopyLink() {
 
 function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result: Scheduled) => void }) {
   const [time, setTime] = useState("");
+  const [kind, setKind] = useState<"visit" | "measure">("visit");
+  const [priceText, setPriceText] = useState("");
+  const [priceReviewed, setPriceReviewed] = useState(false);
+  const priceInput = useRef<HTMLInputElement>(null);
+  const priceId = useId();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const locked = useRef(false);
+  const measurement = kind === "measure";
+  const quote = readQuote(priceText, measurement);
+  const priceError = priceReviewed ? quote.error : "";
+
+  function focusPrice() {
+    setPriceReviewed(true);
+    priceInput.current?.focus();
+  }
   async function schedule(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (locked.current) return;
+    if (quote.error) {
+      focusPrice();
+      return;
+    }
     const fields = new FormData(event.currentTarget);
     locked.current = true;
     setBusy(true);
@@ -51,11 +88,12 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
     try {
       const { data, error } = await getSupabase().rpc("schedule_customer_intake", {
         p_id: row.id, p_date: fields.get("date"), p_time: fields.get("time") || null,
-        p_tech: fields.get("tech"), p_measurement: fields.get("kind") === "measure",
+        p_tech: fields.get("tech"), p_measurement: measurement, p_price: quote.amount,
         p_staff_memo: String(fields.get("staffMemo") ?? "").trim(),
       }).single<Scheduled>();
       if (error || !data) {
-        setError(error?.code === "P0002" ? "이미 처리된 접수예요. 접수함을 새로고침해 주세요."
+        setError(error?.message === "quote_required" ? quoteRequired
+          : error?.code === "P0002" ? "이미 처리된 접수예요. 접수함을 새로고침해 주세요."
           : error?.code === "42501" ? "등록 권한을 확인해 주세요." : "등록 결과를 확인하지 못했어요. 같은 접수에서 다시 시도해 주세요.");
         return;
       }
@@ -77,17 +115,47 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
     <form method="post" onSubmit={schedule} className={s.fields}>
       <fieldset disabled={busy}>
         <legend>방문 일정</legend>
-        <div className={s.dateTimePair}>
-          <label>방문일<input type="date" name="date" defaultValue={today()} required /></label>
-          <ArrivalTime name="time" label="방문 시각" value={time} onChange={setTime} />
-        </div>
-        <div className={s.pair}>
-          <label>일정 종류<select name="kind" aria-label="일정 종류"><option value="visit">일반 방문</option><option value="measure">실측</option></select></label>
+        <div className={s.scheduleFields}>
+          <div className={s.bookingTerms}>
+            <fieldset className={s.kindField}>
+              <legend>일정 종류</legend>
+              <div className={s.kindOptions}>
+                {visitKinds.map(option => <label key={option.value}>
+                  <input type="radio" name="kind" value={option.value} checked={kind === option.value}
+                    onChange={() => { setKind(option.value); setPriceReviewed(false); }} />
+                  <span>{option.label}</span>
+                </label>)}
+              </div>
+            </fieldset>
+            <div className={s.quoteField}>
+              <label htmlFor={priceId}>견적 금액 <small data-required={!measurement}>{measurement ? "선택" : "필수"}</small></label>
+              <div className={s.amountBox} data-invalid={Boolean(priceError)}>
+                <input ref={priceInput} id={priceId} name="price" type="text" inputMode="numeric" enterKeyHint="done"
+                  autoComplete="off" placeholder="예) 150,000" required={!measurement} value={priceText}
+                  aria-label="견적 금액 (원)" aria-invalid={Boolean(priceError)}
+                  aria-describedby={priceError || measurement ? priceId + "-hint" : undefined}
+                  onChange={event => setPriceText(event.target.value)}
+                  onFocus={() => { if (quote.amount !== null) setPriceText(String(quote.amount)); }}
+                  onBlur={() => {
+                    setPriceReviewed(true);
+                    if (quote.amount !== null) setPriceText(quote.amount.toLocaleString("ko-KR"));
+                  }}
+                  onInvalid={event => { event.preventDefault(); focusPrice(); }} />
+                <span aria-hidden="true">원</span>
+              </div>
+              {priceError ? <p id={priceId + "-hint"} role="alert" className={s.error}>{priceError}</p>
+                : measurement && <p id={priceId + "-hint"}>실측 후에 견적을 입력해도 돼요.</p>}
+            </div>
+          </div>
+          <div className={s.dateTimePair}>
+            <label>방문일<input type="date" name="date" defaultValue={today()} required /></label>
+            <ArrivalTime name="time" label="방문 시각" value={time} onChange={setTime} />
+          </div>
           <label>담당 기사<select name="tech" aria-label="담당 기사"><option value="">미배정</option>{TECHS.map(tech => <option key={tech}>{tech}</option>)}</select></label>
+          <label className={s.staffMemo}>직원 메모 <small>선택</small>
+            <textarea name="staffMemo" rows={3} maxLength={1200} placeholder="통화한 내용이나 현장에서 확인할 점" />
+          </label>
         </div>
-        <label className={s.staffMemo}>직원 메모 <small>선택</small>
-          <textarea name="staffMemo" rows={3} maxLength={1200} placeholder="통화한 내용이나 현장에서 확인할 점" />
-        </label>
       </fieldset>
       {error && <p role="alert" className={s.error}>{error}</p>}
       <button className={s.primary} disabled={busy}>{busy ? "등록하는 중…" : "일정 등록"}</button>
