@@ -76,3 +76,10 @@
   resize: vertical;
 }
 .staffMemo textarea:focus-visible { outline: 3px solid #3278ed; outline-offset: 2px; }
+.addressBadge { justify-self: start; padding: 3px 8px; border-radius: 6px; color: #815014; background: #fff0d3; font-size: 12px; font-weight: 700; }
+.addressReview { margin: 14px 0; padding: 15px; border: 1px solid #d5dfec; border-radius: 13px; background: #fff; }
+.addressReview fieldset { min-width: 0; border: 0; margin: 0; padding: 0; }
+.addressReview legend { padding: 0; font-weight: 750; }
+.addressReview fieldset > p { margin: 3px 0 14px; font-size: 14px; }
+.addressActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.panel .addressSaved { color: #19655b; font-size: 14px; font-weight: 650; }

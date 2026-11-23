@@ -20,6 +20,11 @@ do $$ declare
 begin
   perform public.submit_customer_intake(k,'검증 고객','010-0000-0000','테스트로 1','소파 수리','테스트 메모',true,jsonb_build_array(pic,pic));
   perform public.submit_customer_intake(k,'검증 고객','010-0000-0000','테스트로 1','소파 수리','테스트 메모',true);
+  perform public.submit_customer_intake(k,'검증 고객','010-0000-0000','다른길 2','소파 수리','',true,'[]','901호','detail');
+  begin
+    perform public.confirm_customer_intake_address(k,'테스트로 1','테스트로 1','','none');
+    raise exception 'anonymous address confirmation';
+  exception when insufficient_privilege then null; end;
   begin
     perform public.submit_customer_intake('14000000-0000-4000-8000-000000000011','검증 사진','01000000000','테스트로 1','기타','',true,
       jsonb_build_array(pic,jsonb_build_object('image','aGVsbG8=','thumbnail','aGVsbG8=')));
@@ -60,6 +65,10 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000003', true);
 do $$ begin
   if exists(select 1 from public.customer_intakes) then raise exception 'technician read pending intake'; end if;
+  begin
+    perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000010','테스트로 1','테스트로 1','','none');
+    raise exception 'technician confirmed address';
+  exception when insufficient_privilege then null; end;
   if exists(select 1 from public.read_customer_photos('14000000-0000-4000-8000-000000000010',null,true))
     then raise exception 'technician read pending photos'; end if;
   begin
@@ -74,6 +83,13 @@ do $$ begin
   if (select photo_count from public.customer_intakes where id='14000000-0000-4000-8000-000000000010') is distinct from 2
     or (select count(*) from public.read_customer_photos('14000000-0000-4000-8000-000000000010',null,true) where decode(jpeg,'base64')=decode('ffd8ff22ffd9','hex')) <> 2
     then raise exception 'manager cannot preview both images'; end if;
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000010','2027-01-12','14:30','이주형',true);
+    raise exception 'legacy address scheduled before review';
+  exception when invalid_parameter_value then
+    if sqlerrm <> 'address_confirmation_required' then raise; end if;
+  end;
+  perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000010','테스트로 1','테스트로 1','','none');
   perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000010','2027-01-12','14:30','이주형',true);
 end $$;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000002', true);
@@ -129,9 +145,23 @@ do $$ begin
 end $$;
 
 set local role anon;
-select public.submit_customer_intake('14000000-0000-4000-8000-000000000020','메모 검증','01000000000','검증 주소','기타','고객 원문',true);
-select public.submit_customer_intake('14000000-0000-4000-8000-000000000021','실측 미정','01000000000','검증 주소','기타','',true);
-select public.submit_customer_intake('14000000-0000-4000-8000-000000000022','실측 견적','01000000000','검증 주소','기타','',true);
+select public.submit_customer_intake('14000000-0000-4000-8000-000000000020','메모 검증','01000000000','검증로 7','기타','고객 원문',true,'[]','202호','detail');
+select public.submit_customer_intake('14000000-0000-4000-8000-000000000021','실측 미정','01000000000','검증리 산7-2','기타','',true,'[]','','later');
+select public.submit_customer_intake('14000000-0000-4000-8000-000000000022','실측 견적','01000000000','검증로 7','기타','',true,'[]','','none');
+do $$ begin
+  begin
+    perform public.submit_customer_intake(gen_random_uuid(),'누락 검증','01000000000','서울','기타','',true,'[]','','later');
+    raise exception 'neighborhood-only base accepted';
+  exception when invalid_parameter_value then if sqlerrm <> 'invalid_address_base' then raise; end if; end;
+  begin
+    perform public.submit_customer_intake(gen_random_uuid(),'누락 검증','01000000000','검증로 7','기타','',true,'[]','  ','detail');
+    raise exception 'empty required detail accepted';
+  exception when invalid_parameter_value then if sqlerrm <> 'invalid_address_detail' then raise; end if; end;
+  begin
+    perform public.submit_customer_intake(gen_random_uuid(),'누락 검증','01000000000','검증로 7','기타','',true,'[]','미정','detail');
+    raise exception 'placeholder marked address ready';
+  exception when invalid_parameter_value then if sqlerrm <> 'invalid_address_detail' then raise; end if; end;
+end $$;
 do $$ begin
   begin
     perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000020',current_date,'09:30','',false,'직원 메모',150000);
@@ -191,7 +221,7 @@ begin
   select job_id into saved from public.schedule_customer_intake(request_id,current_date,'09:30','이주형',false,'  직원 메모  ',150000);
   select job_id into retried from public.schedule_customer_intake(request_id,current_date,'12:00','',false,'재시도 메모',300000);
   if saved is null or retried is distinct from saved or not exists (
-    select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 메모' and visit_time='09:30' and price=150000
+    select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 메모' and visit_time='09:30' and price=150000 and region='검증로 7 202호'
   ) then raise exception 'approval or retry changed the original price, notes or time'; end if;
   update public.jobs set memo='직원 수정' where id=saved;
   if not exists(select 1 from public.jobs where id=saved and customer_notes='고객 원문' and memo='직원 수정')
@@ -203,9 +233,25 @@ begin
   exception when invalid_parameter_value then
     if sqlerrm <> 'invalid_quote' then raise; end if;
   end;
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000021',current_date,null,'',false,'',150000);
+    raise exception 'regular visit with pending address accepted';
+  exception when invalid_parameter_value then if sqlerrm <> 'address_confirmation_required' then raise; end if; end;
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000021',current_date,null,'',true,'');
+    raise exception 'unconfirmed measurement accepted through older RPC';
+  exception when invalid_parameter_value then if sqlerrm <> 'address_confirmation_required' then raise; end if; end;
+  if not exists(select from public.customer_intakes where id='14000000-0000-4000-8000-000000000021' and scheduled_at is null and address_confirmed is false)
+    or exists(select from public.jobs where name='실측 미정') then raise exception 'blocked scheduling changed state'; end if;
+  perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000021','검증리 산7-2','검증로 15','2층 매장','detail');
+  perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000021','검증리 산7-2','검증로 15','2층 매장','detail');
+  begin
+    perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000021','검증리 산7-2','다른길 77','','none');
+    raise exception 'stale address confirmation overwrote saved address';
+  exception when serialization_failure then null; end;
   perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000021',current_date,null,'',true,'',null);
   perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000022',current_date,null,'',true,'',70000);
-  if not exists(select 1 from public.jobs where name='실측 미정' and is_measurement and price=0)
+  if not exists(select 1 from public.jobs where name='실측 미정' and is_measurement and price=0 and region='검증로 15 2층 매장')
     or not exists(select 1 from public.jobs where name='실측 견적' and is_measurement and price=70000)
     then raise exception 'measurement quote was not saved as entered'; end if;
 end $$;

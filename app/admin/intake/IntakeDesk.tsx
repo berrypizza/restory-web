@@ -7,9 +7,11 @@ import { CustomerPhotoStrip } from "../components/CustomerPhotos";
 import { TECHS } from "../lib/constants";
 import { formatFullDate, getSupabase, today } from "../lib/utils";
 import s from "./intake.module.css";
+import IntakeAddressReview from "./IntakeAddressReview";
 
 type Intake = {
   id: string; received_at: string; customer_name: string; phone: string; address: string; item: string; notes: string | null; photo_count: number;
+  address_confirmed: boolean | null;
 };
 type Scheduled = { job_id: string; visit_date: string };
 const pageSize = 25;
@@ -56,13 +58,17 @@ function CopyLink() {
   </div>;
 }
 
-function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result: Scheduled) => void }) {
+function ScheduleForm({ row, onScheduled, onAddressConfirmed }: {
+  row: Intake; onScheduled: (result: Scheduled) => void; onAddressConfirmed: (address: string) => void;
+}) {
   const [time, setTime] = useState("");
   const [kind, setKind] = useState<"visit" | "measure">("visit");
   const [priceText, setPriceText] = useState("");
   const [priceReviewed, setPriceReviewed] = useState(false);
   const priceInput = useRef<HTMLInputElement>(null);
   const priceId = useId();
+  const addressStep = useRef<HTMLDivElement>(null);
+  const [addressSaved, setAddressSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const locked = useRef(false);
@@ -74,9 +80,18 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
     setPriceReviewed(true);
     priceInput.current?.focus();
   }
+  function focusAddress() {
+    const step = addressStep.current;
+    const field = row.address_confirmed === false ? step?.querySelector<HTMLInputElement>('[name="addressDetail"]:enabled') : null;
+    (field ?? step?.querySelector<HTMLInputElement>('[name="address"]'))?.focus();
+  }
   async function schedule(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (locked.current) return;
+    if (!row.address_confirmed) {
+      focusAddress();
+      return;
+    }
     if (quote.error) {
       focusPrice();
       return;
@@ -92,7 +107,8 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
         p_staff_memo: String(fields.get("staffMemo") ?? "").trim(),
       }).single<Scheduled>();
       if (error || !data) {
-        setError(error?.message === "quote_required" ? quoteRequired
+        setError(error?.message === "address_confirmation_required" ? "방문 주소를 확인한 뒤 일정을 등록해 주세요."
+          : error?.message === "quote_required" ? quoteRequired
           : error?.code === "P0002" ? "이미 처리된 접수예요. 접수함을 새로고침해 주세요."
           : error?.code === "42501" ? "등록 권한을 확인해 주세요." : "등록 결과를 확인하지 못했어요. 같은 접수에서 다시 시도해 주세요.");
         return;
@@ -108,9 +124,14 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
   return <div className={s.detail}>
     <dl>
       <dt>전화번호</dt><dd><a href={`tel:${row.phone}`}>{row.phone}</a></dd>
-      <dt>방문 주소</dt><dd>{row.address}</dd>
+      {row.address_confirmed && <><dt>방문 주소</dt><dd>{row.address}</dd></>}
       {row.notes && <><dt>고객 메모</dt><dd>{row.notes}</dd></>}
     </dl>
+    {!row.address_confirmed && <div ref={addressStep}>
+      <IntakeAddressReview id={row.id} address={row.address} legacy={row.address_confirmed === null}
+        onConfirmed={address => { setAddressSaved(true); onAddressConfirmed(address); }} />
+    </div>}
+    {addressSaved && <p role="status" className={s.addressSaved}>방문 주소를 확인했어요.</p>}
     {row.photo_count > 0 && <CustomerPhotoStrip requestId={row.id} count={row.photo_count} />}
     <form method="post" onSubmit={schedule} className={s.fields}>
       <fieldset disabled={busy}>
@@ -158,7 +179,9 @@ function ScheduleForm({ row, onScheduled }: { row: Intake; onScheduled: (result:
         </div>
       </fieldset>
       {error && <p role="alert" className={s.error}>{error}</p>}
-      {quote.error ? (
+      {!row.address_confirmed ? (
+        <button type="button" className={s.quoteAction} onClick={focusAddress}>방문 주소 확인하기</button>
+      ) : quote.error ? (
         <button type="button" className={s.quoteAction} aria-controls={priceId} onClick={focusPrice}>
           {priceText.trim() ? "견적 금액 확인하기" : "견적 금액 입력하기"}
         </button>
@@ -186,7 +209,7 @@ export default function IntakeDesk({ onView }: { onView: (id: string, date: stri
     setLoading(true);
     setError("");
     try {
-      let query = getSupabase().from("customer_intakes").select("id,received_at,customer_name,phone,address,item,notes,photo_count")
+      let query = getSupabase().from("customer_intakes").select("id,received_at,customer_name,phone,address,address_confirmed,item,notes,photo_count")
         .is("scheduled_at", null).order("received_at").order("id").limit(pageSize + 1);
       if (after) query = query.or(`received_at.gt.${after.received_at},and(received_at.eq.${after.received_at},id.gt.${after.id})`);
       const { data, error } = await query;
@@ -232,10 +255,13 @@ export default function IntakeDesk({ onView }: { onView: (id: string, date: stri
       <ul className={s.list}>{rows.map(row => <li key={row.id}>
         <button className={s.summary} aria-expanded={expanded === row.id} aria-controls={expanded === row.id ? `intake-${row.id}` : undefined}
           onClick={() => setExpanded(expanded === row.id ? null : row.id)}>
-          <span><strong>{row.customer_name}</strong><span>{row.item}</span><small>{receivedDate.format(new Date(row.received_at))} 접수{row.photo_count > 0 && ` · 사진 ${row.photo_count}장`}</small></span>
+          <span><strong>{row.customer_name}</strong><span>{row.item}</span>
+            {!row.address_confirmed && <span className={s.addressBadge}>주소 확인 필요</span>}
+            <small>{receivedDate.format(new Date(row.received_at))} 접수{row.photo_count > 0 && ` · 사진 ${row.photo_count}장`}</small></span>
           <AdminIcon name="arrow" size={18} />
         </button>
-        {expanded === row.id && <div id={`intake-${row.id}`}><ScheduleForm row={row} onScheduled={scheduled} /></div>}
+        {expanded === row.id && <div id={`intake-${row.id}`}><ScheduleForm row={row} onScheduled={scheduled}
+          onAddressConfirmed={address => setRows(old => old.map(entry => entry.id === row.id ? { ...entry, address, address_confirmed: true } : entry))} /></div>}
       </li>)}</ul>
       {more && <button className={s.secondary} disabled={loading} onClick={() => void load(rows.at(-1))}>다음 접수 더 보기</button>}
     </section>

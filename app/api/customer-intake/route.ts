@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { MAX_INTAKE_PHOTOS, MAX_PHOTO_BYTES, MAX_THUMB_BYTES } from "@/lib/intake-photos";
+import { addressIssue } from "@/lib/intake-address";
 
 const bodyLimit = 3_900_000;
 
@@ -15,6 +16,12 @@ export async function POST(request: Request) {
     const input = JSON.parse(body);
     if (!input || !["id", "name", "phone", "address", "item", "notes"].every(key => typeof input[key] === "string")
       || input.consent !== true) return new Response(null, { status: 400 });
+    const structured = "addressMode" in input || "addressDetail" in input;
+    if (structured && (!["detail", "none", "later"].includes(input.addressMode) || typeof input.addressDetail !== "string"
+      || (input.addressMode !== "detail" && input.addressDetail !== "")
+      || addressIssue({ base: input.address, detail: input.addressDetail, mode: input.addressMode }))) {
+      return new Response(null, { status: 400 });
+    }
     const photos = input.photos ?? [];
     if (!Array.isArray(photos) || photos.length > MAX_INTAKE_PHOTOS || photos.some(photo =>
       typeof photo?.image !== "string" || photo.image.length > Math.ceil(MAX_PHOTO_BYTES / 3) * 4 ||
@@ -27,6 +34,7 @@ export async function POST(request: Request) {
     const { error } = await db.rpc("submit_customer_intake", {
       p_id: input.id, p_name: input.name, p_phone: input.phone, p_address: input.address,
       p_item: input.item, p_notes: input.notes, p_consent: input.consent, p_photos: photos,
+      ...(structured ? { p_detail: input.addressDetail, p_address_mode: input.addressMode } : {}),
     });
     if (error) return new Response(null, { status: error.code.startsWith("22") ? 400 : 503 });
     return new Response(null, { status: 204, headers: { "Cache-Control": "no-store" } });

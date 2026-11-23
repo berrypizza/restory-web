@@ -2,6 +2,8 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { INTAKE_LABEL } from "@/lib/consultation-services";
+import { addressIssue, emptyVisitAddress, normalizeAddress } from "@/lib/intake-address";
+import VisitAddressFields from "../components/VisitAddressFields";
 import { isProductOption, PRODUCT_OPTIONS } from "../admin/lib/products";
 import PhotoPicker, { type SelectedPhoto } from "./PhotoPicker";
 import s from "./request.module.css";
@@ -12,6 +14,8 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
   const [phase, setPhase] = useState<"ready" | "sending" | "done">("ready");
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
+  const [address, setAddress] = useState(emptyVisitAddress);
+  const [addressReviewed, setAddressReviewed] = useState(false);
   const [photos, setPhotos] = useState<SelectedPhoto[]>([]);
   const [preparing, setPreparing] = useState(false);
   const requestId = useRef<string | null>(null);
@@ -25,10 +29,12 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
     const fields = new FormData(form);
     const field = (key: string) => String(fields.get(key) ?? "").trim();
     const phone = field("phone").replace(/[\s()-]/g, "").replace(/^\+820?/, "0");
+    const visitIssue = addressIssue(address);
     const invalid = !field("name") ? "name" : !/^(0[1-9]\d{7,9}|050\d{9})$/.test(phone) ? "phone"
-      : field("address").length < 2 ? "address" : product === "custom" && !field("customItem") ? "customItem" : null;
+      : visitIssue?.field ?? (product === "custom" && !field("customItem") ? "customItem" : null);
     if (invalid) {
-      setError(invalid === "phone" ? "전화번호를 지역번호 또는 010부터 확인해 주세요." : "입력한 내용을 확인해 주세요.");
+      setAddressReviewed(true);
+      setError(visitIssue?.field === invalid ? "" : invalid === "phone" ? "전화번호를 지역번호 또는 010부터 확인해 주세요." : "입력한 내용을 확인해 주세요.");
       (form.elements.namedItem(invalid) as HTMLInputElement)?.focus();
       return;
     }
@@ -39,7 +45,8 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
       requestId.current ??= crypto.randomUUID();
       const res = await fetch("/api/customer-intake", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: requestId.current, name: field("name"), phone, address: field("address"),
+        body: JSON.stringify({ id: requestId.current, name: field("name"), phone, address: normalizeAddress(address.base),
+          addressMode: address.mode, addressDetail: address.mode === "detail" ? normalizeAddress(address.detail) : "",
           item: product === "custom" ? field("customItem") : product, notes: field("notes"), consent: fields.has("consent"),
           photos: photos.map(({ image, thumbnail }) => ({ image, thumbnail })) }),
       });
@@ -62,7 +69,7 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
   if (phase === "done") return <section className={s.success}>
     <span className={s.check} aria-hidden="true">✓</span>
     <h1 tabIndex={-1} ref={success}>상담이 접수됐어요</h1>
-    <p>담당자가 보내 주신 내용을 확인한 뒤 남겨 주신 연락처로 답변드릴게요. 방문이 필요하면 그때 일정을 함께 정해요.</p>
+    <p>{address.mode === "later" ? "담당자가 남겨 주신 연락처로 답변드릴게요. 방문이 필요하면 통화로 상세주소를 확인한 뒤 일정을 정해요." : "담당자가 보내 주신 내용을 확인한 뒤 남겨 주신 연락처로 답변드릴게요. 방문이 필요하면 그때 일정을 함께 정해요."}</p>
   </section>;
 
   return <>
@@ -77,7 +84,7 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
         {product === "custom" && <label>상담할 품목<input name="customItem" defaultValue={customItem} placeholder="어떤 가구나 수리가 필요한가요?" maxLength={100} required /></label>}
         <label>이름<input name="name" autoComplete="name" maxLength={60} placeholder="성함" required /></label>
         <label>전화번호<input name="phone" type="tel" autoComplete="tel-national" inputMode="tel" maxLength={23} placeholder="010-0000-0000" required /></label>
-        <label>방문 주소<input name="address" autoComplete="street-address" minLength={2} maxLength={250} placeholder="도로명 또는 지번, 동·호수" required /></label>
+        <VisitAddressFields value={address} onChange={setAddress} allowLater issue={addressReviewed ? addressIssue(address) : null} />
         <label><span>상담 내용 <small>선택</small></span><textarea name="notes" rows={3} maxLength={800} placeholder="불편한 점이나 미리 알려주실 내용을 적어 주세요." /></label>
         <PhotoPicker photos={photos} onChange={setPhotos} onBusy={setPreparing} />
         <label className={s.consent} id="privacy-consent"><input name="consent" type="checkbox" required />
