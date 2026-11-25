@@ -83,3 +83,8 @@
 .addressReview fieldset > p { margin: 3px 0 14px; font-size: 14px; }
 .addressActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
 .panel .addressSaved { color: #19655b; font-size: 14px; font-weight: 650; }
+.folderHead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.folderHead .textLink { min-height: 44px; min-width: 44px; justify-content: center; }
+@media (max-width: 520px) {
+  .folderHead .textLink span { display: none; }
+}

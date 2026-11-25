@@ -13,6 +13,10 @@ do $$ begin
 end $$;
 
 set local role anon;
+do $$ begin
+  perform public.change_customer_intake_folder(gen_random_uuid(),false,'delete');
+  raise exception 'anonymous inbox change';
+exception when insufficient_privilege then null; end $$;
 do $$ declare
   k uuid := '14000000-0000-4000-8000-000000000010';
   pic jsonb := jsonb_build_object('image',encode(decode('ffd8ff0011ffd9','hex'),'base64'),
@@ -66,6 +70,10 @@ select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000003'
 do $$ begin
   if exists(select 1 from public.customer_intakes) then raise exception 'technician read pending intake'; end if;
   begin
+    perform public.change_customer_intake_folder('14000000-0000-4000-8000-000000000010',false,'hold');
+    raise exception 'technician inbox change';
+  exception when insufficient_privilege then null; end;
+  begin
     perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000010','테스트로 1','테스트로 1','','none');
     raise exception 'technician confirmed address';
   exception when insufficient_privilege then null; end;
@@ -90,7 +98,37 @@ do $$ begin
     if sqlerrm <> 'address_confirmation_required' then raise; end if;
   end;
   perform public.confirm_customer_intake_address('14000000-0000-4000-8000-000000000010','테스트로 1','테스트로 1','','none');
+  perform public.change_customer_intake_folder('14000000-0000-4000-8000-000000000010',false,'hold');
+  begin
+    perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000010','2027-01-12','14:30','이주형',true);
+    raise exception 'held intake scheduled';
+  exception when check_violation then null; end;
+  begin
+    perform public.change_customer_intake_folder('14000000-0000-4000-8000-000000000010',false,'delete');
+    raise exception 'stale tab deleted held intake';
+  exception when no_data_found then null; end;
+  if (select count(*) from public.read_customer_photos('14000000-0000-4000-8000-000000000010',null,true)) <> 2
+    then raise exception 'held attachments lost'; end if;
+  perform public.change_customer_intake_folder('14000000-0000-4000-8000-000000000010',true,'restore');
   perform public.schedule_customer_intake('14000000-0000-4000-8000-000000000010','2027-01-12','14:30','이주형',true);
+  begin
+    perform public.change_customer_intake_folder('14000000-0000-4000-8000-000000000010',false,'delete');
+    raise exception 'scheduled intake deleted';
+  exception when no_data_found then null; end;
+end $$;
+do $$ declare
+  k uuid;
+  held boolean;
+  pic jsonb := jsonb_build_object('image','/9j/AQH/2Q==','thumbnail','/9j/AQH/2Q==');
+begin
+  foreach held in array array[false,true] loop
+    k := gen_random_uuid();
+    perform public.submit_customer_intake(k,'삭제 검증','01000000000','검증로 1','기타','메모',true,jsonb_build_array(pic));
+    if held then perform public.change_customer_intake_folder(k,false,'hold'); end if;
+    perform public.change_customer_intake_folder(k,held,'delete');
+    if exists(select 1 from public.customer_intakes where id=k)
+      or exists(select 1 from public.read_customer_photos(k,null,true)) then raise exception 'intake deletion incomplete'; end if;
+  end loop;
 end $$;
 select set_config('request.jwt.claim.sub','14000000-0000-4000-8000-000000000002', true);
 do $$ declare saved uuid; retried uuid; begin

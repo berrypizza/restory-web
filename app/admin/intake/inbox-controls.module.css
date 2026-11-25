@@ -1,0 +1,20 @@
+.folders { display: flex; gap: 4px; width: min(100%, 380px); padding: 4px; border-radius: 13px; background: #eef2f7; }
+.folders button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 0; min-height: 44px; padding: 8px 12px; border: 0; border-radius: 10px; background: transparent; font: inherit; font-size: 15px; font-weight: 650; color: #536276; cursor: pointer; white-space: nowrap; }
+.folders button[aria-pressed="true"] { color: #184fae; background: #fff; box-shadow: 0 1px 4px #20355320; }
+.folders span { font-size: 13px; font-variant-numeric: tabular-nums; }
+.actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 12px; }
+.actions button, .choices button { min-height: 44px; border: 0; border-radius: 10px; padding: 9px 14px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+.hold { background: #ecf0f5; color: #35475e; }
+.restore { background: #e6efff; color: #174ba6; }
+.remove { background: transparent; color: #a93a37; }
+.confirm { position: fixed; inset: 0; box-sizing: border-box; width: min(380px, calc(100% - 32px)); max-height: 85dvh; margin: auto; padding: 24px; border: 0; border-radius: 20px; background: white; color: #192536; text-align: left; box-shadow: 0 16px 72px #16294538; }
+.confirm::backdrop { background: #16233270; }
+.confirm h2 { margin: 0; font: inherit; font-weight: 750; font-size: 21px; line-height: 1.45; letter-spacing: -.035em; word-break: keep-all; overflow-wrap: anywhere; }
+.confirm p { font-size: 15px; line-height: 1.6; margin: 10px 0; color: #526174; }
+.choices { display: flex; gap: 8px; margin-top: 22px; }
+.choices button { flex: 1; background: #eef2f7; color: #35475e; }
+.choices button:last-child { background: #bd3539; color: #fff; }
+.error, .confirm .error { color: #a22e2e; font-size: 14px; }
+.actions button:disabled, .choices button:disabled { opacity: .55; cursor: wait; }
+.folders button:focus-visible, .actions button:focus-visible, .choices button:focus-visible { outline: 3px solid #3979e8; outline-offset: 2px; }
+@media (max-width: 520px) { .folders { width: 100%; } }

@@ -14,7 +14,7 @@ export default function IntakeHomeCard() {
       if (document.visibilityState !== "visible") return;
       const current = ++version;
       const { count, error } = await getSupabase().from("customer_intakes")
-        .select("id", { count: "exact", head: true }).is("scheduled_at", null).abortSignal(controller.signal);
+        .select("id", { count: "exact", head: true }).is("scheduled_at", null).eq("on_hold", false).abortSignal(controller.signal);
       if (!controller.signal.aborted && current === version) setCount(error ? null : count);
     }
     void refresh();

@@ -8,6 +8,7 @@ import { TECHS } from "../lib/constants";
 import { formatFullDate, getSupabase, today } from "../lib/utils";
 import s from "./intake.module.css";
 import IntakeAddressReview from "./IntakeAddressReview";
+import { InboxActions, InboxFolders, actionFeedback, type InboxAction, type InboxFolder } from "./InboxControls";
 
 type Intake = {
   id: string; received_at: string; customer_name: string; phone: string; address: string; item: string; notes: string | null; photo_count: number;
@@ -58,8 +59,9 @@ function CopyLink() {
   </div>;
 }
 
-function ScheduleForm({ row, onScheduled, onAddressConfirmed }: {
+function ScheduleForm({ row, folder, onChange, onScheduled, onAddressConfirmed }: {
   row: Intake; onScheduled: (result: Scheduled) => void; onAddressConfirmed: (address: string) => void;
+  folder: InboxFolder; onChange: (action: InboxAction) => Promise<void>;
 }) {
   const [time, setTime] = useState("");
   const [kind, setKind] = useState<"visit" | "measure">("visit");
@@ -109,7 +111,7 @@ function ScheduleForm({ row, onScheduled, onAddressConfirmed }: {
       if (error || !data) {
         setError(error?.message === "address_confirmation_required" ? "방문 주소를 확인한 뒤 일정을 등록해 주세요."
           : error?.message === "quote_required" ? quoteRequired
-          : error?.code === "P0002" ? "이미 처리된 접수예요. 접수함을 새로고침해 주세요."
+          : error?.code === "P0002" || error?.code === "23514" ? "이미 처리된 접수예요. 접수함을 새로고침해 주세요."
           : error?.code === "42501" ? "등록 권한을 확인해 주세요." : "등록 결과를 확인하지 못했어요. 같은 접수에서 다시 시도해 주세요.");
         return;
       }
@@ -124,16 +126,17 @@ function ScheduleForm({ row, onScheduled, onAddressConfirmed }: {
   return <div className={s.detail}>
     <dl>
       <dt>전화번호</dt><dd><a href={`tel:${row.phone}`}>{row.phone}</a></dd>
-      {row.address_confirmed && <><dt>방문 주소</dt><dd>{row.address}</dd></>}
+      {(row.address_confirmed || folder === "held") && <><dt>방문 주소</dt><dd>{row.address}</dd></>}
       {row.notes && <><dt>고객 메모</dt><dd>{row.notes}</dd></>}
     </dl>
-    {!row.address_confirmed && <div ref={addressStep}>
+    <InboxActions folder={folder} customer={row.customer_name} disabled={busy} onChange={onChange} />
+    {folder === "pending" && !row.address_confirmed && <div ref={addressStep}>
       <IntakeAddressReview id={row.id} address={row.address} legacy={row.address_confirmed === null}
         onConfirmed={address => { setAddressSaved(true); onAddressConfirmed(address); }} />
     </div>}
     {addressSaved && <p role="status" className={s.addressSaved}>방문 주소를 확인했어요.</p>}
     {row.photo_count > 0 && <CustomerPhotoStrip requestId={row.id} count={row.photo_count} />}
-    <form method="post" onSubmit={schedule} className={s.fields}>
+    {folder === "pending" && <form method="post" onSubmit={schedule} className={s.fields}>
       <fieldset disabled={busy}>
         <legend>방문 일정</legend>
         <div className={s.scheduleFields}>
@@ -190,11 +193,15 @@ function ScheduleForm({ row, onScheduled, onAddressConfirmed }: {
           {busy ? "등록하는 중…" : measurement ? "실측 일정 등록" : "일반 방문 등록"}
         </button>
       )}
-    </form>
+    </form>}
   </div>;
 }
 
 export default function IntakeDesk({ onView }: { onView: (id: string, date: string) => void }) {
+  const [folder, setFolder] = useState<InboxFolder>("pending");
+  const [counts, setCounts] = useState<Record<InboxFolder, number | null>>({pending: null, held: null});
+  const [feedback, setFeedback] = useState("");
+  const [revision, setRevision] = useState(0);
   const [rows, setRows] = useState<Intake[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -210,11 +217,14 @@ export default function IntakeDesk({ onView }: { onView: (id: string, date: stri
     setError("");
     try {
       let query = getSupabase().from("customer_intakes").select("id,received_at,customer_name,phone,address,address_confirmed,item,notes,photo_count")
-        .is("scheduled_at", null).order("received_at").order("id").limit(pageSize + 1);
+        .is("scheduled_at", null).eq("on_hold", folder === "held").order("received_at").order("id").limit(pageSize + 1);
       if (after) query = query.or(`received_at.gt.${after.received_at},and(received_at.eq.${after.received_at},id.gt.${after.id})`);
-      const { data, error } = await query;
+      const count = (held: boolean) => getSupabase().from("customer_intakes").select("id", { count: "exact", head: true })
+        .is("scheduled_at", null).eq("on_hold", held);
+      const [{ data, error }, totals] = await Promise.all([query, after ? null : Promise.all([count(false), count(true)])]);
       if (error) throw error;
       if (token !== version.current) return;
+      if (totals) setCounts({pending: totals[0].count, held: totals[1].count});
       setMore(data.length > pageSize);
       const batch = data.slice(0, pageSize) as Intake[];
       setRows(old => after ? [...old, ...batch] : batch);
@@ -223,21 +233,49 @@ export default function IntakeDesk({ onView }: { onView: (id: string, date: stri
     } finally {
       if (token === version.current) setLoading(false);
     }
-  }, []);
+  }, [folder]);
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
     const invalidate = () => { version.current += 1; };
     return () => { window.clearTimeout(timer); invalidate(); };
-  }, [load]);
+  }, [load, revision]);
+  function selectFolder(next: InboxFolder) {
+    if (next === folder) return;
+    version.current++;
+    setFolder(next);
+    setExpanded(null);
+    setRows([]);
+    setMore(false);
+    setError("");
+    setLoading(true);
+  }
+  async function change(row: Intake, action: InboxAction) {
+    const { error } = await getSupabase().rpc("change_customer_intake_folder", {
+      p_id: row.id, p_expected_hold: folder === "held", p_action: action,
+    });
+    if (error) {
+      throw new Error(error.code === "P0002" ? "다른 관리자가 이미 처리한 상담이에요. 접수함을 새로고침해 주세요."
+        : error.code === "42501" ? "관리자 권한을 확인해 주세요." : "상담을 처리하지 못했어요. 다시 시도해 주세요.");
+    }
+    version.current++;
+    setExpanded(null);
+    setRows(old => old.filter(entry => entry.id !== row.id));
+    setResult(null);
+    setFeedback(actionFeedback[action]);
+    setRevision(value => value + 1);
+    window.requestAnimationFrame(() => notice.current?.focus());
+  }
   function scheduled(value: Scheduled) {
     setResult(value);
+    setFeedback("");
     setExpanded(null);
     setRows(old => old.filter(row => row.id !== expanded));
-    void load();
+    setRevision(value => value + 1);
     window.requestAnimationFrame(() => notice.current?.focus());
   }
   return <div className={s.desk}>
     <CopyLink />
+    {feedback && <div className={s.notice} role="status" tabIndex={-1} ref={notice}>{feedback}</div>}
     {result && <div className={s.notice} role="status" tabIndex={-1} ref={notice}>
       <strong>{formatFullDate(result.visit_date)} 일정으로 등록됐어요.</strong>
       <a href={`/admin?day=${result.visit_date}&job=${result.job_id}#calendar`} onClick={event => {
@@ -246,12 +284,13 @@ export default function IntakeDesk({ onView }: { onView: (id: string, date: stri
         onView(result.job_id, result.visit_date);
       }}>일정표에서 보기 <AdminIcon name="arrow" size={16} /></a>
     </div>}
-    <section className={s.panel} aria-label="확인 대기 접수">
-      <div className={s.panelHead}><h2>접수 대기</h2>
-        <button className={s.textLink} type="button" disabled={loading} onClick={() => void load()}><AdminIcon name="refresh" size={16} />새로고침</button>
+    <section className={s.panel} aria-label="상담 목록">
+      <div className={s.folderHead}><InboxFolders folder={folder} counts={counts} onSelect={selectFolder} />
+        <button className={s.textLink} type="button" aria-label="새로고침" title="새로고침" disabled={loading} onClick={() => void load()}>
+          <AdminIcon name="refresh" size={18} /><span>새로고침</span></button>
       </div>
       {error && <p role="alert" className={s.error}>{error}</p>}
-      {!rows.length && !error && <p role="status" className={s.empty}>{loading ? "접수 내용을 불러오고 있어요…" : "확인을 기다리는 접수가 없어요."}</p>}
+      {!rows.length && !error && <p role="status" className={s.empty}>{loading ? "접수 내용을 불러오고 있어요…" : folder === "held" ? "보류한 상담이 없어요." : "확인을 기다리는 접수가 없어요."}</p>}
       <ul className={s.list}>{rows.map(row => <li key={row.id}>
         <button className={s.summary} aria-expanded={expanded === row.id} aria-controls={expanded === row.id ? `intake-${row.id}` : undefined}
           onClick={() => setExpanded(expanded === row.id ? null : row.id)}>
@@ -260,7 +299,7 @@ export default function IntakeDesk({ onView }: { onView: (id: string, date: stri
             <small>{receivedDate.format(new Date(row.received_at))} 접수{row.photo_count > 0 && ` · 사진 ${row.photo_count}장`}</small></span>
           <AdminIcon name="arrow" size={18} />
         </button>
-        {expanded === row.id && <div id={`intake-${row.id}`}><ScheduleForm row={row} onScheduled={scheduled}
+        {expanded === row.id && <div id={`intake-${row.id}`}><ScheduleForm row={row} folder={folder} onChange={action => change(row, action)} onScheduled={scheduled}
           onAddressConfirmed={address => setRows(old => old.map(entry => entry.id === row.id ? { ...entry, address, address_confirmed: true } : entry))} /></div>}
       </li>)}</ul>
       {more && <button className={s.secondary} disabled={loading} onClick={() => void load(rows.at(-1))}>다음 접수 더 보기</button>}
