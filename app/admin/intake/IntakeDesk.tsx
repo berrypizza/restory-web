@@ -8,6 +8,8 @@ import { TECHS } from "../lib/constants";
 import { formatFullDate, getSupabase, today } from "../lib/utils";
 import s from "./intake.module.css";
 import IntakeAddressReview from "./IntakeAddressReview";
+import QuoteAction from "./quote/QuoteAction";
+import { QuoteProfileSettings, loadQuoteProfile } from "./quote/QuoteProfileSettings";
 import { InboxActions, InboxFolders, actionFeedback, type InboxAction, type InboxFolder } from "./InboxControls";
 
 type Intake = {
@@ -54,6 +56,7 @@ function CopyLink() {
   return <div className={s.share}>
     <button type="button" className={s.secondary} onClick={copy}>고객용 링크 복사</button>
     <a href="/request" className={s.textLink} target="_blank" rel="noopener noreferrer">접수 양식 보기 ↗</a>
+    <QuoteProfileSettings />
     <span role="status">{status === "copied" ? "링크를 복사했어요" : ""}</span>
     {status === "manual" && <label>복사할 고객용 링크<input ref={input} readOnly value={new URL("/request", window.location.origin).href} /></label>}
   </div>;
@@ -129,6 +132,7 @@ function ScheduleForm({ row, folder, onChange, onScheduled, onAddressConfirmed }
       {(row.address_confirmed || folder === "held") && <><dt>방문 주소</dt><dd>{row.address}</dd></>}
       {row.notes && <><dt>고객 메모</dt><dd>{row.notes}</dd></>}
     </dl>
+    <QuoteAction customer={row.customer_name} item={row.item} initialAmount={quote.amount} loadIssuer={loadQuoteProfile} disabled={busy} />
     <InboxActions folder={folder} customer={row.customer_name} disabled={busy} onChange={onChange} />
     {folder === "pending" && !row.address_confirmed && <div ref={addressStep}>
       <IntakeAddressReview id={row.id} address={row.address} legacy={row.address_confirmed === null}
