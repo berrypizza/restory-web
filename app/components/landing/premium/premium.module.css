@@ -3317,39 +3317,44 @@ button:hover .rollChar {
 }
 
 /* ─────────────────────────────────────────
-   전후 비교 슬라이더 (히어로 바로 아래)
+   전후 비교 슬라이더 — 히어로 제목 바로 아래에 사진만 녹아들게
 ───────────────────────────────────────── */
-.baSection {
-  position: relative;
-  padding: 24px 0 8px;
+.heroBa {
+  margin-top: 24px;
+  width: 100%;
+  max-width: 600px;
 }
 
-@media (min-width: 768px) {
-  .baSection {
-    padding: 40px 0 16px;
+@media (min-width: 900px) {
+  .heroBa {
+    margin-top: 32px;
   }
-}
-
-.baCard {
-  padding: 8px;
 }
 
 .baBox {
   --pos: 50%;
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: calc(var(--radius) - 8px);
+  border-radius: 24px;
   overflow: hidden;
+  isolation: isolate;
   touch-action: pan-y;
   cursor: ew-resize;
   user-select: none;
-  background: #ddd;
+  -webkit-user-select: none;
+  background: #e9edf5;
+  box-shadow: 0 1px 2px rgba(20, 40, 90, 0.06), 0 24px 48px -20px rgba(30, 70, 170, 0.35);
 }
 
-/* 두 사진 모두 4:3 원본 비율 그대로 — 잘라내면 전후 구도가 어긋남 */
-.baCard {
-  max-width: 920px;
-  margin: 0 auto;
+/* 사진 가장자리를 히어로 안개에 살짝 녹임 */
+.baBox::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
 }
 
 .baBefore {
@@ -3360,24 +3365,25 @@ button:hover .rollChar {
 
 .baTag {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 12px;
+  left: 12px;
   z-index: 2;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 999px;
   font-family: var(--display);
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: #fff;
-  background: rgba(20, 20, 20, 0.72);
+  background: rgba(15, 20, 30, 0.42);
+  backdrop-filter: blur(10px);
   pointer-events: none;
 }
 
 .baTag[data-after] {
   left: auto;
-  right: 14px;
-  background: var(--blue);
+  right: 12px;
+  background: rgba(42, 102, 240, 0.85);
 }
 
 .baHandle {
@@ -3386,10 +3392,10 @@ button:hover .rollChar {
   bottom: 0;
   left: var(--pos);
   z-index: 3;
-  width: 3px;
-  margin-left: -1.5px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 18px rgba(0, 0, 0, 0.25);
+  width: 2px;
+  margin-left: -1px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.18);
   outline: none;
 }
 
@@ -3397,33 +3403,23 @@ button:hover .rollChar {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   translate: -50% -50%;
   display: grid;
   place-items: center;
   border-radius: 50%;
   background: #fff;
-  color: var(--blue);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  color: var(--ink);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.16);
+  transition: scale 0.2s var(--ease);
+}
+
+.baBox:active .baKnob {
+  scale: 1.08;
 }
 
 .baHandle:focus-visible .baKnob {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
-}
-
-.baCaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px 16px;
-  padding: 16px 12px 8px;
-}
-
-.baCaption strong {
-  font-size: clamp(18px, 2vw, 22px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
 }
