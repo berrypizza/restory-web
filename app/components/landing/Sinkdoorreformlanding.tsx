@@ -442,10 +442,10 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                 <TitleCard kicker="색상 샘플" title="Color Samples" />
               </div>
               <div className={s.glass}>
-                <RiseLines className={s.title} lines={["취향에 맞는 색상으로", "골라보세요"]} />
-                <p className={s.body}>
-                  백색 · 크림화이트 · 포그 그레이 · 샌드 그레이 · 딥블루 · LPM 목무늬. 색상칩을 누르면 주방 적용 이미지를 먼저 볼 수 있고 방문 시 실물 샘플을 직접 확인하실 수 있습니다.
-                </p>
+                <header>
+                  <RiseLines className={s.title} lines={["국산 E0 등급"]} />
+                  <p className="mt-1 text-sm text-neutral-600">친환경 소재</p>
+                </header>
                 <div className={s.colorPreview}>
                   <Image
                     src={selectedColor.image}
