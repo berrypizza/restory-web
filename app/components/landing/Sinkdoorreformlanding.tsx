@@ -474,7 +474,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
             </div>
           </section>
 
-          <section data-service-section="photo_guide" id="sink-door-photos" className={s.section}>
+          <section data-service-section="photo_guide" id="sink-door-photos" className={`${s.section} ${s.sectionFlush}`}>
             <div className={s.wrap}>
               <div data-sink-door-contact>
                 <PhotoCtaCard

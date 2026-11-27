@@ -3594,3 +3594,9 @@ button:hover .rollChar {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
+
+/* 앞 섹션에 바로 이어 붙이는 섹션 (위 여백 없음) */
+.section.sectionFlush {
+  padding-top: 0;
+  margin-top: calc(24px - var(--section, 56px));
+}
