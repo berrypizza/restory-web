@@ -474,6 +474,50 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
             </div>
           </section>
 
+          <section data-service-section="photo_guide" id="sink-door-photos" className={s.section}>
+            <div className={s.wrap}>
+              <div data-sink-door-contact>
+                <PhotoCtaCard
+                  title="사진 2장이면 시작돼요"
+                  sub="문짝 가까이 1장 + 주방 전체 1장, 지역·교체 범위만 보내주세요."
+                  href={REQUEST_URL}
+                  label={PHOTO_CTA}
+                  cta="sink_door_request_photo_guide"
+                />
+              </div>
+              <div className={`${s.works} ${s.afterCard}`}>
+                <div className={`${s.glass} ${s.workGlass}`}>
+                  <div className={s.workMeta}>
+                    <h3 className={s.rowTitle}>사진 ② · 주방 전체 촬영 예시</h3>
+                    <p className={s.rowDesc}>문짝 가까이 사진과 별도로, 상부장부터 하부장까지 전체 모습도 담아주세요.</p>
+                  </div>
+                  <Image
+                    src="/images/door/send-photo-guide.png"
+                    alt="문짝이 모두 보이게 정면에서 찍어주세요"
+                    width={1122}
+                    height={1402}
+                    className={s.guideImg}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                </div>
+                <div className={`${s.glass} ${s.workGlass}`}>
+                  <div className={s.guideChat}>
+                    <Image src={CHAT_CONSULT_EXAMPLE_IMAGE} alt="개인정보를 블러 처리한 사진 상담 예시" fill unoptimized sizes="(min-width: 768px) 310px, 100vw" className="object-cover" />
+                  </div>
+                  <div className={s.workMeta}>
+                    <h3 className={s.rowTitle}>사진으로 무료 상담</h3>
+                    <p className={s.rowDesc}>준비한 사진 2장을 보내주시면 교체 가능한 범위와 예상 견적을 안내해 드립니다.</p>
+                    <div className={s.chipRow}>
+                      {["문짝 가까이 사진 1장", "주방 전체가 보이는 사진 1장", "지역·교체를 원하는 범위"].map((t) => (
+                        <span key={t} className={s.tag}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* 4. 일정 */}
           <section data-service-section="timeline" id="sink-door-timeline" className={s.section}>
             <div className={s.wrap}>
@@ -609,63 +653,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           </section>
 
           {/* 7. 사진 상담 — 캐릭터 #2 (행동 유도) */}
-          <section data-service-section="photo_guide" id="sink-door-photos" className={s.section}>
-            <div className={`${s.wrap} ${s.split}`}>
-              <TitleCard kicker="사진 상담" title="Photo Consult" />
-              <div className={s.glass}>
-                <RiseLines className={s.title} lines={["사진 2장으로", "우리 집 교체 범위부터 확인하세요"]} />
-                <ul className={s.checkList}>
-                  <li>① 문짝의 색상·상태가 보이는 가까운 사진 1장</li>
-                  <li>② 상부장부터 하부장까지 주방 전체 사진 1장</li>
-                  <li>함께 알려주세요: 작업 지역·교체를 원하는 범위</li>
-                </ul>
-                <p className={s.note}>
-                  사진으로 교체 가능한 범위와 예상 견적을 안내합니다. 정확한 규격·몸통 상태와 최종 금액은 방문 실측 후 확정합니다.
-                </p>
-              </div>
-            </div>
-            <div className={s.wrap}>
-              <div data-sink-door-contact>
-                <PhotoCtaCard
-                  title="사진 2장이면 시작돼요"
-                  sub="문짝 가까이 1장 + 주방 전체 1장, 지역·교체 범위만 보내주세요."
-                  href={REQUEST_URL}
-                  label={PHOTO_CTA}
-                  cta="sink_door_request_photo_guide"
-                />
-              </div>
-              <div className={`${s.works} ${s.afterCard}`}>
-                <div className={`${s.glass} ${s.workGlass}`}>
-                  <div className={s.workMeta}>
-                    <h3 className={s.rowTitle}>사진 ② · 주방 전체 촬영 예시</h3>
-                    <p className={s.rowDesc}>문짝 가까이 사진과 별도로, 상부장부터 하부장까지 전체 모습도 담아주세요.</p>
-                  </div>
-                  <Image
-                    src="/images/door/send-photo-guide.png"
-                    alt="문짝이 모두 보이게 정면에서 찍어주세요"
-                    width={1122}
-                    height={1402}
-                    className={s.guideImg}
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                  />
-                </div>
-                <div className={`${s.glass} ${s.workGlass}`}>
-                  <div className={s.guideChat}>
-                    <Image src={CHAT_CONSULT_EXAMPLE_IMAGE} alt="개인정보를 블러 처리한 사진 상담 예시" fill unoptimized sizes="(min-width: 768px) 310px, 100vw" className="object-cover" />
-                  </div>
-                  <div className={s.workMeta}>
-                    <h3 className={s.rowTitle}>사진으로 무료 상담</h3>
-                    <p className={s.rowDesc}>준비한 사진 2장을 보내주시면 교체 가능한 범위와 예상 견적을 안내해 드립니다.</p>
-                    <div className={s.chipRow}>
-                      {["문짝 가까이 사진 1장", "주방 전체가 보이는 사진 1장", "지역·교체를 원하는 범위"].map((t) => (
-                        <span key={t} className={s.tag}>{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
 
           {/* 8. 신뢰 */}
           <section data-service-section="warranty" id="sink-door-trust" className={s.section}>
