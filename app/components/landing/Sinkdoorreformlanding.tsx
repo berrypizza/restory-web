@@ -292,8 +292,8 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           {compareCase && (
             <div className={`${s.heroBa} ${s.heroFade}`} style={{ animationDelay: "0.2s" }}>
               <BeforeAfterSlider
-                before={compareCase.beforeImg}
-                after={compareCase.afterImg}
+                before="/images/cases/case-073-ba-before.jpg"
+                after="/images/cases/case-073-ba-after.jpg"
                 beforeAlt="경기 광명 싱크대 문짝 교체 전 주방"
                 afterAlt="경기 광명 싱크대 문짝 교체 후 주방"
               />
