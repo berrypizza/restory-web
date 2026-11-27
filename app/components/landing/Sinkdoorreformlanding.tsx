@@ -304,9 +304,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           </p>
 
           <div className={`${s.heroGlass} ${s.heroFade}`} style={{ animationDelay: "0.35s" }} data-sink-door-contact>
-            <p className={s.heroSub}>
-              쓸 수 있는 상판과 몸통은 그대로, 문짝과 서랍 앞판을 바꿔 주방 분위기를 바꿉니다.
-            </p>
             <div className={s.btnRow}>
               <Link href={REQUEST_URL} className={s.btnPrimary} data-cta="sink_door_request_hero">
                 <CameraIcon />
@@ -317,25 +314,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                 <Arrow />
               </a>
             </div>
-            <p className={s.heroHint}>
-              기존 몸통을 계속 사용할 수 있는지 사진과 방문 실측으로 확인합니다. 문짝 가까이 1장 + 주방 전체 1장,
-              지역·교체 범위를 보내주세요. 최종 금액은 방문 실측 후 확정합니다.
-            </p>
-            <dl className={s.heroFacts}>
-              {[
-                { n: "예산·범위", l: "문짝·서랍 앞판 수와 자재 기준" },
-                { n: "맞춤 제작", l: "실측 후 보통 영업일 3~5일" },
-                { n: "현장 설치", l: "설치 당일 보통 약 2~3시간" },
-              ].map((f) => (
-                <div key={f.n}>
-                  <dt>{f.n}</dt>
-                  <dd>{f.l}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className={s.heroHint}>
-              방문·설치 일정은 상담 후 확정하며, 설치 시간은 문짝 수량과 현장 구조에 따라 달라질 수 있습니다.
-            </p>
           </div>
         </div>
         <div className={s.scrollCue} aria-hidden="true">
