@@ -232,7 +232,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
     region && regionalDoorCases.length < 3
       ? latestDoorCases.filter((item) => !regionalDoorCaseIds.has(item.id)).slice(0, 3 - regionalDoorCases.length)
       : [];
-  const regionCaseCount = regionalDoorCases.length;
   const featuredRegionalDoorCases = region
     ? [...regionalDoorCases.slice(0, 3), ...supplementalDoorCases]
     : latestDoorCases.filter((item) => /싱크대|씽크대|주방/.test(item.title)).slice(0, 3);
@@ -353,26 +352,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           {featuredRegionalDoorCases.length > 0 && (
             <section data-service-section="cases" id="sink-door-cases" className={s.section}>
               <div className={s.wrap}>
-                <div className={s.split}>
-                  <TitleCard kicker={region ? `${region} 실제 사례` : "실제 시공 사례"} title="Real Cases" />
-                  <div className={s.glass}>
-                    <h2 className={s.title}>
-                      {region ? `${region} 싱크대 문짝 교체` : "싱크대 문짝 교체"}
-                      <br />
-                      실제 시공 사례
-                    </h2>
-                    <p className={s.body}>
-                      문짝 교체·리폼도 현장마다 기존 몸통 상태, 문짝 수량, 마감 방식이 다릅니다.{" "}
-                      {!region
-                        ? "최근 실제 시공 사례에서 작업 전후와 현장별 선택 기준을 확인해보세요."
-                        : hasSupplementalDoorCases
-                          ? regionCaseCount > 0
-                            ? `먼저 ${region} 지역 사례를 보여드리고, 부족한 부분은 최근 문짝 교체·리폼 사례로 함께 보강했습니다.`
-                            : `${region} 지역 사례가 아직 부족해, 최근 문짝 교체·리폼 사례를 먼저 함께 보여드립니다.`
-                          : `아래 사례들은 ${region} 지역에서 실제로 확인하고 시공한 작업입니다.`}
-                    </p>
-                  </div>
-                </div>
+                <TitleCard bigKicker kicker={region ? `${region} 싱크대 문짝 교체 실제 사례` : "실제 시공 사례"} title="Real Cases" />
 
                 <div className={`${s.works} ${s.works3}`}>
                   {featuredRegionalDoorCases.map((item, idx) => {
