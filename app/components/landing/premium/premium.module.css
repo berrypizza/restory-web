@@ -3467,6 +3467,9 @@ button:hover .rollChar {
 
 .marqueeBlue .marqueeLine {
   color: #0b0b0b;
+  font-family: var(--font-band-serif), "Noto Serif KR", serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 @media (min-width: 768px) {
