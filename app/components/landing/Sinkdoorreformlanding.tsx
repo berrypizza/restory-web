@@ -154,6 +154,22 @@ const PROCESS_PHOTOS = [
   },
 ];
 
+// 실제 시공 사례: 같은 구도로 맞춘 전후 사진 (원본은 case-104, case-043)
+const CASE_SLIDERS = [
+  {
+    before: "/images/cases/case-104-ba-before.jpg",
+    after: "/images/cases/case-104-ba-after.jpg",
+    beforeAlt: "서울 성동구 싱크대 문짝 교체 전",
+    afterAlt: "서울 성동구 싱크대 문짝 교체 후",
+  },
+  {
+    before: "/images/cases/case-043-ba-before.jpg",
+    after: "/images/cases/case-043-ba-after.jpg",
+    beforeAlt: "인천 청라 싱크대 문짝 교체 전",
+    afterAlt: "인천 청라 싱크대 문짝 교체 후",
+  },
+];
+
 const TRUST_ITEMS = [
   { n: "01", title: "3년 무상 재시공", desc: "문짝 들뜸, 경첩 문제 등 시공 후 3년간 무상으로 재시공해드립니다." },
   { n: "02", title: "경첩 무료 교체", desc: "교체하시는 문짝의 경첩은 리스토리에서 서비스로 무료 교체해드립니다." },
@@ -354,48 +370,11 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
               <div className={s.wrap}>
                 <h2 className={`${s.kicker} ${s.kickerLg}`}>{region ? `${region} 싱크대 문짝 교체 실제 사례` : "실제 시공 사례"}</h2>
 
-                <div className={`${s.works} ${s.works3}`}>
-                  {featuredRegionalDoorCases.map((item, idx) => {
-                    const isSupplementalCase = region ? !item.region.includes(region) : false;
-                    return (
-                      <InView key={item.id} threshold={0.2}>
-                        <Link
-                          href={`/cases/${item.id}`}
-                          className={`${s.work} ${s.glass} ${s.workGlass} ${s.fade}`}
-                          style={{ transitionDelay: `${idx * 0.1}s` }}>
-                          <div className={s.pairImg}>
-                            {[
-                              { src: item.beforeImg, label: "BEFORE" },
-                              { src: item.afterImg, label: "AFTER" },
-                            ].map((ph) => (
-                              <div key={ph.label} className={s.workImg}>
-                                <Image src={ph.src} alt={`${item.title} 작업 ${ph.label === "BEFORE" ? "전" : "후"}`} fill className="object-cover" sizes="(min-width: 768px) 200px, 45vw" />
-                                <span className={s.pairTag} data-after={ph.label === "AFTER" || undefined}>{ph.label}</span>
-                              </div>
-                            ))}
-                          </div>
-                          <div className={s.workMeta}>
-                            <span className={s.tag}>
-                              {item.region} · {item.date.replaceAll("-", ".")}
-                              {isSupplementalCase && " · 유사 최신 사례"}
-                            </span>
-                            <h3 className={s.workTitle}>{item.title}</h3>
-                            <p className={s.workSummary}>{item.summary}</p>
-                            <span className={`${s.arrowLink} ${s.workMore}`}>
-                              <RollText text="READ MORE" />
-                              <Arrow />
-                            </span>
-                          </div>
-                        </Link>
-                      </InView>
-                    );
-                  })}
-                </div>
-                <div className={s.afterCard}>
-                  <Link href={`/cases?cat=${encodeURIComponent("싱크대 리폼")}`} className={s.arrowLink}>
-                    <RollText text="ALL CASES" />
-                    <Arrow />
-                  </Link>
+                {/* 글 없이 사진만: 서울 성동구 · 인천 청라 전후를 막대로 비교 (구도 맞춘 사진) */}
+                <div className={`${s.works} ${s.baPair}`}>
+                  {CASE_SLIDERS.map((c) => (
+                    <BeforeAfterSlider key={c.before} before={c.before} after={c.after} beforeAlt={c.beforeAlt} afterAlt={c.afterAlt} />
+                  ))}
                 </div>
                 <details className={`${s.glass} ${s.moreDetails}`}>
                   <summary>실제 시공 영상 더 보기</summary>

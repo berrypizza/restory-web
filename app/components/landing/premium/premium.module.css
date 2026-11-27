@@ -3459,6 +3459,16 @@ button:hover .rollChar {
   scale: 1.08;
 }
 
+.baPair {
+  margin-top: 24px;
+}
+
+@media (min-width: 700px) {
+  .baPair {
+    gap: 16px;
+  }
+}
+
 .baHandle:focus-visible .baKnob {
   outline: 3px solid var(--blue);
   outline-offset: 3px;
