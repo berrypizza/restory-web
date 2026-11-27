@@ -98,12 +98,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const BUDGET_ITEMS = [
-  { n: "01", title: "새로 제작할 부분", desc: "교체할 문짝과 서랍 앞판의 수량·규격·자재를 확인합니다." },
-  { n: "02", title: "함께 교체할 부속", desc: "교체하는 문짝의 경첩은 무료로 교체합니다." },
-  { n: "03", title: "그대로 사용할 부분", desc: "사용 가능한 상판·몸통·주방 배치는 유지합니다. 몸통 상태는 실측 때 확인합니다." },
-];
-
 const SCHEDULE_ITEMS = [
   { title: "사진 상담", time: "예상 견적 확인", text: "사진 2장과 지역·교체 범위로 먼저 상담합니다." },
   { title: "방문 실측·샘플 확인", time: "일정 협의", text: "규격과 몸통 상태, 실물 색상을 확인하고 최종 견적·설치 일정을 확정합니다." },
@@ -397,7 +391,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           <section data-service-section="budget" id="sink-door-budget" className={s.section}>
             <div className={`${s.wrap} ${s.split}`}>
               <div className={s.stickyCol}>
-                <TitleCard kicker="예산과 작업 범위" title="Budget & Scope" />
+                <h2 className={`${s.kicker} ${s.kickerLg}`}>리스토리만의 강점 !</h2>
                 <Mascot
                   src="/images/door/mascot-diagnose.png"
                   alt="처진 싱크대 문짝의 경첩을 살펴보는 리스토리 기사 캐릭터"
@@ -407,43 +401,30 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                   bubble="그대로 쓸 수 있는 곳부터 볼게요"
                 />
               </div>
-              <div>
                 <div className={s.glass}>
-                  <RiseLines className={s.title} lines={["예산은 교체할 문짝과", "작업 범위부터 확인합니다"]} />
-                  <InView>
-                    <p className={`${s.body} ${s.fade}`}>
-                      전체 길이보다 실제 교체할 문짝·서랍 앞판의 개수와 자재 종류가 기준입니다. 걸레받이와 몰딩은 필요한 길이를 m 단위로 확인합니다.
-                    </p>
-                  </InView>
-                  <p className={s.badge}>전체 교체 대비 4~5배 절감</p>
-                  <InView className={`${s.rows} ${s.rowsCompact}`} as="ol" threshold={0.1}>
-                    {BUDGET_ITEMS.map((item) => (
-                      <li key={item.n} className={`${s.row} ${s.fade}`}>
-                        <span className={s.rowNum}>{item.n}</span>
-                        <h3 className={s.rowTitle}>{item.title}</h3>
-                        <p className={s.rowDesc}>{item.desc}</p>
-                      </li>
-                    ))}
-                  </InView>
-                  <p className={s.note}>
-                    사진으로 교체 가능한 범위와 예상 견적을 먼저 확인하세요. 정확한 규격·몸통 상태와 최종 금액은 방문 실측 후 확정합니다.
-                  </p>
-                </div>
-                <details className={`${s.glass} ${s.moreDetails}`}>
-                  <summary>문짝·서랍 개수 확인 예시 보기</summary>
-                  <div className={s.moreBody}>
-                    <Image
-                      src="/images/door/estimate-count-guide.webp"
-                      alt="싱크대 문짝과 서랍 앞판 개수 세는 견적 산정 예시"
-                      width={1400}
-                      height={933}
-                      unoptimized
-                      className="h-auto w-full rounded-xl"
-                      sizes="(max-width: 768px) 100vw, 720px"
+                  {/* 사진 세 장 콜라주 (ntt-west 신입채용 무드): 물에 불은 문짝 · 제로조인트 엣지 · 댐핑 경첩
+                      스크롤에 따라 각자 다른 속도로 살짝 움직임 */}
+                  <Scrub className={s.collage} aria-label="물에 불은 문짝, 제로조인트 엣지 비교, 댐핑 경첩 사진">
+                    <span className={s.collageGhost} aria-hidden="true">
+                      ZERO JOINT
+                    </span>
+                    <div className={`${s.collageItem} ${s.collageBig}`}>
+                      <Image src="/images/door/edge-water-damage.jpg" alt="모서리로 물이 스며들어 불어 터진 싱크대 문짝" fill className="object-cover" style={{ objectPosition: "50% 45%" }} sizes="(min-width: 900px) 420px, 60vw" />
+                    </div>
+                    <div className={`${s.collageItem} ${s.collageMid}`}>
+                      <Image src="/images/door/zerojoint-hotmelt-comparison.png" alt="핫멜트 엣지와 PET 제로조인트 엣지 모서리 비교" fill className="object-cover" style={{ objectPosition: "50% 0%" }} sizes="(min-width: 900px) 300px, 46vw" />
+                    </div>
+                    <div className={`${s.collageItem} ${s.collageSmall}`} data-plain>
+                      <Image src="/images/sink-door-gear.png" alt="싱크대 문짝 댐핑 경첩" fill className="object-contain" sizes="(min-width: 900px) 220px, 34vw" />
+                    </div>
+                  </Scrub>
+                  <div className={s.vennWrap}>
+                    <GlitchDiagram
+                      label="맞춤 문짝, 엣지 마감, 댐핑 경첩이 함께 맞아야 새 주방이 됩니다"
+                      shapes={<VennShapes top={["DOOR", "맞춤 문짝"]} left={["EDGE", "엣지 마감"]} right={["HINGE", "댐핑 경첩"]} core="New" />}
                     />
                   </div>
-                </details>
-              </div>
+                </div>
             </div>
           </section>
 
@@ -570,35 +551,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           {/* 6. 자재 — 글리치 다이어그램 (문짝·엣지·경첩이 함께 맞아야 새 주방) */}
           <section data-service-section="materials" id="sink-door-materials" className={s.section}>
             <div className={s.wrap}>
-              <div className={s.split}>
-                <div className={s.stickyCol}>
-                  <h2 className={`${s.kicker} ${s.kickerLg}`}>리스토리만의 강점 !</h2>
-                </div>
-                <div className={s.glass}>
-                  {/* 사진 세 장 콜라주 (ntt-west 신입채용 무드): 물에 불은 문짝 · 제로조인트 엣지 · 댐핑 경첩
-                      스크롤에 따라 각자 다른 속도로 살짝 움직임 */}
-                  <Scrub className={s.collage} aria-label="물에 불은 문짝, 제로조인트 엣지 비교, 댐핑 경첩 사진">
-                    <span className={s.collageGhost} aria-hidden="true">
-                      ZERO JOINT
-                    </span>
-                    <div className={`${s.collageItem} ${s.collageBig}`}>
-                      <Image src="/images/door/edge-water-damage.jpg" alt="모서리로 물이 스며들어 불어 터진 싱크대 문짝" fill className="object-cover" style={{ objectPosition: "50% 45%" }} sizes="(min-width: 900px) 420px, 60vw" />
-                    </div>
-                    <div className={`${s.collageItem} ${s.collageMid}`}>
-                      <Image src="/images/door/zerojoint-hotmelt-comparison.png" alt="핫멜트 엣지와 PET 제로조인트 엣지 모서리 비교" fill className="object-cover" style={{ objectPosition: "50% 0%" }} sizes="(min-width: 900px) 300px, 46vw" />
-                    </div>
-                    <div className={`${s.collageItem} ${s.collageSmall}`} data-plain>
-                      <Image src="/images/sink-door-gear.png" alt="싱크대 문짝 댐핑 경첩" fill className="object-contain" sizes="(min-width: 900px) 220px, 34vw" />
-                    </div>
-                  </Scrub>
-                  <div className={s.vennWrap}>
-                    <GlitchDiagram
-                      label="맞춤 문짝, 엣지 마감, 댐핑 경첩이 함께 맞아야 새 주방이 됩니다"
-                      shapes={<VennShapes top={["DOOR", "맞춤 문짝"]} left={["EDGE", "엣지 마감"]} right={["HINGE", "댐핑 경첩"]} core="New" />}
-                    />
-                  </div>
-                </div>
-              </div>
 
               <details className={`${s.glass} ${s.moreDetails}`}>
                 <summary>필름·PET 제로조인트와 엣지 마감 비교 보기</summary>
