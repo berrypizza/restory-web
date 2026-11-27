@@ -22,6 +22,7 @@ import {
   PhotoCtaCard,
   FaqList,
   RunCrew,
+  BeforeAfterSlider,
 } from "./premium/Blocks";
 import { display } from "./premium/fonts";
 import s from "./premium/premium.module.css";
@@ -221,41 +222,18 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               : "리스토리 싱크대 상부장 처짐 수리"}
           </p>
           <RiseLines onLoad as="h1" className={s.heroTitle} lines={heroTitle} />
-          <p className={`${s.heroEn} ${s.heroFade}`} style={{ animationDelay: "0.25s" }}>
-            Fix the hold, keep the cabinet.
-          </p>
+          {/* 실제 수리 전후 (부천 작동 상부장 추락, case-002) — 막대를 좌우로 끌어 비교 */}
+          <div className={`${s.heroBa} ${s.heroFade}`} style={{ animationDelay: "0.2s" }}>
+            <BeforeAfterSlider
+              before="/images/cases/case-002-ba-before.jpg"
+              after="/images/cases/case-002-ba-after.jpg"
+              beforeAlt="부천 작동 상부장이 떨어진 주방"
+              afterAlt="부천 작동 상부장을 다시 설치한 주방"
+            />
+          </div>
 
           <div className={`${s.heroGlass} ${s.heroFade}`} style={{ animationDelay: "0.35s" }}>
-            <p className={s.heroSub}>살릴 수 있는 상부장은 보강·재설치로, 수평과 문짝 닫힘까지 맞춥니다.</p>
             <ContactButtons cta="upper_request_hero" />
-            <p className={s.heroHint}>
-              전체 사진과 작업 지역부터 보내주세요. 틈이 보이는 사진은 안전하게 찍을 수 있을 때 함께 보내주세요.
-            </p>
-            <dl className={s.heroFacts}>
-              {[
-                { n: "고정 보강", l: "약해진 부위" },
-                { n: "약 2시간", l: "현장 작업" },
-                { n: "3년 무상", l: "보강·고정부 A/S" },
-              ].map((f) => (
-                <div key={f.l}>
-                  <dt>{f.n}</dt>
-                  <dd>{f.l}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className={s.heroHint}>
-              분리·고정부 보강·재설치·수평 조절 포함 · 상담에서 확정한 금액 그대로 · 수리 불가 시 비용 없음
-            </p>
-            <div className={s.chipRow}>
-              <a href="#upper-cases" className={s.arrowLink}>
-                실제 수리 전후 사진과 과정 보기
-                <Arrow />
-              </a>
-              <a href="#upper-price-examples" className={s.arrowLink}>
-                상태별 수리 비용 예시 보기
-                <Arrow />
-              </a>
-            </div>
           </div>
         </div>
         <div className={s.scrollCue} aria-hidden="true">
