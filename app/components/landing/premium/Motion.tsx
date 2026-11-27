@@ -20,7 +20,8 @@ function prefersReducedMotion() {
 ───────────────────────────────────────── */
 export function SmoothScroll() {
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    // 터치 기기에선 Lenis가 부드럽게 해주는 게 없고 매 프레임 비용만 듦
+    if (prefersReducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
     const html = document.documentElement;
     const prevBehavior = html.style.scrollBehavior;
     // 전역 scroll-behavior: smooth 와 겹치면 프레임마다 튀므로 잠시 해제

@@ -3200,3 +3200,19 @@ button:hover .rollChar {
     animation: none;
   }
 }
+
+/* ─────────────────────────────────────────
+   PHONES / TOUCH — same look, far less GPU work.
+   Animated blurred orbs + a blended full-screen noise layer + a repainting
+   text texture + a fading backdrop-blur card made the first ~0.5s stutter on phones.
+───────────────────────────────────────── */
+@media (max-width: 899px), (pointer: coarse) {
+  .orb { filter: blur(28px); animation: none; }
+  .ambientOrb { filter: blur(32px); animation: none; }
+  .grain { display: none; }
+  .heroTitle .riseMask .riseLine { animation: rise 0.9s var(--ease) both; }
+  .heroGhost { mix-blend-mode: normal; -webkit-text-stroke: 0; color: rgba(255, 255, 255, 0.4); transform: none; }
+  .heroGlass { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.66); }
+  .glass:not(.titleCard) { backdrop-filter: blur(16px); background: rgba(255, 255, 255, 0.62); }
+  .heroBg { transform: none; }
+}
