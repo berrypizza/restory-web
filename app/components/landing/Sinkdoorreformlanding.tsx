@@ -418,7 +418,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                       <Image src="/images/sink-door-gear.png" alt="싱크대 문짝 댐핑 경첩" fill className="object-contain" sizes="(min-width: 900px) 220px, 34vw" />
                     </div>
                   </Scrub>
-                  <div className={s.vennWrap}>
+                  <div className={`${s.vennWrap} ${s.vennCenter}`}>
                     <GlitchDiagram
                       label="맞춤 문짝, 엣지 마감, 댐핑 경첩이 함께 맞아야 새 주방이 됩니다"
                       shapes={<VennShapes top={["DOOR", "맞춤 문짝"]} left={["EDGE", "엣지 마감"]} right={["HINGE", "댐핑 경첩"]} core="New" />}

@@ -1788,6 +1788,16 @@ button:hover .rollChar {
   max-width: 380px;
 }
 
+/* 카드 가운데 + 크게 (싱크대 문짝 '리스토리만의 강점') */
+.vennWrap.vennCenter {
+  max-width: 560px;
+  margin: 40px auto 8px;
+}
+
+.vennCenter .venn {
+  max-width: 560px;
+}
+
 .workGlass {
   padding: 12px;
 }
