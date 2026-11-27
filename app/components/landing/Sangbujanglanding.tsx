@@ -186,7 +186,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
     : latestSangbujangCases.slice(0, 3);
 
   // 기존 h1 문구를 줄 단위로 (줄마다 다른 텍스처가 채워짐)
-  const heroTitle = region ? [`${region} 상부장 ${symptom}`, "다시 단단하게"] : ["처진 상부장,", "다시 단단하게"];
+  const heroTitle = region ? [`${region} 상부장 ${symptom}`, "다시 단단하게"] : ["처진 상부장,", "추락은 시간문제"];
 
   return (
     <main data-service-id="sangbujang" data-service-keyword={keyword} className={`${s.page} ${display.variable}`}>
