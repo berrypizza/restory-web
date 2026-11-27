@@ -575,15 +575,22 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                   <TitleCard kicker="필름과 문짝 교체의 차이" title="Why Zero Joint" />
                 </div>
                 <div className={s.glass}>
-                  {/* 사진만 가로 두 장: 제로조인트 엣지 비교 · 댐핑 경첩 */}
-                  <div className={s.photoPair}>
-                    <div className={s.photoPairItem}>
-                      <Image src="/images/door/zerojoint-hotmelt-comparison.png" alt="핫멜트 엣지와 PET 제로조인트 엣지 모서리 비교" fill className="object-cover" sizes="(min-width: 900px) 320px, 45vw" />
+                  {/* 사진 세 장 콜라주 (ntt-west 신입채용 무드): 물에 불은 문짝 · 제로조인트 엣지 · 댐핑 경첩
+                      스크롤에 따라 각자 다른 속도로 살짝 움직임 */}
+                  <Scrub className={s.collage} aria-label="물에 불은 문짝, 제로조인트 엣지 비교, 댐핑 경첩 사진">
+                    <span className={s.collageGhost} aria-hidden="true">
+                      ZERO JOINT
+                    </span>
+                    <div className={`${s.collageItem} ${s.collageBig}`}>
+                      <Image src="/images/door/edge-water-damage.jpg" alt="모서리로 물이 스며들어 불어 터진 싱크대 문짝" fill className="object-cover" style={{ objectPosition: "50% 45%" }} sizes="(min-width: 900px) 420px, 60vw" />
                     </div>
-                    <div className={s.photoPairItem} data-plain>
-                      <Image src="/images/sink-door-gear.png" alt="싱크대 문짝 댐핑 경첩" fill className="object-contain" sizes="(min-width: 900px) 320px, 45vw" />
+                    <div className={`${s.collageItem} ${s.collageMid}`}>
+                      <Image src="/images/door/zerojoint-hotmelt-comparison.png" alt="핫멜트 엣지와 PET 제로조인트 엣지 모서리 비교" fill className="object-cover" style={{ objectPosition: "50% 0%" }} sizes="(min-width: 900px) 300px, 46vw" />
                     </div>
-                  </div>
+                    <div className={`${s.collageItem} ${s.collageSmall}`} data-plain>
+                      <Image src="/images/sink-door-gear.png" alt="싱크대 문짝 댐핑 경첩" fill className="object-contain" sizes="(min-width: 900px) 220px, 34vw" />
+                    </div>
+                  </Scrub>
                   <div className={s.vennWrap}>
                     <GlitchDiagram
                       label="맞춤 문짝, 엣지 마감, 댐핑 경첩이 함께 맞아야 새 주방이 됩니다"
