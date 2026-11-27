@@ -9,7 +9,7 @@ import { FAQJsonLd, ServiceJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
-import { Scrub, InView, InkText, RiseLines, RollText } from "./premium/Motion";
+import { Scrub, InView, RiseLines, RollText } from "./premium/Motion";
 import {
   Arrow,
   CameraIcon,
@@ -575,10 +575,15 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                   <TitleCard kicker="필름과 문짝 교체의 차이" title="Why Zero Joint" />
                 </div>
                 <div className={s.glass}>
-                  <InkText lines={["색만 바꾸는 게 아니라,", "모서리까지 새로", "만드는 일입니다."]} />
-                  <p className={s.body}>
-                    필름 부착은 기존 문짝을 덮는 방식이고, 문짝 교체는 새 문짝을 맞춤 제작하는 방식입니다. 색상과 함께 기존 문짝 상태·엣지 마감도 확인하세요.
-                  </p>
+                  {/* 사진만 가로 두 장: 제로조인트 엣지 비교 · 댐핑 경첩 */}
+                  <div className={s.photoPair}>
+                    <div className={s.photoPairItem}>
+                      <Image src="/images/door/zerojoint-hotmelt-comparison.png" alt="핫멜트 엣지와 PET 제로조인트 엣지 모서리 비교" fill className="object-cover" sizes="(min-width: 900px) 320px, 45vw" />
+                    </div>
+                    <div className={s.photoPairItem} data-plain>
+                      <Image src="/images/sink-door-gear.png" alt="싱크대 문짝 댐핑 경첩" fill className="object-contain" sizes="(min-width: 900px) 320px, 45vw" />
+                    </div>
+                  </div>
                   <div className={s.vennWrap}>
                     <GlitchDiagram
                       label="맞춤 문짝, 엣지 마감, 댐핑 경첩이 함께 맞아야 새 주방이 됩니다"

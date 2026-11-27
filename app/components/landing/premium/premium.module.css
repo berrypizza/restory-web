@@ -3478,6 +3478,25 @@ button:hover .rollChar {
   }
 }
 
+/* 사진 두 장 가로 배치 (글 없이) */
+.photoPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.photoPairItem {
+  position: relative;
+  aspect-ratio: 1155 / 1362;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #e9e9e7;
+}
+
+.photoPairItem[data-plain] {
+  background: #fff;
+}
+
 .baPair {
   margin-top: 24px;
 }
