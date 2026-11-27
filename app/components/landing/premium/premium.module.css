@@ -2422,41 +2422,86 @@ button:hover .rollChar {
   }
 }
 
-/* 마지막 CONTACT 밴드: 오른쪽 아래에 손 흔드는 캐릭터 */
-.contactMascot {
+/* 마지막 CONTACT 밴드: 기사 다섯 명이 왼쪽에서 오른쪽으로 뛰어 지나감
+   (aimservices.co.jp/50th 하단 무드). 밴드가 보일 때만 움직임 — RunCrew 컴포넌트가 data-run 토글 */
+.runCrew {
   position: absolute;
   z-index: 1;
-  right: 16px;
-  bottom: 24px;
-  width: 116px;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  --crew-h: 140px;
+  height: var(--crew-h);
+  overflow: hidden;
   pointer-events: none;
-  animation: bob 4.5s ease-in-out infinite;
+  --run-dur: 11s;
 }
 
-.contactMascot img {
-  width: 100%;
-  height: auto;
+.runTrack {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  translate: -100% 0;
+  animation: crewRun var(--run-dur) linear infinite paused;
+  will-change: translate;
+}
+
+.runCrew[data-run="on"] .runTrack,
+.runCrew[data-run="on"] .runner {
+  animation-play-state: running;
+}
+
+/* 키·간격·바운스 박자를 조금씩 달리해서 줄 맞춘 느낌이 안 나게 */
+.runner {
+  position: relative;
+  flex: none;
+  height: 100%;
+  width: auto;
+  margin-right: calc(var(--crew-h) * -0.04);
+  animation: runnerStep 0.44s ease-in-out infinite alternate paused;
+}
+
+.runner img {
+  height: 100%;
+  width: auto;
   display: block;
 }
 
-/* 모바일: 버튼·칩 아래 빈 자리에 캐릭터가 서 있도록 하단 여백 확보 */
+.runner:nth-child(1) { height: 96%; animation-delay: -0.1s; }
+.runner:nth-child(2) { height: 88%; margin-right: calc(var(--crew-h) * -0.1); animation-delay: -0.3s; animation-duration: 0.4s; }
+.runner:nth-child(3) { height: 100%; margin-right: calc(var(--crew-h) * 0.04); animation-delay: -0.05s; animation-duration: 0.5s; }
+.runner:nth-child(4) { height: 93%; margin-right: calc(var(--crew-h) * -0.08); animation-delay: -0.25s; animation-duration: 0.38s; }
+.runner:nth-child(5) { height: 89%; margin-right: 0; animation-delay: -0.15s; }
+
+@keyframes crewRun {
+  from { translate: -100% 0; }
+  to { translate: 100vw 0; }
+}
+
+@keyframes runnerStep {
+  from { translate: 0 0; }
+  to { translate: 0 -7px; }
+}
+
+/* 모바일: 버튼·칩 아래로 뛰어갈 자리 확보 */
 @media (max-width: 899px) {
   .contact {
-    padding-bottom: 188px;
+    padding-bottom: 200px;
   }
 }
 
 @media (min-width: 900px) {
-  /* 오른쪽 1/3은 캐릭터 자리로 비워둠 */
-  .contact .split {
-    grid-template-columns: 3fr 5fr 4fr;
+  .contact {
+    padding-bottom: 340px;
   }
 
-  .contactMascot {
-    top: auto;
-    right: max(24px, calc((100vw - 1160px) / 2));
-    bottom: 48px;
-    width: 300px;
+  .runCrew {
+    bottom: 20px;
+    --crew-h: 280px;
+    --run-dur: 15s;
   }
 }
 
@@ -3179,7 +3224,6 @@ button:hover .rollChar {
   .heroFade,
   .orb,
   .ambientOrb3,
-  .contactMascot,
   .mascotFig,
   .riseOnLoad .riseLine {
     animation: none !important;
@@ -3269,4 +3313,16 @@ button:hover .rollChar {
   .heroGlass { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.66); }
   .glass:not(.titleCard) { backdrop-filter: blur(16px); background: rgba(255, 255, 255, 0.62); }
   .heroBg { transform: none; }
+}
+
+/* 모션 줄이기: 뛰는 무리는 가운데에 멈춰 서 있음 */
+@media (prefers-reduced-motion: reduce) {
+  .runTrack {
+    animation: none;
+    left: 50%;
+    translate: -50% 0;
+  }
+  .runner {
+    animation: none;
+  }
 }

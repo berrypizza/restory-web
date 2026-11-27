@@ -252,3 +252,39 @@ export function FaqList({ items, idPrefix }: { items: { q: string; a: string }[]
     </div>
   );
 }
+
+/* ─────────────────────────────────────────
+   RunCrew — CONTACT 밴드 아래로 기사 다섯 명이 뛰어 지나감
+   밴드가 화면에 있을 때만 data-run="on" 으로 애니메이션을 돌림
+───────────────────────────────────────── */
+const RUNNERS = [
+  { src: "/images/premium/run/run-1.webp", w: 379 },
+  { src: "/images/premium/run/run-2.webp", w: 365 },
+  { src: "/images/premium/run/run-3.webp", w: 371 },
+  { src: "/images/premium/run/run-4.webp", w: 410 },
+  { src: "/images/premium/run/run-5.webp", w: 367 },
+];
+
+export function RunCrew() {
+  const ref = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(([e]) => {
+      el.dataset.run = e.isIntersecting ? "on" : "off";
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={s.runCrew} aria-hidden="true">
+      <div className={s.runTrack}>
+        {RUNNERS.map((r) => (
+          <span key={r.src} className={s.runner}>
+            <Image src={r.src} alt="" width={r.w} height={520} sizes="(min-width: 900px) 190px, 104px" unoptimized />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}

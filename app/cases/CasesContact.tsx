@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Arrow, CameraIcon, Star } from "@/app/components/landing/premium/Blocks";
+import { Arrow, CameraIcon, Star, RunCrew } from "@/app/components/landing/premium/Blocks";
 import { RollText, Scrub } from "@/app/components/landing/premium/Motion";
 import p from "@/app/components/landing/premium/premium.module.css";
 
@@ -9,9 +8,7 @@ export default function CasesContact({ requestHref, phoneHref, cta }: { requestH
   return (
     <Scrub as="section" data-service-section="contact" className={p.contact}>
       <Star className={p.contactStar} />
-      <div className={p.contactMascot}>
-        <Image src="/images/premium/mascot-wave.png" alt="공구함을 들고 손을 흔드는 리스토리 기사 캐릭터" width={880} height={1168} sizes="(min-width: 900px) 360px, 150px" />
-      </div>
+      <RunCrew />
       <div className={p.wrap} style={{ position: "relative" }}>
         <Link href={requestHref} className={p.contactBig} aria-label="사진으로 상담 접수" data-cta={`${cta}_contact_title`}>
           <RollText text="CONTACT" />

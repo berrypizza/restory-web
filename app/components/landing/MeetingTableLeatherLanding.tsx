@@ -22,6 +22,7 @@ import {
   TitleCard,
   PhotoCtaCard,
   FaqList,
+  RunCrew,
 } from "./premium/Blocks";
 import { display } from "./premium/fonts";
 import s from "./premium/premium.module.css";
@@ -568,9 +569,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
       {/* 9. CONTACT — 캐릭터 #3 (마무리) */}
       <Scrub as="section" data-service-section="contact" className={s.contact}>
         <Star className={s.contactStar} />
-        <div className={s.contactMascot}>
-          <Image src="/images/premium/mascot-wave.png" alt="공구함을 들고 손을 흔드는 리스토리 기사 캐릭터" width={880} height={1168} sizes="(min-width: 900px) 360px, 150px" />
-        </div>
+        <RunCrew />
         <div className={s.wrap} style={{ position: "relative" }}>
           <Link href={REQUEST_URL} className={s.contactBig} aria-label={PHOTO_CTA} data-cta="meeting_table_request_contact_title">
             <RollText text="CONTACT" />

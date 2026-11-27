@@ -17,7 +17,7 @@ import {
   RollText,
 } from "./premium/Motion";
 import { display } from "./premium/fonts";
-import { Arrow, CameraIcon, Star, YouTubeFacade, GlitchDiagram, VennShapes, Mascot, TitleCard } from "./premium/Blocks";
+import { Arrow, CameraIcon, Star, YouTubeFacade, GlitchDiagram, VennShapes, Mascot, TitleCard, RunCrew } from "./premium/Blocks";
 import s from "./premium/premium.module.css";
 
 /* ─────────────────────────────────────────
@@ -679,15 +679,7 @@ export default function SofaCushionLanding({ keyword }: Props) {
       {/* 9. CONTACT 밴드 */}
       <Scrub as="section" data-service-section="contact" className={s.contact}>
         <Star className={s.contactStar} />
-        <div className={s.contactMascot}>
-          <Image
-            src="/images/premium/mascot-wave.png"
-            alt="공구함을 들고 손을 흔드는 리스토리 기사 캐릭터"
-            width={880}
-            height={1168}
-            sizes="(min-width: 900px) 360px, 150px"
-          />
-        </div>
+        <RunCrew />
         <div className={s.wrap} style={{ position: "relative" }}>
           <Link href={REQUEST_URL} className={s.contactBig} aria-label="사진 올리고 상담 받기" data-cta="sofa_request_contact_title">
             <RollText text="CONTACT" />
