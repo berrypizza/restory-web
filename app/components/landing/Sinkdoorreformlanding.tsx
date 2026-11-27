@@ -40,7 +40,7 @@ const VISIT_MEASUREMENT_IMAGE = "/images/door/visit-measurement.webp";
 const REAL_SAMPLE_CHECK_IMAGE = "/images/door/real-sample-check.webp";
 const CUSTOM_PRODUCTION_IMAGE = "/images/door/factory-direct.gif";
 const FIELD_INSTALLATION_IMAGE = "/images/door/field-installation.webp";
-const PHOTO_CTA = "사진 2장으로 예상 견적 받기";
+const PHOTO_CTA = "5초만에 견적 받기";
 const SITE_URL = "https://www.restorystudio.co.kr";
 
 type SinkDoorCase = (typeof cases)[number];
