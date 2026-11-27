@@ -3459,6 +3459,22 @@ button:hover .rollChar {
   scale: 1.08;
 }
 
+/* 파란 띠 + 검은 글씨 마퀴 (싱크대 문짝 '금액 투자 대비 / 최고 효율') */
+.marquee.marqueeBlue {
+  padding: 20px 0 16px;
+  background: #0e62ed;
+}
+
+.marqueeBlue .marqueeLine {
+  color: #0b0b0b;
+}
+
+@media (min-width: 768px) {
+  .marquee.marqueeBlue {
+    padding: 32px 0 24px;
+  }
+}
+
 .baPair {
   margin-top: 24px;
 }
