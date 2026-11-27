@@ -352,7 +352,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           {featuredRegionalDoorCases.length > 0 && (
             <section data-service-section="cases" id="sink-door-cases" className={s.section}>
               <div className={s.wrap}>
-                <TitleCard bigKicker kicker={region ? `${region} 싱크대 문짝 교체 실제 사례` : "실제 시공 사례"} title="Real Cases" />
+                <h2 className={`${s.kicker} ${s.kickerLg}`}>{region ? `${region} 싱크대 문짝 교체 실제 사례` : "실제 시공 사례"}</h2>
 
                 <div className={`${s.works} ${s.works3}`}>
                   {featuredRegionalDoorCases.map((item, idx) => {

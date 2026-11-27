@@ -168,22 +168,17 @@ export function TitleCard({
   kicker,
   title,
   as: Tag = "h2",
-  bigKicker = false,
 }: {
   kicker: string;
   title: string;
   as?: "h2" | "p";
-  /** 한글 소제목을 크게 — 이때 소제목이 h2가 되고 영문 제목은 장식 */
-  bigKicker?: boolean;
 }) {
-  const KickerTag = bigKicker ? "h2" : "p";
-  const TitleTag = bigKicker ? "p" : Tag;
   return (
     <InView className={`${s.glass} ${s.titleCard}`} threshold={0.3}>
-      <KickerTag className={`${s.kicker} ${bigKicker ? s.kickerLg : ""} ${s.fade}`}>{kicker}</KickerTag>
-      <TitleTag className={`${s.cardTitle} ${s.fade}`} style={{ transitionDelay: "0.08s" }}>
+      <p className={`${s.kicker} ${s.fade}`}>{kicker}</p>
+      <Tag className={`${s.cardTitle} ${s.fade}`} style={{ transitionDelay: "0.08s" }}>
         {title}
-      </TitleTag>
+      </Tag>
     </InView>
   );
 }
