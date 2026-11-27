@@ -190,22 +190,30 @@ export function RiseLines({
   as: Tag = "h2",
   delay = 0,
   onLoad = false,
+  glitchLine,
 }: {
   lines: string[];
   className?: string;
   as?: "h1" | "h2" | "h3" | "p";
   delay?: number;
   onLoad?: boolean;
+  /** 이 줄에 RGB 지지직 효과 (벤 다이어그램과 같은 박자) */
+  glitchLine?: number;
 }) {
   const content = (
     <Tag className={className}>
       {lines.map((l, i) => (
-        <span key={i} className={s.riseMask}>
+        <span key={i} className={i === glitchLine ? `${s.riseMask} ${s.glitchText}` : s.riseMask}>
           <span
             className={s.riseLine}
             style={{ transitionDelay: `${delay + i * 70}ms`, animationDelay: `${delay + i * 70}ms` }}>
             {l}
           </span>
+          {i === glitchLine &&
+            [s.gtR, s.gtG, s.gtB].map((c) => (
+              // 글자는 CSS로 그림 — 제목(h1) 텍스트에 같은 문구가 중복되지 않게
+              <span key={c} className={`${s.gtLayer} ${c}`} data-text={l} aria-hidden="true" />
+            ))}
         </span>
       ))}
     </Tag>

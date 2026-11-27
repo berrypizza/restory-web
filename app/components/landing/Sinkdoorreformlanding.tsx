@@ -218,7 +218,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
   // 기존 h1 문구를 줄 단위로 (줄마다 다른 텍스처가 채워짐)
   const heroTitle = region
     ? [`${region} 싱크대`, `문짝 ${type}`]
-    : ["싱크대 문짝", "교체만 해도", "새 주방 됩니다"];
+    : ["싱크대 문짝", "교체만 해도", "전체 교체 대비 4~5배 절감"];
   const serviceUrl =
     canonicalUrl ??
     (keyword ? `https://www.restorystudio.co.kr/kitchen/${keyword}` : "https://www.restorystudio.co.kr/kitchen/sink-door");
@@ -287,7 +287,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           <p className={`${s.heroEyebrow} ${s.heroFade}`}>
             {region ? `${region} 싱크대 문짝 ${type || "교체"}` : "Re'Story · Sink Door Renewal"}
           </p>
-          <RiseLines onLoad as="h1" className={s.heroTitle} lines={heroTitle} />
+          <RiseLines onLoad as="h1" className={s.heroTitle} lines={heroTitle} glitchLine={region ? undefined : 2} />
           {/* 실제 시공 전후 (경기 광명) — 막대를 좌우로 끌어 비교 */}
           {compareCase && (
             <div className={`${s.heroBa} ${s.heroFade}`} style={{ animationDelay: "0.2s" }}>
