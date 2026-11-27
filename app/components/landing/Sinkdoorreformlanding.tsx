@@ -388,8 +388,9 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
 
           {/* 거대한 회색 영문 */}
           <Scrub className={s.marquee} aria-hidden="true">
-            <span className={s.marqueeLine}>New doors, same kitchen,</span>
-            <span className={s.marqueeLine}>a whole new mood.</span>
+            {/* 줄이 화면 밖에서 밀려 들어오므로 문구를 이어 붙여 폭을 채움 */}
+            <span className={s.marqueeLine}>금액 투자 대비 · 금액 투자 대비</span>
+            <span className={s.marqueeLine}>최고 효율 · 최고 효율 · 최고 효율</span>
           </Scrub>
 
           {/* 3. 예산·범위 — 캐릭터 #1 (공감: 그대로 쓸 부분부터 확인) */}
