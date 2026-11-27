@@ -98,16 +98,9 @@ const FAQ_ITEMS = [
   },
 ];
 
-const SCHEDULE_ITEMS = [
-  { title: "사진 상담", time: "예상 견적 확인", text: "사진 2장과 지역·교체 범위로 먼저 상담합니다." },
-  { title: "방문 실측·샘플 확인", time: "일정 협의", text: "규격과 몸통 상태, 실물 색상을 확인하고 최종 견적·설치 일정을 확정합니다." },
-  { title: "맞춤 제작", time: "실측 후 영업일 3~5일", text: "측정한 규격으로 문짝과 서랍 앞판을 제작합니다." },
-  { title: "현장 설치", time: "설치 당일 약 2~3시간", text: "새 문짝을 설치하고 경첩·간격·수평을 조절합니다." },
-];
-
 const PROCESS_PHOTOS = [
   {
-    step: "02",
+    step: "01",
     title: "방문 실측",
     badge: "규격 확인",
     desc: "예상 견적을 확인한 뒤 방문 일정을 잡습니다. 현장에서 문짝과 서랍 앞판의 크기, 경첩 위치, 걸레받이·몰딩 길이를 정확하게 측정합니다.",
@@ -117,7 +110,7 @@ const PROCESS_PHOTOS = [
     imageRatio: "4 / 3",
   },
   {
-    step: "2-1",
+    step: "02",
     title: "실제 샘플 눈으로 확인",
     badge: "실물 확인",
     desc: "원하는 문짝의 색상과 마감 방식을 선택합니다. 백색 유광 하이그로시와 PET 제로조인트 무광 등 현장에 맞는 방향을 함께 봅니다.",
@@ -127,7 +120,7 @@ const PROCESS_PHOTOS = [
     imageRatio: "16 / 9",
   },
   {
-    step: "3",
+    step: "03",
     title: "맞춤 제작",
     badge: "영업일 3~5일",
     desc: "문짝과 서랍 앞판은 측정한 규격에 맞춰 하나씩 주문 제작합니다.",
@@ -137,7 +130,7 @@ const PROCESS_PHOTOS = [
     imageRatio: "16 / 9",
   },
   {
-    step: "4",
+    step: "04",
     title: "현장 설치",
     badge: "약 2~3시간",
     desc: "기존 문짝을 철거하고 새 문짝을 설치합니다. 설치 후에는 경첩과 간격, 수평을 세밀하게 조절합니다.",
@@ -430,52 +423,27 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
 
           {/* 4. 일정 */}
           <section data-service-section="timeline" id="sink-door-timeline" className={s.section}>
-            <div className={`${s.wrap} ${s.split}`}>
-              <TitleCard kicker="제작 기간과 설치 시간" title="Schedule" />
-              <div className={s.glass}>
-                <RiseLines className={s.title} lines={["제작 기간과 설치 시간을", "나눠서 확인하세요"]} />
-                <InView>
-                  <p className={`${s.body} ${s.fade}`}>사진 상담부터 설치까지, 단계마다 걸리는 시간을 따로 안내합니다.</p>
-                </InView>
-              </div>
-            </div>
             <div className={s.wrap}>
-              <div className={`${s.glass} ${s.rowsCard}`}>
-                <InView className={s.rows} as="ol" threshold={0.1}>
-                  {SCHEDULE_ITEMS.map((item, index) => (
-                    <li key={item.title} className={`${s.row} ${s.fade}`}>
-                      <span className={s.rowNum}>0{index + 1}</span>
-                      <h3 className={s.rowTitle}>{item.title}</h3>
-                      <p className={s.rowDesc}>{item.text}</p>
-                      <span className={`${s.tag} ${s.rowAside}`}>{item.time}</span>
-                    </li>
-                  ))}
-                </InView>
-              </div>
-              <p className={`${s.note} ${s.afterCard}`}>
-                제작·설치 시간은 일반적인 기준이며, 문짝 수량과 현장 구조에 따라 달라질 수 있습니다. 제작 기간과 별도로 방문·설치 일정을 협의합니다.
-              </p>
-              <details className={`${s.glass} ${s.moreDetails}`}>
-                <summary>실측부터 설치까지 공정 사진 보기</summary>
-                <div className={s.moreBody}>
-                  <div className={s.photoSteps}>
-                    {PROCESS_PHOTOS.map((item) => (
-                      <div key={item.step} className={s.photoStep}>
-                        <div className={s.photoStepHead}>
-                          <span className={s.rowNum}>{item.step}</span>
-                          <span className={s.tag}>{item.badge}</span>
-                        </div>
-                        <h3 className={s.rowTitle}>{item.title}</h3>
-                        <div className={s.photoStepImg} style={{ aspectRatio: item.imageRatio }}>
-                          <Image src={item.image} alt={item.imageAlt} fill unoptimized sizes="(min-width: 768px) 520px, 100vw" className="object-cover" />
-                        </div>
-                        <p className={s.rowDesc}>{item.desc}</p>
-                        <p className={s.note}>{item.note}</p>
+              <h2 className={`${s.kicker} ${s.kickerLg}`}>제작 기간과 설치 시간</h2>
+              {/* 실측부터 설치까지 공정 사진 (접지 않고 바로 보여줌) */}
+              <div className={`${s.glass} ${s.afterCard}`}>
+                <div className={s.photoSteps}>
+                  {PROCESS_PHOTOS.map((item) => (
+                    <div key={item.step} className={s.photoStep}>
+                      <div className={s.photoStepHead}>
+                        <span className={s.rowNum}>{item.step}</span>
+                        <span className={s.tag}>{item.badge}</span>
                       </div>
-                    ))}
-                  </div>
+                      <h3 className={s.rowTitle}>{item.title}</h3>
+                      <div className={s.photoStepImg} style={{ aspectRatio: item.imageRatio }}>
+                        <Image src={item.image} alt={item.imageAlt} fill unoptimized sizes="(min-width: 768px) 520px, 100vw" className="object-cover" />
+                      </div>
+                      <p className={s.rowDesc}>{item.desc}</p>
+                      <p className={s.note}>{item.note}</p>
+                    </div>
+                  ))}
                 </div>
-              </details>
+              </div>
             </div>
           </section>
 
