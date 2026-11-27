@@ -1,4 +1,9 @@
-.header { position: sticky; top: 0; z-index: 55; background: #fff; color: #17283d; border-bottom: 1px solid #e1e7ed; }
+/* 전 페이지 공통 프로스티드 헤더 (careers.resilire.jp 실측값: 흰색 50% + blur 40px) */
+.header { position: sticky; top: 0; z-index: 55; background: rgb(255 255 255 / 50%); backdrop-filter: blur(40px); color: #17283d; border-bottom: 1px solid rgb(225 231 237 / 70%); }
+.header .menuButton { background: rgb(242 245 249 / 60%); }
+.header .primary a[aria-current], .header .primary a:hover { background: rgb(240 245 252 / 65%); }
+/* 프리미엄 랜딩(히어로에 data-premium-hero): 헤더를 히어로 위에 겹쳐 처음부터 비치게 (높이만큼 겹침 + 흰 하단선) */
+:global(body):has([data-premium-hero]) .header { margin-bottom: -65px; border-bottom-color: #fff; }
 .bar { width: min(1184px, 100%); height: 64px; padding-inline: clamp(18px, 4vw, 42px); margin: auto; display: flex; align-items: center; gap: 40px; }
 .brand { position: relative; display: block; width: 100px; height: 48px; overflow: hidden; flex: none; }
 .brand img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; max-width: none; }

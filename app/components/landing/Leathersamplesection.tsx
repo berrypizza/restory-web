@@ -2,10 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import FadeIn from "@/app/components/FadeIn";
 import { buildTrackedContactPath } from "@/lib/attribution";
 
-const KAKAO_URL = buildTrackedContactPath("kakao", "leather_sample");
 const PHONE = buildTrackedContactPath("phone", "leather_sample");
 
 // 카탈로그별 대표 색상 — 실제 이미지 기반
@@ -87,23 +87,16 @@ const CATALOGS = [
   },
 ];
 
-export default function LeatherSampleSection() {
+/* requestHref: 사진 상담 접수 양식 주소 (페이지별 품목이 미리 선택됨). 고른 샘플은 상담 내용 칸에 채워짐 */
+export default function LeatherSampleSection({ requestHref = "/request?service=leather" }: { requestHref?: string }) {
   const [modalIdx, setModalIdx] = useState<number | null>(null);
   const [fading, setFading] = useState(false);
-  const [toast, setToast] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
-  const handleKakaoInquiry = async (cat: (typeof CATALOGS)[number]) => {
-    const msg = `안녕하세요! 가죽 샘플 문의드립니다.\n관심 샘플: ${cat.label}\n(${cat.brands})\n\n방문 견적 원합니다.`;
-    try {
-      await navigator.clipboard.writeText(msg);
-    } catch {
-      // clipboard 실패해도 카카오는 열어줌
-    }
-    setToast(true);
-    setTimeout(() => setToast(false), 3000);
-    setTimeout(() => window.open(KAKAO_URL, "_blank"), 300);
+  const sampleRequestHref = (cat: (typeof CATALOGS)[number]) => {
+    const note = `가죽 샘플 문의 — 관심 샘플: ${cat.label} (${cat.brands}). 방문 견적 원합니다.`;
+    return `${requestHref}${requestHref.includes("?") ? "&" : "?"}note=${encodeURIComponent(note)}`;
   };
 
   // 모달 열리면 body 스크롤 잠금
@@ -237,20 +230,6 @@ export default function LeatherSampleSection() {
           </FadeIn>
         </div>
       </section>
-
-      {/* 토스트 */}
-      {toast && (
-        <div
-          className="fixed bottom-36 left-1/2 z-[60] flex items-center gap-2 rounded-2xl px-5 py-3.5 text-[13px] font-bold text-white shadow-xl"
-          style={{
-            transform: "translateX(-50%)",
-            background: "#1a1a1a",
-            animation: "fadeInUp 0.2s ease",
-          }}>
-          <span style={{ color: "#4ade80" }}>✓</span>
-          메시지 복사됐어요. 카카오에 붙여넣기 해주세요
-        </div>
-      )}
 
       {/* 모달 */}
       {modalIdx !== null && current && (
@@ -403,18 +382,13 @@ export default function LeatherSampleSection() {
             <div
               className="flex-shrink-0 px-4 py-4 flex flex-col gap-2"
               style={{ background: "#111", borderTop: "1px solid #1e1e1e" }}>
-              <button
-                onClick={() => handleKakaoInquiry(current)}
+              <Link
+                href={sampleRequestHref(current)}
+                data-cta="leather_sample_request"
                 className="flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-[15px] font-black"
-                style={{
-                  background: "#FEE500",
-                  color: "#1a1a1a",
-                  border: "none",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                }}>
-                💬 이 색상으로 카카오 문의
-              </button>
+                style={{ background: "#2a66f0", color: "#fff", textDecoration: "none" }}>
+                📸 이 샘플로 사진 상담 접수
+              </Link>
               <a
                 href={PHONE}
                 className="flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[14px] font-bold text-white"

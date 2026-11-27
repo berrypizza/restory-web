@@ -724,7 +724,7 @@ export default function MeetingTableLeatherLanding({ keyword }: Props) {
         </div>
       </section>
 
-      <LeatherSampleSection />
+      <LeatherSampleSection requestHref={`/request?item=${encodeURIComponent("회의 테이블 천갈이")}`} />
 
       <section data-service-section="reviews" className="px-5 py-14 md:py-20" style={{ background: "#fff" }}>
         <div className="mx-auto max-w-2xl">

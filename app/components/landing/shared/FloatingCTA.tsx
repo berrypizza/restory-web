@@ -11,6 +11,8 @@ interface FloatingCTAProps {
   label?: string;
   compactMobile?: boolean;
   avoidOverlapSelector?: string;
+  /** false면 같은 탭에서 열기 (예: 자체 접수 양식) */
+  newTab?: boolean;
 }
 
 export default function FloatingCTA({
@@ -20,6 +22,7 @@ export default function FloatingCTA({
   compactMobile = false,
   avoidOverlapSelector,
   label = "카카오톡 사진 상담",
+  newTab = true,
 }: FloatingCTAProps) {
   const [showSticky, setShowSticky] = useState(false);
   const [inlineContactVisible, setInlineContactVisible] = useState(false);
@@ -90,7 +93,7 @@ export default function FloatingCTA({
         })}>맨 위로</button>
         {onReviewClick && <button type="button" className={compactMobile ? s.desktopOnly : s.review} onClick={onReviewClick}>리뷰 보기</button>}
         <a href={phone} className={s.phone} data-service-cta-location="fixed" data-cta="floating_phone">전화 문의</a>
-        <a href={kakaoUrl} className={s.kakao} target="_blank" rel="noopener noreferrer" data-service-cta-location="fixed" data-cta="floating_kakao_bar">{label}</a>
+        <a href={kakaoUrl} className={s.kakao} {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})} data-service-cta-location="fixed" data-cta="floating_kakao_bar">{label}</a>
       </div>
     </>
   );

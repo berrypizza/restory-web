@@ -8,7 +8,7 @@ import { isProductOption, PRODUCT_OPTIONS } from "../admin/lib/products";
 import PhotoPicker, { type SelectedPhoto } from "./PhotoPicker";
 import s from "./request.module.css";
 
-export default function CustomerRequestForm({ initialItem = "" }: { initialItem?: string }) {
+export default function CustomerRequestForm({ initialItem = "", initialNotes = "" }: { initialItem?: string; initialNotes?: string }) {
   const customItem = initialItem && !isProductOption(initialItem) ? initialItem : "";
   const [product, setProduct] = useState(customItem ? "custom" : initialItem);
   const [phase, setPhase] = useState<"ready" | "sending" | "done">("ready");
@@ -85,7 +85,7 @@ export default function CustomerRequestForm({ initialItem = "" }: { initialItem?
         <label>이름<input name="name" autoComplete="name" maxLength={60} placeholder="성함" required /></label>
         <label>전화번호<input name="phone" type="tel" autoComplete="tel-national" inputMode="tel" maxLength={23} placeholder="010-0000-0000" required /></label>
         <VisitAddressFields value={address} onChange={setAddress} allowLater issue={addressReviewed ? addressIssue(address) : null} />
-        <label><span>상담 내용 <small>선택</small></span><textarea name="notes" rows={3} maxLength={800} placeholder="불편한 점이나 미리 알려주실 내용을 적어 주세요." /></label>
+        <label><span>상담 내용 <small>선택</small></span><textarea name="notes" rows={3} maxLength={800} defaultValue={initialNotes} placeholder="불편한 점이나 미리 알려주실 내용을 적어 주세요." /></label>
         <PhotoPicker photos={photos} onChange={setPhotos} onBusy={setPreparing} />
         <label className={s.consent} id="privacy-consent"><input name="consent" type="checkbox" required />
           <span>리스토리 스튜디오가 상담 연락과 방문 일정 관리를 위해 이름, 전화번호, 주소, 상담 내용과 첨부한 사진을 수집·이용하는 데 동의해요.</span>

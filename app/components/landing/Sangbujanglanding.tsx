@@ -1,21 +1,37 @@
 "use client";
 
 import { LandingTrail, LandingIntake, LandingSections } from "./shared/LandingNavigation";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import FadeIn from "@/app/components/FadeIn";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
+import { SmoothScroll, Scrub, InView, RiseLines, RollText } from "./premium/Motion";
+import {
+  Arrow,
+  CameraIcon,
+  Star,
+  YouTubeFacade,
+  GlitchDiagram,
+  VennShapes,
+  Mascot,
+  TitleCard,
+  PhotoCtaCard,
+  FaqList,
+} from "./premium/Blocks";
+import { display } from "./premium/fonts";
+import s from "./premium/premium.module.css";
 
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
 const PHONE = buildTrackedContactPath("phone", "sangbujang");
-const KAKAO_URL = buildTrackedContactPath("kakao", "sangbujang");
+// 사진 상담은 자체 접수 양식으로 (상부장 처짐 수리 항목이 미리 선택된 상태로 열림)
+const REQUEST_URL = "/request?service=upper";
+const PHOTO_CTA = "사진으로 수리 범위·비용 확인";
 const SITE_URL = "https://www.restorystudio.co.kr";
 type SangbujangCase = (typeof cases)[number];
 
@@ -37,6 +53,29 @@ const CASE_COMPARISONS: Record<string, { before: string; after: string; summary:
     summary: "기존 장을 다시 사용할 수 있는지 확인한 뒤 고정 상태와 상단 라인을 정리했습니다.",
   },
 };
+
+const SCOPE_ITEMS = [
+  {
+    n: "01",
+    title: "처짐 원인 확인",
+    desc: "장을 내려 시공목, 벽 고정 상태, 장 몸통의 손상을 확인합니다. 문짝·경첩 문제와 장 전체의 처짐을 구분합니다.",
+  },
+  {
+    n: "02",
+    title: "필요한 부분 보강",
+    desc: "상태에 따라 합판·각재·칼블럭·앙카 등을 사용해 지지부를 보강합니다. 사용 자재와 고정 방식은 현장마다 달라집니다.",
+  },
+  {
+    n: "03",
+    title: "재설치와 마무리",
+    desc: "상부장을 다시 고정한 뒤 수평과 문짝 닫힘을 맞춥니다. 수리한 부분과 사용 시 살펴볼 부분을 함께 안내합니다.",
+  },
+];
+
+const PHOTO_EXAMPLES = [
+  { src: "/images/cases/case-128-before.jpg", title: "1. 전체 모습", desc: "주변 장과 높이를 비교할 수 있게 찍어주세요.", source: "인천 부평 · 시공 전", href: "/cases/case-128" },
+  { src: "/images/cases/case-125-before.jpg", title: "2. 틈이 보이는 부분 · 가능할 때", desc: "벌어진 위치가 보이게 찍어주세요. 가까이 가기 어렵다면 전체 사진부터 보내주세요.", source: "서울 잠실 · 시공 전", href: "/cases/case-125" },
+];
 
 const FAQ_ITEMS = [
   {
@@ -89,59 +128,8 @@ function parseKeyword(keyword: string): { region: string; symptom: string } {
   return { region, symptom };
 }
 
-function YouTubeFacade({ videoId }: { videoId: string }) {
-  const [loaded, setLoaded] = useState(false);
-  return (
-    <div className="relative aspect-video overflow-hidden rounded-2xl bg-black">
-      {loaded ? (
-        <iframe
-          className="h-full w-full"
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-          title="리스토리 상부장 수리 시공 영상"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      ) : (
-        <button
-          type="button"
-          onClick={() => setLoaded(true)}
-          aria-label="상부장 실제 시공 영상 재생"
-          className="relative h-full w-full cursor-pointer focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-[#FEE500]"
-        >
-          <Image
-            src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
-            alt=""
-            fill
-            unoptimized
-            className="object-cover opacity-70"
-            sizes="(min-width: 768px) 640px, 100vw"
-          />
-          <span className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-            <span
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-2xl text-white"
-              aria-hidden="true"
-            >
-              ▶
-            </span>
-            <span className="text-sm font-bold text-white">
-              실제 시공 영상 보기
-            </span>
-          </span>
-        </button>
-      )}
-    </div>
-  );
-}
-
-function RegionalCaseItemListJsonLd({
-  name,
-  items,
-}: {
-  name: string;
-  items: SangbujangCase[];
-}) {
+function RegionalCaseItemListJsonLd({ name, items }: { name: string; items: SangbujangCase[] }) {
   if (items.length === 0) return null;
-
   const data = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -157,49 +145,24 @@ function RegionalCaseItemListJsonLd({
         image: `${SITE_URL}${item.afterImg}`,
         url: `${SITE_URL}/cases/${item.id}`,
         datePublished: item.date,
-        author: {
-          "@type": "Organization",
-          name: "리스토리 스튜디오",
-        },
+        author: { "@type": "Organization", name: "리스토리 스튜디오" },
       },
     })),
   };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
 
-function ContactButtons({
-  dark = false,
-  compact = false,
-  label = "카카오로 수리 범위·비용 확인",
-}: {
-  dark?: boolean;
-  compact?: boolean;
-  label?: string;
-}) {
+/* 사진 접수 + 전화 버튼 한 줄 (하단 고정 버튼이 겹치지 않도록 data-upper-contact) */
+function ContactButtons({ label = PHOTO_CTA, onBlue = false, cta }: { label?: string; onBlue?: boolean; cta: string }) {
   return (
-    <div
-      data-upper-contact
-      className={`flex flex-col lg:flex-row lg:gap-3 ${compact ? "gap-0" : "gap-3"}`}
-    >
-      <a
-        href={KAKAO_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex min-h-14 items-center justify-center rounded-2xl bg-[#FEE500] px-5 py-4 text-[15px] font-black text-neutral-900"
-      >
+    <div data-upper-contact className={s.btnRow}>
+      <Link href={REQUEST_URL} className={onBlue ? s.btnOnBlue : s.btnPrimary} data-cta={cta}>
+        <CameraIcon />
         {label}
-      </a>
-      <a
-        href={PHONE}
-        className={`flex items-center justify-center font-bold ${compact ? "min-h-11 px-4 py-2 text-[13px] underline underline-offset-4" : "min-h-14 rounded-2xl border px-5 py-4 text-[15px]"} ${dark ? (compact ? "text-white/80" : "border-white/20 bg-white/10 text-white") : "border-neutral-200 bg-white text-neutral-800"}`}
-      >
-        전화 문의
+      </Link>
+      <a href={PHONE} className={onBlue ? s.btnGhost : s.btnDark}>
+        <RollText text="전화 문의" />
+        <Arrow />
       </a>
     </div>
   );
@@ -210,31 +173,22 @@ const latestSangbujangCases = cases
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 export default function SangbujangLanding({ keyword }: { keyword?: string }) {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const { region, symptom } = keyword
-    ? parseKeyword(keyword)
-    : { region: "", symptom: "처짐" };
-  const regionalCases = region
-    ? latestSangbujangCases.filter((item) => item.region.includes(region))
-    : [];
+  const { region, symptom } = keyword ? parseKeyword(keyword) : { region: "", symptom: "처짐" };
+  const regionalCases = region ? latestSangbujangCases.filter((item) => item.region.includes(region)) : [];
   const regionalIds = new Set(regionalCases.map((item) => item.id));
   const featuredCases = region
     ? [
         ...regionalCases.slice(0, 3),
-        ...latestSangbujangCases
-          .filter((item) => !regionalIds.has(item.id))
-          .slice(0, Math.max(0, 3 - regionalCases.length)),
+        ...latestSangbujangCases.filter((item) => !regionalIds.has(item.id)).slice(0, Math.max(0, 3 - regionalCases.length)),
       ]
     : latestSangbujangCases.slice(0, 3);
 
+  // 기존 h1 문구를 줄 단위로 (줄마다 다른 텍스처가 채워짐)
+  const heroTitle = region ? [`${region} 상부장 ${symptom}`, "다시 단단하게"] : ["처진 상부장,", "다시 단단하게"];
+
   return (
-    <main data-service-id="sangbujang" data-service-keyword={keyword}
-      className="break-keep bg-white"
-      style={{
-        fontFamily:
-          "'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif",
-      }}
-    >
+    <main data-service-id="sangbujang" data-service-keyword={keyword} className={`${s.page} ${display.variable}`}>
+      <SmoothScroll />
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상부장 수리` : "싱크대 상부장 수리"}
         description="처진 상부장의 고정 상태를 확인하고 보강·재설치합니다. 상태별 비용 예시: 일반 처짐 25만 원, 심한 처짐·손상 30만 원, 추락 수리 35만 원. 모두 부가세 별도이며 상태와 파손 범위에 따라 달라질 수 있습니다. 상담에서 최종 금액을 확정하며 이후 금액 변경과 수리 불가 시 비용은 없습니다."
@@ -242,545 +196,426 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         includeAggregateRating={false}
       />
       <FAQJsonLd faqs={FAQ_ITEMS} />
-      <RegionalCaseItemListJsonLd
-        name={`${region ? `${region} 지역·` : ""}상부장 처짐 실제 수리 사례`}
-        items={featuredCases}
-      />
+      <RegionalCaseItemListJsonLd name={`${region ? `${region} 지역·` : ""}상부장 처짐 실제 수리 사례`} items={featuredCases} />
 
-      <LandingTrail field="repair" title="상부장 처짐 수리" />
-      <section data-service-section="hero" className="relative overflow-hidden bg-[#0a1628]">
-        <div className="absolute inset-0 md:hidden">
-          <Image
-            src="/images/upper/hero-im.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover opacity-30"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a1628]" />
+      {/* 1. HERO — 밝은 주방 사진 위 반투명 안개, 흐린 빛 구체, 텍스처가 채워진 대형 제목 */}
+      <Scrub as="section" data-service-section="hero" data-premium-hero className={s.hero}>
+        <div className={s.heroBg}>
+          <Image src="/images/upper/hero-kitchen-studio.jpg" alt="" fill priority className="object-cover" sizes="100vw" />
         </div>
-        <div className="relative mx-auto flex max-w-7xl flex-col md:min-h-[760px] md:flex-row">
-          <div className="relative z-10 flex flex-col justify-center px-5 pb-8 pt-7 md:w-[54%] md:px-10 md:py-14 lg:px-14">
-            <FadeIn>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5">
-                <Image
-                  src="/images/logo.png"
-                  alt="리스토리"
-                  width={20}
-                  height={20}
-                  className="rounded-full"
-                />
-                <span className="text-xs font-bold text-white/80">
-                  {region
-                    ? `${region} 싱크대 상부장 ${symptom}${symptom === "수리" ? "" : " 수리"}`
-                    : "리스토리 싱크대 상부장 처짐 수리"}
-                </span>
-              </div>
-              <h1
-                className="mb-3 whitespace-pre-line font-black leading-[1.18] tracking-tight text-white"
-                style={{ fontSize: "clamp(2.05rem, 4.5vw, 3.7rem)" }}
-              >
-                {region
-                  ? `${region} 상부장 ${symptom}\n다시 단단하게`
-                  : "처진 상부장,\n다시 단단하게"}
-              </h1>
-              <p className="max-w-md text-[14px] leading-[1.75] text-white/80 md:text-[16px]">
-                살릴 수 있는 상부장은 보강·재설치로,
-                <br />
-                수평과 문짝 닫힘까지 맞춥니다.
+        <span className={`${s.orb} ${s.orbA}`} aria-hidden="true" />
+        <span className={`${s.orb} ${s.orbB}`} aria-hidden="true" />
+        <span className={`${s.orb} ${s.orbC}`} aria-hidden="true" />
+        <span className={s.grain} aria-hidden="true" />
+        <div className={s.heroTrail}>
+          <LandingTrail field="repair" title="상부장 처짐 수리" />
+        </div>
+        <p className={s.heroGhost} aria-hidden="true">
+          RE&apos;STORY UPPER CABINET
+        </p>
+
+        <div className={`${s.wrap} ${s.heroInner}`}>
+          <p className={`${s.heroEyebrow} ${s.heroFade}`}>
+            {region
+              ? `${region} 싱크대 상부장 ${symptom}${symptom === "수리" ? "" : " 수리"}`
+              : "리스토리 싱크대 상부장 처짐 수리"}
+          </p>
+          <RiseLines onLoad as="h1" className={s.heroTitle} lines={heroTitle} />
+          <p className={`${s.heroEn} ${s.heroFade}`} style={{ animationDelay: "0.25s" }}>
+            Fix the hold, keep the cabinet.
+          </p>
+
+          <div className={`${s.heroGlass} ${s.heroFade}`} style={{ animationDelay: "0.35s" }}>
+            <p className={s.heroSub}>살릴 수 있는 상부장은 보강·재설치로, 수평과 문짝 닫힘까지 맞춥니다.</p>
+            <ContactButtons cta="upper_request_hero" />
+            <p className={s.heroHint}>
+              전체 사진과 작업 지역부터 보내주세요. 틈이 보이는 사진은 안전하게 찍을 수 있을 때 함께 보내주세요.
+            </p>
+            <dl className={s.heroFacts}>
+              {[
+                { n: "고정 보강", l: "약해진 부위" },
+                { n: "약 2시간", l: "현장 작업" },
+                { n: "3년 무상", l: "보강·고정부 A/S" },
+              ].map((f) => (
+                <div key={f.l}>
+                  <dt>{f.n}</dt>
+                  <dd>{f.l}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className={s.heroHint}>
+              분리·고정부 보강·재설치·수평 조절 포함 · 상담에서 확정한 금액 그대로 · 수리 불가 시 비용 없음
+            </p>
+            <div className={s.chipRow}>
+              <a href="#upper-cases" className={s.arrowLink}>
+                실제 수리 전후 사진과 과정 보기
+                <Arrow />
+              </a>
+              <a href="#upper-price-examples" className={s.arrowLink}>
+                상태별 수리 비용 예시 보기
+                <Arrow />
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className={s.scrollCue} aria-hidden="true">
+          SCROLL <span />
+        </div>
+      </Scrub>
+
+      {/* ── 이하 본문: 뒤에 흐린 빛 구체가 떠다니고, 내용은 반투명 유리 카드 위에 ── */}
+      <Scrub className={s.glassZone}>
+        <div className={s.ambient} aria-hidden="true">
+          <div className={s.ambientSticky}>
+            <span className={`${s.ambientOrb} ${s.ambientOrb1}`} />
+            <span className={`${s.ambientOrb} ${s.ambientOrb2}`} />
+            <span className={`${s.ambientOrb} ${s.ambientOrb3}`} />
+            <span className={s.grain} />
+          </div>
+        </div>
+
+        {/* 2. 비용 예시 */}
+        <section data-service-section="budget" id="upper-price-examples" aria-labelledby="upper-price-heading" className={s.section}>
+          <div className={`${s.wrap} ${s.split}`}>
+            <div className={s.stickyCol}>
+              <TitleCard kicker="비용 예시 · 부가세 별도" title="Price" as="p" />
+            </div>
+            <div className={s.glass}>
+              <h2 id="upper-price-heading" className={s.title}>
+                상태별 수리 비용 예시
+              </h2>
+              <dl className={s.priceList}>
+                {PRICE_EXAMPLES.map((item) => (
+                  <div key={item.condition} className={s.priceRow}>
+                    <dt>{item.condition}</dt>
+                    <dd>{item.price}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className={s.body}>
+                상태와 파손 범위에 따라 예시 금액과 달라질 수 있습니다. 필요한 작업과 최종 금액은 사진 상담으로 먼저 안내합니다.
               </p>
-              <div className="my-4 overflow-hidden rounded-2xl border border-white/20 bg-[#12213b]/90">
-                <dl className="grid grid-cols-3 divide-x divide-white/15 py-4 text-center">
-                  {[
-                    {
-                      label: "약해진 부위",
-                      value: "고정 보강",
-                      note: "",
-                    },
-                    { label: "현장 작업", value: "약 2시간", note: "" },
-                    { label: "보강·고정부 A/S", value: "3년 무상", note: "" },
-                  ].map((item) => (
-                    <div key={item.label} className="px-1">
-                      <dt className="text-[10px] leading-5 text-white/70 sm:text-[11px]">
-                        {item.label}
-                      </dt>
-                      <dd className="mt-1 whitespace-nowrap text-[21px] font-black leading-tight text-white lg:text-[25px]">
-                        {item.value}
-                        {item.note && (
-                          <span className="mt-1 block text-[11px] font-medium text-white/75">
-                            {item.note}
+              <p className={s.strongNote}>
+                상담에서 확정한 금액은 이후 변경하지 않습니다.
+                <br />
+                수리 불가로 판단되면 비용을 받지 않습니다.
+              </p>
+              <ContactButtons label="사진으로 우리 집 수리비 확인" cta="upper_request_price" />
+            </div>
+          </div>
+        </section>
+
+        <LandingSections sections={[["upper-cases", "시공 사례"], ["upper-cost", "비용·작업 범위"], ["upper-faq", "자주 묻는 질문"]]} />
+
+        {/* 3. 사례 */}
+        <section data-service-section="cases" id="upper-cases" className={s.section}>
+          <div className={s.wrap}>
+            <div className={s.split}>
+              <TitleCard kicker="수리 전후" title="Before / After" />
+              <div className={s.glass}>
+                <RiseLines className={s.title} lines={["다시 제자리를 찾은 상부장"]} />
+                <p className={s.body}>
+                  {region
+                    ? regionalCases.length > 0
+                      ? `${region} 지역에 공개된 실제 시공 사례 ${regionalCases.length}건 중 최근 작업을 먼저 보여드립니다. 다른 지역의 참고 사례는 별도로 표시했습니다.`
+                      : `${region} 지역에 공개된 사례가 아직 없어, 다른 지역의 실제 수리 사례를 참고로 보여드립니다.`
+                    : "처짐 위치와 원인은 현장마다 다릅니다. 실제 작업 전후 사진과 확인한 내용을 함께 살펴보세요."}
+                </p>
+              </div>
+            </div>
+
+            <div className={s.caseList}>
+              {featuredCases.map((item, index) => {
+                const cmp = CASE_COMPARISONS[item.id];
+                return (
+                  <InView key={item.id} threshold={0.15}>
+                    <article className={`${s.glass} ${s.workGlass} ${s.fade}`}>
+                      <Link href={`/cases/${item.id}`} className={s.work}>
+                        <div className={s.pairImg}>
+                          {[
+                            { label: "수리 전", src: item.beforeImg, caption: cmp?.before },
+                            { label: "수리 후", src: item.afterImg, caption: cmp?.after },
+                          ].map((photo) => (
+                            <figure key={photo.label}>
+                              <div className={`${s.workImg} ${index === 0 ? s.workImgWide : ""}`}>
+                                <Image
+                                  src={photo.src}
+                                  alt={`${item.title} ${photo.label}`}
+                                  fill
+                                  className="object-cover"
+                                  style={index === 0 && item.id === "case-128" ? { transform: "scale(1.25)", transformOrigin: "45% 40%" } : undefined}
+                                  sizes="(min-width: 768px) 480px, 50vw"
+                                />
+                                <span className={s.pairTag} data-after={photo.label === "수리 후" || undefined}>
+                                  {photo.label}
+                                </span>
+                              </div>
+                              {index === 0 && photo.caption && <figcaption className={s.pairCaption}>{photo.caption}</figcaption>}
+                            </figure>
+                          ))}
+                        </div>
+                        <div className={s.workMeta}>
+                          {index === 0 && (
+                            <p className={s.note}>
+                              같은 현장의 실제 전후 사진입니다. 촬영 위치·각도는 서로 다릅니다.
+                              {item.id === "case-128" && " 왼쪽 장이 잘 보이도록 확대했습니다."}
+                            </p>
+                          )}
+                          <span className={s.tag}>
+                            {item.region} · {item.date.replaceAll("-", ".")}
+                            {region && !item.region.includes(region) && " · 다른 지역 참고 사례"}
                           </span>
-                        )}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <div className="border-t border-white/15 px-3 py-3">
-                  <p className="text-[12px] font-bold leading-[1.7] text-white/90">
-                    분리·고정부 보강·재설치·수평 조절 포함
-                  </p>
-                  <ul className="mt-2 space-y-1 text-[12px] font-bold leading-[1.7] text-blue-200">
-                    <li>
-                      <span aria-hidden="true">✓ </span>상담에서 확정한 금액 그대로
-                    </li>
-                    <li>
-                      <span aria-hidden="true">✓ </span>수리 불가 시 비용 없음
-                    </li>
-                  </ul>
-                  <a
-                    href="#upper-cases"
-                    className="mt-1 inline-flex min-h-11 items-center text-[12px] font-bold text-white/85 underline underline-offset-4"
-                  >
-                    실제 수리 전후 사진과 과정 보기 →
-                  </a>
+                          <h3 className={s.workTitle}>{item.title}</h3>
+                          <p className={s.workSummary} data-full>
+                            {cmp?.summary ?? item.summary}
+                          </p>
+                          <span className={`${s.arrowLink} ${s.workMore}`}>
+                            원인과 수리 과정 보기
+                            <Arrow />
+                          </span>
+                        </div>
+                      </Link>
+                      {item.review && (
+                        <blockquote className={s.reviewQuote}>
+                          <p className={s.note}>이 사례에 등록된 고객 후기 · {item.review.author}</p>
+                          <p>“{item.review.content}”</p>
+                        </blockquote>
+                      )}
+                    </article>
+                  </InView>
+                );
+              })}
+            </div>
+            <div className={s.afterCard}>
+              <Link href={`/cases?cat=${encodeURIComponent("상부장 처짐")}`} className={s.arrowLink}>
+                상부장 처짐 사례 전체 보기
+                <Arrow />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* 거대한 회색 영문 */}
+        <Scrub className={s.marquee} aria-hidden="true">
+          <span className={s.marqueeLine}>Fix the hold,</span>
+          <span className={s.marqueeLine}>keep the cabinet.</span>
+        </Scrub>
+
+        {/* 4. 수리 범위 — 캐릭터 #1(공감) + 글리치 다이어그램 */}
+        <section data-service-section="scope" className={s.section}>
+          <div className={s.wrap}>
+            <div className={s.split}>
+              <div className={s.stickyCol}>
+                <TitleCard kicker="수리 범위" title="Repair Scope" />
+                <Mascot
+                  src="/images/upper/mascot-diagnose.png"
+                  alt="처진 상부장을 손으로 받치며 뒤쪽 고정 상태를 살피는 리스토리 기사 캐릭터"
+                  width={1168}
+                  height={880}
+                  className={s.mascotDiagnose}
+                  bubble="뒤쪽 고정부터 볼게요"
+                />
+              </div>
+              <div className={s.glass}>
+                <RiseLines className={s.title} lines={["겉의 틈부터,", "뒤쪽 고정까지"]} />
+                <p className={s.body}>
+                  틈만 가리는 것으로 끝내지 않고, 장이 힘을 받는 부분을 확인합니다. 벽과 장의 상태에 맞춰 보강 방법을 정합니다.
+                </p>
+                <div className={s.vennWrap}>
+                  <GlitchDiagram
+                    label="시공목, 벽 고정, 수평 조절이 함께 맞아야 상부장이 단단하게 고정됩니다"
+                    shapes={<VennShapes top={["STUD", "시공목"]} left={["ANCHOR", "벽 고정"]} right={["LEVEL", "수평"]} core="Solid" />}
+                  />
                 </div>
               </div>
-              <p className="mb-3 text-center text-[13px] font-bold leading-[1.7] text-white lg:text-left">
-                사진으로 수리 범위 · 금액 · 방문일 확인
+            </div>
+            <div className={`${s.glass} ${s.rowsCard}`}>
+              <InView className={s.rows} as="ol" threshold={0.1}>
+                {SCOPE_ITEMS.map((item) => (
+                  <li key={item.n} className={`${s.row} ${s.fade}`}>
+                    <span className={s.rowNum}>{item.n}</span>
+                    <h3 className={s.rowTitle}>{item.title}</h3>
+                    <p className={s.rowDesc}>{item.desc}</p>
+                  </li>
+                ))}
+              </InView>
+            </div>
+            <div className={`${s.glass} ${s.afterCard}`}>
+              <p className={s.rowTitle}>수리와 교체를 나누는 기준은 ‘기존 장의 상태’입니다.</p>
+              <p className={s.body}>
+                몸통이 다시 힘을 받을 수 있으면 보강 후 재설치를 검토합니다. 판재가 넓게 터졌거나 물에 불어 강도가 떨어졌다면 새 제작이 필요할 수 있습니다.
               </p>
-              <ContactButtons dark compact />
-              <p className="mt-2 text-center text-[12px] leading-[1.8] text-white/70 lg:text-left">
-                전체 사진과 작업 지역부터 보내주세요.
-                <br />틈이 보이는 사진은 안전하게 찍을 수 있을 때 함께 보내주세요.
-              </p>
-              <a
-                href="#upper-price-examples"
-                className="mt-1 inline-flex min-h-11 w-full items-center justify-center text-[12px] font-bold text-blue-200 underline underline-offset-4 lg:w-auto lg:justify-start"
-              >
-                상태별 수리 비용 예시 보기 →
-              </a>
-            </FadeIn>
+            </div>
           </div>
-          <div className="relative hidden md:block md:w-[46%]">
-            <Image
-              src="/images/upper/hero.webp"
-              alt="리스토리 싱크대 상부장 수리 현장"
-              fill
-              priority
-              sizes="46vw"
-              className="object-cover opacity-80"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628] via-transparent to-transparent" />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section data-service-section="budget"
-        id="upper-price-examples"
-        aria-labelledby="upper-price-heading"
-        className="scroll-mt-24 bg-[#eef4ff] px-5 py-10 md:py-14"
-      >
-        <div className="mx-auto max-w-3xl">
-          <p className="mb-2 text-xs font-bold text-[#1a5cff]">
-            비용 예시 · 부가세 별도
-          </p>
-          <h2
-            id="upper-price-heading"
-            className="text-[26px] font-black leading-[1.35] tracking-tight md:text-4xl"
-          >
-            상태별 수리 비용 예시
-          </h2>
-          <dl className="my-5 grid gap-3 md:grid-cols-3">
-            {PRICE_EXAMPLES.map((item) => (
-              <div
-                key={item.condition}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-[#dce6fa] bg-white px-4 py-5 md:block md:p-5"
-              >
-                <dt className="text-[13px] font-bold leading-[1.7] text-neutral-700">
-                  {item.condition}
-                </dt>
-                <dd className="shrink-0 text-[26px] font-black leading-tight text-[#0a1628] md:mt-3 md:text-3xl">
-                  {item.price}
-                </dd>
+        {/* 5. 확정 금액과 A/S */}
+        <section data-service-section="warranty" id="upper-cost" className={s.section}>
+          <div className={`${s.wrap} ${s.split}`}>
+            <div className={s.stickyCol}>
+              <TitleCard kicker="확정 금액과 A/S" title="Cost & Care" />
+            </div>
+            <div>
+              <div className={s.glass}>
+                <RiseLines className={s.title} lines={["확정 금액과", "시공 후 A/S"]} />
+                <p className={s.body}>
+                  일반적인 현장 작업은 약 2시간입니다. 상태와 작업 범위에 따라 달라지며, 방문일은 상담 후 조율합니다.
+                </p>
+                <a href="#upper-price-examples" className={s.arrowLink}>
+                  상태별 비용 예시 · 부가세 별도
+                  <Arrow />
+                </a>
               </div>
-            ))}
-          </dl>
-          <p className="text-[13px] leading-[1.85] text-neutral-600">
-            상태와 파손 범위에 따라 예시 금액과 달라질 수 있습니다. 필요한 작업과
-            최종 금액은 사진 상담으로 먼저 안내합니다.
-          </p>
-          <p className="mb-5 mt-3 text-[13px] font-bold leading-[1.85] text-[#0a1628]">
-            상담에서 확정한 금액은 이후 변경하지 않습니다.
-            <br />
-            수리 불가로 판단되면 비용을 받지 않습니다.
-          </p>
-          <ContactButtons compact label="사진으로 우리 집 수리비 확인" />
-        </div>
-      </section>
-
-
-      <LandingSections sections={[["upper-cases", "시공 사례"], ["upper-cost", "비용·작업 범위"], ["upper-faq", "자주 묻는 질문"]]} />
-
-      <section data-service-section="cases"
-        id="upper-cases"
-        className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
-      >
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
-              BEFORE / AFTER
-            </p>
-            <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              다시 제자리를 찾은 상부장
-            </h2>
-            <p className="mb-8 mt-4 text-sm leading-[1.85] text-neutral-600">
-              {region
-                ? regionalCases.length > 0
-                  ? `${region} 지역에 공개된 실제 시공 사례 ${regionalCases.length}건 중 최근 작업을 먼저 보여드립니다. 다른 지역의 참고 사례는 별도로 표시했습니다.`
-                  : `${region} 지역에 공개된 사례가 아직 없어, 다른 지역의 실제 수리 사례를 참고로 보여드립니다.`
-                : "처짐 위치와 원인은 현장마다 다릅니다. 실제 작업 전후 사진과 확인한 내용을 함께 살펴보세요."}
-            </p>
-          </FadeIn>
-          <div className="space-y-6">
-            {featuredCases.map((item, index) => (
-              <FadeIn key={item.id} delay={index * 50}>
-                <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                  <Link href={`/cases/${item.id}`} className="block">
-                    <div className={`grid gap-px bg-neutral-200 ${index === 0 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-2"}`}>
-                      {[
-                        { label: "수리 전", src: item.beforeImg },
-                        { label: "수리 후", src: item.afterImg },
-                      ].map((photo) => (
-                        <figure
-                          key={photo.label}
-                          className="bg-white"
-                        >
-                          <div className={`relative overflow-hidden bg-neutral-100 ${index === 0 ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
-                          <Image
-                            src={photo.src}
-                            alt={`${item.title} ${photo.label}`}
-                            fill
-                            className="object-cover"
-                            style={index === 0 && item.id === "case-128" ? { transform: "scale(1.25)", transformOrigin: "45% 40%" } : undefined}
-                            sizes={index === 0 ? "(min-width: 768px) 384px, (min-width: 640px) 50vw, 100vw" : "(min-width: 768px) 384px, 50vw"}
-                          />
-                          <span
-                            className={`absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-black text-white ${photo.label === "수리 후" ? "bg-[#1a5cff]" : "bg-black/70"}`}
-                          >
-                            {photo.label}
-                          </span>
-                          </div>
-                          {index === 0 && CASE_COMPARISONS[item.id] && (
-                            <figcaption className="px-4 py-3 text-[13px] font-bold leading-[1.7] text-neutral-800">
-                              {photo.label === "수리 전" ? CASE_COMPARISONS[item.id].before : CASE_COMPARISONS[item.id].after}
-                            </figcaption>
-                          )}
-                        </figure>
-                      ))}
-                    </div>
-                    <div className="p-5 md:p-7">
-                      {index === 0 && (
-                        <p className="mb-3 text-[11px] leading-[1.7] text-neutral-500">
-                          같은 현장의 실제 전후 사진입니다. 촬영 위치·각도는 서로 다릅니다.
-                          {item.id === "case-128" && " 왼쪽 장이 잘 보이도록 확대했습니다."}
-                        </p>
-                      )}
-                      <p className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold text-[#1a5cff]">
-                        <span>
-                          {item.region} · {item.date.replaceAll("-", ".")}
-                        </span>
-                        {region && !item.region.includes(region) && (
-                          <span className="rounded-full bg-neutral-100 px-2 py-1 text-neutral-500">
-                            다른 지역 참고 사례
-                          </span>
-                        )}
-                      </p>
-                      <h3 className="text-lg font-black leading-snug text-neutral-950 md:text-xl">
-                        {item.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-[1.85] text-neutral-600">
-                        {CASE_COMPARISONS[item.id]?.summary ?? item.summary}
-                      </p>
-                      <p className="mt-4 text-sm font-bold text-[#1a5cff]">
-                        원인과 수리 과정 보기 →
-                      </p>
-                    </div>
+              <div className={`${s.glass} ${s.checkBox}`}>
+                <h3>추락 파손 추가금은 미리 안내합니다</h3>
+                <p className={s.body}>
+                  추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있습니다. 추가 작업과 금액은 상담 시 미리 안내하며, 상담 후 금액은 변경되지 않습니다.
+                </p>
+                <p className={s.strongNote}>수리 불가로 판단된 경우에는 비용을 받지 않습니다.</p>
+              </div>
+              <div className={`${s.glass} ${s.checkBox}`}>
+                <h3>이번에 보강·재고정한 시공 부위, 3년 무상 A/S</h3>
+                <p className={s.body}>
+                  작업일 기준으로 적용합니다. 수리한 고정부의 이탈, 설치 상태, 수평 조절 등 이번 시공과 직접 관련된 문제를 확인합니다.
+                </p>
+                <p className={s.note}>
+                  외부 충격·누수·물먹음·기존 판재의 추가 노후화·임의 분해나 변경처럼 시공과 직접 관련 없는 문제는 제외될 수 있습니다.
+                </p>
+                <div data-upper-contact>
+                  <Link href={REQUEST_URL} className={s.arrowLink} data-cta="upper_request_as">
+                    수리한 부위 사진으로 A/S 문의
+                    <Arrow />
                   </Link>
-                  {item.review && (
-                    <blockquote className="mx-5 mb-5 rounded-xl bg-[#f8f9fb] p-4 md:mx-7 md:mb-7">
-                      <p className="mb-2 text-[11px] font-bold text-neutral-500">
-                        이 사례에 등록된 고객 후기 · {item.review.author}
-                      </p>
-                      <p className="text-[13px] leading-[1.8] text-neutral-700">
-                        “{item.review.content}”
-                      </p>
-                    </blockquote>
-                  )}
-                </article>
-              </FadeIn>
-            ))}
-          </div>
-          <Link
-            href={`/cases?cat=${encodeURIComponent("상부장 처짐")}`}
-            className="mt-6 inline-flex min-h-11 items-center text-sm font-bold text-[#1a5cff]"
-          >
-            상부장 처짐 사례 전체 보기 →
-          </Link>
-        </div>
-      </section>
-
-      <section data-service-section="scope" className="px-5 py-14 md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
-              REPAIR SCOPE
-            </p>
-            <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              겉의 틈부터, 뒤쪽 고정까지
-            </h2>
-            <p className="mb-8 mt-4 text-sm leading-[1.85] text-neutral-600">
-              틈만 가리는 것으로 끝내지 않고, 장이 힘을 받는 부분을 확인합니다.
-              벽과 장의 상태에 맞춰 보강 방법을 정합니다.
-            </p>
-          </FadeIn>
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              {
-                n: "01",
-                title: "처짐 원인 확인",
-                desc: "장을 내려 시공목, 벽 고정 상태, 장 몸통의 손상을 확인합니다. 문짝·경첩 문제와 장 전체의 처짐을 구분합니다.",
-              },
-              {
-                n: "02",
-                title: "필요한 부분 보강",
-                desc: "상태에 따라 합판·각재·칼블럭·앙카 등을 사용해 지지부를 보강합니다. 사용 자재와 고정 방식은 현장마다 달라집니다.",
-              },
-              {
-                n: "03",
-                title: "재설치와 마무리",
-                desc: "상부장을 다시 고정한 뒤 수평과 문짝 닫힘을 맞춥니다. 수리한 부분과 사용 시 살펴볼 부분을 함께 안내합니다.",
-              },
-            ].map((item) => (
-              <div
-                key={item.n}
-                className="rounded-2xl border border-neutral-200 p-6"
-              >
-                <p className="mb-5 text-sm font-black text-[#1a5cff]">
-                  {item.n}
-                </p>
-                <h3 className="mb-3 text-lg font-black">{item.title}</h3>
-                <p className="text-sm leading-[1.85] text-neutral-600">
-                  {item.desc}
-                </p>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
-          <div className="mt-6 rounded-2xl bg-[#eef4ff] p-5 text-sm leading-[1.85] text-neutral-700">
-            <strong className="block text-neutral-900">
-              수리와 교체를 나누는 기준은 ‘기존 장의 상태’입니다.
-            </strong>
-            몸통이 다시 힘을 받을 수 있으면 보강 후 재설치를 검토합니다. 판재가
-            넓게 터졌거나 물에 불어 강도가 떨어졌다면 새 제작이 필요할 수
-            있습니다.
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section data-service-section="warranty"
-        id="upper-cost"
-        className="scroll-mt-24 bg-[#0a1628] px-5 py-14 text-white md:py-20"
-      >
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-3 text-xs font-bold tracking-widest text-blue-300">
-              COST & AFTERCARE
-            </p>
-            <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              확정 금액과 시공 후 A/S
-            </h2>
-            <p className="mt-5 text-sm leading-[1.85] text-white/75">
-              일반적인 현장 작업은 약 2시간입니다. 상태와 작업 범위에 따라
-              달라지며, 방문일은 상담 후 조율합니다.
-            </p>
-            <a href="#upper-price-examples" className="mb-5 inline-flex min-h-11 items-center text-sm font-bold text-blue-200 underline underline-offset-4">
-              상태별 비용 예시 · 부가세 별도 →
-            </a>
-          </FadeIn>
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-5">
-            <h3 className="mb-3 text-base font-black">추락 파손 추가금은 미리 안내합니다</h3>
-            <p className="text-sm leading-[1.85] text-white/75">
-              추락한 상부장은 파손 부위에 따라 추가금이 있을 수 있습니다. 추가
-              작업과 금액은 상담 시 미리 안내하며, 상담 후 금액은 변경되지 않습니다.
-            </p>
-            <p className="mt-4 text-sm font-black text-blue-200">
-              수리 불가로 판단된 경우에는 비용을 받지 않습니다.
-            </p>
+        {/* 6. 사진 가이드 — 캐릭터 #2 (행동 유도) */}
+        <section data-service-section="photo_guide" id="upper-photo-guide" className={s.section}>
+          <div className={`${s.wrap} ${s.split}`}>
+            <TitleCard kicker="사진 상담" title="Photo Guide" />
+            <div className={s.glass}>
+              <RiseLines className={s.title} lines={["사진은 이렇게 보내주세요"]} />
+              <p className={s.body}>
+                안전하게 찍을 수 있는 전체 사진부터 보내주세요. 가능하면 틈이 보이는 사진도 함께 보내주시면 상태를 살피는 데 도움이 됩니다.
+              </p>
+            </div>
           </div>
-          <div className="mt-8 rounded-2xl bg-white p-6 text-neutral-900">
-            <p className="mb-2 text-lg font-black">
-              이번에 보강·재고정한 시공 부위, 3년 무상 A/S
-            </p>
-            <p className="text-sm leading-[1.85] text-neutral-600">
-              작업일 기준으로 적용합니다. 수리한 고정부의 이탈, 설치 상태, 수평
-              조절 등 이번 시공과 직접 관련된 문제를 확인합니다.
-            </p>
-            <p className="mt-3 text-xs leading-[1.85] text-neutral-500">
-              외부 충격·누수·물먹음·기존 판재의 추가 노후화·임의 분해나 변경처럼
-              시공과 직접 관련 없는 문제는 제외될 수 있습니다.
-            </p>
-            <a
-              data-upper-contact
-              href={KAKAO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex min-h-11 items-center text-[13px] font-bold text-[#1a5cff] underline underline-offset-4"
-            >
-              수리한 부위 사진으로 A/S 문의 →
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section data-service-section="photo_guide" id="upper-photo-guide" className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
-              PHOTO CONSULTATION
-            </p>
-            <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              사진은 이렇게 보내주세요
-            </h2>
-            <p className="mb-6 mt-4 text-sm leading-[1.85] text-neutral-600">
-              안전하게 찍을 수 있는 전체 사진부터 보내주세요.
-              가능하면 틈이 보이는 사진도 함께 보내주시면 상태를 살피는 데 도움이 됩니다.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                { src: "/images/cases/case-128-before.jpg", title: "1. 전체 모습", desc: "주변 장과 높이를 비교할 수 있게 찍어주세요.", source: "인천 부평 · 시공 전", href: "/cases/case-128" },
-                { src: "/images/cases/case-125-before.jpg", title: "2. 틈이 보이는 부분 · 가능할 때", desc: "벌어진 위치가 보이게 찍어주세요. 가까이 가기 어렵다면 전체 사진부터 보내주세요.", source: "서울 잠실 · 시공 전", href: "/cases/case-125" },
-              ].map((photo) => (
-                <figure key={photo.src} className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                  <div className="relative aspect-[16/10]">
-                    <Image src={photo.src} alt={`${photo.source} 사진으로 보여주는 ${photo.title} 촬영 예시`} fill sizes="(min-width: 768px) 384px, (min-width: 640px) 50vw, 100vw" className="object-cover" />
+          <div className={s.wrap}>
+            <div className={`${s.works} ${s.afterCard}`}>
+              {PHOTO_EXAMPLES.map((photo) => (
+                <figure key={photo.src} className={`${s.glass} ${s.workGlass}`}>
+                  <div className={`${s.workImg} ${s.workImgWide}`}>
+                    <Image src={photo.src} alt={`${photo.source} 사진으로 보여주는 ${photo.title} 촬영 예시`} fill sizes="(min-width: 768px) 480px, 100vw" className="object-cover" />
                   </div>
-                  <figcaption className="p-4">
-                    <h3 className="font-black">{photo.title}</h3>
-                    <p className="mt-2 text-[13px] leading-[1.8] text-neutral-600">{photo.desc}</p>
-                    <Link href={photo.href} className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-[#1a5cff]">{photo.source} 사례 보기 →</Link>
+                  <figcaption className={s.workMeta}>
+                    <h3 className={s.rowTitle}>{photo.title}</h3>
+                    <p className={s.rowDesc}>{photo.desc}</p>
+                    <Link href={photo.href} className={`${s.arrowLink} ${s.workMore}`}>
+                      {photo.source} 사례 보기
+                      <Arrow />
+                    </Link>
                   </figcaption>
                 </figure>
               ))}
             </div>
-            <p className="mt-3 text-xs leading-[1.8] text-neutral-500">
-              서로 다른 실제 시공 전 사진을 촬영 구도 예시로 사용했습니다.
-            </p>
-            <div className="my-6 rounded-2xl border border-[#dce6fa] bg-[#eef4ff] p-5">
-              <h3 className="mb-2 text-sm font-black">사진과 함께 작업 지역·증상을 적어주세요</h3>
-              <p className="select-text text-sm leading-[1.85] text-neutral-700">예시: 인천 부평 / 왼쪽 장과 천장 사이에 틈이 있어요 / 어제 발견했어요.</p>
+            <p className={`${s.note} ${s.afterCard}`}>서로 다른 실제 시공 전 사진을 촬영 구도 예시로 사용했습니다.</p>
+            <div className={`${s.glass} ${s.afterCard}`}>
+              <h3 className={s.rowTitle}>사진과 함께 작업 지역·증상을 적어주세요</h3>
+              <p className={s.body}>예시: 인천 부평 / 왼쪽 장과 천장 사이에 틈이 있어요 / 어제 발견했어요.</p>
+              <p className={s.note}>
+                처짐이 심하다면 장을 당기거나 직접 분리하지 마세요. 아래 공간의 사용을 피하고, 올라가거나 장을 움직이지 않아도 찍을 수 있는 사진으로 먼저 상담해주세요.
+              </p>
             </div>
-            <p className="mb-6 text-xs leading-[1.85] text-neutral-600">
-              처짐이 심하다면 장을 당기거나 직접 분리하지 마세요. 아래 공간의
-              사용을 피하고, 올라가거나 장을 움직이지 않아도 찍을 수 있는
-              사진으로 먼저 상담해주세요.
+            <div data-upper-contact>
+              <PhotoCtaCard
+                title="전체 사진 한 장이면 시작돼요"
+                sub="안전하게 찍은 전체 사진과 작업 지역·증상만 보내주세요."
+                href={REQUEST_URL}
+                label={PHOTO_CTA}
+                cta="upper_request_photo_guide"
+              />
+            </div>
+            <p className={`${s.note} ${s.afterCard}`}>
+              사진으로 예상 범위를 살핀 뒤 수리 금액·방문일을 상담합니다. 내부 파손과 정확한 작업 범위는 현장 점검 또는 장 분리 후 확인합니다.
             </p>
-            <ContactButtons />
-            <p className="mt-4 text-xs leading-[1.8] text-neutral-500">
-              사진으로 예상 범위를 살핀 뒤 수리 금액·방문일을 상담합니다.
-              내부 파손과 정확한 작업 범위는 현장 점검 또는 장 분리 후 확인합니다.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <section data-service-section="video" className="px-5 py-14 md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-3 text-xs font-bold tracking-widest text-[#1a5cff]">
-              ON SITE
-            </p>
-            <h2 className="mb-4 text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              실제 수리 과정을 확인하세요
-            </h2>
-            <p className="mb-7 text-sm leading-[1.85] text-neutral-600">
-              상부장을 내리고 보강해 다시 설치하는 현장 영상입니다. 작업 방법은
-              각 현장의 상태에 따라 달라집니다.
-            </p>
-            <YouTubeFacade videoId="tDAtB2ClG08" />
-          </FadeIn>
-        </div>
-      </section>
+        {/* 7. 영상 */}
+        <section data-service-section="video" className={s.section}>
+          <div className={`${s.wrap} ${s.split}`}>
+            <div className={s.stickyCol}>
+              <TitleCard kicker="현장 영상" title="On Site" />
+            </div>
+            <div className={s.glass}>
+              <RiseLines className={s.title} lines={["실제 수리 과정을 확인하세요"]} />
+              <p className={s.body}>
+                상부장을 내리고 보강해 다시 설치하는 현장 영상입니다. 작업 방법은 각 현장의 상태에 따라 달라집니다.
+              </p>
+              <YouTubeFacade videoId="tDAtB2ClG08" title="리스토리 상부장 수리 시공 영상" label="상부장 실제 시공 영상 재생" />
+            </div>
+          </div>
+        </section>
 
-      <section data-service-section="faq"
-        id="upper-faq"
-        className="scroll-mt-24 bg-[#f8f9fb] px-5 py-14 md:py-20"
-      >
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mb-8 text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-            상담 전에 궁금한 점
-          </h2>
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((item, i) => (
-              <div
-                key={item.q}
-                className="overflow-hidden rounded-2xl border border-neutral-200 bg-white"
-              >
-                <h3>
-                  <button
-                    type="button"
-                    id={`upper-faq-button-${i}`}
-                    aria-expanded={openFaq === i}
-                    aria-controls={`upper-faq-answer-${i}`}
-                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="flex min-h-16 w-full items-center justify-between gap-4 px-5 py-5 text-left text-sm font-bold leading-[1.7] text-neutral-900"
-                  >
-                    <span>{item.q}</span>
-                    <span
-                      className="shrink-0 text-lg text-[#1a5cff]"
-                      aria-hidden="true"
-                    >
-                      {openFaq === i ? "−" : "+"}
-                    </span>
-                  </button>
-                </h3>
-                <div
-                  id={`upper-faq-answer-${i}`}
-                  role="region"
-                  aria-labelledby={`upper-faq-button-${i}`}
-                  hidden={openFaq !== i}
-                >
-                  <p className="whitespace-pre-line border-t border-neutral-100 px-5 py-5 text-[13px] leading-[1.85] text-neutral-600">
-                    {item.a}
-                  </p>
-                </div>
+        {/* 8. FAQ */}
+        <section data-service-section="faq" id="upper-faq" className={s.section}>
+          <div className={`${s.wrap} ${s.split}`}>
+            <div className={s.stickyCol}>
+              <TitleCard kicker="자주 묻는 질문" title="FAQ" as="p" />
+            </div>
+            <div>
+              <h2 className={`${s.title} ${s.faqHeading}`}>상담 전에 궁금한 점</h2>
+              <FaqList items={FAQ_ITEMS} idPrefix="upper-faq" />
+              <div className={`${s.glass} ${s.afterCard}`}>
+                <h3 className={s.rowTitle}>함께 불편한 싱크대 문제도 알려주세요</h3>
+                <p className={s.body}>
+                  하부장 밑판 물먹음, 문짝·경첩, 서랍 레일 문제도 사진을 미리 보내주세요. 같은 날 확인 가능한 범위와 별도 작업이 필요한 범위를 나눠 안내드립니다.
+                </p>
               </div>
-            ))}
+            </div>
           </div>
-          <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-5">
-            <h3 className="mb-2 text-sm font-black">
-              함께 불편한 싱크대 문제도 알려주세요
-            </h3>
-            <p className="text-[13px] leading-[1.85] text-neutral-600">
-              하부장 밑판 물먹음, 문짝·경첩, 서랍 레일 문제도 사진을 미리
-              보내주세요. 같은 날 확인 가능한 범위와 별도 작업이 필요한 범위를
-              나눠 안내드립니다.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </Scrub>
 
-      <section data-service-section="contact" className="bg-[#0a1628] px-5 py-14 text-white md:py-20">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn>
-            <p className="mb-3 text-xs font-bold tracking-widest text-blue-300">
+      {/* 9. CONTACT — 캐릭터 #3 (마무리) */}
+      <Scrub as="section" data-service-section="contact" className={s.contact}>
+        <Star className={s.contactStar} />
+        <div className={s.contactMascot}>
+          <Image src="/images/premium/mascot-wave.png" alt="공구함을 들고 손을 흔드는 리스토리 기사 캐릭터" width={880} height={1168} sizes="(min-width: 900px) 360px, 150px" />
+        </div>
+        <div className={s.wrap} style={{ position: "relative" }}>
+          <Link href={REQUEST_URL} className={s.contactBig} aria-label={PHOTO_CTA} data-cta="upper_request_contact_title">
+            <RollText text="CONTACT" />
+          </Link>
+          <div className={s.split}>
+            <p className={s.labelSmall} style={{ color: "rgba(255,255,255,0.7)" }}>
               {region ? `${region} 상부장 수리 상담` : "상부장 수리 상담"}
             </p>
-            <h2 className="text-[28px] font-black leading-[1.3] tracking-tight md:text-4xl">
-              교체를 결정하기 전에,
-              <br />
-              살릴 수 있는 상태인지 확인하세요.
-            </h2>
-            <p className="mb-7 mt-5 text-sm leading-[1.85] text-white/70">
-              전체 사진과 작업 지역부터 보내주세요.
-              <br />
-              수리 범위를 먼저 살피고, 금액과 방문일을 상담해 확정합니다.
-            </p>
-            <ContactButtons dark />
-          </FadeIn>
+            <div>
+              <h2 className={s.contactTitle}>
+                교체를 결정하기 전에,
+                <br />
+                살릴 수 있는 상태인지 확인하세요.
+              </h2>
+              <p className={s.contactSub}>
+                전체 사진과 작업 지역부터 보내주세요. 수리 범위를 먼저 살피고, 금액과 방문일을 상담해 확정합니다.
+              </p>
+              <ContactButtons onBlue cta="upper_request_contact" />
+              <div className={s.chips}>
+                {["고정 보강", "현장 작업 약 2시간", "3년 무상 A/S", "수리 불가 시 비용 없음"].map((b) => (
+                  <span key={b}>{b}</span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      </Scrub>
+
       <LandingIntake field="repair" service="upper" />
-      <FloatingCTA compactMobile avoidOverlapSelector="[data-upper-contact]" label="사진으로 수리 범위·비용 확인" />
+      <FloatingCTA compactMobile avoidOverlapSelector="[data-upper-contact]" label={PHOTO_CTA} kakaoUrl={REQUEST_URL} newTab={false} />
     </main>
   );
 }

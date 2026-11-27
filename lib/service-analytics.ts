@@ -12,7 +12,8 @@ export const SECTION_IDS = [
   "video", "contact", "services", "problems",
 ] as const;
 export type SectionId = typeof SECTION_IDS[number];
-export type ContactChannel = "kakao" | "phone";
+// request = 자체 사진 접수 양식(/request)으로 가는 클릭
+export type ContactChannel = "kakao" | "phone" | "request";
 export type CtaLocation = "fixed" | "body" | "header" | "footer";
 export type ServiceEvent = "service_landing_view" | "service_section_view" | "service_section_progress" | "service_contact_click";
 export type ServiceProperties = Record<string, string | number>;
@@ -48,6 +49,7 @@ export function contactChannel(href: string, origin: string): ContactChannel | n
     const url = new URL(href, origin);
     if (url.protocol === "tel:") return "phone";
     if (!/^https?:$/.test(url.protocol)) return null;
+    if (url.origin === origin && /^\/request\/?$/.test(url.pathname)) return "request";
     if (url.origin === origin && /^\/go\/(kakao|phone)\/?$/.test(url.pathname)) {
       return url.pathname.includes("kakao") ? "kakao" : "phone";
     }

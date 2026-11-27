@@ -80,6 +80,11 @@ export default function AttributionTracker() {
       if (href.startsWith("/go/phone") || href.startsWith("tel:")) {
         track("contact_click", eventData("phone", cta));
       }
+
+      // 자체 사진 접수 양식으로 가는 클릭도 상담 시작으로 집계
+      if (link && link.origin === window.location.origin && /^\/request\/?$/.test(link.pathname)) {
+        track("contact_click", eventData("request", cta));
+      }
     };
 
     document.addEventListener("click", onClick, true);
