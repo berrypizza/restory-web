@@ -464,12 +464,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                 <p className={s.note}>
                   사진과 화면 색상은 실제 샘플과 다를 수 있어 출장 방문 시 실물을 보고 선택하실 수 있습니다. 색상은 방문 실측 때 실물로 확인합니다. 먼저 사진 2장과 지역·교체 범위를 보내 예상 견적을 확인하세요.
                 </p>
-                <div className={s.btnRow} data-sink-door-contact>
-                  <Link href={REQUEST_URL} className={s.btnPrimary} data-cta="sink_door_request_colors">
-                    <CameraIcon />
-                    {PHOTO_CTA}
-                  </Link>
-                </div>
               </div>
             </div>
           </section>
