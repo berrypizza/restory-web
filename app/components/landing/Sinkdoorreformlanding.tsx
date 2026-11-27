@@ -405,7 +405,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                   width={1168}
                   height={880}
                   className={s.mascotDiagnose}
-                  bubble="그대로 쓸 수 있는 곳부터 볼게요"
+                  bubble="오래오래 좋은 컨디션으로 쓸 수 있을까?"
                 />
               </div>
                 <div className={s.glass}>
