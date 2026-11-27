@@ -421,48 +421,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
             </div>
           </section>
 
-          {/* 4. 일정 */}
-          <section data-service-section="timeline" id="sink-door-timeline" className={s.section}>
-            <div className={s.wrap}>
-              <h2 className={`${s.kicker} ${s.kickerLg}`}>제작 기간과 설치 시간</h2>
-              {/* 실측부터 설치까지 공정 사진 (접지 않고 바로 보여줌) */}
-              <div className={`${s.glass} ${s.afterCard}`}>
-                <div className={s.photoSteps}>
-                  {PROCESS_PHOTOS.map((item) => (
-                    <div key={item.step} className={s.photoStep}>
-                      <div className={s.photoStepHead}>
-                        <span className={s.rowNum}>{item.step}</span>
-                        <span className={s.tag}>{item.badge}</span>
-                      </div>
-                      <h3 className={s.rowTitle}>{item.title}</h3>
-                      <div className={s.photoStepImg} style={{ aspectRatio: item.imageRatio }}>
-                        <Image src={item.image} alt={item.imageAlt} fill unoptimized sizes="(min-width: 768px) 520px, 100vw" className="object-cover" />
-                      </div>
-                      <p className={s.rowDesc}>{item.desc}</p>
-                      <p className={s.note}>{item.note}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* 풀블리드 이미지 밴드 */}
-          {bandCase && (
-            <Scrub className={s.band}>
-              <div className={s.bandFrame}>
-                <Image src={bandCase.afterImg} alt="" fill className="object-cover" sizes="100vw" />
-              </div>
-              <div className={`${s.wrap} ${s.bandText}`}>
-                <p className={s.bandTitle}>RENEW</p>
-                <Link href={`/cases?cat=${encodeURIComponent("싱크대 리폼")}`} className={`${s.arrowLink} ${s.bandLink}`}>
-                  <RollText text="ALL CASES" />
-                  <Arrow />
-                </Link>
-              </div>
-            </Scrub>
-          )}
-
           {/* 5. 색상 */}
           <section data-service-section="colors" id="sink-door-colors" className={s.section}>
             <div className={`${s.wrap} ${s.split}`}>
@@ -515,6 +473,49 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
               </div>
             </div>
           </section>
+
+          {/* 4. 일정 */}
+          <section data-service-section="timeline" id="sink-door-timeline" className={s.section}>
+            <div className={s.wrap}>
+              <h2 className={`${s.kicker} ${s.kickerLg}`}>제작 기간과 설치 시간</h2>
+              {/* 실측부터 설치까지 공정 사진 (접지 않고 바로 보여줌) */}
+              <div className={`${s.glass} ${s.afterCard}`}>
+                <div className={s.photoSteps}>
+                  {PROCESS_PHOTOS.map((item) => (
+                    <div key={item.step} className={s.photoStep}>
+                      <div className={s.photoStepHead}>
+                        <span className={s.rowNum}>{item.step}</span>
+                        <span className={s.tag}>{item.badge}</span>
+                      </div>
+                      <h3 className={s.rowTitle}>{item.title}</h3>
+                      <div className={s.photoStepImg} style={{ aspectRatio: item.imageRatio }}>
+                        <Image src={item.image} alt={item.imageAlt} fill unoptimized sizes="(min-width: 768px) 520px, 100vw" className="object-cover" />
+                      </div>
+                      <p className={s.rowDesc}>{item.desc}</p>
+                      <p className={s.note}>{item.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 풀블리드 이미지 밴드 */}
+          {bandCase && (
+            <Scrub className={s.band}>
+              <div className={s.bandFrame}>
+                <Image src={bandCase.afterImg} alt="" fill className="object-cover" sizes="100vw" />
+              </div>
+              <div className={`${s.wrap} ${s.bandText}`}>
+                <p className={s.bandTitle}>RENEW</p>
+                <Link href={`/cases?cat=${encodeURIComponent("싱크대 리폼")}`} className={`${s.arrowLink} ${s.bandLink}`}>
+                  <RollText text="ALL CASES" />
+                  <Arrow />
+                </Link>
+              </div>
+            </Scrub>
+          )}
+
 
           {/* 6. 자재 — 글리치 다이어그램 (문짝·엣지·경첩이 함께 맞아야 새 주방) */}
           <section data-service-section="materials" id="sink-door-materials" className={s.section}>
