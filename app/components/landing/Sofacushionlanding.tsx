@@ -10,7 +10,6 @@ import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
 import {
-  SmoothScroll,
   Scrub,
   InView,
   InkText,
@@ -169,8 +168,7 @@ function CaseStrip({ region }: { region?: string }) {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className={s.stripTrack}
-        data-lenis-prevent-horizontal>
+        className={s.stripTrack}>
         {CASE_ITEMS.map((item) => (
           <Link
             key={item.id}
@@ -248,7 +246,6 @@ export default function SofaCushionLanding({ keyword }: Props) {
       data-service-id="sofa-sag"
       data-service-keyword={keyword}
       className={`${s.page} ${display.variable}`}>
-      <SmoothScroll />
       <ServiceJsonLd
         name={
           region

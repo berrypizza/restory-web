@@ -9,7 +9,7 @@ import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
-import { SmoothScroll, Scrub, InView, RiseLines, RollText } from "./premium/Motion";
+import { Scrub, InView, RiseLines, RollText } from "./premium/Motion";
 import {
   Arrow,
   CameraIcon,
@@ -188,7 +188,6 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
 
   return (
     <main data-service-id="sangbujang" data-service-keyword={keyword} className={`${s.page} ${display.variable}`}>
-      <SmoothScroll />
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상부장 수리` : "싱크대 상부장 수리"}
         description="처진 상부장의 고정 상태를 확인하고 보강·재설치합니다. 상태별 비용 예시: 일반 처짐 25만 원, 심한 처짐·손상 30만 원, 추락 수리 35만 원. 모두 부가세 별도이며 상태와 파손 범위에 따라 달라질 수 있습니다. 상담에서 최종 금액을 확정하며 이후 금액 변경과 수리 불가 시 비용은 없습니다."

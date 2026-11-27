@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import Lenis from "lenis";
-import "lenis/dist/lenis.css";
 import s from "./premium.module.css";
 
 /* ─────────────────────────────────────────
@@ -13,31 +11,6 @@ function prefersReducedMotion() {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
-}
-
-/* ─────────────────────────────────────────
-   SmoothScroll — Lenis 관성 스크롤 (이 페이지에서만)
-───────────────────────────────────────── */
-export function SmoothScroll() {
-  useEffect(() => {
-    // 터치 기기에선 Lenis가 부드럽게 해주는 게 없고 매 프레임 비용만 듦
-    if (prefersReducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
-    const html = document.documentElement;
-    const prevBehavior = html.style.scrollBehavior;
-    // 전역 scroll-behavior: smooth 와 겹치면 프레임마다 튀므로 잠시 해제
-    html.style.scrollBehavior = "auto";
-    const lenis = new Lenis({
-      lerp: 0.14,
-      wheelMultiplier: 1,
-      autoRaf: true,
-      anchors: { offset: -72 },
-    });
-    return () => {
-      lenis.destroy();
-      html.style.scrollBehavior = prevBehavior;
-    };
-  }, []);
-  return null;
 }
 
 /* ─────────────────────────────────────────

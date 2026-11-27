@@ -9,7 +9,7 @@ import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
-import { SmoothScroll, Scrub, InView, RiseLines, RollText } from "./premium/Motion";
+import { Scrub, InView, RiseLines, RollText } from "./premium/Motion";
 import {
   Arrow,
   CameraIcon,
@@ -144,7 +144,6 @@ export default function HabujangLanding({ keyword }: { keyword?: string }) {
 
   return (
     <main data-service-id="habujang" data-service-keyword={keyword} className={`${s.page} ${display.variable}`}>
-      <SmoothScroll />
       <ServiceJsonLd
         name={region ? `${region} 싱크대 하부장 밑판 교체` : "싱크대 하부장 밑판 교체"}
         description="기존 장의 상태를 확인해 손상된 하부장 밑판을 교체합니다. 비용은 현장별 상담 견적으로 안내하며, 사진으로 교체 가능 범위·견적·방문 일정을 확인합니다."

@@ -9,7 +9,7 @@ import { sanitizePublicCaseText } from "@/lib/public-case-text";
 import FloatingCTA from "@/app/components/landing/shared/FloatingCTA";
 import Image from "next/image";
 import { Arrow, CameraIcon } from "@/app/components/landing/premium/Blocks";
-import { RiseLines, RollText, Scrub, SmoothScroll } from "@/app/components/landing/premium/Motion";
+import { RiseLines, RollText, Scrub } from "@/app/components/landing/premium/Motion";
 import { display } from "@/app/components/landing/premium/fonts";
 import p from "@/app/components/landing/premium/premium.module.css";
 import CasesContact from "../CasesContact";
@@ -68,7 +68,6 @@ export default async function CaseDetailPage({ params }: Props) {
   const requestHref = intakeService ? "/request?service=" + intakeService : "/request";
   return (
     <main className={`${p.page} ${s.page} ${display.variable}`} data-service-id="cases" data-service-keyword={item.id}>
-      <SmoothScroll />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
       {/* HERO — 이 현장의 작업 후 사진 위 안개 · 빛 구체 · 텍스처 제목 */}

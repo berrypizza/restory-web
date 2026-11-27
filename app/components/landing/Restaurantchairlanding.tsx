@@ -10,7 +10,7 @@ import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
-import { SmoothScroll, Scrub, InView, RiseLines, RollText } from "./premium/Motion";
+import { Scrub, InView, RiseLines, RollText } from "./premium/Motion";
 import {
   Arrow,
   CameraIcon,
@@ -120,7 +120,7 @@ function CaseStrip({ region }: { region?: string }) {
           <Arrow />
         </Link>
       </div>
-      <div ref={scrollRef} onScroll={handleScroll} className={s.stripTrack} data-lenis-prevent-horizontal>
+      <div ref={scrollRef} onScroll={handleScroll} className={s.stripTrack}>
         {CASE_ITEMS.map((item) => (
           <Link key={item.id} href={`/cases/${item.id}`} draggable={false} className={`${s.stripCard} ${s.work}`}>
             <div className={s.workImg}>
@@ -203,7 +203,6 @@ export default function RestaurantChairLanding({ keyword }: Props) {
       data-service-id={isSofa ? "restaurant-sofa" : "restaurant-chair"}
       data-service-keyword={keyword}
       className={`${s.page} ${display.variable}`}>
-      <SmoothScroll />
       <ServiceJsonLd
         name={region ? (isSofa ? `${region} 붙박이 ${sofaWord} 천갈이` : `${region} ${bizType} 의자 가죽 교체`) : "식당·카페 의자 가죽 교체"}
         description="식당·카페 의자 가죽 교체 전문. 새 의자 대비 1/3~1/5 비용. 영업 외 시간 방문 시공, 무상 A/S."

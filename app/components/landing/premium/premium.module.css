@@ -239,6 +239,9 @@
    HERO — 밝은 배경 · 반투명 소파 사진 · 흐린 빛 구체 · 그라데이션 대형 타이포
    (careers.resilire.jp 첫 화면 무드, 리스토리 블루 팔레트)
 ───────────────────────────────────────── */
+/* 네이티브 스크롤: 앵커 이동 시 떠 있는 내비 높이만큼 띄움 (Lenis anchors offset 대체) */
+:global(html):has(.hero) { scroll-padding-top: 72px; }
+
 .hero {
   position: relative;
   overflow: hidden;

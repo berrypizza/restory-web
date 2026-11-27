@@ -9,7 +9,7 @@ import { ServiceJsonLd, FAQJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
-import { SmoothScroll, Scrub, InView, RiseLines, RollText } from "./premium/Motion";
+import { Scrub, InView, RiseLines, RollText } from "./premium/Motion";
 import {
   Arrow,
   CameraIcon,
@@ -142,7 +142,6 @@ export default function CountertopCrackLanding({ keyword }: { keyword?: string }
 
   return (
     <main data-service-id="sink-top-crack" data-service-keyword={keyword} className={`${s.page} ${display.variable}`}>
-      <SmoothScroll />
       <ServiceJsonLd
         name={region ? `${region} 싱크대 상판 크랙 수리` : "싱크대 상판 크랙 수리"}
         description="보수 가능한 상판의 크랙을 정리하고 마감합니다. 비용 범위는 30~50만 원이며 부가세 별도입니다. 최종 금액은 상태를 보고 상담 후 안내합니다. 예상 마감과 방문 일정, 시공 부위 3년 무상 A/S 적용 조건도 확인하세요."

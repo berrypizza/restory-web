@@ -9,7 +9,7 @@ import { FAQJsonLd, ServiceJsonLd } from "@/app/components/JsonLd";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { cases } from "@/lib/case-data";
 import { REGIONS } from "@/lib/seo-regions";
-import { SmoothScroll, Scrub, InView, InkText, RiseLines, RollText } from "./premium/Motion";
+import { Scrub, InView, InkText, RiseLines, RollText } from "./premium/Motion";
 import {
   Arrow,
   CameraIcon,
@@ -247,7 +247,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
 
   return (
     <main data-service-id="sink-door" data-service-keyword={keyword} className={`${s.page} ${display.variable}`}>
-      <SmoothScroll />
       <ServiceJsonLd
         name={region ? `${region} 싱크대 문짝 교체·리폼` : "싱크대 문짝 교체·리폼"}
         description="싱크대 문짝만 교체해도 새 주방처럼. 전체 교체 비용의 1/5~. 당일 시공, 3년 무상 A/S, 경첩 무료 교체."

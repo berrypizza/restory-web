@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { cases, PARENT_CATEGORIES, SUB_CATEGORIES } from "@/lib/case-data";
 import { buildTrackedContactPath } from "@/lib/attribution";
 import { PhotoCtaCard } from "@/app/components/landing/premium/Blocks";
-import { RiseLines, Scrub, SmoothScroll } from "@/app/components/landing/premium/Motion";
+import { RiseLines, Scrub } from "@/app/components/landing/premium/Motion";
 import { display } from "@/app/components/landing/premium/fonts";
 import p from "@/app/components/landing/premium/premium.module.css";
 import { browseCases, listHref, listQuery, pageSize, type CaseFilters, type CaseParams } from "./case-browser";
@@ -58,7 +58,6 @@ export default async function CasesPage({ searchParams }: { searchParams: Promis
   };
   return (
     <main className={`${p.page} ${s.page} ${display.variable}`} data-service-id="cases">
-      <SmoothScroll />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <CaseNavigation>
         {/* HERO — 실제 현장 사진 위 안개 · 흐린 빛 구체 · 텍스처 제목 */}
