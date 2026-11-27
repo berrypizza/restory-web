@@ -2434,7 +2434,7 @@ button:hover .rollChar {
   height: var(--crew-h);
   overflow: hidden;
   pointer-events: none;
-  --run-dur: 11s;
+  --run-dur: 5.5s;
 }
 
 .runTrack {
@@ -2442,48 +2442,25 @@ button:hover .rollChar {
   left: 0;
   bottom: 0;
   height: 100%;
-  display: flex;
-  align-items: flex-end;
   translate: -100% 0;
   animation: crewRun var(--run-dur) linear infinite paused;
   will-change: translate;
 }
 
-.runCrew[data-run="on"] .runTrack,
-.runCrew[data-run="on"] .runner {
+.runCrew[data-run="on"] .runTrack {
   animation-play-state: running;
 }
 
-/* 키·간격·바운스 박자를 조금씩 달리해서 줄 맞춘 느낌이 안 나게 */
-.runner {
-  position: relative;
-  flex: none;
-  height: 100%;
-  width: auto;
-  margin-right: calc(var(--crew-h) * -0.04);
-  animation: runnerStep 0.44s ease-in-out infinite alternate paused;
-}
-
-.runner img {
+.runTrack picture,
+.runTrack img {
   height: 100%;
   width: auto;
   display: block;
 }
 
-.runner:nth-child(1) { height: 96%; animation-delay: -0.1s; }
-.runner:nth-child(2) { height: 88%; margin-right: calc(var(--crew-h) * -0.1); animation-delay: -0.3s; animation-duration: 0.4s; }
-.runner:nth-child(3) { height: 100%; margin-right: calc(var(--crew-h) * 0.04); animation-delay: -0.05s; animation-duration: 0.5s; }
-.runner:nth-child(4) { height: 93%; margin-right: calc(var(--crew-h) * -0.08); animation-delay: -0.25s; animation-duration: 0.38s; }
-.runner:nth-child(5) { height: 89%; margin-right: 0; animation-delay: -0.15s; }
-
 @keyframes crewRun {
   from { translate: -100% 0; }
   to { translate: 100vw 0; }
-}
-
-@keyframes runnerStep {
-  from { translate: 0 0; }
-  to { translate: 0 -7px; }
 }
 
 /* 모바일: 버튼·칩 아래로 뛰어갈 자리 확보 */
@@ -2501,7 +2478,7 @@ button:hover .rollChar {
   .runCrew {
     bottom: 20px;
     --crew-h: 280px;
-    --run-dur: 15s;
+    --run-dur: 9s;
   }
 }
 
@@ -3321,8 +3298,5 @@ button:hover .rollChar {
     animation: none;
     left: 50%;
     translate: -50% 0;
-  }
-  .runner {
-    animation: none;
   }
 }

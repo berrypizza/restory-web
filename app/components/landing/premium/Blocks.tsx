@@ -255,16 +255,9 @@ export function FaqList({ items, idPrefix }: { items: { q: string; a: string }[]
 
 /* ─────────────────────────────────────────
    RunCrew — CONTACT 밴드 아래로 기사 다섯 명이 뛰어 지나감
-   밴드가 화면에 있을 때만 data-run="on" 으로 애니메이션을 돌림
+   제자리 뛰기 영상에서 한 걸음(10프레임, 12fps)을 뽑은 움직이는 webp를
+   CSS로 왼쪽→오른쪽으로 옮김. 밴드가 화면에 있을 때만 data-run="on"
 ───────────────────────────────────────── */
-const RUNNERS = [
-  { src: "/images/premium/run/run-1.webp", w: 379 },
-  { src: "/images/premium/run/run-2.webp", w: 365 },
-  { src: "/images/premium/run/run-3.webp", w: 371 },
-  { src: "/images/premium/run/run-4.webp", w: 410 },
-  { src: "/images/premium/run/run-5.webp", w: 367 },
-];
-
 export function RunCrew() {
   const ref = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
@@ -279,11 +272,23 @@ export function RunCrew() {
   return (
     <div ref={ref} className={s.runCrew} aria-hidden="true">
       <div className={s.runTrack}>
-        {RUNNERS.map((r) => (
-          <span key={r.src} className={s.runner}>
-            <Image src={r.src} alt="" width={r.w} height={520} sizes="(min-width: 900px) 190px, 104px" unoptimized />
-          </span>
-        ))}
+        <picture>
+          {/* 모션 줄이기: 멈춘 한 장 */}
+          <source
+            media="(prefers-reduced-motion: reduce)"
+            srcSet="/images/premium/run/run-crew-still.webp"
+          />
+          <img
+            src="/images/premium/run/run-crew.webp"
+            srcSet="/images/premium/run/run-crew-sm.webp 752w, /images/premium/run/run-crew.webp 1236w"
+            sizes="(min-width: 900px) 752px, 376px"
+            width={1236}
+            height={460}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
       </div>
     </div>
   );
