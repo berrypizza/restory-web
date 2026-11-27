@@ -299,9 +299,6 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
               />
             </div>
           )}
-          <p className={`${s.heroEn} ${s.heroFade}`} style={{ animationDelay: "0.25s" }}>
-            New doors, same kitchen — a whole new mood.
-          </p>
 
           <div className={`${s.heroGlass} ${s.heroFade}`} style={{ animationDelay: "0.35s" }} data-sink-door-contact>
             <div className={s.btnRow}>
