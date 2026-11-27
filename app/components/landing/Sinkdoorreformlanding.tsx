@@ -572,7 +572,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
             <div className={s.wrap}>
               <div className={s.split}>
                 <div className={s.stickyCol}>
-                  <TitleCard kicker="필름과 문짝 교체의 차이" title="Why Zero Joint" />
+                  <h2 className={`${s.kicker} ${s.kickerLg}`}>리스토리만의 강점 !</h2>
                 </div>
                 <div className={s.glass}>
                   {/* 사진 세 장 콜라주 (ntt-west 신입채용 무드): 물에 불은 문짝 · 제로조인트 엣지 · 댐핑 경첩
