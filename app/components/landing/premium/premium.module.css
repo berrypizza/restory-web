@@ -3202,6 +3202,57 @@ button:hover .rollChar {
 }
 
 /* ─────────────────────────────────────────
+   목록·상세 페이지용 짧은 히어로 (작업 사례 등)
+───────────────────────────────────────── */
+.heroCompact .heroInner {
+  min-height: 0;
+  padding-top: 32px;
+  padding-bottom: 88px;
+}
+
+@media (min-width: 900px) {
+  .heroCompact .heroInner {
+    padding-top: 48px;
+    padding-bottom: 120px;
+  }
+}
+
+.heroCompact .heroTitle {
+  font-size: clamp(40px, min(6.4vw, 9vh), 88px);
+}
+
+.heroCompact .heroGhost {
+  font-size: clamp(90px, 13vw, 210px);
+}
+
+.heroTitleSm.heroTitleSm {
+  font-size: clamp(30px, 4.4vw, 56px);
+  line-height: 1.22;
+  letter-spacing: -0.04em;
+}
+
+.heroCrumb {
+  margin-bottom: 20px;
+}
+
+.heroSplit {
+  display: grid;
+  gap: var(--gap);
+  align-items: end;
+}
+
+@media (min-width: 900px) {
+  .heroSplit {
+    grid-template-columns: 6fr 5fr;
+    gap: 40px;
+  }
+}
+
+.heroSplit .heroGlass {
+  max-width: none;
+}
+
+/* ─────────────────────────────────────────
    PHONES / TOUCH — same look, far less GPU work.
    Animated blurred orbs + a blended full-screen noise layer + a repainting
    text texture + a fading backdrop-blur card made the first ~0.5s stutter on phones.

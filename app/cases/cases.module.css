@@ -1,11 +1,6 @@
 .page {
-  --ink: #192d3e;
   --muted: #536575;
-  --line: #dce3e9;
-  --blue: #205cce;
   display: flow-root;
-  background: #fff;
-  color: var(--ink);
   word-break: keep-all;
   overflow-wrap: anywhere;
   line-height: 1.55;
@@ -266,4 +261,71 @@
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { transition: none !important; scroll-behavior: auto !important; }
   :global(html):has(.page) { scroll-behavior: auto; }
+}
+
+/* ─────────────────────────────────────────
+   프리미엄 스킬 적용 (히어로 · 유리 카드 · 칩)
+───────────────────────────────────────── */
+.feature {
+  display: block;
+  min-height: 340px;
+  overflow: hidden;
+  border: 1px solid #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px -24px rgba(20, 50, 120, 0.35);
+}
+.search {
+  max-width: none;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  padding-left: 18px;
+}
+.search button { border-radius: 999px; padding: 0 22px; }
+.search button:hover, .contactLinks a:first-child:hover { background: #1f55d6; }
+
+.finder { margin-top: 0; padding: calc(var(--section) * 0.75) 0 0; border-bottom: 0; }
+.categories a, .relatedSwitch button { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(20, 20, 20, 0.08); }
+.categories a:hover, .relatedSwitch button:hover { background: #fff; }
+.categories a[aria-current], .relatedSwitch button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+.subcategories a[aria-current], .activeFilters a { background: var(--blue-soft); color: #1f55d6; }
+
+.results { padding-block: var(--gap) var(--section); }
+.resultsHead { margin: 24px 0 16px; padding-inline: 4px; }
+.grid { gap: var(--gap); }
+.card.card { padding: 8px; }
+.cardLink { border-radius: calc(var(--radius) - 8px); }
+.cover { border-radius: calc(var(--radius) - 8px); }
+.cardBody { padding: 14px 10px 10px; }
+.cardMeta span:first-child { color: var(--blue); }
+.pages a[aria-current] { background: var(--blue); }
+.pages a:hover { background: rgba(255, 255, 255, 0.8); }
+
+.detailMeta { margin-top: 16px; color: rgba(20, 20, 20, 0.6); }
+.detailBody { padding-block: calc(var(--section) * 0.75) var(--section); }
+.readingGrid { gap: var(--gap) 24px; }
+.photosCard.photosCard { grid-column: 1; grid-row: 1; padding: 8px; min-width: 0; }
+.photo { border-radius: calc(var(--radius) - 8px); }
+.photoLabel[data-phase="after"] { background: var(--blue); }
+.storyColumn { padding: var(--pad); }
+.review { border-top-color: rgba(20, 20, 20, 0.08); }
+.review blockquote { border-inline-start-color: var(--blue); background: rgba(255, 255, 255, 0.7); border-radius: 0 12px 12px 0; }
+.tags a { background: rgba(255, 255, 255, 0.7); }
+.consult { top: 88px; padding: var(--pad); }
+.consultMascot { width: 96px; margin: -8px 0 8px; }
+.consultMascot img { width: 100%; height: auto; }
+.contactLinks a:first-child { background: var(--blue); border-radius: 999px; }
+.related { margin: var(--section) 0 0; padding-top: 0; border-top: 0; }
+.relatedHead { padding-inline: 4px; }
+
+@media (max-width: 920px) {
+  .photosCard.photosCard { grid-row: auto; }
+}
+@media (max-width: 740px) {
+  .feature { min-height: 0; height: clamp(180px, 48vw, 260px); }
+  .detailBody { padding-top: 24px; }
+}
+@media (max-width: 600px) {
+  .card.card { padding: 6px; }
+  .related .card.card { padding: 8px; }
 }

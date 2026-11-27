@@ -18,7 +18,7 @@ export function CaseNavigation({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const navigate = (href: string) => startTransition(() => router.push(href));
-  return <Navigation.Provider value={{ pending, navigate }}><div className={s.shell}>{children}</div></Navigation.Provider>;
+  return <Navigation.Provider value={{ pending, navigate }}>{children}</Navigation.Provider>;
 }
 
 export function BrowseLink({ href, ...props }: Omit<ComponentProps<typeof Link>, "href" | "onNavigate"> & { href: string }) {
