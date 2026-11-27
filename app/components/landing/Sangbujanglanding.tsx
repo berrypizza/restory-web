@@ -225,8 +225,8 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
           {/* 실제 수리 전후 (부천 작동 상부장 추락, case-002) — 막대를 좌우로 끌어 비교 */}
           <div className={`${s.heroBa} ${s.heroFade}`} style={{ animationDelay: "0.2s" }}>
             <BeforeAfterSlider
-              before="/images/cases/case-002-ba-before.jpg"
-              after="/images/cases/case-002-ba-after.jpg"
+              before="/images/cases/case-002-fall-before.jpg"
+              after="/images/cases/case-002-fall-after.jpg"
               beforeAlt="부천 작동 상부장이 떨어진 주방"
               afterAlt="부천 작동 상부장을 다시 설치한 주방"
             />
