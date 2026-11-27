@@ -363,12 +363,26 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
                     <BeforeAfterSlider key={c.before} before={c.before} after={c.after} beforeAlt={c.beforeAlt} afterAlt={c.afterAlt} />
                   ))}
                 </div>
-                <details className={`${s.glass} ${s.moreDetails}`}>
-                  <summary>실제 시공 영상 더 보기</summary>
-                  <div className={s.moreBody}>
-                    <YouTubeFacade videoId={REAL_VIDEO_ID} title="리스토리 싱크대 문짝 리폼 시공 영상" label="싱크대 문짝 리폼 시공 영상 재생" />
-                  </div>
-                </details>
+                <section id="sink-door-case-video" aria-labelledby="sink-door-case-video-title" className={s.caseVideo}>
+                  <header>
+                    <h3 id="sink-door-case-video-title">실제 시공 영상</h3>
+                    <a href={`https://www.youtube.com/watch?v=${REAL_VIDEO_ID}`} target="_blank" rel="noopener noreferrer">
+                      유튜브에서 보기 <span aria-hidden="true">↗</span>
+                    </a>
+                  </header>
+                  {activeTab === "detail" && (
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${REAL_VIDEO_ID}?playsinline=1`}
+                      title="리스토리 스튜디오 싱크대 문짝 교체 시공 영상"
+                      width="960"
+                      height="540"
+                      loading="lazy"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allow="autoplay; encrypted-media; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  )}
+                </section>
               </div>
             </section>
           )}

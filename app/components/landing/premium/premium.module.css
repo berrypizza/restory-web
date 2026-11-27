@@ -3584,6 +3584,49 @@ button:hover .rollChar {
   margin-top: 24px;
 }
 
+.caseVideo {
+  margin-top: clamp(24px, 4vw, 48px);
+}
+
+.caseVideo header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 12px;
+  margin-bottom: 8px;
+}
+
+.caseVideo h3 {
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.caseVideo a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.caseVideo iframe {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--radius);
+  background: #141414;
+}
+
 @media (min-width: 700px) {
   .baPair {
     gap: 16px;
