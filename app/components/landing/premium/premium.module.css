@@ -2640,6 +2640,21 @@ button:hover .rollChar {
   }
 }
 
+/* 분야 카드 4열 (홈) — 모바일 2열, 사진은 4:3으로 낮게 */
+.works4 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.works4 .workImg {
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 900px) {
+  .works4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 /* 전후 사진 한 쌍 */
 .pairImg {
   display: grid;
