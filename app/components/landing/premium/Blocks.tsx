@@ -293,3 +293,107 @@ export function RunCrew() {
     </div>
   );
 }
+
+/* ─────────────────────────────────────────
+   BeforeAfterSlider — 가운데 막대를 좌우로 끌어 전후 비교
+   화면에 들어오면 막대가 좌우로 한 번씩 훑으며 비교를 보여주고,
+   손대는 순간 자동 움직임은 멈춤 (모션 줄이기면 처음부터 멈춤)
+───────────────────────────────────────── */
+export function BeforeAfterSlider({
+  before,
+  after,
+  beforeAlt,
+  afterAlt,
+}: {
+  before: string;
+  after: string;
+  beforeAlt: string;
+  afterAlt: string;
+}) {
+  const boxRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = React.useRef<HTMLDivElement>(null);
+  const touched = React.useRef(false);
+  const dragging = React.useRef(false);
+
+  const setPos = React.useCallback((pct: number) => {
+    const v = Math.max(0, Math.min(100, pct));
+    boxRef.current?.style.setProperty("--pos", `${v}%`);
+    handleRef.current?.setAttribute("aria-valuenow", String(Math.round(v)));
+  }, []);
+
+  React.useEffect(() => {
+    const box = boxRef.current;
+    if (!box || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let start = 0;
+    let visible = false;
+    const tick = (t: number) => {
+      if (touched.current || !visible) return;
+      if (!start) start = t;
+      // 50 → 85 → 15 → 50 을 3.6초에 한 바퀴
+      setPos(50 + 35 * Math.sin(((t - start) / 3600) * Math.PI * 2));
+      raf = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      cancelAnimationFrame(raf);
+      if (visible && !touched.current) raf = requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    io.observe(box);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [setPos]);
+
+  const fromPointer = (clientX: number) => {
+    const r = boxRef.current?.getBoundingClientRect();
+    if (r) setPos(((clientX - r.left) / r.width) * 100);
+  };
+
+  return (
+    <div
+      ref={boxRef}
+      className={s.baBox}
+      onPointerDown={(e) => {
+        touched.current = true;
+        dragging.current = true;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        fromPointer(e.clientX);
+      }}
+      onPointerMove={(e) => dragging.current && fromPointer(e.clientX)}
+      onPointerUp={() => (dragging.current = false)}
+      onPointerCancel={() => (dragging.current = false)}>
+      <Image src={after} alt={afterAlt} fill className="object-cover" sizes="(min-width: 1200px) 1100px, 100vw" draggable={false} />
+      <div className={s.baBefore}>
+        <Image src={before} alt={beforeAlt} fill className="object-cover" sizes="(min-width: 1200px) 1100px, 100vw" draggable={false} />
+      </div>
+      <span className={s.baTag}>BEFORE</span>
+      <span className={s.baTag} data-after>
+        AFTER
+      </span>
+      <div
+        ref={handleRef}
+        className={s.baHandle}
+        role="slider"
+        tabIndex={0}
+        aria-label="작업 전후 비교 위치"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={50}
+        onKeyDown={(e) => {
+          if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+          e.preventDefault();
+          touched.current = true;
+          const now = Number(handleRef.current?.getAttribute("aria-valuenow") ?? 50);
+          setPos(now + (e.key === "ArrowLeft" ? -5 : 5));
+        }}>
+        <span className={s.baKnob} aria-hidden="true">
+          <svg width="22" height="12" viewBox="0 0 22 12" fill="none">
+            <path d="M6 1 1 6l5 5M16 1l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  );
+}

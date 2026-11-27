@@ -21,6 +21,7 @@ import {
   TitleCard,
   PhotoCtaCard,
   FaqList,
+  BeforeAfterSlider,
   RunCrew,
 } from "./premium/Blocks";
 import { display } from "./premium/fonts";
@@ -238,6 +239,7 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
   const hasSupplementalDoorCases = supplementalDoorCases.length > 0;
   const reviewCases = latestDoorCases.filter((c) => c.review);
   const bandCase = featuredRegionalDoorCases[0] ?? latestDoorCases[0];
+  const compareCase = cases.find((c) => c.id === "case-073");
 
   const showReviews = () => {
     setActiveTab("reviews");
@@ -329,6 +331,33 @@ export default function SinkdoorReformLanding({ keyword, canonicalUrl }: Props) 
           SCROLL <span />
         </div>
       </Scrub>
+
+      {/* 히어로 바로 아래: 막대를 좌우로 끌어 보는 실제 시공 전후 (경기 광명) */}
+      {compareCase && (
+        <section className={s.baSection} aria-label="싱크대 문짝 교체 전후 비교">
+          <div className={s.wrap}>
+            <div className={`${s.glass} ${s.baCard}`}>
+              <BeforeAfterSlider
+                before={compareCase.beforeImg}
+                after={compareCase.afterImg}
+                beforeAlt="경기 광명 싱크대 문짝 교체 전 주방"
+                afterAlt="경기 광명 싱크대 문짝 교체 후 주방"
+              />
+              <div className={s.baCaption}>
+                <div>
+                  <p className={s.kicker}>{compareCase.region} · 싱크대 문짝 교체</p>
+                  <strong>같은 주방입니다. 문짝만 바꿨습니다.</strong>
+                  <p className={s.note}>가운데 막대를 좌우로 움직여 비교해 보세요.</p>
+                </div>
+                <Link href={`/cases/${compareCase.id}`} className={s.arrowLink}>
+                  <RollText text="이 사례 보기" />
+                  <Arrow />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <nav aria-label="싱크대 문짝 교체 상세·리뷰" data-public-detail-tabs className={s.detailTabs}>
         <div className="mx-auto grid max-w-[720px] grid-cols-2 text-center">

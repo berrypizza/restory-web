@@ -3315,3 +3315,115 @@ button:hover .rollChar {
     translate: -50% 0;
   }
 }
+
+/* ─────────────────────────────────────────
+   전후 비교 슬라이더 (히어로 바로 아래)
+───────────────────────────────────────── */
+.baSection {
+  position: relative;
+  padding: 24px 0 8px;
+}
+
+@media (min-width: 768px) {
+  .baSection {
+    padding: 40px 0 16px;
+  }
+}
+
+.baCard {
+  padding: 8px;
+}
+
+.baBox {
+  --pos: 50%;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: calc(var(--radius) - 8px);
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: ew-resize;
+  user-select: none;
+  background: #ddd;
+}
+
+/* 두 사진 모두 4:3 원본 비율 그대로 — 잘라내면 전후 구도가 어긋남 */
+.baCard {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.baBefore {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.baTag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: rgba(20, 20, 20, 0.72);
+  pointer-events: none;
+}
+
+.baTag[data-after] {
+  left: auto;
+  right: 14px;
+  background: var(--blue);
+}
+
+.baHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  z-index: 3;
+  width: 3px;
+  margin-left: -1.5px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 18px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.baKnob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--blue);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.baHandle:focus-visible .baKnob {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.baCaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 16px 12px 8px;
+}
+
+.baCaption strong {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
