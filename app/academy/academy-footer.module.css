@@ -1,0 +1,151 @@
+/* Premium footer: off-white page tone, Montserrat display, frosted glass card */
+.footer {
+  --blue: #0a2c9e;
+  --ink: #141414;
+  --sub: rgba(20, 20, 20, 0.62);
+  --display-font: var(--font-sofa-display), "Helvetica Neue", Arial, sans-serif;
+  position: relative;
+  overflow: clip;
+  margin-top: -2px;
+  padding: clamp(56px, 8vw, 104px) 0 clamp(24px, 3vw, 40px);
+  background:
+    radial-gradient(ellipse 60% 50% at 85% 10%, rgba(42, 102, 240, 0.14), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 10% 90%, rgba(243, 196, 126, 0.35), transparent 70%),
+    #f4f4f2;
+  color: var(--ink);
+}
+.wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  gap: clamp(24px, 3vw, 40px);
+}
+@media (min-width: 768px) {
+  .wrap {
+    padding: 0 48px;
+  }
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 32px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.mark {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -3px;
+  line-height: 1;
+}
+.mark > span {
+  color: var(--blue);
+}
+.name {
+  padding-left: 14px;
+  border-left: 1px solid rgba(20, 20, 20, 0.2);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 1px;
+}
+.tagline {
+  margin: 0;
+  flex: 1 1 260px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sub);
+}
+.footer .home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.footer .home:hover {
+  transform: translateY(-2px);
+}
+
+/* Frosted glass, as measured for the premium pages (never pair with -webkit-backdrop-filter here) */
+.card {
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(40px);
+  border: 1px solid #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.cardTitle {
+  margin: 0 0 18px;
+  font-family: var(--display-font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--blue);
+}
+.info {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px 32px;
+}
+.info div {
+  display: grid;
+  gap: 4px;
+}
+.info .wide {
+  grid-column: 1 / -1;
+}
+.info dt {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sub);
+}
+.info dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+.footer .info a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.giant {
+  margin: clamp(8px, 2vw, 24px) 0 0;
+  font-family: var(--display-font);
+  font-weight: 800;
+  font-size: clamp(72px, 20vw, 300px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  background: linear-gradient(120deg, #0a2c9e 0%, #2a66f0 45%, #f3c47e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+}
+.copy {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sub);
+}

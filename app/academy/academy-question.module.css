@@ -1,0 +1,123 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  /* clip (not hidden) so this isn't a scroll container — scroll-driven reveals track the page */
+  overflow: clip;
+  min-height: clamp(560px, 92svh, 920px);
+  display: grid;
+  place-items: center;
+  background: #e8e7e4;
+  color: #111;
+}
+
+.dust {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Melt the dust into the black section below instead of a hard edge */
+.section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  height: clamp(200px, 34%, 360px);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.75) 70%, #000 100%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  padding: 96px 20px;
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+  transform: rotate(-4deg);
+}
+
+/* Heavy slanted gothic filled with a red, smoky "fire" texture */
+.section .title {
+  margin: 0;
+  display: grid;
+  justify-items: start;
+  font-weight: 400;
+  font-size: clamp(40px, 6.4vw, 104px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+  white-space: nowrap;
+  transform: skewX(-12deg);
+  color: transparent;
+  /* bright flame blotches (noise) over a deep red-black base */
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='520' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.03' numOctaves='5' seed='9'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.14  0 0 0 0 0.08  0 0 0 -3.2 1.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    linear-gradient(118deg, #a3000c 0%, #4a0005 45%, #8e0009 70%, #c8100f 100%);
+  background-size: 520px 260px, 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.section .title span:nth-child(2) {
+  padding-left: 0.35em;
+}
+.section .title span:nth-child(3) {
+  padding-left: 0.7em;
+}
+
+.section .en {
+  margin: 0;
+  font-size: clamp(13px, 1.8vw, 28px);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: #c4100f;
+  /* soft paper-coloured halo keeps the line readable over the dust */
+  text-shadow: 0 0 3px #e8e7e4, 0 0 3px #e8e7e4, 0 0 8px #e8e7e4, 0 0 16px #e8e7e4;
+  transform: skewX(-10deg);
+}
+
+/* Rise in as the section scrolls into view (where scroll-driven animation is supported) */
+@supports (animation-timeline: view()) {
+  .title span,
+  .en {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 38%;
+  }
+  .title span:nth-child(2) { animation-range: entry 16% cover 42%; }
+  .title span:nth-child(3) { animation-range: entry 22% cover 46%; }
+  .en { animation-range: entry 28% cover 50%; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(40px); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@media (max-width: 760px) {
+  .section {
+    min-height: clamp(480px, 80svh, 700px);
+  }
+  .inner {
+    padding: 72px 16px;
+    gap: 20px;
+  }
+  .section .title {
+    font-size: clamp(34px, 9.4vw, 60px);
+  }
+  .section .en {
+    font-size: clamp(11px, 3.2vw, 16px);
+    white-space: normal;
+    text-align: center;
+    max-width: 22em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title span,
+  .en {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,244 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  /* overlap the fade above by a pixel so no seam shows */
+  margin-top: -2px;
+  display: grid;
+  /* one viewport-wide column, so the oversized devil overflows evenly instead of pushing content right */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  padding: 0 20px clamp(88px, 10vw, 140px);
+}
+
+/* Looming devil, fading into the black */
+.devil {
+  width: min(900px, 120vw);
+  /* room above so the horn tips are never clipped */
+  margin-top: clamp(24px, 4vw, 56px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 96%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 96%);
+  pointer-events: none;
+}
+.devil img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.section .chaosTitle {
+  position: relative;
+  z-index: 2;
+  margin: clamp(-180px, -14vw, -70px) 0 0;
+  font-weight: 400;
+  font-size: clamp(36px, 6vw, 88px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-shadow: 0 0 40px rgba(10, 44, 158, 0.9), 0 0 2px #000;
+}
+.chaosLine {
+  display: block;
+}
+/* Giant "AI," stamped over the devil, rising out of the title line */
+.section .bigAI {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.04em);
+  transform: translateX(-50%) skewX(-6deg);
+  font-size: clamp(150px, 26vw, 380px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  color: transparent;
+  background: linear-gradient(180deg, #ffffff 0%, #c9d6ff 38%, #4f74ff 78%, #0a2c9e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 28px rgba(79, 116, 255, 0.75)) drop-shadow(0 12px 30px rgba(0, 0, 0, 0.8));
+  text-shadow: none;
+  animation: pulseAI 4s ease-in-out infinite;
+}
+@keyframes pulseAI {
+  50% { filter: drop-shadow(0 0 46px rgba(79, 116, 255, 0.95)) drop-shadow(0 12px 30px rgba(0, 0, 0, 0.8)); }
+}
+
+/* Vortex: tools spiral down the arrow and vanish */
+.flow {
+  position: relative;
+  container-type: size;
+  width: min(560px, 92vw);
+  height: clamp(420px, 78vw, 600px);
+  margin-top: clamp(16px, 3vw, 40px);
+}
+.arrow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.arrow path {
+  fill: none;
+  stroke: rgba(127, 162, 255, 0.55);
+  stroke-width: 0.9;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 3px;
+  animation: suck 1.2s linear infinite;
+}
+@keyframes suck {
+  to { stroke-dashoffset: -12; }
+}
+.arrowHead {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 48px;
+  height: 48px;
+  transform: translateX(-50%);
+}
+.arrowHead path {
+  fill: none;
+  stroke: #7fa2ff;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.vortex {
+  position: absolute;
+  left: 50%;
+  top: 92%;
+  width: 46cqw;
+  height: 46cqw;
+  transform: translate(-50%, -50%) scaleY(0.38);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #000 0 18%, transparent 46%),
+    conic-gradient(from 0deg, #0a2c9e, #06123a, #2a55e6, #06123a, #0a2c9e);
+  filter: blur(3px);
+  opacity: 0.9;
+  animation: spin 2.4s linear infinite;
+}
+@keyframes spin {
+  to { transform: translate(-50%, -50%) scaleY(0.38) rotate(360deg); }
+}
+
+.tile {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: clamp(84px, 22cqw, 128px);
+  aspect-ratio: 1;
+  margin-left: calc(clamp(84px, 22cqw, 128px) / -2);
+  border-radius: 26%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  font: 800 clamp(11px, 2.6cqw, 14px)/1 Arial, Helvetica, sans-serif;
+  letter-spacing: -0.02em;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -8px 14px rgba(0, 0, 0, 0.28),
+    0 18px 30px rgba(0, 0, 0, 0.55);
+  animation: fall 6s cubic-bezier(0.45, 0.05, 0.6, 1) infinite;
+  will-change: transform, opacity;
+}
+.tile svg {
+  width: 52%;
+  height: auto;
+}
+.gpt {
+  background: linear-gradient(150deg, #3a3a3a, #0b0b0b 70%);
+  color: #fff;
+}
+.claude {
+  background: linear-gradient(150deg, #fffaf2, #efe4d3 75%);
+  color: #3d2a1e;
+}
+.higgs {
+  background: linear-gradient(150deg, #2b2f33, #0a0c0e 75%);
+  color: #d7ff3e;
+}
+
+/* S-curve down the arrow, tumbling and shrinking into the vortex */
+@keyframes fall {
+  0%   { transform: translate(-30cqw, -6cqh) rotate(-24deg) scale(1);    opacity: 0; }
+  8%   { opacity: 1; }
+  35%  { transform: translate(24cqw, 26cqh) rotate(22deg) scale(0.86); }
+  65%  { transform: translate(-14cqw, 56cqh) rotate(-38deg) scale(0.62); opacity: 1; }
+  92%  { transform: translate(0, 82cqh) rotate(160deg) scale(0.16);      opacity: 0.4; }
+  100% { transform: translate(0, 86cqh) rotate(220deg) scale(0.05);      opacity: 0; }
+}
+
+/* Answer, set like a bold caption with a red highlight */
+.section .answer {
+  position: relative;
+  z-index: 2;
+  margin: clamp(48px, 7vw, 96px) 0 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.12em;
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 104px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-align: center;
+  word-break: keep-all;
+}
+.answer mark {
+  background: #e8121b;
+  color: #fff;
+  padding: 0 0.14em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- Alone vs. AI + mastermind, one scene ---------- */
+.scene {
+  position: relative;
+  z-index: 2;
+  width: min(1040px, 100%);
+  margin-top: clamp(64px, 9vw, 120px);
+  display: grid;
+  gap: 16px;
+}
+.sceneFigure {
+  margin: 0;
+  display: grid;
+  gap: 18px;
+}
+.sceneImage {
+  position: relative;
+  /* no frame: the picture melts into the black on every side */
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%);
+}
+.sceneImage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (max-width: 760px) {
+  .section .chaosTitle {
+    font-size: 8.4vw;
+  }
+  .section .answer {
+    font-size: 8.2vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .vortex,
+  .arrow path,
+  .section .bigAI {
+    animation: none;
+  }
+  .tile:nth-of-type(1) { transform: translate(-22cqw, 8cqh) rotate(-14deg); }
+  .tile:nth-of-type(2) { transform: translate(20cqw, 30cqh) rotate(12deg) scale(0.85); }
+  .tile:nth-of-type(3) { transform: translate(-10cqw, 56cqh) rotate(-20deg) scale(0.65); }
+  .tile:nth-of-type(n + 4) { display: none; }
+}

@@ -549,3 +549,23 @@
   .page .nav > nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; color: #e0e7df; font-size: 14px; }
   .page .nav .nav-cta { width: auto; min-height: 44px; align-items: center; margin-left: auto; padding-inline: 12px; }
 }
+
+/* ---------- Premium frosted header over the hero (restory-premium-landing) ---------- */
+.page .header{position:sticky;top:0;z-index:50;height:88px;margin-bottom:calc(-1 * var(--gisal-hdr, 88px));background:rgba(255,255,255,.5);backdrop-filter:blur(40px);border-bottom:1px solid #fff;color:#0b1530;transition:background-color .3s ease}
+.page .header[data-solid]{background:rgba(255,255,255,.86)}
+.page .header .brand-mark{color:#0b1530}
+.page .header .brand-mark>span{color:#0a2c9e}
+.page .header .collabCross{color:#6b7a90}
+.page .header .restoryBrand{color:#0b1530}
+.page .header .restoryBrand:hover{color:#0a2c9e}
+.page .header .nav nav{color:#3a4660;font-weight:650}
+.page .header .nav nav a{transition:color .18s}
+.page .header .nav nav a:hover{color:#0a2c9e}
+.page .header .nav-cta{border:0;border-radius:12px;background:#0a2c9e;color:#fff;font-weight:740;box-shadow:0 4px 10px rgba(10,44,158,.18)}
+.page .header .nav-cta:hover{background:#0b3cc9;color:#fff}
+@media (max-width:1100px){
+  .page .header{height:auto;margin-bottom:calc(-1 * var(--gisal-hdr, 102px))}
+  .page .header .nav > nav{border-top-color:rgba(10,44,158,.12)}
+  .page .header .nav > nav a{color:#3a4660}
+}
+:global(html):has([data-gisal-header]){scroll-padding-top:var(--gisal-hdr,88px)}
