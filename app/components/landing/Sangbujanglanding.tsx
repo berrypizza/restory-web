@@ -221,7 +221,7 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
               ? `${region} 싱크대 상부장 ${symptom}${symptom === "수리" ? "" : " 수리"}`
               : "리스토리 싱크대 상부장 처짐 수리"}
           </p>
-          <RiseLines onLoad as="h1" className={s.heroTitle} lines={heroTitle} />
+          <RiseLines onLoad as="h1" className={s.heroTitle} lines={heroTitle} glitchLine={region ? undefined : 1} />
           {/* 실제 수리 전후 (부천 작동 상부장 추락, case-002) — 막대를 좌우로 끌어 비교 */}
           <div className={`${s.heroBa} ${s.heroFade}`} style={{ animationDelay: "0.2s" }}>
             <BeforeAfterSlider
