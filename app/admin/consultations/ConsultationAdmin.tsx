@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { communityClient } from "@/lib/community/client";
 import {
-  CONSULTATION_STATUSES, CONSULTATION_TYPES, SITUATIONS, REPAIR_EXPERIENCES, MARKETING_EXPERIENCES,
+  CONSULTATION_STATUSES, CONSULTATION_TYPES, SITUATIONS, TRADES, REPAIR_EXPERIENCES, MARKETING_EXPERIENCES,
   type Consultation, type ConsultationStatus,
 } from "@/lib/academy/consultation";
 import AdminIcon from "../components/AdminIcon";
@@ -62,7 +62,9 @@ function Inquiry({
         <h3 className={styles.detailTitle}>상담 신청 내용</h3>
         <dl className={styles.answers}>
           <div><dt>상담 방식 · 비용</dt><dd>{type?.format || row.consultation_type} · {row.fee_krw === 0 ? "무료" : `${row.fee_krw.toLocaleString("ko-KR")}원`}</dd></div>
-          <div><dt>현재 상황</dt><dd>{SITUATIONS.find(item => item.value === row.situation)?.label || row.situation || "미입력"}</dd></div>
+          {row.trade
+            ? <div><dt>직종</dt><dd>{TRADES.find(item => item.value === row.trade)?.label || row.trade}</dd></div>
+            : <div><dt>현재 상황</dt><dd>{SITUATIONS.find(item => item.value === row.situation)?.label || row.situation || "미입력"}</dd></div>}
           <div><dt>이메일</dt><dd>{row.email ? <a href={`mailto:${row.email}`}>{row.email}</a> : "미입력"}</dd></div>
           <div><dt>거주 지역</dt><dd>{row.region || "미입력"}</dd></div>
           <div><dt>나이 / 연령대</dt><dd>{row.age_range || "미입력"}</dd></div>
@@ -158,7 +160,7 @@ export default function ConsultationAdmin() {
     setListError("");
     try {
       const db = communityClient();
-      let query = db.from("academy_consultations").select("id,consultation_type,fee_krw,situation,name,phone,email,region,age_range,repair_experience,marketing_experience,available_time,message,status,consent_version,consented_at,created_at", { count: "exact" }).order("created_at", { ascending: false }).order("id").range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      let query = db.from("academy_consultations").select("id,consultation_type,fee_krw,situation,trade,name,phone,email,region,age_range,repair_experience,marketing_experience,available_time,message,status,consent_version,consented_at,created_at", { count: "exact" }).order("created_at", { ascending: false }).order("id").range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
       if (status) query = query.eq("status", status);
       if (kind) query = query.eq("consultation_type", kind);
       const [result, pending] = await Promise.all([

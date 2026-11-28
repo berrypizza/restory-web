@@ -7,6 +7,7 @@ import AcademyQuestion from "./AcademyQuestion";
 import AcademyChaos from "./AcademyChaos";
 import AcademyEssence from "./AcademyEssence";
 import AcademyFooter from "./AcademyFooter";
+import AcademyRoots from "./AcademyRoots";
 import styles from "./gisal.module.css";
 
 function cx(names: string) { return names.split(" ").map(name => styles[name]).join(" "); }
@@ -32,6 +33,7 @@ export default function GisalLanding() {
     <AcademyQuestion />
     <AcademyChaos />
     <AcademyEssence />
+    <AcademyRoots />
   </main>
   <AcademyFooter />
 

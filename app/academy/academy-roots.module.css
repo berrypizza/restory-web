@@ -1,0 +1,233 @@
+/* Many threads converging into one glowing point: "나" */
+.section {
+  position: relative;
+  isolation: isolate;
+  /* clip (not hidden) keeps scroll-driven reveals tied to the page scroll */
+  overflow: clip;
+  margin-top: -2px;
+  padding: clamp(72px, 10vw, 140px) 20px clamp(96px, 12vw, 160px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  color: #fff;
+  background:
+    radial-gradient(ellipse 55% 40% at 50% 62%, rgba(255, 170, 70, 0.18), transparent 70%),
+    linear-gradient(180deg, #120a04 0%, #0b0704 84%, #3a2a1c 94%, #f4f4f2 100%);
+}
+
+/* floating motes */
+.dust {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 12% 30%, rgba(255, 210, 140, 0.5), transparent),
+    radial-gradient(2px 2px at 82% 22%, rgba(255, 210, 140, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 30% 70%, rgba(255, 210, 140, 0.45), transparent),
+    radial-gradient(2.5px 2.5px at 68% 64%, rgba(255, 210, 140, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 90% 80%, rgba(255, 210, 140, 0.4), transparent),
+    radial-gradient(2px 2px at 6% 86%, rgba(255, 210, 140, 0.3), transparent);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  to { transform: translateY(-24px); }
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  width: min(1000px, 100%);
+}
+.tree {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.tick line {
+  stroke: rgba(255, 220, 170, 0.45);
+  stroke-width: 1.4;
+}
+.tick text {
+  fill: rgba(255, 225, 185, 0.5);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.tick .who {
+  fill: rgba(255, 214, 150, 0.8);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.parent {
+  fill: #ffe6b8;
+  font-size: 26px;
+  filter: drop-shadow(0 0 6px rgba(255, 170, 70, 0.8));
+}
+
+/* Opening line above the tree */
+.gene {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 clamp(32px, 5vw, 64px);
+  display: grid;
+  justify-items: center;
+  gap: 0.15em;
+  font-size: clamp(28px, 4.4vw, 60px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: #fff4dc;
+  text-shadow: 0 0 30px rgba(255, 170, 70, 0.35);
+}
+.gene span:last-child {
+  color: #ffd38a;
+}
+
+.bands path {
+  stroke: rgba(255, 214, 150, 0.32);
+  stroke-width: 0.9;
+}
+.horizon {
+  filter: drop-shadow(0 0 6px rgba(255, 196, 106, 0.9));
+}
+.fray path {
+  fill: none;
+  stroke: rgba(255, 214, 150, 0.55);
+  stroke-width: 1;
+}
+.branches path {
+  fill: none;
+  stroke: #fff1d2;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(255, 190, 100, 0.7));
+}
+.nodes circle {
+  fill: #fff6e0;
+}
+.glow {
+  transform-origin: 500px 830px;
+  animation: pulse 3.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% { transform: scale(1.18); opacity: 0.85; }
+}
+.me {
+  fill: #fff;
+  font-size: 40px;
+}
+
+/* Draw the threads down into "나" as the section scrolls in */
+@supports (animation-timeline: view()) {
+  .fray path,
+  .branches path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw linear both;
+    animation-timeline: view();
+  }
+  .fray path {
+    animation-range: entry 10% cover 35%;
+  }
+  .branches path {
+    animation-range: entry calc(20% + (5 - var(--l)) * 4%) cover calc(38% + (5 - var(--l)) * 4%);
+  }
+  .bands path {
+    animation: bandsIn linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 25%;
+  }
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes bandsIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Copy under the light */
+.section .copy {
+  position: relative;
+  z-index: 1;
+  margin: clamp(24px, 4vw, 56px) 0 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.06em;
+  font-weight: 400;
+  font-size: clamp(48px, 8vw, 120px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 40px rgba(255, 170, 70, 0.35);
+}
+.section .copy .copySub {
+  margin-top: 0.35em;
+  font-size: 0.42em;
+  letter-spacing: 0.02em;
+  color: #ffd38a;
+}
+
+/* Closing CTA in the hero's deep blue */
+.section .cta {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(36px, 5vw, 56px);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 0 34px;
+  border-radius: 999px;
+  background: #0a2c9e;
+  color: #fff;
+  font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  box-shadow: 0 0 0 1px rgba(157, 182, 255, 0.35), 0 14px 40px rgba(10, 44, 158, 0.6), 0 0 60px rgba(42, 85, 230, 0.35);
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.3s ease;
+}
+.section .cta:hover {
+  background: #1a3fc4;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 760px) {
+  .section .cta {
+    width: 100%;
+    max-width: 360px;
+    justify-content: center;
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  .tick text {
+    font-size: 20px;
+  }
+  .parent {
+    font-size: 34px;
+  }
+  .gene {
+    font-size: 5.3vw;
+  }
+  .gene span {
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dust,
+  .glow,
+  .fray path,
+  .branches path,
+  .bands path {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+  }
+}

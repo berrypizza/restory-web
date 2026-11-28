@@ -1,12 +1,12 @@
 import { ACADEMY_OFFER } from "./offer";
 
-export type AcademyCtaLocation = "nav" | "hero" | "video" | "curriculum" | "basic" | "premium" | "mobile";
+export type AcademyCtaLocation = "nav" | "hero" | "video" | "curriculum" | "basic" | "premium" | "mobile" | "closing";
 export type AcademyAttribution = {
   source_plan: "basic" | "setup" | "undecided" | "direct";
   source_cta: AcademyCtaLocation | "direct";
 };
 
-const ctaLocations: readonly string[] = ["nav", "hero", "video", "curriculum", "basic", "premium", "mobile"];
+const ctaLocations: readonly string[] = ["nav", "hero", "video", "curriculum", "basic", "premium", "mobile", "closing"];
 const direct: AcademyAttribution = { source_plan: "direct", source_cta: "direct" };
 
 /** Entry interest, not an enrollment or a purchased course. */

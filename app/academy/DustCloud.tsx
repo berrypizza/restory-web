@@ -122,6 +122,7 @@ export default function DustCloud({ className }: { className?: string }) {
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
       w = rect.width; h = rect.height;
+      if (!w || !h) return;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -138,6 +139,8 @@ export default function DustCloud({ className }: { className?: string }) {
     };
 
     const draw = (time: number) => {
+      // nothing to draw while the canvas has no size (hidden, mid-layout or unmounting)
+      if (!w || !h || !layerA.width || !layerB.width) return;
       const t = time / 1000;
       const dt = last ? Math.min(0.05, (time - last) / 1000) : 0;
       last = time;
