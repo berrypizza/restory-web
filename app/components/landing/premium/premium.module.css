@@ -3643,3 +3643,19 @@ button:hover .rollChar {
   padding-top: 0;
   margin-top: calc(24px - var(--section, 56px));
 }
+
+/* 히어로 바로 아래 영상 섹션: 위 여백을 줄여 히어로에 붙임 */
+.section.videoLead {
+  padding-top: 32px;
+}
+
+.videoLead .videoCard {
+  margin-top: 4px;
+}
+
+.videoEmbed {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius, 20px) - 8px);
+  background: #000;
+}

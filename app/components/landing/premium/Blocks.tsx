@@ -397,3 +397,21 @@ export function BeforeAfterSlider({
     </div>
   );
 }
+
+/* ─────────────────────────────────────────
+   YouTubeEmbed — 페이지에 바로 박힌 유튜브 플레이어 (화면 가까이 와야 불러옴)
+───────────────────────────────────────── */
+export function YouTubeEmbed({ videoId, title }: { videoId: string; title: string }) {
+  return (
+    <div className={`${s.video} ${s.videoEmbed}`}>
+      <iframe
+        className="absolute inset-0 h-full w-full"
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1`}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    </div>
+  );
+}

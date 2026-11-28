@@ -14,7 +14,6 @@ import {
   Arrow,
   CameraIcon,
   Star,
-  YouTubeFacade,
   GlitchDiagram,
   VennShapes,
   Mascot,
@@ -23,6 +22,7 @@ import {
   FaqList,
   RunCrew,
   BeforeAfterSlider,
+  YouTubeEmbed,
 } from "./premium/Blocks";
 import { display } from "./premium/fonts";
 import s from "./premium/premium.module.css";
@@ -240,6 +240,16 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
           SCROLL <span />
         </div>
       </Scrub>
+
+      {/* 히어로 바로 아래: 실제 상부장 추락 현장 영상 (페이지에 바로 재생) */}
+      <section data-service-section="video" id="upper-video" className={`${s.section} ${s.videoLead}`}>
+        <div className={s.wrap}>
+          <h2 className={`${s.kicker} ${s.kickerLg}`}>싱크대 상부장 추락 현장</h2>
+          <div className={`${s.glass} ${s.videoCard}`}>
+            <YouTubeEmbed videoId="tDAtB2ClG08" title="싱크대 상부장 추락 현장 영상" />
+          </div>
+        </div>
+      </section>
 
       {/* ── 이하 본문: 뒤에 흐린 빛 구체가 떠다니고, 내용은 반투명 유리 카드 위에 ── */}
       <Scrub className={s.glassZone}>
@@ -523,20 +533,6 @@ export default function SangbujangLanding({ keyword }: { keyword?: string }) {
         </section>
 
         {/* 7. 영상 */}
-        <section data-service-section="video" className={s.section}>
-          <div className={`${s.wrap} ${s.split}`}>
-            <div className={s.stickyCol}>
-              <TitleCard kicker="현장 영상" title="On Site" />
-            </div>
-            <div className={s.glass}>
-              <RiseLines className={s.title} lines={["실제 수리 과정을 확인하세요"]} />
-              <p className={s.body}>
-                상부장을 내리고 보강해 다시 설치하는 현장 영상입니다. 작업 방법은 각 현장의 상태에 따라 달라집니다.
-              </p>
-              <YouTubeFacade videoId="tDAtB2ClG08" title="리스토리 상부장 수리 시공 영상" label="상부장 실제 시공 영상 재생" />
-            </div>
-          </div>
-        </section>
 
         {/* 8. FAQ */}
         <section data-service-section="faq" id="upper-faq" className={s.section}>
